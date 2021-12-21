@@ -396,6 +396,11 @@
      <property name="title">
       <string>&amp;Title View</string>
      </property>
+     <property name="icon">
+      <iconset>
+       <normalon>icons/icons8-list-64.png</normalon>
+      </iconset>
+     </property>
      <addaction name="actionCode_Title"/>
      <addaction name="actionShort_Title"/>
      <addaction name="actionFull_Title"/>
@@ -418,6 +423,10 @@
    </property>
   </widget>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-opened-folder-64.png</normaloff>icons/icons8-opened-folder-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Open...</string>
    </property>
@@ -428,6 +437,11 @@
   <action name="actionSave">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normalon>icons/icons8-save-64.png</normalon>
+    </iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -443,6 +457,10 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-download-64.png</normaloff>icons/icons8-download-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Import...</string>
    </property>
@@ -454,6 +472,10 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-database-administrator-64.png</normaloff>icons/icons8-database-administrator-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Reindex</string>
    </property>
@@ -462,6 +484,10 @@
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-export-64.png</normaloff>icons/icons8-export-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -470,6 +496,10 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-info-64.png</normaloff>icons/icons8-info-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;About...</string>
    </property>
@@ -478,6 +508,10 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-help-64.png</normaloff>icons/icons8-help-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Help</string>
    </property>
@@ -485,6 +519,10 @@
   <action name="actionSave_As">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-save-as-64.png</normaloff>icons/icons8-save-as-64.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;As...</string>
@@ -500,6 +538,10 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-expand-64.png</normaloff>icons/icons8-expand-64.png</iconset>
+   </property>
    <property name="text">
     <string>E&amp;xpand All</string>
    </property>
@@ -513,6 +555,10 @@
   <action name="actionCollapse_All">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-collapse-64.png</normaloff>icons/icons8-collapse-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Collapse All</string>
@@ -528,6 +574,10 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-double-tick-64.png</normaloff>icons/icons8-double-tick-64.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Select All</string>
    </property>
@@ -541,6 +591,10 @@
   <action name="actionUnselect_All">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>icons/icons8-unchecked-checkbox-64.png</normaloff>icons/icons8-unchecked-checkbox-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Unselect All</string>
