@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowvsbLJB.ui'
+## Form generated from reading UI file 'main_windowJljzpk.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -144,6 +144,7 @@ class Ui_MainWindow(object):
         self.label_grouping.setObjectName(u"label_grouping")
         self.label_grouping.setGeometry(QRect(220, 40, 75, 26))
         self.combo_grouping = QComboBox(self.frame_info)
+        self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
@@ -349,8 +350,9 @@ class Ui_MainWindow(object):
         self.label_grouping.setText(QCoreApplication.translate("MainWindow", u"&Grouping:", None))
         self.combo_grouping.setItemText(0, QCoreApplication.translate("MainWindow", u"Publication", None))
         self.combo_grouping.setItemText(1, QCoreApplication.translate("MainWindow", u"Language", None))
-        self.combo_grouping.setItemText(2, QCoreApplication.translate("MainWindow", u"Tag", None))
-        self.combo_grouping.setItemText(3, QCoreApplication.translate("MainWindow", u"Color", None))
+        self.combo_grouping.setItemText(2, QCoreApplication.translate("MainWindow", u"Year", None))
+        self.combo_grouping.setItemText(3, QCoreApplication.translate("MainWindow", u"Tag", None))
+        self.combo_grouping.setItemText(4, QCoreApplication.translate("MainWindow", u"Color", None))
 
 #if QT_CONFIG(tooltip)
         self.combo_grouping.setToolTip("")

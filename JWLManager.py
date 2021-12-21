@@ -182,17 +182,17 @@ class Window(QMainWindow, Ui_MainWindow):
         if selection == "Notes":
             self.disable_options()
         elif selection == "Highlights":
-            self.disable_options([2])
+            self.disable_options([3])
         elif selection == "Bookmarks":
-            self.disable_options([2,3])
+            self.disable_options([3,4])
         elif selection == "Annotations":
-            self.disable_options([2,3])
+            self.disable_options([3,4])
         elif selection == "Favorites":
-            self.disable_options([2,3])
+            self.disable_options([3,4])
         self.regroup()
 
     def disable_options(self, list=[]):
-        for item in range(4):
+        for item in range(5):
             self.combo_grouping.model().item(item).setEnabled(True)
         for item in list:
             self.combo_grouping.model().item(item).setEnabled(False)
@@ -583,6 +583,12 @@ class BuildTree():
             levels = (tag, publication, language, issue)
         elif self.grouping == "Color":
             levels = (color, publication, language, issue)
+        elif self.grouping == "Year":
+            if issue[0]:
+                year = (issue[0][:4], '')
+            else:
+                year = ('* NO DATE *', '')
+            levels = (year, publication, language, issue)
         for level in levels:
             if level[0]:
                 index += f".{level[0]}"
