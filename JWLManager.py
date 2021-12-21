@@ -28,8 +28,7 @@ SOFTWARE.
 """
 
 # TODO
-# format publications name??
-# add check-able menu items for name display: code | short name | long name
+#
 
 VERSION = 'v0.0.6'
 
@@ -203,7 +202,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def help(self):
         QMessageBox.information(self, 'Help',
-                'Please have a look at the README.md file.',
+                'Please have a look at the README file.',
                 QMessageBox.Ok)
 
     def about(self):
