@@ -260,33 +260,6 @@
         <string>&amp;Delete</string>
        </property>
       </widget>
-      <widget class="QLabel" name="icon">
-       <property name="geometry">
-        <rect>
-         <x>170</x>
-         <y>2</y>
-         <width>41</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>icons/connected_36.ico</pixmap>
-       </property>
-      </widget>
-      <zorder>icon</zorder>
-      <zorder>label_total</zorder>
-      <zorder>label_selected</zorder>
-      <zorder>total</zorder>
-      <zorder>selected</zorder>
-      <zorder>label_category</zorder>
-      <zorder>combo_category</zorder>
-      <zorder>label_grouping</zorder>
-      <zorder>combo_grouping</zorder>
-      <zorder>button_export</zorder>
-      <zorder>button_delete</zorder>
      </widget>
     </item>
     <item row="1" column="0">
