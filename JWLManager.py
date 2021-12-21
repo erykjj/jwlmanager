@@ -31,7 +31,6 @@ SOFTWARE.
 # Update README
 # Add filter field
 # Handle pubs like es22 -> es, 2022
-# Option to group be year (not whole date)
 
 
 VERSION = 'v0.0.6'
@@ -85,6 +84,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
+        self.treeWidget.setExpandsOnDoubleClick(False)
 
         self.set_vars()
         self.read_csv()
@@ -133,6 +133,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.treeWidget.itemChanged.connect(self.tree_selection)
+        self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.button_export.clicked.connect(self.export)
         self.button_delete.clicked.connect(self.delete)
 
@@ -150,6 +151,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def unselect_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
+
+
+    def double_clicked(self, item):
+        if self.treeWidget.isExpanded(item):
+            self.treeWidget.setExpanded(item, False)
+        else:
+            self.treeWidget.expandRecursively(item, -1)
 
 
     def code_view(self):
