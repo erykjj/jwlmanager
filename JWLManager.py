@@ -30,11 +30,11 @@ SOFTWARE.
 # TODO
 # Update README
 # Add filter field
-# Handle pubs like es22 -> es, 2022
 
 
 VERSION = 'v0.0.6'
 
+import re
 import sqlite3
 import sys
 
@@ -528,6 +528,24 @@ class BuildTree():
 
 
     def process_name(self, name):
+        year = ''
+        name, tip = self.check_name(name)
+        if tip:
+            return (name, tip, year)
+        stripped = re.search('(.*?)(?!-)(\d+$)', name)
+        if stripped:
+            prefix = stripped.group(1)
+            suffix = stripped.group(2)
+            if prefix != 'kn':
+                name = prefix
+                year = '20' + suffix
+        name, tip = self.check_name(name)
+        if not tip:
+            tip = '?'
+        return (name, tip, year)
+
+    def check_name(self, name):
+        tip = ''
         if name in self.publications.keys():
             if self.title_format == 'code':
                 tip = self.publications[name][0]
@@ -537,21 +555,7 @@ class BuildTree():
             else:
                 tip = name
                 name = self.publications[name][1]
-            return (name, tip)
-        stripped = name.rstrip('-0123456789')
-        if stripped in self.publications.keys():
-            if self.title_format == 'code':
-                name = stripped
-                tip = self.publications[stripped][0]
-            elif self.title_format == 'short':
-                tip = stripped
-                name = self.publications[stripped][0]
-            else:
-                tip = stripped
-                name = self.publications[stripped][1]
-        else:
-            tip = '?'
-        return (name, tip)
+        return name, tip
 
     def process_language(self, lang):
         if lang in LANGUAGES.keys():
@@ -583,6 +587,8 @@ class BuildTree():
         self.total += 1
         index = ''
         parent = self.tree
+        if publication[2] and not issue[0]:
+            issue = (publication[2], '')
         if self.grouping == "Publication":
             levels = (publication, language, issue)
         elif self.grouping == "Language":
@@ -596,15 +602,17 @@ class BuildTree():
                 year = (issue[0][:4], '')
             else:
                 year = ('* NO DATE *', '')
+            if year[0] == issue[0]:
+                issue = ('', '')
             levels = (year, publication, language, issue)
         for level in levels:
             if level[0]:
                 index += f".{level[0]}"
-                parent = self.check_node(parent, level, item, index)
+                parent = self.check_node(parent, level, index)
         self.leaves[index].append(item)
         parent.setData(0, Qt.UserRole, index)
 
-    def check_node(self, parent, data, item, index):
+    def check_node(self, parent, data, index):
         if index not in self.nodes:
             parent = self.nodes[index] = self.add_node(parent, data)
             self.leaves[index] = []
