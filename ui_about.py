@@ -8,6 +8,8 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
+import os
+import sys
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
@@ -27,7 +29,7 @@ class Ui_Dialog(object):
         Dialog.setMinimumSize(QSize(240, 100))
         Dialog.setMaximumSize(QSize(240, 170))
         icon1 = QIcon()
-        icon1.addFile(u"icons/project_36.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(self.resource_path('icons/project_36.ico'), QSize(), QIcon.Normal, QIcon.Off)
         Dialog.setWindowIcon(icon1)
         Dialog.setModal(False)
         self.buttonBox = QDialogButtonBox(Dialog)
@@ -65,7 +67,7 @@ class Ui_Dialog(object):
         self.icon.setAutoFillBackground(True)
         self.icon.setFrameShape(QFrame.NoFrame)
         self.icon.setFrameShadow(QFrame.Sunken)
-        self.icon.setPixmap(QPixmap(u"icons/project_56.png"))
+        self.icon.setPixmap(QPixmap(self.resource_path('icons/project_56.png')))
         self.icon.setScaledContents(False)
         self.icon.setAlignment(Qt.AlignCenter)
         self.icon.raise_()
@@ -89,3 +91,12 @@ class Ui_Dialog(object):
         self.icon.setText("")
     # retranslateUi
 
+    def resource_path(self, relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+
+        return os.path.join(base_path, relative_path)

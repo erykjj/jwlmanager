@@ -57,7 +57,7 @@ from ui_about import Ui_Dialog
 # General style sheet
 # FONT = '"Verdana", "Noto Sans Cond", "Arial", "Helvetica", "sans-serif"'
 FONT = '"Arial", "Helvetica", "sans-serif"'
-FONT_SIZE = 12 # 10 is ok on Windows; small on linux
+FONT_SIZE = 10 # 10 is ok on Windows; small on linux
 FONT_STYLE = f"font-family: {FONT}; font: {FONT_SIZE}pt;"
 
 
@@ -82,6 +82,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.setFont(QFont(FONT_STYLE, italic=False))
         self.status_label = QLabel("No archive selected  ")
         self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
+        self.status_label.setStyleSheet("color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
         self.treeWidget.setExpandsOnDoubleClick(False)
@@ -446,6 +447,7 @@ class BuildTree():
         con.commit()
         con.close()
         self.tree.setColumnWidth(0, 400)
+        self.tree.setColumnWidth(1, 40)
         self.tree.setSortingEnabled(True)
 
 
