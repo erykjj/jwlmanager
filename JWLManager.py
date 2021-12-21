@@ -90,6 +90,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def set_vars(self):
         self.total.setText('')
         self.modified = False
+        self.title_format = 'code'
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
@@ -122,6 +123,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCollapse_All.triggered.connect(self.collapse_all)
         self.actionSelect_All.triggered.connect(self.select_all)
         self.actionUnselect_All.triggered.connect(self.unselect_all)
+        self.actionCode_Title.triggered.connect(self.code_view)
+        self.actionShort_Title.triggered.connect(self.short_view)
+        self.actionFull_Title.triggered.connect(self.full_view)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -142,6 +146,31 @@ class Window(QMainWindow, Ui_MainWindow):
     def unselect_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
+
+
+    def code_view(self):
+        if self.title_format == 'code':
+            return
+        self.actionShort_Title.setChecked(False)
+        self.actionFull_Title.setChecked(False)
+        self.title_format = 'code'
+        self.regroup()
+
+    def short_view(self):
+        if self.title_format == 'short':
+            return
+        self.actionCode_Title.setChecked(False)
+        self.actionFull_Title.setChecked(False)
+        self.title_format = 'short'
+        self.regroup()
+
+    def full_view(self):
+        if self.title_format == 'full':
+            return
+        self.actionShort_Title.setChecked(False)
+        self.actionCode_Title.setChecked(False)
+        self.title_format = 'full'
+        self.regroup()
 
 
     def switchboard(self, selection):
@@ -167,7 +196,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self):
         tree = BuildTree(self.treeWidget, self.publications,
                           self.combo_category.currentText(),
-                          self.combo_grouping.currentText())
+                          self.combo_grouping.currentText(), self.title_format)
         self.leaves = tree.leaves
         self.total.setText(f"**{tree.total:,}**")
 
@@ -205,6 +234,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
+        self.actionCollapse_All.setEnabled(True)
+        self.actionExpand_All.setEnabled(True)
+        self.actionSelect_All.setEnabled(True)
+        self.actionUnselect_All.setEnabled(True)
+        self.menuTitle_View.setEnabled(True)
         self.switchboard(self.combo_category.currentText())
 
     def trim_db(self):
@@ -276,10 +310,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.setEnabled(True)
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet(f"font: {FONT_SIZE}pt; font: italic;")
-        self.actionCollapse_All.setEnabled(True)
-        self.actionExpand_All.setEnabled(True)
-        self.actionSelect_All.setEnabled(True)
-        self.actionUnselect_All.setEnabled(True)
 
     def archive_saved(self):
         self.modified = False
@@ -386,12 +416,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, tree, publications, category='Note', grouping='Publication'):
+    def __init__(self, tree, publications, category='Note', grouping='Publication', title='code'):
         self.tree = tree
         self.tree.clear()
         self.category = category
         self.grouping = grouping
         self.publications = publications
+        self.title_format = title
         self.nodes = {}
         self.leaves = {}
         self.total = 0
@@ -487,15 +518,28 @@ class BuildTree():
 
     def process_name(self, name):
         if name in self.publications.keys():
-            tip = self.publications[name][0]
-            # name += f"     {self.publications[name][0]}" # messes up the index
-        else:
-            name = name.rstrip('-0123456789')
-            if name in self.publications.keys():
+            if self.title_format == 'code':
                 tip = self.publications[name][0]
-                # name += f"     {self.publications[name][0]}"
+            elif self.title_format == 'short':
+                tip = name
+                name = self.publications[name][0]
             else:
-                tip = None
+                tip = name
+                name = self.publications[name][1]
+            return (name, tip)
+        stripped = name.rstrip('-0123456789')
+        if stripped in self.publications.keys():
+            if self.title_format == 'code':
+                name = stripped
+                tip = self.publications[stripped][0]
+            elif self.title_format == 'short':
+                tip = stripped
+                name = self.publications[stripped][0]
+            else:
+                tip = stripped
+                name = self.publications[stripped][1]
+        else:
+            tip = '?'
         return (name, tip)
 
     def process_language(self, lang):

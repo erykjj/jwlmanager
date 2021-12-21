@@ -386,11 +386,27 @@
     <property name="title">
      <string>&amp;Tree</string>
     </property>
+    <widget class="QMenu" name="menuTitle_View">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="toolTip">
+      <string extracomment="Title display"/>
+     </property>
+     <property name="title">
+      <string>&amp;Title View</string>
+     </property>
+     <addaction name="actionCode_Title"/>
+     <addaction name="actionShort_Title"/>
+     <addaction name="actionFull_Title"/>
+    </widget>
     <addaction name="actionExpand_All"/>
     <addaction name="actionCollapse_All"/>
     <addaction name="separator"/>
     <addaction name="actionSelect_All"/>
     <addaction name="actionUnselect_All"/>
+    <addaction name="separator"/>
+    <addaction name="menuTitle_View"/>
    </widget>
    <addaction name="menu_file"/>
    <addaction name="menuTree"/>
@@ -534,6 +550,42 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="actionCode_Title">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Code</string>
+   </property>
+   <property name="toolTip">
+    <string>Use publication code as title</string>
+   </property>
+  </action>
+  <action name="actionShort_Title">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Short Title</string>
+   </property>
+   <property name="toolTip">
+    <string>Use short publication title</string>
+   </property>
+  </action>
+  <action name="actionFull_Title">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Full Title</string>
+   </property>
+   <property name="toolTip">
+    <string>Use full publication title</string>
    </property>
   </action>
  </widget>

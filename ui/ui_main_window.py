@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowGeJgEN.ui'
+## Form generated from reading UI file 'main_windowFpPOyo.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -57,6 +57,16 @@ class Ui_MainWindow(object):
         self.actionUnselect_All = QAction(MainWindow)
         self.actionUnselect_All.setObjectName(u"actionUnselect_All")
         self.actionUnselect_All.setEnabled(False)
+        self.actionCode_Title = QAction(MainWindow)
+        self.actionCode_Title.setObjectName(u"actionCode_Title")
+        self.actionCode_Title.setCheckable(True)
+        self.actionCode_Title.setChecked(True)
+        self.actionShort_Title = QAction(MainWindow)
+        self.actionShort_Title.setObjectName(u"actionShort_Title")
+        self.actionShort_Title.setCheckable(True)
+        self.actionFull_Title = QAction(MainWindow)
+        self.actionFull_Title.setObjectName(u"actionFull_Title")
+        self.actionFull_Title.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
@@ -171,6 +181,9 @@ class Ui_MainWindow(object):
         self.menu_help.setObjectName(u"menu_help")
         self.menuTree = QMenu(self.menubar)
         self.menuTree.setObjectName(u"menuTree")
+        self.menuTitle_View = QMenu(self.menuTree)
+        self.menuTitle_View.setObjectName(u"menuTitle_View")
+        self.menuTitle_View.setEnabled(False)
         MainWindow.setMenuBar(self.menubar)
         self.statusBar = QStatusBar(MainWindow)
         self.statusBar.setObjectName(u"statusBar")
@@ -204,6 +217,11 @@ class Ui_MainWindow(object):
         self.menuTree.addSeparator()
         self.menuTree.addAction(self.actionSelect_All)
         self.menuTree.addAction(self.actionUnselect_All)
+        self.menuTree.addSeparator()
+        self.menuTree.addAction(self.menuTitle_View.menuAction())
+        self.menuTitle_View.addAction(self.actionCode_Title)
+        self.menuTitle_View.addAction(self.actionShort_Title)
+        self.menuTitle_View.addAction(self.actionFull_Title)
 
         self.retranslateUi(MainWindow)
 
@@ -272,6 +290,18 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.actionUnselect_All.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Z", None))
 #endif // QT_CONFIG(shortcut)
+        self.actionCode_Title.setText(QCoreApplication.translate("MainWindow", u"&Code", None))
+#if QT_CONFIG(tooltip)
+        self.actionCode_Title.setToolTip(QCoreApplication.translate("MainWindow", u"Use publication code as title", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionShort_Title.setText(QCoreApplication.translate("MainWindow", u"&Short Title", None))
+#if QT_CONFIG(tooltip)
+        self.actionShort_Title.setToolTip(QCoreApplication.translate("MainWindow", u"Use short publication title", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionFull_Title.setText(QCoreApplication.translate("MainWindow", u"&Full Title", None))
+#if QT_CONFIG(tooltip)
+        self.actionFull_Title.setToolTip(QCoreApplication.translate("MainWindow", u"Use full publication title", None))
+#endif // QT_CONFIG(tooltip)
         self.label_total.setText(QCoreApplication.translate("MainWindow", u"Total: ", None))
         self.label_selected.setText(QCoreApplication.translate("MainWindow", u"Selected: ", None))
         self.total.setText("")
@@ -309,5 +339,9 @@ class Ui_MainWindow(object):
         self.menu_file.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menu_help.setTitle(QCoreApplication.translate("MainWindow", u"&Help", None))
         self.menuTree.setTitle(QCoreApplication.translate("MainWindow", u"&Tree", None))
+#if QT_CONFIG(tooltip)
+        self.menuTitle_View.setToolTip("")
+#endif // QT_CONFIG(tooltip)
+        self.menuTitle_View.setTitle(QCoreApplication.translate("MainWindow", u"&Title View", None))
     # retranslateUi
 
