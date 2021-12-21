@@ -28,9 +28,10 @@ SOFTWARE.
 """
 
 # TODO
-# Implement export
+# Update README
 # Add filter field
 # Handle pubs like es22 -> es, 2022
+# Option to group be year (not whole date)
 
 
 VERSION = 'v0.0.6'
@@ -50,8 +51,8 @@ from tempfile import mkdtemp
 from zipfile import ZipFile, ZIP_DEFLATED
 
 # GUI definition
-from ui.ui_main_window import Ui_MainWindow
-from ui.ui_about import Ui_Dialog
+from ui_main_window import Ui_MainWindow
+from ui_about import Ui_Dialog
 
 
 # General style sheet
@@ -746,7 +747,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     font = QFont(); # method 2 with font setting disabled
-    font.setPixelSize(14);
+    font.setPixelSize(16);
     app.setFont(font);
 
     win = Window()
