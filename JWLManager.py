@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -28,7 +28,10 @@ SOFTWARE.
 """
 
 # TODO
-#
+# Implement export
+# Add filter field
+# Handle pubs like es22 -> es, 2022
+
 
 VERSION = 'v0.0.6'
 
@@ -202,7 +205,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def help(self):
         QMessageBox.information(self, 'Help',
-                'Please have a look at the README file.',
+                'Please have a look\nat the README file.',
                 QMessageBox.Ok)
 
     def about(self):
@@ -432,7 +435,7 @@ class BuildTree():
         self.build_tree()
         con.commit()
         con.close()
-        self.tree.setColumnWidth(0, 350)
+        self.tree.setColumnWidth(0, 400)
         self.tree.setSortingEnabled(True)
         self.tree.sortByColumn(1, Qt.DescendingOrder)
 
