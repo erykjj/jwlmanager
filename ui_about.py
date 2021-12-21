@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'aboutBkZrMT.ui'
+## Form generated from reading UI file 'aboutUezkMi.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -27,7 +27,7 @@ class Ui_Dialog(object):
         Dialog.setMinimumSize(QSize(240, 100))
         Dialog.setMaximumSize(QSize(240, 170))
         icon1 = QIcon()
-        icon1.addFile(u"ui/icons/project_36.ico", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u"icons/project_36.ico", QSize(), QIcon.Normal, QIcon.Off)
         Dialog.setWindowIcon(icon1)
         Dialog.setModal(False)
         self.buttonBox = QDialogButtonBox(Dialog)
@@ -65,7 +65,7 @@ class Ui_Dialog(object):
         self.icon.setAutoFillBackground(True)
         self.icon.setFrameShape(QFrame.NoFrame)
         self.icon.setFrameShadow(QFrame.Sunken)
-        self.icon.setPixmap(QPixmap(u"ui/icons/project_56.ico"))
+        self.icon.setPixmap(QPixmap(u"icons/project_56.png"))
         self.icon.setScaledContents(False)
         self.icon.setAlignment(Qt.AlignCenter)
         self.icon.raise_()

@@ -161,7 +161,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>icons/project_56.ico</pixmap>
+    <pixmap>icons/project_56.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>false</bool>
