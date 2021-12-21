@@ -84,6 +84,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label = QLabel("No archive selected  ")
         self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
+        self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
 
         self.set_vars()
         self.read_csv()
@@ -438,7 +439,6 @@ class BuildTree():
         con.close()
         self.tree.setColumnWidth(0, 400)
         self.tree.setSortingEnabled(True)
-        self.tree.sortByColumn(1, Qt.DescendingOrder)
 
 
     def build_tree(self):
