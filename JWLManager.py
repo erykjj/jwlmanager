@@ -29,10 +29,11 @@ SOFTWARE.
 
 # TODO
 # Update README
+# Implemet adding Bible favorite
 # Add filter field
 
 
-VERSION = 'v0.0.6'
+VERSION = 'v0.0.7'
 
 import re
 import sqlite3
