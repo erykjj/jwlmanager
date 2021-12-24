@@ -803,13 +803,15 @@ class ExportItems():
                 self.export_file.write(f",{row[item]}")
 
     def export_highlight_header(self):
-        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\n'
-            'YOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS')
+        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.StyleIndex,\n        UserMark.Version, Location.BookNumber, Location.ChapterNumber,\n        Location.DocumentId, Location.Track, Location.IssueTagNumber,\n        Location.KeySymbol, Location.MepsLanguage, Location.Type')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
     def export_annotations(self):
+        self.export_annotations_header()
+
+    def export_annotations_header(self):
         return
 
 
