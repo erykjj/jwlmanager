@@ -1,6 +1,4 @@
 ﻿Symbol	Short	Full	Format
-co-r	Convention video	Convention video	Media
-CO-invpw	CO-invpw (?)	CO-invpw (?)	UNKNOWN
 ebtv	ebtv (?)	ebtv (?)	UNKNOWN
 fmg	fmg (?)	fmg (?)	UNKNOWN
 ad	Aid	Aid to Bible Understanding	Book
@@ -25,7 +23,9 @@ cj	Commentary on James	Commentary on the Letter of James	Book
 cl	Close to Jehovah	Draw Close to Jehovah	Book
 cn	Concordance	Comprehensive Concordance of the New World Translation of the Holy Scriptures	Book
 ct	Creator	Is There a Creator Who Cares About You?	Book
+CO-invpw	Convention invitation (?)	Invitation to the Regional Convention (?)	Tract
 CO-pgm	Convention Program	Regional Convention Program	Program
+co-r	Convention video	Convention video	Media
 dg	Does God Care	Does God Really Care About Us?	Brochure
 dp	Daniel’s Prophecy	Pay Attention to Daniel’s Prophecy!	Book
 dx	Index	Watch Tower Publications Index	Periodical
@@ -78,7 +78,7 @@ kc	"Kingdom Come"	"Let Your Kingdom Come"	Book
 kj	"Know Jehovah"	"The Nations Shall Know That I Am Jehovah"—How?	Book
 kl	Knowledge	Knowledge That Leads to Everlasting Life	Book
 km	Kingdom Ministry	Our Kingdom Ministry	Periodical
-kn	Kingdom News	Kingdom News	Brochure
+kn	Kingdom News	Kingdom News	Tract
 kp	Watch!	Keep on the Watch!	Brochure
 kr	God’s Kindom Rules	God’s Kingdom Rules!	Book
 kt	Know the Truth	Know the Truth	Tract
@@ -127,7 +127,7 @@ rq	Require	What Does God Require of Us?	Brochure
 rr	Pure Worship	Pure Worship of Jehovah—Restored At Last!	Book
 rs	Reasoning	Reasoning From the Scriptures	Book
 rsg	Research Guide	Research Guide for Jehovah’s Witnesses	Brochure
-S-38	LM Instructions	Life and Ministry Meeting Instructions	Brochure
+S-38	LM Instructions	Life and Ministry Meeting Instructions	Document
 sfl	Shepherd	"Shepherd the flock of God"	Book
 sg	School Guidebook	Theocratic Ministry School Guidebook	Book
 sgd	Bible Study Guidebook	Guide for the Study of God’s Word	Brochure
@@ -145,7 +145,7 @@ tr	Truth	The Truth That Leads to Eternal Life	Book
 ts	This Life	Is This Life All There Is?	Book
 uw	United in Worship	United in Worship of the Only True God	Book
 vi	Victory Over Death	Victory Over Death—Is It Possible for You?	Brochure
-vrg	Video Guide	Bible Study Video Reference Guide	Brochure
+vrg	Video Guide	Bible Study Video Reference Guide	Document
 w	The Watchtower	The Watchtower	Periodical
 we	When Someone Dies	When Someone You Love Dies	Brochure
 wi	World Without War	Will There Ever Be a World Without War?	Brochure
