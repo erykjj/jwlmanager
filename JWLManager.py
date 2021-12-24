@@ -68,7 +68,7 @@ LANGUAGES = { 0:'English', 1:'Spanish', 2:'German', 3:'French', 4:'Italian',
               54:'Danish', 62:'Estonian', 67:'Finnish', 72:'Greek', 85:'Hindi', 
               89:'Hungarian', 184:'Norwegian', 198:'Polish', 200:'Punjabi',
               202:'Romanian', 207:'Russian', 230:'Swedish', 231:'Tagalog', 
-              253:'Ukrainian', 279:'Chinese', 285:'Latvian' }
+              253:'Ukrainian', 279:'Latvian' }
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
