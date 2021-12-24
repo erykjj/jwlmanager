@@ -704,15 +704,9 @@ class ExportItems():
         self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        # self.cur.executescript("PRAGMA temp_store = 2; \
-        #                         PRAGMA journal_mode = 'OFF'; \
-        #                         PRAGMA foreign_keys = 'OFF';")
         self.export_file = open(fname, 'w')
-
-        self.result = self.export_items()
+        self.export_items()
         self.export_file.close
-        # self.cur.execute("PRAGMA foreign_keys = 'ON';")
-        # con.commit()
         con.close()
 
     def export_items(self):
@@ -810,9 +804,16 @@ class ExportItems():
 
     def export_annotations(self):
         self.export_annotations_header()
+        sql = f"""SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.Track, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"""
+        for row in self.cur.execute(sql):
+            self.export_file.write(f"\n{row[0]}")
+            for item in range(1,10):
+                self.export_file.write(f",{row[item]}")
 
     def export_annotations_header(self):
-        return
+        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.Track, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
+        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write('*' * 79)
 
 
 class Reindex():
