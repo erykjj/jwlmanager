@@ -20,7 +20,9 @@ $ ./JWLManager.py
 A single-file Windows executable can be produced using `pyinstaller`
 
 ____
-**IMPORTING**: You need to provide a text file with the notes to import. You can use the file produced by exporting and modify the note text. Or you can create your own. The accepted format for the import file is like this:
+**IMPORTING**: ==NOT IMPLEMENTED YET==
+
+You need to provide a text file with the notes to import. You can use the file produced by exporting and modify the note text. Or you can create your own. The accepted format for the import file is like this:
 
 ```
 {TITLE=»}
@@ -68,5 +70,5 @@ ____
 **FEEDBACK**: Feel free to [get in touch](https://gitlab.com/erykj/jwlmanager/-/issues) and post any issues and suggestions.
 
 ____
-[^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
+[^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/){:target="_blank"} is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 
