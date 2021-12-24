@@ -342,12 +342,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.selected_items += len(self.leaves[index])
         self.selected.setText(f"**{self.selected_items:,}**")
         self.button_delete.setEnabled(self.selected_items)
-        self.button_export.setEnabled(self.selected_items)
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
 
 
     def export(self):
         reply = QMessageBox.question(self, 'Export',
-                f"Are you sure you want to\nEXPORT these {self.selected_items} items?",
+                f"{self.selected_items} items will be EXPORTED.\nProceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
@@ -359,9 +359,22 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        # result = ExportItems(self.combo_category.currentText(), selected).result
-        # self.statusBar.showMessage(f" {result} items exported", 3500)
+        fname = self.export_file()
+        if fname[0] == '':
+            self.statusBar.showMessage(" NOT exported!", 3500)
+            return
+        ExportItems(self.combo_category.currentText(), selected, fname[0])
+        self.statusBar.showMessage("Items exported", 3500)
         # self.regroup()
+
+    def export_file(self):
+        fname = ()
+        now = datetime.now().strftime("%Y-%m-%d")
+        fname = QFileDialog.getSaveFileName(self, 'Export file',
+                    f"{self.working_dir}/EXPORT_{self.combo_category.currentText()}_{now}.txt",
+                    "Text files (*.txt)")
+        return fname
+
 
     def delete(self):
         reply = QMessageBox.warning(self, 'Delete',
@@ -512,7 +525,7 @@ class BuildTree():
         sql = "SELECT 0, 0, '', '', NoteId, GROUP_CONCAT(t.Name), 0 FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
         for row in self.cur.execute(sql):
             item = row[4]
-            publication = ("* INDEPENDENT *", None)
+            publication = ("* INDEPENDENT *", None, None)
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
             tag = (row[5] or "* UN-TAGGED *", None)
@@ -682,6 +695,103 @@ class DeleteItems():
     def delete_notes(self):
         sql = f"DELETE FROM Note WHERE NoteId IN {self.items};"
         return self.cur.execute(sql).rowcount
+
+
+class ExportItems():
+    def __init__(self, category='Note', items=[], fname=''):
+        self.category = category
+        self.items = str(items).replace('[', '(').replace(']', ')')
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        # self.cur.executescript("PRAGMA temp_store = 2; \
+        #                         PRAGMA journal_mode = 'OFF'; \
+        #                         PRAGMA foreign_keys = 'OFF';")
+        self.export_file = open(fname, 'w')
+        self.export_header()
+        self.result = self.export_items()
+        self.export_file.close
+        # self.cur.execute("PRAGMA foreign_keys = 'ON';")
+        # con.commit()
+        con.close()
+
+    def export_header(self):
+        self.export_file.write('\n'.join(['{TITLE=}\n',
+            'MODIFY FIELD ABOVE BEFORE RE-IMPORTING',
+            'LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n',
+            'EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.',
+            'BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n',
+            'LINE AFTER HEADER IS NOTE TITLE',
+            'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
+            'SEPARATE TAGS WITH "," (commas)',
+            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}']))
+        self.export_file.write(f"\n\nExported by {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write('*' * 79)
+
+    def export_items(self):
+        if self.category == "Highlights":
+            return self.export_highlights()
+        elif self.category == "Notes":
+            return self.export_notes()
+        elif self.category == "Annotations":
+            return self.export_annotations()
+
+    def export_notes(self):
+        self.export_bible()
+        self.export_publications()
+        self.export_independent()
+
+    def export_bible(self):
+        sql = f"""SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber,
+                    l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,
+                    n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n
+                    JOIN Location l USING (LocationId) LEFT JOIN TagMap tm
+                    USING (NoteId) LEFT JOIN Tag t USING (TagId)
+                    LEFT JOIN UserMark u USING (UserMarkId)
+                    WHERE n.BlockType = 2 AND NoteId IN {self.items}
+                    GROUP BY n.NoteId;"""
+        for row in self.cur.execute(sql):
+            color = str(row[5] or 0)
+            tags = row[8] or ''
+            txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])\
+                +"}{BK="+str(row[2])+"}{CH="+str(row[3])+"}{VER="+str(row[4])\
+                +"}{COLOR="+color+"}{TAGS="+tags+"}===\n"+row[6]+"\n"+row[7].rstrip()
+            self.export_file.write(txt)
+
+    def export_publications(self):
+        sql = f"""SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber,
+                    l.DocumentId, n.BlockIdentifier, u.ColorIndex,
+                    n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n
+                    JOIN Location l USING (LocationId) LEFT JOIN TagMap tm
+                    USING (NoteId) LEFT JOIN Tag t USING (TagId)
+                    LEFT JOIN UserMark u USING (UserMarkId)
+                    WHERE n.BlockType = 1 AND NoteId IN {self.items}
+                    GROUP BY n.NoteId;"""
+        for row in self.cur.execute(sql):
+            color = str(row[5] or 0)
+            tags = row[8] or ''
+            txt = "\n==={CAT=PUBLICATION}{LANG="+str(row[0])+"}{PUB="\
+                    +str(row[1])+"}{ISSUE="+str(row[2])+"}{DOC="+str(row[3])\
+                    +"}{BLOCK="+str(row[4])+"}{COLOR="+color+"}{TAGS="+tags\
+                    +"}===\n"+row[6]+"\n"+row[7].rstrip()
+            self.export_file.write(txt)
+
+    def export_independent(self):
+        sql = f"""SELECT n.Title, n.Content, GROUP_CONCAT(t.Name)
+                    FROM Note n JOIN TagMap tm USING (NoteId)
+                    JOIN Tag t USING (TagId) WHERE n.BlockType = 0
+                    AND NoteId IN {self.items} GROUP BY n.NoteId;"""
+        for row in self.cur.execute(sql):
+            tags = row[2] or ''
+            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags\
+                    +"}===\n"+row[0]+"\n"+row[1].rstrip()
+            self.export_file.write(txt)
+
+
+    def export_highlights(self):
+        return
+    
+    def export_annotations(self):
+        return
 
 
 class Reindex():
