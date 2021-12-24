@@ -363,9 +363,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == '':
             self.statusBar.showMessage(" NOT exported!", 3500)
             return
-        ExportItems(self.combo_category.currentText(), selected, fname[0])
+        ExportItems(self.combo_category.currentText(), selected, fname[0],
+            Path(self.current_archive).stem)
         self.statusBar.showMessage("Items exported", 3500)
-        # self.regroup()
 
     def export_file(self):
         fname = ()
@@ -698,34 +698,22 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category='Note', items=[], fname=''):
+    def __init__(self, category='Note', items=[], fname='', current_archive=''):
         self.category = category
         self.items = str(items).replace('[', '(').replace(']', ')')
+        self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         # self.cur.executescript("PRAGMA temp_store = 2; \
         #                         PRAGMA journal_mode = 'OFF'; \
         #                         PRAGMA foreign_keys = 'OFF';")
         self.export_file = open(fname, 'w')
-        self.export_header()
+
         self.result = self.export_items()
         self.export_file.close
         # self.cur.execute("PRAGMA foreign_keys = 'ON';")
         # con.commit()
         con.close()
-
-    def export_header(self):
-        self.export_file.write('\n'.join(['{TITLE=}\n',
-            'MODIFY FIELD ABOVE BEFORE RE-IMPORTING',
-            'LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n',
-            'EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.',
-            'BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n',
-            'LINE AFTER HEADER IS NOTE TITLE',
-            'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
-            'SEPARATE TAGS WITH "," (commas)',
-            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}']))
-        self.export_file.write(f"\n\nExported by {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
-        self.export_file.write('*' * 79)
 
     def export_items(self):
         if self.category == "Highlights":
@@ -736,9 +724,23 @@ class ExportItems():
             return self.export_annotations()
 
     def export_notes(self):
+        self.export_note_header()
         self.export_bible()
         self.export_publications()
         self.export_independent()
+
+    def export_note_header(self):
+        self.export_file.write('\n'.join(['{TITLE=}\n',
+            'MODIFY FIELD ABOVE BEFORE RE-IMPORTING',
+            'LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n',
+            'EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.',
+            'BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n',
+            'LINE AFTER HEADER IS NOTE TITLE',
+            'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
+            'SEPARATE TAGS WITH "," (commas)',
+            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}']))
+        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write('*' * 79)
 
     def export_bible(self):
         sql = f"""SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber,
@@ -788,8 +790,25 @@ class ExportItems():
 
 
     def export_highlights(self):
-        return
-    
+        self.export_highlight_header()
+        sql = f"""SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken,
+                u.ColorIndex, u.StyleIndex, u.Version, l.BookNumber,
+                l.ChapterNumber, l.DocumentId, l.Track, l.IssueTagNumber,
+                l.KeySymbol, l.MepsLanguage, l.Type FROM BlockRange b
+                JOIN UserMark u USING(UserMarkId) JOIN Location l
+                USING (LocationId) WHERE UserMarkId IN {self.items};"""
+        for row in self.cur.execute(sql):
+            self.export_file.write(f"\n{row[0]}")
+            for item in range(1,15):
+                self.export_file.write(f",{row[item]}")
+
+    def export_highlight_header(self):
+        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\n'
+            'YOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS')
+        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write('*' * 79)
+
+
     def export_annotations(self):
         return
 
