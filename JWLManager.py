@@ -96,7 +96,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def set_vars(self):
         self.total.setText('')
         self.modified = False
-        self.title_format = 'code'
+        self.title_format = 'short'
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
@@ -552,10 +552,17 @@ class BuildTree():
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
+            name = prefix
+            name, tip = self.check_name(name)
             if prefix != 'kn':
-                name = prefix
                 year = '20' + suffix
-        name, tip = self.check_name(name)
+            else:
+                if self.title_format == 'code':
+                    name += f"{suffix}"
+                    tip += f" #{suffix}"
+                else:
+                    name += f" #{suffix}"
+                    tip += f"{suffix}"
         if not tip:
             tip = '?'
         return (name, tip, year)
