@@ -1,3 +1,7 @@
+**NOTE**: This project is at mid-development stage. Some functions are not implemented as yet. All have to be fully tested. If you want a working implementation, have a look at my previous console-based Ruby script: [jwl-admin](https://gitlab.com/erykj/jwl-admin){:target="_blank"}.
+
+____
+
 **DISCLAIMER**: KEEP A BACKUP of your original *.jwlibrary* file in case you need to restore after messing up ;-)
 
 ____
@@ -20,7 +24,7 @@ $ ./JWLManager.py
 A single-file Windows executable can be produced using `pyinstaller`
 
 ____
-**IMPORTING**: ==NOT IMPLEMENTED YET==
+**IMPORTING**: NOT IMPLEMENTED YET
 
 You need to provide a text file with the notes to import. You can use the file produced by exporting and modify the note text. Or you can create your own. The accepted format for the import file is like this:
 
