@@ -1,4 +1,4 @@
-**NOTE**: This project is at mid-development stage. Some functions are not implemented as yet. All have to be fully tested. If you want a working implementation, have a look at my previous console-based Ruby script: [jwl-admin](https://gitlab.com/erykj/jwl-admin){:target="_blank"}.
+**NOTE**: This project is at mid-development stage. Some functions are not implemented as yet. All have to be fully tested. If you want a working implementation, have a look at my previous console-based Ruby script: <a href="https://gitlab.com/erykj/jwl-admin" target="_blank">jwl-admin</a>.
 
 ____
 
@@ -74,5 +74,5 @@ ____
 **FEEDBACK**: Feel free to [get in touch](https://gitlab.com/erykj/jwlmanager/-/issues) and post any issues and suggestions.
 
 ____
-[^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/){:target="_blank"} is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
+[^1]: <a href="https://www.jw.org/en/online-help/jw-library/" target="_blank">JW Library</a> is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 
