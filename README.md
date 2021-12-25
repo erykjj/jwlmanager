@@ -21,7 +21,7 @@ Or, make it executable first and run directly:
 $ chmod u+x ./JWLManager.py
 $ ./JWLManager.py
 ```
-A single-file Windows executable can be produced using `pyinstaller`
+You can find a single-file <u>Windows executable</u> in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
 
 ____
 **IMPORTING**: NOT IMPLEMENTED YET
