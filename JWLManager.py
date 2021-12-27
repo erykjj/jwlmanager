@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-File:           JWL Manager
+File:           JWLManager
 
 Description:    Manage .jwlibrary backup archives
 
@@ -27,13 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-# TODO
-# Update README
-# Implemet adding Bible favorite
-# Add filter field
-
-
-VERSION = 'v0.0.7'
+VERSION = 'v0.0.8'
 
 import re
 import sqlite3
@@ -43,7 +37,6 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from csv import DictReader
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
@@ -60,15 +53,6 @@ from ui_about import Ui_Dialog
 FONT = '"Arial", "Helvetica", "sans-serif"'
 FONT_SIZE = 10 # 10 is ok on Windows; small on linux
 FONT_STYLE = f"font-family: {FONT}; font: {FONT_SIZE}pt;"
-
-
-# Maybe this should be in a resource CSV?
-LANGUAGES = { 0:'English', 1:'Spanish', 2:'German', 3:'French', 4:'Italian',
-              5:'Portuguese', 6:'Dutch', 7:'Japanese', 14:'Arabic', 53:'Czech',
-              54:'Danish', 62:'Estonian', 67:'Finnish', 72:'Greek', 85:'Hindi', 
-              89:'Hungarian', 184:'Norwegian', 198:'Polish', 200:'Punjabi',
-              202:'Romanian', 207:'Russian', 230:'Swedish', 231:'Tagalog', 
-              253:'Ukrainian', 279:'Latvian' }
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -89,7 +73,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setExpandsOnDoubleClick(False)
 
         self.set_vars()
-        self.read_csv()
+        self.read_res()
         self.center()
         self.connect_signals()
 
@@ -101,13 +85,16 @@ class Window(QMainWindow, Ui_MainWindow):
         self.current_archive = ""
         self.working_dir = Path.home()
 
-    def read_csv(self):
+    def read_res(self):
         self.publications = {}
-        with open(PROJECT_PATH / 'res/Publications.csv', newline='', 
-                  encoding='utf-8-sig') as csvfile:
-          reader = DictReader(csvfile, delimiter='\t')
-          for row in reader:
-              self.publications[row['Symbol']] = (row['Short'], row['Full'])
+        self.languages = {}
+        con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
+        cur = con.cursor()
+        for row in cur.execute("SELECT * FROM Publications;"):
+            self.publications[row[0]] = (row[1], row[2], row[3], row[4])
+        for row in cur.execute("SELECT * FROM Languages;"):
+            self.languages[row[0]] = (row[1], row[2])
+        con.close()
 
     def center(self):
         qr = self.frameGeometry()
@@ -208,7 +195,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
 
     def regroup(self):
-        tree = BuildTree(self.treeWidget, self.publications,
+        tree = BuildTree(self.treeWidget, self.publications, self.languages,
                           self.combo_category.currentText(),
                           self.combo_grouping.currentText(), self.title_format)
         self.leaves = tree.leaves
@@ -443,12 +430,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, tree, publications, category='Note', grouping='Publication', title='code'):
+    def __init__(self, tree, publications, languages, category='Note', grouping='Publication', title='code'):
         self.tree = tree
         self.tree.clear()
         self.category = category
         self.grouping = grouping
         self.publications = publications
+        self.languages = languages
         self.title_format = title
         self.nodes = {}
         self.leaves = {}
@@ -581,11 +569,12 @@ class BuildTree():
         return name, tip
 
     def process_language(self, lang):
-        if lang in LANGUAGES.keys():
-            name = LANGUAGES[lang]
+        if lang in self.languages.keys():
+            name = self.languages[lang][0]
+            tip = self.languages[lang][1]
         else:
             name = f"Language #{lang}"
-        tip = None
+            tip = None
         return (name, tip)
 
     def process_issue(self, doc):
@@ -899,7 +888,7 @@ class AboutDialog(QDialog, Ui_Dialog):
         self.setupUi(self)
         self.setWindowTitle(f"About {APP}")
         self.setWindowFlag(Qt.FramelessWindowHint)
-        self.label_app.setText("**JWL Manager**")
+        self.label_app.setText("**JWLManager**")
         self.label_version.setText(VERSION)
         self.label_copyright.setText('*©2022 Eryk J.*')
         self.label_copyright.setVisible(False)
