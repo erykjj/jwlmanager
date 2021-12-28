@@ -211,12 +211,19 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help(self):
-        QMessageBox.information(self, 'Help',
-                'Please have a look\nat the README file.',
-                QMessageBox.Ok)
+        dialog = QDialog(self)
+        dialog.setWindowTitle("README")
+        dialog.setMinimumSize(600, 600)
+        text = QTextEdit(dialog)
+        text.setReadOnly(True)
+        text.setMarkdown(open('README.md').read())
+        layout = QHBoxLayout(dialog)
+        layout.addWidget(text)
+        dialog.setLayout(layout)
+        dialog.show()
 
     def about(self):
-        dialog = QMessageBox(self, self, f"", "", QMessageBox.Ok)
+        dialog = QMessageBox(self, self, "", "", QMessageBox.Ok)
         text = f"""
             <h2 style="text-align: center;"><span style="color: #800080;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JWLManager</span></h2>
             <h4 style="text-align: center;">&nbsp;&nbsp;&nbsp;{VERSION}</h4>
