@@ -45,14 +45,13 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 # GUI definition
 from ui_main_window import Ui_MainWindow
-from ui_about import Ui_Dialog
 
 
 # General style sheet
 # FONT = '"Verdana", "Noto Sans Cond", "Arial", "Helvetica", "sans-serif"'
-FONT = '"Arial", "Helvetica", "sans-serif"'
-FONT_SIZE = 10 # 10 is ok on Windows; small on linux
-FONT_STYLE = f"font-family: {FONT}; font: {FONT_SIZE}pt;"
+# FONT = '"Arial", "Helvetica", "sans-serif"'
+# FONT_SIZE = 10 # 10 is ok on Windows; small on linux
+# FONT_STYLE = f"font-family: {FONT}; font: {FONT_SIZE}pt;"
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -64,9 +63,10 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         # self.setStyleSheet(FONT_STYLE) # disabled with method 2
-        self.statusBar.setFont(QFont(FONT_STYLE, italic=False))
+        # self.statusBar.setFont(QFont(FONT_STYLE, italic=False))
         self.status_label = QLabel("No archive selected  ")
-        self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
+        self.status_label.setStyleSheet("font: italic;")
+        # self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
         self.status_label.setStyleSheet("color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
@@ -238,7 +238,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         self.current_archive = Path(fname[0])
         self.working_dir = Path(fname[0]).parent
-        self.status_label.setStyleSheet(f"font: {FONT_SIZE}pt; color:  black;")
+        self.status_label.setStyleSheet("color:  black;")
         self.status_label.setText(f"{Path(fname[0]).stem}  ")
         with ZipFile(fname[0],"r") as zipped:
             zipped.extractall(tmp_path)
@@ -321,12 +321,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = True
         self.actionSave.setEnabled(True)
         self.actionSave_As.setEnabled(True)
-        self.status_label.setStyleSheet(f"font: {FONT_SIZE}pt; font: italic;")
+        self.status_label.setStyleSheet("font: italic;")
 
     def archive_saved(self):
         self.modified = False
         self.actionSave.setEnabled(False)
-        self.status_label.setStyleSheet(f"font: {FONT_SIZE}pt; font: normal;")
+        self.status_label.setStyleSheet("font: normal;")
         self.statusBar.showMessage(" Saved", 3500)
 
 
