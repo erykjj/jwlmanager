@@ -29,6 +29,7 @@ SOFTWARE.
 
 VERSION = 'v0.0.8'
 
+import os
 import re
 import sqlite3
 import sys
@@ -96,6 +97,14 @@ class Window(QMainWindow, Ui_MainWindow):
         for row in cur.execute("SELECT * FROM Languages;"):
             self.languages[row[0]] = row[1:]
         con.close()
+
+    def resource_path(self, relative_path):
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+
 
     def center(self):
         qr = self.frameGeometry()
@@ -216,7 +225,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setMinimumSize(600, 600)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
-        text.setMarkdown(open('README.md').read())
+        text.setMarkdown(open(self.resource_path('README.md')).read())
         layout = QHBoxLayout(dialog)
         layout.addWidget(text)
         dialog.setLayout(layout)
@@ -232,7 +241,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 """
         dialog.setText(text)
         label = QLabel(dialog)
-        label.setPixmap('icons/project_72.png')
+        label.setPixmap(self.resource_path('icons/project_72.png'))
         label.setGeometry(10,12,72,72)  
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
