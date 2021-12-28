@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowmMhwNe.ui'
+## Form generated from reading UI file 'main_windowWxgehr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -106,6 +106,11 @@ class Ui_MainWindow(object):
         self.actionFull_Title = QAction(MainWindow)
         self.actionFull_Title.setObjectName(u"actionFull_Title")
         self.actionFull_Title.setCheckable(True)
+        self.actionGrouped = QAction(MainWindow)
+        self.actionGrouped.setObjectName(u"actionGrouped")
+        self.actionGrouped.setCheckable(True)
+        self.actionGrouped.setChecked(True)
+        self.actionGrouped.setEnabled(False)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
@@ -246,6 +251,7 @@ class Ui_MainWindow(object):
         self.menuView.addAction(self.actionSelect_All)
         self.menuView.addAction(self.actionUnselect_All)
         self.menuView.addSeparator()
+        self.menuView.addAction(self.actionGrouped)
         self.menuView.addAction(self.menuTitle_View.menuAction())
         self.menuTitle_View.addAction(self.actionCode_Title)
         self.menuTitle_View.addAction(self.actionShort_Title)
@@ -330,6 +336,13 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.actionFull_Title.setToolTip(QCoreApplication.translate("MainWindow", u"Use full publication title", None))
 #endif // QT_CONFIG(tooltip)
+        self.actionGrouped.setText(QCoreApplication.translate("MainWindow", u"&Grouped", None))
+#if QT_CONFIG(tooltip)
+        self.actionGrouped.setToolTip(QCoreApplication.translate("MainWindow", u"Group publications by category", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(shortcut)
+        self.actionGrouped.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+G", None))
+#endif // QT_CONFIG(shortcut)
         self.label_total.setText(QCoreApplication.translate("MainWindow", u"Total: ", None))
         self.label_selected.setText(QCoreApplication.translate("MainWindow", u"Selected: ", None))
         self.total.setText("")
@@ -378,5 +391,4 @@ class Ui_MainWindow(object):
             base_path = sys._MEIPASS
         except Exception:
             base_path = os.path.abspath(".")
-        return os.path.join(base_path, relative_path)
-
+        return os.path.join(base_path, relative_path) 

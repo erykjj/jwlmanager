@@ -81,6 +81,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText('')
         self.modified = False
         self.title_format = 'short'
+        self.grouped = True
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
@@ -119,6 +120,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCode_Title.triggered.connect(self.code_view)
         self.actionShort_Title.triggered.connect(self.short_view)
         self.actionFull_Title.triggered.connect(self.full_view)
+        self.actionGrouped.triggered.connect(self.grouping)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -174,6 +176,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup()
 
 
+    def grouping(self):
+        self.grouped = not self.grouped
+        self.regroup()
+
+
     def switchboard(self, selection):
         self.combo_grouping.setCurrentText('Publication')
         if selection == "Notes":
@@ -197,7 +204,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self):
         tree = BuildTree(self.treeWidget, self.publications, self.languages,
                           self.combo_category.currentText(),
-                          self.combo_grouping.currentText(), self.title_format)
+                          self.combo_grouping.currentText(), self.title_format,
+                          self.grouped)
         self.leaves = tree.leaves
         self.total.setText(f"**{tree.total:,}**")
 
@@ -250,6 +258,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionExpand_All.setEnabled(True)
         self.actionSelect_All.setEnabled(True)
         self.actionUnselect_All.setEnabled(True)
+        self.actionGrouped.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
         self.switchboard(self.combo_category.currentText())
 
@@ -441,11 +450,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, tree, publications, languages, category='Note', grouping='Publication', title='code'):
+    def __init__(self, tree, publications, languages, category='Note', grouping='Publication', title='code', grouped=True):
         self.tree = tree
         self.tree.clear()
         self.category = category
         self.grouping = grouping
+        self.grouped = grouped
         self.publications = publications
         self.languages = languages
         self.title_format = title
@@ -524,7 +534,7 @@ class BuildTree():
         sql = "SELECT 0, 0, '', '', NoteId, GROUP_CONCAT(t.Name), 0 FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
         for row in self.cur.execute(sql):
             item = row[4]
-            publication = ("* INDEPENDENT *", None, None)
+            publication = ("Other", "* INDEPENDENT *", None, None)
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
             tag = (row[5] or "* UN-TAGGED *", None)
@@ -614,7 +624,10 @@ class BuildTree():
         group = (publication[0], '')
         publication = (publication[1], publication[2])
         if self.grouping == "Publication":
-            levels = (group, publication, language, issue)
+            if self.grouped:
+                levels = (group, publication, language, issue)
+            else:
+                levels = (publication, language, issue)
         elif self.grouping == "Language":
             levels = (language, publication, issue)
         elif self.grouping == "Tag":
