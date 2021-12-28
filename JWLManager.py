@@ -584,7 +584,6 @@ class BuildTree():
         year = ''
         if name in self.publications.keys():
             group = self.publications[name][3]
-            year = self.publications[name][2] or ''
             if self.title_format == 'code':
                 tip = self.publications[name][0]
             elif self.title_format == 'short':
