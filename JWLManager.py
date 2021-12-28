@@ -91,9 +91,9 @@ class Window(QMainWindow, Ui_MainWindow):
         con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
         cur = con.cursor()
         for row in cur.execute("SELECT * FROM Publications;"):
-            self.publications[row[0]] = (row[1], row[2], row[3], row[4])
+            self.publications[row[0]] = row[1:]
         for row in cur.execute("SELECT * FROM Languages;"):
-            self.languages[row[0]] = (row[1], row[2])
+            self.languages[row[0]] = row[1:]
         con.close()
 
     def center(self):
@@ -534,7 +534,7 @@ class BuildTree():
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
         for row in self.cur.execute(sql):
             item = row[4]
-            publication = self.process_name(row[1] or 'MEDIA')
+            publication = self.process_name(row[1] or '* MEDIA *')
             language = self.process_language(row[2])
             issue = self.process_issue(row[3])
             tag = (row[5] or "* UN-TAGGED *", None)
@@ -543,32 +543,31 @@ class BuildTree():
 
 
     def process_name(self, name):
-        year = ''
-        name, tip = self.check_name(name)
+        group, name, tip, year = self.check_name(name)
         if tip:
-            return (name, tip, year)
+            return (group, name, tip, year)
         stripped = re.search('(.*?)(?!-)(\d+$)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
             name = prefix
-            name, tip = self.check_name(name)
-            if prefix != 'kn':
-                year = '20' + suffix
-            else:
-                if self.title_format == 'code':
-                    name += f"{suffix}"
-                    tip += f" #{suffix}"
+            group, name, tip, year = self.check_name(name)
+            if not year:
+                if int(suffix) >= 50:
+                    year = '19' + suffix
                 else:
-                    name += f" #{suffix}"
-                    tip += f"{suffix}"
+                    year = '20' + suffix
         if not tip:
             tip = '?'
-        return (name, tip, year)
+        return (group, name, tip, year)
 
     def check_name(self, name):
         tip = ''
+        group = ''
+        year = ''
         if name in self.publications.keys():
+            group = self.publications[name][3]
+            year = self.publications[name][2] or ''
             if self.title_format == 'code':
                 tip = self.publications[name][0]
             elif self.title_format == 'short':
@@ -577,7 +576,7 @@ class BuildTree():
             else:
                 tip = name
                 name = self.publications[name][1]
-        return name, tip
+        return group, name, tip, year
 
     def process_language(self, lang):
         if lang in self.languages.keys():
@@ -610,10 +609,12 @@ class BuildTree():
         self.total += 1
         index = ''
         parent = self.tree
-        if publication[2] and not issue[0]:
-            issue = (publication[2], '')
+        if publication[3] and not issue[0]:
+            issue = (publication[3], '')
+        group = (publication[0], '')
+        publication = (publication[1], publication[2])
         if self.grouping == "Publication":
-            levels = (publication, language, issue)
+            levels = (group, publication, language, issue)
         elif self.grouping == "Language":
             levels = (language, publication, issue)
         elif self.grouping == "Tag":
