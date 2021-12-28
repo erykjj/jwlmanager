@@ -216,17 +216,17 @@ class Window(QMainWindow, Ui_MainWindow):
                 QMessageBox.Ok)
 
     def about(self):
-        dialog = QMessageBox(None, self, f"", "", QMessageBox.Ok)
+        dialog = QMessageBox(self, self, f"", "", QMessageBox.Ok)
         text = f"""
-            <h2 style="text-align: center;"><span style="color: #800080;">JWLManager</span></h2>
-            <h4 style="text-align: center;">{VERSION}</h4>
-            <p style="text-align: center;"><em>&copy;2022 Eryk J.</em></p>
+            <h2 style="text-align: center;"><span style="color: #800080;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JWLManager</span></h2>
+            <h4 style="text-align: center;">&nbsp;&nbsp;&nbsp;{VERSION}</h4>
+            <p style="text-align: center;"><em>&nbsp;&nbsp;&nbsp;&copy;2022 Eryk J.</em></p>
             <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="https://gitlab.com/erykj/jwlmanager">https://gitlab.com/erykj/jwlmanager</a></span></p>
                 """
         dialog.setText(text)
         label = QLabel(dialog)
-        label.setPixmap('icons/project_56.png')
-        label.setGeometry(34,50,56,56)  
+        label.setPixmap('icons/project_72.png')
+        label.setGeometry(10,12,72,72)  
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
 
