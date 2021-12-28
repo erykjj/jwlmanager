@@ -208,7 +208,18 @@ class Window(QMainWindow, Ui_MainWindow):
                 QMessageBox.Ok)
 
     def about(self):
-        dialog = AboutDialog(self)
+        dialog = QMessageBox(None, self, f"", "", QMessageBox.Ok)
+        text = f"""
+            <h2 style="text-align: center;"><span style="color: #800080;">JWLManager</span></h2>
+            <h4 style="text-align: center;">{VERSION}</h4>
+            <p style="text-align: center;"><em>&copy;2022 Eryk J.</em></p>
+            <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="https://gitlab.com/erykj/jwlmanager">https://gitlab.com/erykj/jwlmanager</a></span></p>
+                """
+        dialog.setText(text)
+        label = QLabel(dialog)
+        label.setPixmap('icons/project_56.png')
+        label.setGeometry(34,50,56,56)  
+        dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
 
 
@@ -880,18 +891,6 @@ class Reindex():
         self.update_table('TagMap', 'LocationId')
         self.update_table('PlaylistMedia', 'LocationId')
         self.drop_table()
-
-
-class AboutDialog(QDialog, Ui_Dialog):
-    def __init__(self, parent=None):
-        super(AboutDialog, self).__init__(parent)
-        self.setupUi(self)
-        self.setWindowTitle(f"About {APP}")
-        self.setWindowFlag(Qt.FramelessWindowHint)
-        self.label_app.setText("**JWLManager**")
-        self.label_version.setText(VERSION)
-        self.label_copyright.setText('*©2022 Eryk J.*')
-        self.label_copyright.setVisible(False)
 
 
 if __name__ == "__main__":
