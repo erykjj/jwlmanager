@@ -485,8 +485,8 @@ class BuildTree():
         self.build_tree()
         con.commit()
         con.close()
-        self.tree.setColumnWidth(0, 400)
-        self.tree.setColumnWidth(1, 40)
+        self.tree.setColumnWidth(1, 30)
+        self.tree.resizeColumnToContents(0)
         self.tree.setSortingEnabled(True)
 
 

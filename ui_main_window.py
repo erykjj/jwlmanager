@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowWxgehr.ui'
+## Form generated from reading UI file 'main_windowrXQsqt.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
+
 
 import os
 import sys
@@ -19,9 +20,9 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(560, 590)
-        MainWindow.setMinimumSize(QSize(560, 590))
-        MainWindow.setMaximumSize(QSize(560, 16777215))
+        MainWindow.resize(662, 600)
+        MainWindow.setMinimumSize(QSize(560, 600))
+        MainWindow.setMaximumSize(QSize(16777215, 16777215))
         icon = QIcon()
         icon.addFile(self.resource_path('icons/project_36.ico'), QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon)
@@ -204,7 +205,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 560, 34))
+        self.menubar.setGeometry(QRect(0, 0, 662, 34))
         self.menu_file = QMenu(self.menubar)
         self.menu_file.setObjectName(u"menu_file")
         self.menu_help = QMenu(self.menubar)
@@ -391,4 +392,4 @@ class Ui_MainWindow(object):
             base_path = sys._MEIPASS
         except Exception:
             base_path = os.path.abspath(".")
-        return os.path.join(base_path, relative_path) 
+        return os.path.join(base_path, relative_path)
