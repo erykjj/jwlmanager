@@ -70,8 +70,11 @@ class Window(QMainWindow, Ui_MainWindow):
         # self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
         self.status_label.setStyleSheet("color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
+        self.treeWidget.setSortingEnabled(True)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
         self.treeWidget.setExpandsOnDoubleClick(False)
+        self.treeWidget.setColumnWidth(0, 550)
+        self.treeWidget.setColumnWidth(1, 30)
 
         self.set_vars()
         self.read_res()
@@ -485,9 +488,6 @@ class BuildTree():
         self.build_tree()
         con.commit()
         con.close()
-        self.tree.setColumnWidth(1, 30)
-        self.tree.resizeColumnToContents(0)
-        self.tree.setSortingEnabled(True)
 
 
     def build_tree(self):
