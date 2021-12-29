@@ -225,7 +225,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def help(self):
         dialog = QDialog(self)
         dialog.setWindowTitle("README")
-        dialog.setMinimumSize(600, 600)
+        dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
         text.setMarkdown(open(self.resource_path('README.md')).read())
