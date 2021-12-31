@@ -278,6 +278,7 @@ class Window(QMainWindow, Ui_MainWindow):
             PRAGMA temp_store = 2;
             PRAGMA journal_mode = 'OFF';
             PRAGMA foreign_keys = 'OFF';
+            BEGIN;
             DELETE FROM Note WHERE (Title IS NULL OR Title = '')
               AND (Content IS NULL OR Content = '');
             DELETE FROM Location WHERE LocationId NOT IN
@@ -294,9 +295,9 @@ class Window(QMainWindow, Ui_MainWindow):
               NOT IN (SELECT NoteId FROM Note);
             DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
             PRAGMA foreign_keys = 'ON';
+            COMMIT;
             VACUUM;"""
         cur.executescript(sql)
-        con.commit()
         con.close()
         self.archive_modified()
 
@@ -392,6 +393,26 @@ class Window(QMainWindow, Ui_MainWindow):
         return fname
 
 
+    def import_file(self):
+        reply = QMessageBox.warning(self, 'Import',
+                "Make sure your import file is properly formatted.\n\nImporting will modify the archive.\nProceed?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.No:
+            return
+        fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
+        if fname[0] == "":
+            self.statusBar.showMessage(" NOT imported!", 3500)
+            return
+        count = ImportItems(fname[0]).count
+        if not count:
+            self.statusBar.showMessage(" NOT imported!", 3500)
+            return
+        self.statusBar.showMessage(f" {count} items imported", 3500)
+        self.archive_modified()
+        self.regroup()
+        self.tree_selection()
+
+
     def delete(self):
         reply = QMessageBox.warning(self, 'Delete',
                 f"Are you sure you want to\nDELETE these {self.selected_items} items?",
@@ -428,15 +449,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def clean_up(self):
         rmtree(tmp_path, ignore_errors=True)
-
-
-    def import_file(self):
-        fname = QFileDialog.getOpenFileName(self, 'Import file', '.',
-                                            "Import files (*.txt)")
-        if fname[0] == "":
-            return
-        self.statusBar.showMessage(" Imported", 3500)
-        self.archive_modified()
 
 
     def re_index(self):
@@ -732,6 +744,7 @@ class ExportItems():
         self.cur = con.cursor()
         self.export_file = open(fname, 'w')
         self.export_items()
+        self.export_file.write('\n==={END}===')
         self.export_file.close
         con.close()
 
@@ -842,6 +855,73 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
 
+class ImportItems():
+    def __init__(self, fname=''):
+        self.app = self
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.import_file = open(fname, 'r')
+        if self.pre_import():
+            self.count = self.import_items()
+        else:
+            self.count = 0
+        self.import_file.close
+        con.close()
+
+    def pre_import(self):
+      line = self.import_file.readline()
+      m = re.search('\{TITLE=(.?)\}', line)
+      if m:
+          self.title_char = m.group(1) or ''
+      else:
+          QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
+          return False
+      if self.title_char:
+          self.delete_notes(self.title_char)
+      return True
+
+    def delete_notes(self):
+        return
+
+    def import_items(self):
+        count = 0
+        self.cur.execute("BEGIN;")
+        notes = self.import_file.read().replace("'", "''")
+        for item in re.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, re.S):
+            count += 1
+            attribs = self.process_header(item.group(1))
+            title = item.group(2)
+            note = item.group(3)
+            if attribs['CAT'] == 'BIBLE':
+                self.import_bible(attribs, title, note)
+            elif attribs['CAT'] == 'PUBLICATION':
+                self.import_publication(attribs, title, note)
+            elif attribs['CAT'] == 'INDEPENDENT':
+                self.import_independent(attribs, title, note)
+            else:
+                QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
+                return 0
+        self.cur.execute("COMMIT;")
+        return count
+
+    def import_bible(self, attribs, title, note):
+        return
+
+    def import_publication(self, attribs, title, note):
+        return
+
+    def import_independent(self, attribs, title, note):
+        return
+        print(attribs, title, note)
+
+
+    def process_header(self, line):
+        attribs = {}
+        for (key, value) in re.findall('{(.*?)=(.*?)}', line):
+            attribs[key] = value
+        return attribs
+
+
 class Reindex():
     def __init__(self, progress):
         self.progress = progress
@@ -849,7 +929,8 @@ class Reindex():
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF';")
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
         self.reindex_notes()
         self.reindex_highlights()
         self.reindex_tags()
