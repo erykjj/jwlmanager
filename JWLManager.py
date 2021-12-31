@@ -48,13 +48,6 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from ui_main_window import Ui_MainWindow
 
 
-# General style sheet
-# FONT = '"Verdana", "Noto Sans Cond", "Arial", "Helvetica", "sans-serif"'
-# FONT = '"Arial", "Helvetica", "sans-serif"'
-# FONT_SIZE = 10 # 10 is ok on Windows; small on linux
-# FONT_STYLE = f"font-family: {FONT}; font: {FONT_SIZE}pt;"
-
-
 PROJECT_PATH = Path(__file__).resolve().parent
 APP = Path(__file__).stem
 
@@ -63,11 +56,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
-        # self.setStyleSheet(FONT_STYLE) # disabled with method 2
-        # self.statusBar.setFont(QFont(FONT_STYLE, italic=False))
         self.status_label = QLabel("No archive selected  ")
         self.status_label.setStyleSheet("font: italic;")
-        # self.status_label.setStyleSheet(f"{FONT_STYLE}; color:  grey;")
         self.status_label.setStyleSheet("color:  grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.setSortingEnabled(True)
@@ -924,10 +914,9 @@ class Reindex():
 
 if __name__ == "__main__":
     tmp_path = mkdtemp(prefix='JWLManager_')
-    # QApplication.setAttribute(Qt.AA_Use96Dpi) # method 1 with font setting above
     app = QApplication(sys.argv)
 
-    font = QFont(); # method 2 with font setting disabled
+    font = QFont();
     font.setPixelSize(16);
     app.setFont(font);
 
