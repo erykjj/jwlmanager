@@ -389,7 +389,7 @@ class Window(QMainWindow, Ui_MainWindow):
         fname = ()
         now = datetime.now().strftime("%Y-%m-%d")
         fname = QFileDialog.getSaveFileName(self, 'Export file',
-                    f"{self.working_dir}/EXPORT_{self.combo_category.currentText()}_{now}.txt",
+                    f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt",
                     "Text files (*.txt)")
         return fname
 
