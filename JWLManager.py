@@ -932,6 +932,7 @@ class ImportItems():
             # Add new tag marker if needed
             self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
 
+
     def add_bible_location(self, attribs):
         # Add new location for the whole Bible if it doesn't already exist
         self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{attribs['ED']}', {attribs['LANG']}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1 );")
@@ -981,8 +982,38 @@ class ImportItems():
         self.process_tags(note_id, attribs['TAGS'])
 
 
+    def add_publication_location(self, attribs):
+        # Add new location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId ) SELECT {attribs['ISSUE']}, '{attribs['PUB']}', {attribs['LANG']}, {attribs['DOC']} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} );")
+        result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']};").fetchone()
+        return result[0]
+
+    def add_publication_usermark(self, attribs, location_id, unique_id):
+        # Add new usermark for specified color if it doesn't already exist
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 WHERE NOT EXISTS ( SELECT 1 FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1 );")
+        result = self.cur.execute(f"SELECT UserMarkId from UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1;").fetchone()
+        return result[0]
+
     def import_publication(self, attribs, title, note):
-        return
+        location_id = self.add_publication_location(attribs)
+        unique_id = uuid.uuid1()
+        usermark_id = self.add_publication_usermark(attribs, location_id, unique_id)
+        result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_id} AND Title = '{title}' AND BlockIdentifier = {attribs['BLOCK']};").fetchone()
+        if result:
+            # Note with this title at that location already exists
+            unique_id = result[0]
+            # Update the note
+            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}' WHERE Guid = '{unique_id}';"
+        else:
+            # Note is new...
+            unique_id = uuid.uuid1()
+            # Add new note
+            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']});"
+        self.cur.execute(sql)
+        # Get id of note
+        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = "{unique_id}";").fetchone()[0]
+        self.process_tags(note_id, attribs['TAGS'])
+
 
     def import_independent(self, attribs, title, note):
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE Title = '{title}' AND BlockType = 0;").fetchone()
