@@ -985,7 +985,21 @@ class ImportItems():
         return
 
     def import_independent(self, attribs, title, note):
-        return
+        result = self.cur.execute(f"SELECT Guid FROM Note WHERE Title = '{title}' AND BlockType = 0;").fetchone()
+        if result:
+            # Note with this title already exists
+            unique_id = result[0]
+            # Update the note
+            sql = f"UPDATE Note SET Content = '{note}' WHERE Guid = '{unique_id}';"
+        else:
+            # Note is new...
+            unique_id = uuid.uuid1()
+            # Add new note
+            sql = f"INSERT Into Note (Guid, Title, Content, BlockType) VALUES ('{unique_id}', '{title}', '{note}', 0);"
+        self.cur.execute(sql)
+        # Get id of note
+        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+        self.process_tags(note_id, attribs['TAGS'])
 
 
     def process_header(self, line):
