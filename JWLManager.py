@@ -33,6 +33,7 @@ import os
 import re
 import sqlite3
 import sys
+import uuid
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -861,31 +862,27 @@ class ImportItems():
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
-        if self.pre_import():
-            self.count = self.import_items()
-        else:
-            self.count = 0
+        self.pre_import()
+        self.count = self.import_items()
         self.import_file.close
         con.close()
 
     def pre_import(self):
-      line = self.import_file.readline()
-      m = re.search('\{TITLE=(.?)\}', line)
-      if m:
-          title_char = m.group(1) or ''
-      else:
-          QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
-          return False
-      if title_char:
-          count = self.delete_notes(title_char)
-          print(count)
-      return True
+        line = self.import_file.readline()
+        m = re.search('\{TITLE=(.?)\}', line)
+        if m:
+            title_char = m.group(1) or ''
+        else:
+            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
+            return 0
+        if title_char:
+            self.delete_notes(title_char)
 
     def delete_notes(self, title_char):
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
         if results < 1:
             return 0
-        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\"\nWILL BE DELETED before importing\nProceed with deletion?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\"\nWILL BE DELETED before importing\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == "No":
           return 0
         sql = f"""
@@ -920,15 +917,75 @@ class ImportItems():
         self.cur.execute("COMMIT;")
         return count
 
+
+    def process_tags(self, note_id, tags):
+        # Remove tags related to note - it'll be re-tagged
+        self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
+        for tag in tags.split(','):
+            # Strip off leading and trailing spaces
+            tag = tag.strip()
+            # Add new tag if it doesn't already exist
+            self.cur.execute(f"INSERT INTO Tag ( Type, Name ) SELECT 1, '{tag}' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = '{tag}' );")
+            tag_id = self.cur.execute(f"SELECT TagId from Tag WHERE Name = '{tag}';").fetchone()[0]
+            # Get next available position
+            position = self.cur.execute(f"SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};").fetchone()[0] + 1
+            # Add new tag marker if needed
+            self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
+
+    def add_bible_location(self, attribs):
+        # Add new location for the whole Bible if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{attribs['ED']}', {attribs['LANG']}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1 );")
+        result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
+        return result[0]
+
+    def add_scripture_location(self, attribs):
+        # Add new scripture location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']};").fetchone()
+        return result[0]
+
+    def add_bible_usermark(self, attribs, location_id, unique_id):
+        # Add new usermark for specified color if it doesn't already exist
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 WHERE NOT EXISTS ( SELECT 1 FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1 );")
+        result = self.cur.execute(f"SELECT UserMarkId from UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1;").fetchone()
+        # colors = {} # TODO: should this be global??
+        # ix = f"{str(attribs['LANG'])}.{attribs['ED']}.{str(attribs['COLOR'])}"
+        # colors[ix] = result[0]
+        # return colors
+        return result[0]
+
     def import_bible(self, attribs, title, note):
-        return
+        location_bible = self.add_bible_location(attribs)
+        location_scripture = self.add_scripture_location(attribs)
+        unique_id = uuid.uuid1()
+        # colors = self.add_bible_usermark(attribs, location_bible, unique_id)
+        usermark = self.add_bible_usermark(attribs, location_bible, unique_id)
+        result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
+        if result:
+            # Note with this title at that location already exists
+            unique_id = result[0]
+            # Update the note
+            # ix = f"{str(attribs['LANG'])}.{attribs['ED']}.{str(attribs['COLOR'])}"
+            # sql = f"UPDATE Note SET UserMarkId = {colors[ix]}, Content = '{note}' WHERE Guid = '{unique_id}';"
+            sql = f"UPDATE Note SET UserMarkId = {usermark}, Content = '{note}' WHERE Guid = '{unique_id}';"
+        else:
+            # Note is new...
+            unique_id = uuid.uuid1()
+            # Add new note
+            # ix = f"{str(attribs['LANG'])}.{attribs['ED']}.{str(attribs['COLOR'])}"
+            # sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {colors[ix]}, {location_scripture}, '{title}', '{note}', 2, {attribs['VER']});"
+            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark}, {location_scripture}, '{title}', '{note}', 2, {attribs['VER']});"
+        self.cur.execute(sql)
+        # Get id of note
+        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+        self.process_tags(note_id, attribs['TAGS'])
+
 
     def import_publication(self, attribs, title, note):
         return
 
     def import_independent(self, attribs, title, note):
         return
-        print(attribs, title, note)
 
 
     def process_header(self, line):
