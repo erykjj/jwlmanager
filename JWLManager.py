@@ -872,16 +872,32 @@ class ImportItems():
       line = self.import_file.readline()
       m = re.search('\{TITLE=(.?)\}', line)
       if m:
-          self.title_char = m.group(1) or ''
+          title_char = m.group(1) or ''
       else:
           QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
           return False
-      if self.title_char:
-          self.delete_notes(self.title_char)
+      if title_char:
+          count = self.delete_notes(title_char)
+          print(count)
       return True
 
-    def delete_notes(self):
-        return
+    def delete_notes(self, title_char):
+        results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
+        if results < 1:
+            return 0
+        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\"\nWILL BE DELETED before importing\nProceed with deletion?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if answer == "No":
+          return 0
+        sql = f"""
+            PRAGMA foreign_keys = 'OFF';
+            DELETE FROM Note WHERE Title GLOB '{title_char}*';"""
+        results = self.cur.executescript(sql)
+        sql = """
+            DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);
+            DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+            PRAGMA foreign_keys = 'ON';"""
+        self.cur.executescript(sql)
+        return results
 
     def import_items(self):
         count = 0
