@@ -188,23 +188,20 @@ class Window(QMainWindow, Ui_MainWindow):
     def switchboard(self, selection):
         self.combo_grouping.setCurrentText('Publication')
         if selection == "Notes":
-            self.disable_options()
-            self.button_import.setEnabled(True)
+            self.disable_options([], False, True)
         elif selection == "Highlights":
-            self.disable_options([3])
-            self.button_import.setEnabled(False)
+            self.disable_options([3], False, False)
         elif selection == "Bookmarks":
-            self.disable_options([3,4])
-            self.button_import.setEnabled(False)
+            self.disable_options([3,4], False, False)
         elif selection == "Annotations":
-            self.disable_options([3,4])
-            self.button_import.setEnabled(False)
+            self.disable_options([3,4], False, False)
         elif selection == "Favorites":
-            self.disable_options([3,4])
-            self.button_import.setEnabled(False)
+            self.disable_options([3,4], True, False)
         self.regroup()
 
-    def disable_options(self, list=[]):
+    def disable_options(self, list=[], add=False, imp=False):
+        self.button_add.setEnabled(add)
+        self.button_import.setEnabled(imp)
         for item in range(5):
             self.combo_grouping.model().item(item).setEnabled(True)
         for item in list:

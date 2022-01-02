@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowTLosob.ui'
+## Form generated from reading UI file 'main_windowDiXlbA.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -19,7 +19,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(641, 812)
+        MainWindow.resize(640, 812)
         MainWindow.setMinimumSize(QSize(560, 600))
         MainWindow.setMaximumSize(QSize(16777215, 16777215))
         icon1 = QIcon()
@@ -177,16 +177,20 @@ class Ui_MainWindow(object):
         self.button_delete = QPushButton(self.frame_info)
         self.button_delete.setObjectName(u"button_delete")
         self.button_delete.setEnabled(False)
-        self.button_delete.setGeometry(QRect(430, 10, 86, 26))
+        self.button_delete.setGeometry(QRect(430, 40, 86, 26))
         self.button_import = QPushButton(self.frame_info)
         self.button_import.setObjectName(u"button_import")
         self.button_import.setEnabled(False)
         self.button_import.setGeometry(QRect(530, 40, 86, 26))
         self.icon = QLabel(self.frame_info)
         self.icon.setObjectName(u"icon")
-        self.icon.setGeometry(QRect(453, 36, 41, 41))
+        self.icon.setGeometry(QRect(640, 20, 41, 41))
         self.icon.setPixmap(QPixmap(self.resource_path('icons/connected_56.png')))
         self.icon.setScaledContents(True)
+        self.button_add = QPushButton(self.frame_info)
+        self.button_add.setObjectName(u"button_add")
+        self.button_add.setEnabled(False)
+        self.button_add.setGeometry(QRect(430, 10, 86, 26))
 
         self.gridLayout_2.addWidget(self.frame_info, 0, 0, 1, 1)
 
@@ -223,7 +227,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 641, 34))
+        self.menubar.setGeometry(QRect(0, 0, 640, 34))
         self.menu_file = QMenu(self.menubar)
         self.menu_file.setObjectName(u"menu_file")
         self.menu_help = QMenu(self.menubar)
@@ -402,6 +406,7 @@ class Ui_MainWindow(object):
         self.button_delete.setText(QCoreApplication.translate("MainWindow", u"&Delete", None))
         self.button_import.setText(QCoreApplication.translate("MainWindow", u"&Import", None))
         self.icon.setText("")
+        self.button_add.setText(QCoreApplication.translate("MainWindow", u"&Add", None))
         ___qtreewidgetitem = self.treeWidget.headerItem()
         ___qtreewidgetitem.setText(1, QCoreApplication.translate("MainWindow", u"Count", None));
         self.menu_file.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
