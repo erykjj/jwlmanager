@@ -255,18 +255,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText("* NEW ARCHIVE *  ")
         with ZipFile(self.resource_path("res/blank.jwlibrary"),"r") as zipped:
             zipped.extractall(tmp_path)
-        self.button_import.setEnabled(True) # TODO: depends on current category!!
-        self.actionReindex.setEnabled(True)
-        self.combo_grouping.setEnabled(True)
-        self.combo_category.setEnabled(True)
-        self.actionCollapse_All.setEnabled(True)
-        self.actionExpand_All.setEnabled(True)
-        self.actionSelect_All.setEnabled(True)
-        self.actionUnselect_All.setEnabled(True)
-        self.actionGrouped.setEnabled(True)
-        self.menuTitle_View.setEnabled(True)
-        self.switchboard(self.combo_category.currentText())
-
+        self.file_loaded()
 
     def load_file(self):
         if self.modified:
@@ -287,6 +276,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText(f"{Path(fname[0]).stem}  ")
         with ZipFile(fname[0],"r") as zipped:
             zipped.extractall(tmp_path)
+        self.file_loaded()
+
+    def file_loaded(self):
         self.button_import.setEnabled(True) # TODO: depends on current category!!
         self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
@@ -298,6 +290,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionGrouped.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
         self.switchboard(self.combo_category.currentText())
+
 
     def trim_db(self):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
