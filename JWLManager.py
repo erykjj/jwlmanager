@@ -80,6 +80,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
+        # self.button_add.hide()
+        self.button_add.setVisible(False)
 
     def read_res(self):
         self.publications = {}
@@ -188,20 +190,22 @@ class Window(QMainWindow, Ui_MainWindow):
     def switchboard(self, selection):
         self.combo_grouping.setCurrentText('Publication')
         if selection == "Notes":
-            self.disable_options([], False, True)
+            self.disable_options([], False, True, True)
         elif selection == "Highlights":
-            self.disable_options([3], False, True)
+            self.disable_options([3], False, True, True)
         elif selection == "Bookmarks":
-            self.disable_options([3,4], False, False)
+            self.disable_options([3,4], False, False, False)
         elif selection == "Annotations":
-            self.disable_options([3,4], False, True)
+            self.disable_options([3,4], False, True, True)
         elif selection == "Favorites":
-            self.disable_options([3,4], True, False)
+            self.disable_options([3,4], True, False, False)
         self.regroup()
 
-    def disable_options(self, list=[], add=False, imp=False):
-        self.button_add.setEnabled(add)
+    def disable_options(self, list=[], add=False, exp=False, imp=False):
+        self.button_add.setVisible(add)
+        self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
+        self.button_import.setVisible(imp)
         for item in range(5):
             self.combo_grouping.model().item(item).setEnabled(True)
         for item in list:
@@ -772,7 +776,6 @@ class ExportItems():
         self.cur = con.cursor()
         self.export_file = open(fname, 'w')
         self.export_items()
-        self.export_file.write('\n==={END}===')
         self.export_file.close
         con.close()
 
@@ -789,6 +792,7 @@ class ExportItems():
         self.export_bible()
         self.export_publications()
         self.export_independent()
+        self.export_file.write('\n==={END}===')
 
     def export_note_header(self):
         self.export_file.write('\n'.join(['{TITLE=}\n',
@@ -864,7 +868,7 @@ class ExportItems():
                 self.export_file.write(f",{row[item]}")
 
     def export_highlight_header(self):
-        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.StyleIndex,\n        UserMark.Version, Location.BookNumber, Location.ChapterNumber,\n        Location.DocumentId, Location.Track, Location.IssueTagNumber,\n        Location.KeySymbol, Location.MepsLanguage, Location.Type')
+        self.export_file.write('{HIGHLIGHTS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.StyleIndex,\n        UserMark.Version, Location.BookNumber, Location.ChapterNumber,\n        Location.DocumentId, Location.Track, Location.IssueTagNumber,\n        Location.KeySymbol, Location.MepsLanguage, Location.Type')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -878,7 +882,7 @@ class ExportItems():
                 self.export_file.write(f",{row[item]}")
 
     def export_annotations_header(self):
-        self.export_file.write('THIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.Track, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
+        self.export_file.write('{ANNOTATIONS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.Track, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
