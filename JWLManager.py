@@ -117,7 +117,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
-        self.actionReindex.triggered.connect(self.re_index)
+        self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
         self.actionCollapse_All.triggered.connect(self.collapse_all)
         self.actionSelect_All.triggered.connect(self.select_all)
@@ -485,8 +485,8 @@ class Window(QMainWindow, Ui_MainWindow):
         rmtree(tmp_path, ignore_errors=True)
 
 
-    def re_index(self):
-        reply = QMessageBox.information(self, 'Re-index',
+    def reindex(self):
+        reply = QMessageBox.information(self, 'Reindex',
                 'This may take a few seconds.\nProceed?',
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
@@ -494,10 +494,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
         self.pd.setWindowModality(Qt.WindowModal)
-        self.pd.setWindowTitle('Re-indexing')
+        self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
         self.pd.setModal(True)
         self.pd.setMinimumDuration(0)
+        self.statusBar.showMessage(" Reindexing. Please wait...")
+        app.processEvents()
         Reindex(self.pd)
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
