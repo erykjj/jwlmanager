@@ -190,11 +190,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if selection == "Notes":
             self.disable_options([], False, True)
         elif selection == "Highlights":
-            self.disable_options([3], False, False)
+            self.disable_options([3], False, True)
         elif selection == "Bookmarks":
             self.disable_options([3,4], False, False)
         elif selection == "Annotations":
-            self.disable_options([3,4], False, False)
+            self.disable_options([3,4], False, True)
         elif selection == "Favorites":
             self.disable_options([3,4], True, False)
         self.regroup()
@@ -426,7 +426,12 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == "":
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
-        count = ImportItems(fname[0]).count
+        if self.combo_category.currentText() == 'Annotations':
+            count = ImportAnnotations(fname[0]).count
+        elif self.combo_category.currentText() == 'Highlights':
+            count = ImportHighlights(fname[0]).count
+        elif self.combo_category.currentText() == 'Notes':
+            count = ImportNotes(fname[0]).count
         if not count:
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
@@ -878,7 +883,35 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
 
-class ImportItems():
+class ImportAnnotations():
+    def __init__(self, fname=''):
+        self.count = 0
+        return
+        self.app = self
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.import_file = open(fname, 'r')
+        self.pre_import()
+        self.count = self.import_items()
+        self.import_file.close
+        con.close()
+
+
+class ImportHighlights():
+    def __init__(self, fname=''):
+        self.count = 0
+        return
+        self.app = self
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.import_file = open(fname, 'r')
+        self.pre_import()
+        self.count = self.import_items()
+        self.import_file.close
+        con.close()
+
+
+class ImportNotes():
     def __init__(self, fname=''):
         self.app = self
         con = sqlite3.connect(f"{tmp_path}/userData.db")
