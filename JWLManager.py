@@ -430,6 +430,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == "":
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
+        self.statusBar.showMessage(" Importing. Please wait...")
+        app.processEvents()
         if self.combo_category.currentText() == 'Annotations':
             count = ImportAnnotations(fname[0]).count
         elif self.combo_category.currentText() == 'Highlights':
