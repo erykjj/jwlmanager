@@ -983,6 +983,8 @@ class ImportNotes():
         for tag in tags.split(','):
             # Strip off leading and trailing spaces
             tag = tag.strip()
+            if not tag:
+                continue
             # Add new tag if it doesn't already exist
             self.cur.execute(f"INSERT INTO Tag ( Type, Name ) SELECT 1, '{tag}' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = '{tag}' );")
             tag_id = self.cur.execute(f"SELECT TagId from Tag WHERE Name = '{tag}';").fetchone()[0]
