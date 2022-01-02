@@ -64,7 +64,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setSortingEnabled(True)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
         self.treeWidget.setExpandsOnDoubleClick(False)
-        self.treeWidget.setColumnWidth(0, 550)
+        self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
 
         self.set_vars()
