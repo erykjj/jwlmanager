@@ -110,11 +110,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.close)
         self.actionHelp.triggered.connect(self.help)
         self.actionAbout.triggered.connect(self.about)
+        self.actionNew.triggered.connect(self.new_file)
         self.actionOpen.triggered.connect(self.load_file)
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
-        self.actionImport.triggered.connect(self.import_file)
         self.actionReindex.triggered.connect(self.re_index)
         self.actionExpand_All.triggered.connect(self.expand_all)
         self.actionCollapse_All.triggered.connect(self.collapse_all)
@@ -130,6 +130,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.button_export.clicked.connect(self.export)
         self.button_delete.clicked.connect(self.delete)
+        self.button_import.clicked.connect(self.import_file)
 
 
     def expand_all(self):
@@ -241,6 +242,32 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.exec()
 
 
+    def new_file(self):
+        if self.modified:
+            reply = QMessageBox.question(self, 'Save', 'Save current archive?', 
+                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
+                QMessageBox.Yes)
+            if reply == QMessageBox.Yes:
+                self.save_file()
+            elif reply == QMessageBox.Cancel:
+                return
+        self.status_label.setStyleSheet("color:  black;")
+        self.status_label.setText("* NEW ARCHIVE *  ")
+        with ZipFile(self.resource_path("res/blank.jwlibrary"),"r") as zipped:
+            zipped.extractall(tmp_path)
+        self.button_import.setEnabled(True) # TODO: depends on current category!!
+        self.actionReindex.setEnabled(True)
+        self.combo_grouping.setEnabled(True)
+        self.combo_category.setEnabled(True)
+        self.actionCollapse_All.setEnabled(True)
+        self.actionExpand_All.setEnabled(True)
+        self.actionSelect_All.setEnabled(True)
+        self.actionUnselect_All.setEnabled(True)
+        self.actionGrouped.setEnabled(True)
+        self.menuTitle_View.setEnabled(True)
+        self.switchboard(self.combo_category.currentText())
+
+
     def load_file(self):
         if self.modified:
             reply = QMessageBox.question(self, 'Save', 'Save current archive?', 
@@ -260,7 +287,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText(f"{Path(fname[0]).stem}  ")
         with ZipFile(fname[0],"r") as zipped:
             zipped.extractall(tmp_path)
-        self.actionImport.setEnabled(True)
+        self.button_import.setEnabled(True) # TODO: depends on current category!!
         self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
@@ -328,6 +355,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if reply == QMessageBox.No:
                 return self.save_file()
         self.save_filename = fname[0]
+        self.status_label.setText(f"{Path(fname[0]).stem}  ")
         self.zipfile()
 
     def zipfile(self):
