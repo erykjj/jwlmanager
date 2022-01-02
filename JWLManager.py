@@ -189,14 +189,19 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.setCurrentText('Publication')
         if selection == "Notes":
             self.disable_options()
+            self.button_import.setEnabled(True)
         elif selection == "Highlights":
             self.disable_options([3])
+            self.button_import.setEnabled(False)
         elif selection == "Bookmarks":
             self.disable_options([3,4])
+            self.button_import.setEnabled(False)
         elif selection == "Annotations":
             self.disable_options([3,4])
+            self.button_import.setEnabled(False)
         elif selection == "Favorites":
             self.disable_options([3,4])
+            self.button_import.setEnabled(False)
         self.regroup()
 
     def disable_options(self, list=[]):
@@ -279,7 +284,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.file_loaded()
 
     def file_loaded(self):
-        self.button_import.setEnabled(True) # TODO: depends on current category!!
         self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
