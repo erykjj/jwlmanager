@@ -6,7 +6,8 @@
 
 ### Changed
 
-- Enable Save As as soon as an archive is opened
+- Enabled Save As as soon as an archive is opened
+- Updated README with info on importing and adding 
 
 ### Fixed
 ### Removed
