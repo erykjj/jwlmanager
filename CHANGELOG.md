@@ -5,6 +5,9 @@
 - Changelog file
 
 ### Changed
+
+- Enable Save As as soon as an archive is opened
+
 ### Fixed
 ### Removed
 ____

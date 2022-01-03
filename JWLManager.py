@@ -288,6 +288,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
+        self.actionSave_As.setEnabled(True)
         self.actionCollapse_All.setEnabled(True)
         self.actionExpand_All.setEnabled(True)
         self.actionSelect_All.setEnabled(True)
@@ -441,6 +442,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if not count:
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
+        self.trim_db()
         self.statusBar.showMessage(f" {count} items imported/updated", 3500)
         self.archive_modified()
         self.regroup()
