@@ -441,7 +441,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if not count:
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
-        self.statusBar.showMessage(f" {count} items imported", 3500)
+        self.statusBar.showMessage(f" {count} items imported/updated", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
@@ -492,7 +492,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
+        self.pd = QProgressDialog("Please be patient...", None, 0, 14, self)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -925,8 +925,10 @@ class ImportNotes():
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
-        self.pre_import()
-        self.count = self.import_items()
+        if self.pre_import():
+            self.count = self.import_items()
+        else:
+            self.count = 0
         self.import_file.close
         con.close()
 
@@ -937,9 +939,10 @@ class ImportNotes():
             title_char = m.group(1) or ''
         else:
             QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
-            return 0
+            return False
         if title_char:
             self.delete_notes(title_char)
+        return True
 
     def delete_notes(self, title_char):
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
@@ -997,8 +1000,9 @@ class ImportNotes():
             # Add new tag marker if needed
             self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
 
-    def add_usermark(self, attribs, location_id, unique_id):
+    def add_usermark(self, attribs, location_id):
         # Add new usermark for specified color if it doesn't already exist
+        unique_id = uuid.uuid1()
         self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 WHERE NOT EXISTS ( SELECT 1 FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1 );")
         result = self.cur.execute(f"SELECT UserMarkId from UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Version = 1;").fetchone()
         return result[0]
@@ -1019,8 +1023,7 @@ class ImportNotes():
     def import_bible(self, attribs, title, note):
         location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        unique_id = uuid.uuid1()
-        usermark = self.add_usermark(attribs, location_bible, unique_id)
+        usermark = self.add_usermark(attribs, location_bible)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
         if result:
             # Note with this title at that location already exists
@@ -1047,8 +1050,7 @@ class ImportNotes():
 
     def import_publication(self, attribs, title, note):
         location_id = self.add_publication_location(attribs)
-        unique_id = uuid.uuid1()
-        usermark_id = self.add_usermark(attribs, location_id, unique_id)
+        usermark_id = self.add_usermark(attribs, location_id)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_id} AND Title = '{title}' AND BlockIdentifier = {attribs['BLOCK']};").fetchone()
         if result:
             # Note with this title at that location already exists
