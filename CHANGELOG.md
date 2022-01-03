@@ -1,7 +1,13 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Changelog file
 
+### Changed
+### Fixed
+### Removed
+____
 ## [0.0.9] - 2022-01-02
 ### Added
 - Implemented importing Notes
@@ -31,8 +37,3 @@ ____
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
 [0.0.8]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
 [0.0.7]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.7
-____
-### Added
-### Changed
-### Removed
-### Fixed
