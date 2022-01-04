@@ -431,6 +431,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == "":
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
+        self.working_dir = Path(fname[0]).parent
         self.statusBar.showMessage(" Importing. Please wait...")
         app.processEvents()
         if self.combo_category.currentText() == 'Annotations':
@@ -881,30 +882,61 @@ class ExportItems():
 
     def export_annotations(self):
         self.export_annotations_header()
-        sql = f"""SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.Track, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"""
+        sql = f"""SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"""
         for row in self.cur.execute(sql):
             self.export_file.write(f"\n{row[0]}")
-            for item in range(1,10):
+            for item in range(1,7):
                 self.export_file.write(f",{row[item]}")
 
     def export_annotations_header(self):
-        self.export_file.write('{ANNOTATIONS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.Track, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
+        self.export_file.write('{ANNOTATIONS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
 class ImportAnnotations():
     def __init__(self, fname=''):
-        self.count = 0
-        return
         self.app = self
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
-        self.pre_import()
-        self.count = self.import_items()
+        if self.pre_import():
+            self.count = self.import_items()
+        else:
+            self.count = 0
         self.import_file.close
         con.close()
+
+    def pre_import(self):
+        line = self.import_file.readline()
+        if re.search('{ANNOTATIONS}', line):
+            return True
+        else:
+            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {ANNOTATIONS} tag line', QMessageBox.Abort)
+            return False
+
+    def import_items(self):
+        count = 0
+        while not re.match("\*\*\*\*\*", self.import_file.readline()):
+            pass
+        self.cur.execute("BEGIN;")
+        for line in self.import_file.readlines():
+            count += 1
+            attribs = re.split(',', line, 6)
+            print(attribs)
+            location_id = self.add_location(attribs)
+            if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
+                self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+            else:
+                self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+        self.cur.execute("COMMIT;")
+        return count
+
+    def add_location(self, attribs):
+        # Add new location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {int(attribs[0])}, {int(attribs[1])}, '{attribs[2]}', {int(attribs[3])}, {int(attribs[4])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])});")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])};").fetchone()
+        return result[0]
 
 
 class ImportHighlights():
@@ -1063,7 +1095,7 @@ class ImportNotes():
             # Note is new...
             unique_id = uuid.uuid1()
             # Add new note
-            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']});"
+            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']});"
         self.cur.execute(sql)
         # Get id of note
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]

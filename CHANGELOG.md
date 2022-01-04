@@ -3,11 +3,13 @@
 ## [Unreleased]
 ### Added
 - Changelog file
+- Implemented importing Annotations
 
 ### Changed
 
 - Enabled Save As as soon as an archive is opened
-- Updated README with info on importing and adding 
+- Updated README with info on importing and adding
+- Adjusted Annotations export to work better with importing
 
 ### Fixed
 ### Removed
