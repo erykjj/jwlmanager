@@ -815,15 +815,7 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
     def export_bible(self):
-        sql = f"""SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber,
-                    l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,
-                    n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n
-                    JOIN Location l USING (LocationId) LEFT JOIN TagMap tm
-                    USING (NoteId) LEFT JOIN Tag t USING (TagId)
-                    LEFT JOIN UserMark u USING (UserMarkId)
-                    WHERE n.BlockType = 2 AND NoteId IN {self.items}
-                    GROUP BY n.NoteId;"""
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber,  l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,  n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n  JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId)  WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])\
@@ -832,15 +824,7 @@ class ExportItems():
             self.export_file.write(txt)
 
     def export_publications(self):
-        sql = f"""SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber,
-                    l.DocumentId, n.BlockIdentifier, u.ColorIndex,
-                    n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n
-                    JOIN Location l USING (LocationId) LEFT JOIN TagMap tm
-                    USING (NoteId) LEFT JOIN Tag t USING (TagId)
-                    LEFT JOIN UserMark u USING (UserMarkId)
-                    WHERE n.BlockType = 1 AND NoteId IN {self.items}
-                    GROUP BY n.NoteId;"""
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             txt = "\n==={CAT=PUBLICATION}{LANG="+str(row[0])+"}{PUB="\
@@ -850,11 +834,7 @@ class ExportItems():
             self.export_file.write(txt)
 
     def export_independent(self):
-        sql = f"""SELECT n.Title, n.Content, GROUP_CONCAT(t.Name)
-                    FROM Note n JOIN TagMap tm USING (NoteId)
-                    JOIN Tag t USING (TagId) WHERE n.BlockType = 0
-                    AND NoteId IN {self.items} GROUP BY n.NoteId;"""
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             tags = row[2] or ''
             txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags\
                     +"}===\n"+row[0]+"\n"+row[1].rstrip()
@@ -863,27 +843,20 @@ class ExportItems():
 
     def export_highlights(self):
         self.export_highlight_header()
-        sql = f"""SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken,
-                u.ColorIndex, u.StyleIndex, u.Version, l.BookNumber,
-                l.ChapterNumber, l.DocumentId, l.Track, l.IssueTagNumber,
-                l.KeySymbol, l.MepsLanguage, l.Type FROM BlockRange b
-                JOIN UserMark u USING(UserMarkId) JOIN Location l
-                USING (LocationId) WHERE UserMarkId IN {self.items};"""
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM BlockRange b JOIN UserMark u USING(UserMarkId) JOIN Location l USING (LocationId) WHERE UserMarkId IN {self.items};"):
             self.export_file.write(f"\n{row[0]}")
-            for item in range(1,15):
+            for item in range(1,13):
                 self.export_file.write(f",{row[item]}")
 
     def export_highlight_header(self):
-        self.export_file.write('{HIGHLIGHTS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.StyleIndex,\n        UserMark.Version, Location.BookNumber, Location.ChapterNumber,\n        Location.DocumentId, Location.Track, Location.IssueTagNumber,\n        Location.KeySymbol, Location.MepsLanguage, Location.Type')
+        self.export_file.write('{HIGHLIGHTS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
     def export_annotations(self):
         self.export_annotations_header()
-        sql = f"""SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"""
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"):
             self.export_file.write(f"\n{row[0]}")
             for item in range(1,7):
                 self.export_file.write(f",{row[item]}")
@@ -896,7 +869,7 @@ class ExportItems():
 
 class ImportAnnotations():
     def __init__(self, fname=''):
-        self.app = self
+        # self.app = self
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
@@ -941,21 +914,51 @@ class ImportAnnotations():
 
 class ImportHighlights():
     def __init__(self, fname=''):
-        self.count = 0
-        return
-        self.app = self
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
-        self.pre_import()
-        self.count = self.import_items()
+        if self.pre_import():
+            self.count = self.import_items()
+        else:
+            self.count = 0
         self.import_file.close
         con.close()
+
+    def pre_import(self):
+        line = self.import_file.readline()
+        if re.search('{HIGHLIGHTS}', line):
+            return True
+        else:
+            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {HIGHLIGHTS} tag line', QMessageBox.Abort)
+            return False
+
+    def import_items(self):
+        count = 0
+        while not re.match("\*\*\*\*\*", self.import_file.readline()):
+            pass
+        self.cur.execute("BEGIN;")
+        for line in self.import_file.readlines():
+            count += 1
+            attribs = re.split(',', line, 6)
+            print(attribs)
+            location_id = self.add_location(attribs)
+            if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
+                self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+            else:
+                self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+        self.cur.execute("COMMIT;")
+        return count
+
+    def add_location(self, attribs):
+        # Add new location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {int(attribs[0])}, {int(attribs[1])}, '{attribs[2]}', {int(attribs[3])}, {int(attribs[4])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])});")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])};").fetchone()
+        return result[0]
 
 
 class ImportNotes():
     def __init__(self, fname=''):
-        self.app = self
+        # self.app = self
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.import_file = open(fname, 'r')
