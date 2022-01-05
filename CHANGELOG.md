@@ -5,6 +5,7 @@
 - Changelog file
 - Implemented importing Annotations
 - Implemented importing publication Highlights
+- Implemented importing Bible Highlights
 
 ### Changed
 
