@@ -895,7 +895,7 @@ class ImportAnnotations():
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             count += 1
-            attribs = re.split(',', line, 6)
+            attribs = re.split(',', line.rstrip(), 6)
             print(attribs)
             location_id = self.add_location(attribs)
             if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
@@ -939,21 +939,76 @@ class ImportHighlights():
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             count += 1
-            attribs = re.split(',', line, 6)
-            print(attribs)
-            location_id = self.add_location(attribs)
-            if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
-                self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+            attribs = re.split(',', line.rstrip().replace("None", ""))
+            print(attribs[6])
+            if attribs[6]:
+                self.import_bible(attribs)
             else:
-                self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+                self.import_publication(attribs)
         self.cur.execute("COMMIT;")
         return count
 
-    def add_location(self, attribs):
-        # Add new location if it doesn't already exist
-        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {int(attribs[0])}, {int(attribs[1])}, '{attribs[2]}', {int(attribs[3])}, {int(attribs[4])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])});")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])};").fetchone()
+    def add_usermark(self, attribs, location_id):
+        # Add new usermark if it doesn't already exist
+        unique_id = uuid.uuid1()
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {int(attribs[4])}, {location_id}, 0, '{unique_id}', {int(attribs[5])} WHERE NOT EXISTS ( SELECT 1 FROM UserMark WHERE ColorIndex = {int(attribs[4])} AND LocationId = {location_id} AND Version = {int(attribs[5])} );")
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE ColorIndex = {int(attribs[4])} AND LocationId = {location_id} AND Version = {int(attribs[5])};").fetchone()
         return result[0]
+
+
+    def add_scripture_location(self, attribs):
+        # Add new scripture location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs[10]}', {int(attribs[11])}, {int(attribs[6])}, {int(attribs[7])}, {int(attribs[12])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND BookNumber = {int(attribs[6])} AND ChapterNumber = {int(attribs[7])} );")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND BookNumber = {int(attribs[6])} AND ChapterNumber = {int(attribs[7])};").fetchone()
+        return result[0]
+
+    def import_bible(self, attribs):
+        location_id = self.add_scripture_location(attribs)
+        usermark_id = self.add_usermark(attribs, location_id)
+        result = self.cur.execute(f"SELECT * FROM BlockRange WHERE UserMarkId = {usermark_id} AND Identifier = {int(attribs[1])};")
+        # if result.fetchone():
+        for row in result.fetchall():
+            print(row)
+        return
+            # Note with this title at that location already exists
+        #     unique_id = result[0]
+        #     # Update the note
+        #     sql = f"UPDATE Note SET UserMarkId = {usermark}, Content = '{note}' WHERE Guid = '{unique_id}';"
+        # else:
+        #     # Note is new...
+        #     unique_id = uuid.uuid1()
+        #     # Add new note
+        #     sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark}, {location_scripture}, '{title}', '{note}', 2, {attribs['VER']});"
+        # self.cur.execute(sql)
+        # # Get id of note
+        # note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+
+
+    def add_publication_location(self, attribs):
+        # Add new location if it doesn't already exist
+        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {int(attribs[9])}, '{attribs[10]}', {int(attribs[11])}, {int(attribs[8])}, {int(attribs[12])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND IssueTagNumber = {int(attribs[9])} AND DocumentId = {int(attribs[8])} AND Type = {int(attribs[12])});")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND IssueTagNumber = {int(attribs[9])} AND DocumentId = {int(attribs[8])} AND Type = {int(attribs[12])};").fetchone()
+        return result[0]
+
+    def import_publication(self, attribs):
+        # TODO: needs testing
+        location_id = self.add_publication_location(attribs)
+        usermark_id = self.add_usermark(attribs, location_id)
+        result = self.cur.execute(f"SELECT * FROM BlockRange join UserMark USING (UserMarkId) where Identifier = {int(attribs[1])} AND LocationId = {location_id};")
+        ns = int(attribs[2])
+        ne = int(attribs[3])
+        blocks = []
+        for row in result.fetchall():
+            cs = row[3]
+            ce = row[4]
+            if ce >= ns and ne >= cs:
+                ns = min(cs, ns)
+                ne = max(ce, ne)
+                blocks.append(row[0])
+        block = str(blocks).replace('[', '(').replace(']', ')')
+        self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
+        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ({int(attribs[0])}, {int(attribs[1])}, {ns}, {ne}, {usermark_id});")
+        return
 
 
 class ImportNotes():
@@ -1060,18 +1115,18 @@ class ImportNotes():
     def import_bible(self, attribs, title, note):
         location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        usermark = self.add_usermark(attribs, location_bible)
+        usermark_id = self.add_usermark(attribs, location_bible)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
         if result:
             # Note with this title at that location already exists
             unique_id = result[0]
             # Update the note
-            sql = f"UPDATE Note SET UserMarkId = {usermark}, Content = '{note}' WHERE Guid = '{unique_id}';"
+            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}' WHERE Guid = '{unique_id}';"
         else:
             # Note is new...
             unique_id = uuid.uuid1()
             # Add new note
-            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark}, {location_scripture}, '{title}', '{note}', 2, {attribs['VER']});"
+            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', 2, {attribs['VER']});"
         self.cur.execute(sql)
         # Get id of note
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
