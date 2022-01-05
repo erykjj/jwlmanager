@@ -4,6 +4,7 @@
 ### Added
 - Changelog file
 - Implemented importing Annotations
+- Implemented importing publication Highlights
 
 ### Changed
 
