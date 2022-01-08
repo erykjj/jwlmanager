@@ -939,13 +939,18 @@ class ImportHighlights():
             pass
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
-            count += 1
-            attribs = re.split(',', line.rstrip().replace("None", ""))
-            if attribs[6]:
-                location_id = self.add_scripture_location(attribs)
-            else:
-                location_id = self.add_publication_location(attribs)
-            self.import_highlight(attribs, location_id)
+            try:
+                count += 1
+                attribs = re.split(',', line.rstrip().replace("None", ""))
+                if attribs[6]:
+                    location_id = self.add_scripture_location(attribs)
+                else:
+                    location_id = self.add_publication_location(attribs)
+                self.import_highlight(attribs, location_id)
+            except:
+                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                self.cur.execute("ROLLBACK;")
+                return 0
         self.cur.execute("COMMIT;")
         return count
 
@@ -1052,7 +1057,7 @@ class ImportNotes():
                     QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
                     return 0
             except:
-                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry:\n{attribs}', QMessageBox.Abort)
+                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
         self.cur.execute("COMMIT;")
