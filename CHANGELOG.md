@@ -4,8 +4,8 @@
 ### Added
 - Changelog file
 - Implemented importing Annotations
-- Implemented importing publication Highlights
-- Implemented importing Bible Highlights
+- Implemented importing Highlights
+- Added some exception handling on failed imports
 
 ### Changed
 
@@ -14,6 +14,9 @@
 - Adjusted Annotations export to work better with importing
 
 ### Fixed
+
+- Line-breaks in Annotations
+
 ### Removed
 ____
 ## [0.0.9] - 2022-01-02

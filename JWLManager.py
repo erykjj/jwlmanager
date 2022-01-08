@@ -861,7 +861,8 @@ class ExportItems():
         for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"):
             self.export_file.write(f"\n{row[0]}")
             for item in range(1,7):
-                self.export_file.write(f",{row[item]}")
+                string = str(row[item]).replace("\n", r"\n")
+                self.export_file.write(f",{string}")
 
     def export_annotations_header(self):
         self.export_file.write('{ANNOTATIONS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
@@ -900,10 +901,11 @@ class ImportAnnotations():
                 count += 1
                 attribs = re.split(',', line.rstrip(), 6)
                 location_id = self.add_location(attribs)
+                value = attribs[6].replace(r"\n", "\n")
                 if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
-                    self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+                    self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
                 else:
-                    self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+                    self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{value}');")
             except:
                 QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
