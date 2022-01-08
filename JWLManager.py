@@ -394,7 +394,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def export(self):
         reply = QMessageBox.question(self, 'Export',
-                f"{self.selected_items} items will be EXPORTED.\nProceed?",
+                f"{self.selected_items} items will be EXPORTED. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
@@ -425,7 +425,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def import_file(self):
         reply = QMessageBox.warning(self, 'Import',
-                "Make sure your import file is properly formatted.\n\nImporting will modify the archive.\nProceed?",
+                "Make sure your import file is properly formatted.\n\nImporting will modify the archive. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
@@ -492,7 +492,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def reindex(self):
         reply = QMessageBox.information(self, 'Reindex',
-                'This may take a few seconds.\nProceed?',
+                'This may take a few seconds. Proceed?',
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
@@ -896,13 +896,18 @@ class ImportAnnotations():
             pass
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
-            count += 1
-            attribs = re.split(',', line.rstrip(), 6)
-            location_id = self.add_location(attribs)
-            if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
-                self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
-            else:
-                self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+            try:
+                count += 1
+                attribs = re.split(',', line.rstrip(), 6)
+                location_id = self.add_location(attribs)
+                if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
+                    self.cur.execute(f"UPDATE InputField SET Value = '{attribs[6]}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+                else:
+                    self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{attribs[6]}');")
+            except:
+                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                self.cur.execute("ROLLBACK;")
+                return 0
         self.cur.execute("COMMIT;")
         return count
 
