@@ -974,15 +974,12 @@ class ImportHighlights():
         return result[0]
 
     def add_usermark(self, attribs, location_id):
-        # Add new usermark if it doesn't already exist
-        # Perhaps should add one in any case?? - what happens when color is changed??
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {int(attribs[4])}, {location_id}, 0, '{unique_id}', {int(attribs[5])} WHERE NOT EXISTS ( SELECT 1 FROM UserMark WHERE ColorIndex = {int(attribs[4])} AND LocationId = {location_id} AND Version = {int(attribs[5])} );")
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE ColorIndex = {int(attribs[4])} AND LocationId = {location_id} AND Version = {int(attribs[5])};").fetchone()
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {int(attribs[4])}, {location_id}, 0, '{unique_id}', {int(attribs[5])};")
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
     def import_highlight(self, attribs, location_id):
-        # TODO: needs testing
         usermark_id = self.add_usermark(attribs, location_id)
         result = self.cur.execute(f"SELECT * FROM BlockRange join UserMark USING (UserMarkId) where Identifier = {int(attribs[1])} AND LocationId = {location_id};")
         ns = int(attribs[2])
