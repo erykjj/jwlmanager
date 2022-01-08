@@ -1037,21 +1037,32 @@ class ImportNotes():
         self.cur.execute("BEGIN;")
         notes = self.import_file.read().replace("'", "''")
         for item in re.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, re.S):
-            count += 1
-            attribs = self.process_header(item.group(1))
-            title = item.group(2)
-            note = item.group(3)
-            if attribs['CAT'] == 'BIBLE':
-                self.import_bible(attribs, title, note)
-            elif attribs['CAT'] == 'PUBLICATION':
-                self.import_publication(attribs, title, note)
-            elif attribs['CAT'] == 'INDEPENDENT':
-                self.import_independent(attribs, title, note)
-            else:
-                QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
+            try:
+                count += 1
+                attribs = self.process_header(item.group(1))
+                title = item.group(2)
+                note = item.group(3)
+                if attribs['CAT'] == 'BIBLE':
+                    self.import_bible(attribs, title, note)
+                elif attribs['CAT'] == 'PUBLICATION':
+                    self.import_publication(attribs, title, note)
+                elif attribs['CAT'] == 'INDEPENDENT':
+                    self.import_independent(attribs, title, note)
+                else:
+                    QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
+                    return 0
+            except:
+                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry:\n{attribs}', QMessageBox.Abort)
+                self.cur.execute("ROLLBACK;")
                 return 0
         self.cur.execute("COMMIT;")
         return count
+
+    def process_header(self, line):
+        attribs = {}
+        for (key, value) in re.findall('{(.*?)=(.*?)}', line):
+            attribs[key] = value
+        return attribs
 
 
     def process_tags(self, note_id, tags):
@@ -1154,13 +1165,6 @@ class ImportNotes():
         # Get id of note
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
-
-
-    def process_header(self, line):
-        attribs = {}
-        for (key, value) in re.findall('{(.*?)=(.*?)}', line):
-            attribs[key] = value
-        return attribs
 
 
 class Reindex():
