@@ -261,6 +261,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText("* NEW ARCHIVE *  ")
         with ZipFile(self.resource_path("res/blank.jwlibrary"),"r") as zipped:
             zipped.extractall(tmp_path)
+        file = open(f"{tmp_path}/manifest.json", 'w')
+        text = r'{"name":"UserDataBackup","creationDate":"' + datetime.now().strftime("%Y-%m-%d") + r'","version":1,"type":0,"userDataBackup":{"userMarkCount":0,"lastModifiedDate":"' + datetime.now().strftime("%Y-%m-%dT%H:%M") + r'","deviceName":"JWLManager","databaseName":"userData.db","hash":"","schemaVersion":8}}'
+        file.write(text)
+        file.close
         self.file_loaded()
 
     def load_file(self):
