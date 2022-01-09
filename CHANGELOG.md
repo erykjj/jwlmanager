@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- app icon
+
 ### Changed
 
 ### Fixed
