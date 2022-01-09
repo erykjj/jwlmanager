@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.0.10] - 2022-01-08
+### Added
 - Changelog file
 - Implemented importing Annotations
 - Implemented importing Highlights
@@ -12,13 +21,12 @@
 - Enabled Save As as soon as an archive is opened
 - Updated README with info on importing and adding
 - Adjusted Annotations export to work better with importing
+- Add current date to new archive manifest
 
 ### Fixed
 
 - Line-breaks in Annotations
 
-### Removed
-____
 ## [0.0.9] - 2022-01-02
 ### Added
 - Implemented importing Notes
@@ -45,6 +53,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.0.10]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.10
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
 [0.0.8]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
 [0.0.7]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.7
