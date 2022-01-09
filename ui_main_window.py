@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowDiXlbA.ui'
+## Form generated from reading UI file 'main_windowCFISzx.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QSize(560, 600))
         MainWindow.setMaximumSize(QSize(16777215, 16777215))
         icon1 = QIcon()
-        icon1.addFile(self.resource_path('icons/project_36.ico'), QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(self.resource_path('icons/project_72.png'), QSize(), QIcon.Normal, QIcon.Off)
         MainWindow.setWindowIcon(icon1)
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
         self.actionOpen = QAction(MainWindow)
