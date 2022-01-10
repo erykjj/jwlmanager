@@ -461,7 +461,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def add_favorite(self):
         text = AddFavorites(self.publications, self.languages).message
         self.statusBar.showMessage(text, 3500)
-        # self.statusBar.showMessage(f" {pub} {lang}", 3500)
         self.regroup()
         self.tree_selection()
 
@@ -571,14 +570,14 @@ class BuildTree():
             self.build_index(publication, language, issue, tag, color, item)
 
     def get_bookmarks(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId, '', 0 FROM Bookmark b JOIN Location l USING (LocationId) GROUP BY b.PublicationLocationId;"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId FROM Bookmark b JOIN Location l USING (LocationId);"
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
             issue = self.process_issue(row[3])
-            tag = (row[5] or "* UN-TAGGED *", None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
+            tag = ('', None)
+            color = ('Grey', None)
             self.build_index(publication, language, issue, tag, color, item)
 
     def get_favorites(self):
@@ -798,6 +797,7 @@ class AddFavorites():
 
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
+      # TODO: only need position of Favorites, not all tags
       tags = {}
       results = self.cur.execute("SELECT t.Name, t.TagId, ifnull(max(tm.Position), -1) AS Position FROM Tag t, TagMap tm WHERE tm.TagId = t.TagId GROUP BY t.Name;").fetchall()
       if results:
