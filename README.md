@@ -1,6 +1,6 @@
-## JWLManager
+JWLManager
+====
 
-____
 ### Purpose
 
 This application allows for viewing and performing various operations on a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). This resulting modified *.jwlibrary* file can then be restored within the app.
