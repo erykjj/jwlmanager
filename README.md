@@ -1,14 +1,16 @@
 ## JWLManager
 
+____
 ### Purpose
 
 This application allows for viewing and performing various operations on a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). This resulting modified *.jwlibrary* file can then be restored within the app.
 
 In addition to the main functions of exporting, importing, and deleting, the application can also clean up any residual/unused records from the database and re-index the various tables within the database.
+
 ____
 ### Usage
 
-This is a Python3 script implementing the QT framework.
+This is a Python3 script implementing the Qt5 framework.
 
 If you have Python3 installed, execute to run:
 
@@ -25,7 +27,8 @@ $ ./JWLManager.py
 
 You may have to `pip install` some of the required libraries (*PySide2*, etc.).
 
-You can find a single-file <u>Windows executable</u> in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
+You can find a Windows executable in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
+
 ____
 ### Operation
 
@@ -54,9 +57,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 
 #### <u>Adding</u>
 
-For Favorites only. Most useful for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself.
-
-**Not implemented yet**
+For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. **Make sure the Bible translation you add exists in the selected language**, as strange things can happen if it does not.
 
 #### <u>Deleting</u>
 
@@ -119,9 +120,11 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 #### <u>Reindexing</u>
 
 This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take a few seconds, depending on the number of records the database contains. It does not need to be run more than once in a while.
+
 ____
 ### Feedback
 
 Feel free to [get in touch](https://gitlab.com/erykj/jwlmanager/-/issues) and post any issues and suggestions.
+
 ____
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.

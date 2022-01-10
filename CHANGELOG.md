@@ -10,6 +10,8 @@
 
 ### Fixed
 
+- Corrected Bookmark count
+
 ### Removed
 ____
 ## [0.0.10] - 2022-01-08
