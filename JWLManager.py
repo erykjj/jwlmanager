@@ -131,8 +131,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.button_export.clicked.connect(self.export)
-        self.button_delete.clicked.connect(self.delete)
         self.button_import.clicked.connect(self.import_file)
+        self.button_add.clicked.connect(self.add_favorite)
+        self.button_delete.clicked.connect(self.delete)
 
 
     def expand_all(self):
@@ -457,6 +458,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.tree_selection()
 
 
+    def add_favorite(self):
+        text = AddFavorites(self.publications, self.languages).message
+        self.statusBar.showMessage(text, 3500)
+        # self.statusBar.showMessage(f" {pub} {lang}", 3500)
+        self.regroup()
+        self.tree_selection()
+
+
     def delete(self):
         reply = QMessageBox.warning(self, 'Delete',
                 f"Are you sure you want to\nDELETE these {self.selected_items} items?",
@@ -731,6 +740,96 @@ class BuildTree():
         child.setData(1, Qt.DisplayRole, 0)
         child.setTextAlignment(1, Qt.AlignCenter)
         return child
+
+
+class AddFavorites():
+    def __init__(self, publications = [], languages = []):
+        self.publications = publications
+        self.languages = languages
+        self.message = ""
+
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA foreign_keys = 'OFF';")
+        self.add_favorite()
+        self.cur.execute("PRAGMA foreign_keys = 'ON';")
+        con.commit()
+        con.close()
+
+    def add_dialog(self):
+        dialog = QDialog()
+        dialog.setWindowTitle("Add Favorite")
+        label = QLabel(dialog)
+        label.setText("Select the publication and language to add.\nMake sure the publication exists in the selected language!")
+
+        publication = QComboBox(dialog)
+        pubs = []
+        for pub in self.publications.values():
+            if pub[3] == "Bibles":
+                pubs.append(pub[1])
+        publication.addItem('NONE')
+        publication.addItems(sorted(pubs))
+        publication.setStyleSheet("QComboBox { combobox-popup: 0; }");
+
+        language = QComboBox(dialog)
+        language.addItem('NONE')
+        for lang in sorted(self.languages.values()):
+            language.addItem(lang[0])
+        language.setMaxVisibleItems(15)
+        language.setStyleSheet("QComboBox { combobox-popup: 0; }");
+
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(label)
+        layout.addWidget(publication)
+        layout.addWidget(language)
+        layout.addWidget(buttons)
+        dialog.setLayout(layout)
+
+        if dialog.exec():
+            return publication.currentText(), language.currentText()
+        else:
+            return 'NONE', 'NONE'
+
+    def tag_positions(self):
+      self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
+      tags = {}
+      results = self.cur.execute("SELECT t.Name, t.TagId, ifnull(max(tm.Position), -1) AS Position FROM Tag t, TagMap tm WHERE tm.TagId = t.TagId GROUP BY t.Name;").fetchall()
+      if results:
+          for row in results:
+              tags[row[0]] = [row[1], row[2]]
+      else:
+          tags['Favorite'] = [1, -1]
+      return tags
+
+    def add_location(self, symbol, language):
+      self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{symbol}', {language}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1 );")
+      result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
+      return result[0]
+
+    def add_favorite(self):
+        pub, lang = self.add_dialog()
+        if pub == "NONE" or lang == "NONE":
+            self.message = " Nothing added!"
+            return 
+        publication = [k for k, v in self.publications.items() if v[1] == pub][0]
+        language = [k for k, v in self.languages.items() if v[0] == lang][0]
+        location = self.add_location(publication, language)
+        result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
+        if result:
+            self.message = f'Favorite for "{pub}" in {lang} already exists.'
+            return
+        tags = self.tag_positions()
+        tag_id = tags['Favorite'][0]
+        position = tags['Favorite'][1] + 1
+        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
+        self.message = f'Added favorite for "{pub}" in {lang}.'
+        return 1
 
 
 class DeleteItems():
