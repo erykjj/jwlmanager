@@ -9,6 +9,8 @@
 
 ### Changed
 
+- Speeded up reindexing
+
 ### Fixed
 
 - Corrected Bookmark count
