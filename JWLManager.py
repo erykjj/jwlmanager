@@ -1322,13 +1322,15 @@ class Reindex():
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
                                 PRAGMA foreign_keys = 'OFF'; \
+                                PRAGMA ignore_check_constraints = TRUE; \
                                 BEGIN;")
         self.reindex_notes()
         self.reindex_highlights()
         self.reindex_tags()
         self.reindex_ranges()
         self.reindex_locations()
-        self.cur.execute('PRAGMA foreign_keys = "ON";')
+        self.cur.executescript('PRAGMA foreign_keys = "ON"; \
+                                PRAGMA ignore_check_constraints = FALSE;')
         con.commit()
         con.close()
 
@@ -1340,10 +1342,7 @@ class Reindex():
 
     def update_table(self, table, field):
         app.processEvents()
-        sql = f"""
-            UPDATE {table} SET {field} = (SELECT New - 999999 FROM CrossReference WHERE CrossReference.Old = {table}.{field});
-            UPDATE {table} SET {field} = {field} + 999999;"""
-        self.cur.executescript(sql)
+        self.cur.execute(f"UPDATE {table} SET {field} = {field};")
         self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
