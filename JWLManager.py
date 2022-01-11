@@ -704,26 +704,17 @@ class BuildTree():
             return ('', '')
 
     def process_title(self, IssueTagNumber, BookNumber, ChapterNumber, IsssueTitle):
-        # TODO: not showing title on items that have no issue and/or chapter!!
         issue = (None, None)
         title = (None, None)
         if IssueTagNumber == "0":
             IssueTagNumber = None
-        # if not BookNumber and IssueTagNumber:
-        #     issue = self.process_issue(IssueTagNumber)
-        #     if self.detailed:
-        #         title = (IsssueTitle, None)
-        # else:
-        #     if self.detailed and BookNumber:
-        #         issue = (self.books[BookNumber], str(BookNumber))
-        #         title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         if IssueTagNumber:
             issue = self.process_issue(IssueTagNumber)
             if self.detailed:
                 title = (IsssueTitle, None)
         elif BookNumber:
             if self.detailed:
-                issue = (self.books[BookNumber], str(BookNumber))
+                issue = (self.books[BookNumber], f"Book #{BookNumber}")
                 title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         else:
             if self.detailed:
