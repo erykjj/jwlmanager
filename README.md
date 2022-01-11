@@ -47,6 +47,7 @@ The ***View*** menu has some additional options (also accessible directly via th
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
 * **Unselect All (Ctrl+Z)** - unselect everything
+* **Detailed (Ctrl+D)** - add more detail to the tree: book and chapter in the case of the Bibles, article title in case of other publications; be aware that this will slow down the tree construction (wait patiently)
 * **Grouped (Ctrl+G)** - when grouping by publication, this further classifies the publications by type (books, brochures, periodicals, etc.)
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
