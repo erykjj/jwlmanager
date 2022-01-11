@@ -87,12 +87,15 @@ class Window(QMainWindow, Ui_MainWindow):
     def read_res(self):
         self.publications = {}
         self.languages = {}
+        self.books = {}
         con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
         cur = con.cursor()
         for row in cur.execute("SELECT * FROM Publications;"):
             self.publications[row[0]] = row[1:]
         for row in cur.execute("SELECT * FROM Languages;"):
             self.languages[row[0]] = row[1:]
+        for row in cur.execute("SELECT BookNumber, StandardBookName FROM BookNames;"):
+            self.books[row[0]] = row[1]
         con.close()
 
     def resource_path(self, relative_path):
@@ -219,10 +222,13 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
 
     def regroup(self):
-        tree = BuildTree(self.treeWidget, self.publications, self.languages,
-                          self.combo_category.currentText(),
+        self.statusBar.showMessage(" Please wait...")
+        app.processEvents()
+        tree = BuildTree(self.treeWidget, self.books, self.publications,
+                          self.languages, self.combo_category.currentText(),
                           self.combo_grouping.currentText(), self.title_format,
-                          self.grouped)
+                          self.detailed, self.grouped)
+        self.statusBar.showMessage(" ", 1)
         self.leaves = tree.leaves
         self.total.setText(f"**{tree.total:,}**")
 
@@ -532,14 +538,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, tree, publications, languages, category='Note', grouping='Publication', title='code', grouped=True):
+    def __init__(self, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True):
         self.tree = tree
         self.tree.clear()
         self.category = category
+        self.detailed = detailed
         self.grouping = grouping
         self.grouped = grouped
         self.publications = publications
         self.languages = languages
+        self.books = books
         self.title_format = title
         self.nodes = {}
         self.leaves = {}
@@ -565,16 +573,29 @@ class BuildTree():
         elif self.category == "Annotations":
             self.get_annotations()
 
+
     def get_annotations(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, '', 0 FROM InputField JOIN Location l USING (LocationId);"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);"
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
-            issue = self.process_issue(row[3])
-            tag = (row[5] or "* UN-TAGGED *", None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            self.build_index(publication, language, issue, tag, color, item)
+            if row[3]:
+                issue = self.process_issue(row[3])
+                if self.detailed:
+                    title = (row[7], '')
+                else:
+                    title = ('', '')
+            else:
+                if self.detailed:
+                    issue = (row[5], '')
+                    title = (row[6], '')
+                else:
+                    issue = ('', '')
+                    title = ('', '')
+            tag = ('', None)
+            color = ('Grey', None)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
     def get_bookmarks(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId FROM Bookmark b JOIN Location l USING (LocationId);"
@@ -616,19 +637,29 @@ class BuildTree():
             publication = ("Other", "* INDEPENDENT *", None, None)
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
+            title = (None, None)
             tag = (row[5] or "* UN-TAGGED *", None)
             color = ('Grey', None)
-            self.build_index(publication, language, issue, tag, color, item)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
-        sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
+        sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or '* MEDIA *')
             language = self.process_language(row[2])
-            issue = self.process_issue(row[3])
+            issue = (None, None)
+            title = (None, None)
+            if not row[7] and row[3]:
+                issue = self.process_issue(row[3])
+                if self.detailed:
+                    title = (row[9], None)
+            else:
+                if self.detailed and row[7]:
+                    issue = (self.books[row[7]], str(row[7]))
+                    title = ("Ch. " + str(row[8]).rjust(3, ' '), None)
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            self.build_index(publication, language, issue, tag, color, item)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
 
     def process_name(self, name):
@@ -693,7 +724,7 @@ class BuildTree():
             return ('', '')
 
 
-    def build_index(self, publication, language, issue, tag, color, item):
+    def build_index(self, publication, language, issue, title, tag, color, item):
         self.total += 1
         index = ''
         parent = self.tree
@@ -703,15 +734,15 @@ class BuildTree():
         publication = (publication[1], publication[2])
         if self.grouping == "Publication":
             if self.grouped:
-                levels = (group, publication, language, issue)
+                levels = (group, publication, language, issue, title)
             else:
-                levels = (publication, language, issue)
+                levels = (publication, language, issue, title)
         elif self.grouping == "Language":
-            levels = (language, publication, issue)
+            levels = (language, publication, issue, title)
         elif self.grouping == "Tag":
-            levels = (tag, publication, language, issue)
+            levels = (tag, publication, language, issue, title)
         elif self.grouping == "Color":
-            levels = (color, publication, language, issue)
+            levels = (color, publication, language, issue, title)
         elif self.grouping == "Year":
             if issue[0]:
                 year = (issue[0][:4], '')
@@ -719,7 +750,7 @@ class BuildTree():
                 year = ('* NO DATE *', '')
             if year[0] == issue[0]:
                 issue = ('', '')
-            levels = (year, publication, language, issue)
+            levels = (year, publication, language, issue, title)
         for level in levels:
             if level[0]:
                 index += f".{level[0]}"
