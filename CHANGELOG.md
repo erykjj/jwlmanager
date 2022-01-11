@@ -5,6 +5,7 @@
 
 - App icon
 - Implemented adding Favorites
+- Added detailed view
 
 ### Changed
 
