@@ -797,15 +797,12 @@ class AddFavorites():
 
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
-      # TODO: only need position of Favorites, not all tags
-      tags = {}
-      results = self.cur.execute("SELECT t.Name, t.TagId, ifnull(max(tm.Position), -1) AS Position FROM Tag t, TagMap tm WHERE tm.TagId = t.TagId GROUP BY t.Name;").fetchall()
-      if results:
-          for row in results:
-              tags[row[0]] = [row[1], row[2]]
+      tag_id = self.cur.execute("SELECT TagId FROM Tag WHERE Type = 0;").fetchone()[0]
+      position = self.cur.execute(f"SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};").fetchone()
+      if position[0] != None:
+          return tag_id, position[0] + 1
       else:
-          tags['Favorite'] = [1, -1]
-      return tags
+          return tag_id, 0
 
     def add_location(self, symbol, language):
       self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{symbol}', {language}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1 );")
@@ -824,9 +821,7 @@ class AddFavorites():
         if result:
             self.message = f'Favorite for "{pub}" in {lang} already exists.'
             return
-        tags = self.tag_positions()
-        tag_id = tags['Favorite'][0]
-        position = tags['Favorite'][1] + 1
+        tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
         self.message = f'Added favorite for "{pub}" in {lang}.'
         return 1

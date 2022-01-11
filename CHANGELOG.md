@@ -1,4 +1,4 @@
-# Changelog
+# JWLManager Changelog
 
 ## [Unreleased]
 ### Added
