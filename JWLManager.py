@@ -743,8 +743,9 @@ class BuildTree():
         elif self.grouping == "Color":
             levels = (color, publication, language, issue, title)
         elif self.grouping == "Year":
-            if issue[0]:
+            if issue[0] and re.match('\d{4}', issue[0]):
                 year = (issue[0][:4], '')
+                print (issue[0],year)
             else:
                 year = ('* NO DATE *', '')
             if year[0] == issue[0]:
