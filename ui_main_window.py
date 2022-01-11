@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowWjlnrM.ui'
+## Form generated from reading UI file 'main_windowuzinjN.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -116,6 +116,10 @@ class Ui_MainWindow(object):
         icon13 = QIcon()
         icon13.addFile(self.resource_path('icons/icons8-add-file-64.png'), QSize(), QIcon.Normal, QIcon.Off)
         self.actionNew.setIcon(icon13)
+        self.actionDetailed = QAction(MainWindow)
+        self.actionDetailed.setObjectName(u"actionDetailed")
+        self.actionDetailed.setCheckable(True)
+        self.actionDetailed.setEnabled(False)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
@@ -268,7 +272,9 @@ class Ui_MainWindow(object):
         self.menuView.addAction(self.actionSelect_All)
         self.menuView.addAction(self.actionUnselect_All)
         self.menuView.addSeparator()
+        self.menuView.addAction(self.actionDetailed)
         self.menuView.addAction(self.actionGrouped)
+        self.menuView.addSeparator()
         self.menuView.addAction(self.menuTitle_View.menuAction())
         self.menuTitle_View.addAction(self.actionCode_Title)
         self.menuTitle_View.addAction(self.actionShort_Title)
@@ -366,6 +372,10 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.actionNew.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+N", None))
+#endif // QT_CONFIG(shortcut)
+        self.actionDetailed.setText(QCoreApplication.translate("MainWindow", u"&Detailed", None))
+#if QT_CONFIG(shortcut)
+        self.actionDetailed.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+D", None))
 #endif // QT_CONFIG(shortcut)
         self.label_total.setText(QCoreApplication.translate("MainWindow", u"Total: ", None))
         self.label_selected.setText(QCoreApplication.translate("MainWindow", u"Selected: ", None))
