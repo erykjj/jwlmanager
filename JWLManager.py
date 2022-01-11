@@ -94,7 +94,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.publications[row[0]] = row[1:]
         for row in cur.execute("SELECT * FROM Languages;"):
             self.languages[row[0]] = row[1:]
-        for row in cur.execute("SELECT BookNumber, StandardBookName FROM BookNames;"):
+        for row in cur.execute("SELECT BookNumber, StandardBookName FROM BookNames WHERE Language = 1;"):
+            # Note: Bible books in English only
             self.books[row[0]] = row[1]
         con.close()
 
@@ -580,65 +581,53 @@ class BuildTree():
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
-            if row[3]:
-                issue = self.process_issue(row[3])
-                if self.detailed:
-                    title = (row[7], '')
-                else:
-                    title = ('', '')
-            else:
-                if self.detailed:
-                    issue = (row[5], '')
-                    title = (row[6], '')
-                else:
-                    issue = ('', '')
-                    title = ('', '')
+            issue, title = self.process_title(row[3], row[5], row[6], row[7])
             tag = ('', None)
             color = ('Grey', None)
             self.build_index(publication, language, issue, title, tag, color, item)
 
     def get_bookmarks(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId FROM Bookmark b JOIN Location l USING (LocationId);"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);"
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
-            issue = self.process_issue(row[3])
+            issue, title = self.process_title(row[3], row[5], row[6], row[7])
             tag = ('', None)
             color = ('Grey', None)
-            self.build_index(publication, language, issue, tag, color, item)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
     def get_favorites(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId, 'Favorite', 0 FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL order by tm.Position;"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL order by tm.Position;"
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
-            issue = self.process_issue(row[3])
-            tag = (row[5] or "* UN-TAGGED *", None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            self.build_index(publication, language, issue, tag, color, item)
+            issue, title = self.process_title(row[3], None, None, None)
+            tag = ("Favorite", None)
+            color = ('Grey', None)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
     def get_highlights(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, '', ColorIndex FROM UserMark JOIN Location l USING (LocationId);"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
         for row in self.cur.execute(sql):
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
-            issue = self.process_issue(row[3])
-            tag = (row[5] or "* UN-TAGGED *", None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            self.build_index(publication, language, issue, tag, color, item)
+            issue, title = self.process_title(row[3], row[6], row[7], row[8])
+            tag = (None, None)
+            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
+            self.build_index(publication, language, issue, title, tag, color, item)
 
     def get_notes(self):
-        sql = "SELECT 0, 0, '', '', NoteId, GROUP_CONCAT(t.Name), 0 FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
+        sql = "SELECT NoteId, GROUP_CONCAT(t.Name) FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
         for row in self.cur.execute(sql):
-            item = row[4]
+            item = row[0]
             publication = ("Other", "* INDEPENDENT *", None, None)
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
             title = (None, None)
-            tag = (row[5] or "* UN-TAGGED *", None)
+            tag = (row[1] or "* UN-TAGGED *", None)
             color = ('Grey', None)
             self.build_index(publication, language, issue, title, tag, color, item)
 
@@ -647,16 +636,7 @@ class BuildTree():
             item = row[4]
             publication = self.process_name(row[1] or '* MEDIA *')
             language = self.process_language(row[2])
-            issue = (None, None)
-            title = (None, None)
-            if not row[7] and row[3]:
-                issue = self.process_issue(row[3])
-                if self.detailed:
-                    title = (row[9], None)
-            else:
-                if self.detailed and row[7]:
-                    issue = (self.books[row[7]], str(row[7]))
-                    title = ("Ch. " + str(row[8]).rjust(3, ' '), None)
+            issue, title = self.process_title(row[3], row[7], row[8], row[9])
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
             self.build_index(publication, language, issue, title, tag, color, item)
@@ -723,6 +703,32 @@ class BuildTree():
         else:
             return ('', '')
 
+    def process_title(self, IssueTagNumber, BookNumber, ChapterNumber, IsssueTitle):
+        # TODO: not showing title on items that have no issue and/or chapter!!
+        issue = (None, None)
+        title = (None, None)
+        if IssueTagNumber == "0":
+            IssueTagNumber = None
+        # if not BookNumber and IssueTagNumber:
+        #     issue = self.process_issue(IssueTagNumber)
+        #     if self.detailed:
+        #         title = (IsssueTitle, None)
+        # else:
+        #     if self.detailed and BookNumber:
+        #         issue = (self.books[BookNumber], str(BookNumber))
+        #         title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
+        if IssueTagNumber:
+            issue = self.process_issue(IssueTagNumber)
+            if self.detailed:
+                title = (IsssueTitle, None)
+        elif BookNumber:
+            if self.detailed:
+                issue = (self.books[BookNumber], str(BookNumber))
+                title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
+        else:
+            if self.detailed:
+                title = (IsssueTitle, None)
+        return issue, title
 
     def build_index(self, publication, language, issue, title, tag, color, item):
         self.total += 1
