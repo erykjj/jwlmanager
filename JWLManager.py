@@ -765,17 +765,20 @@ class AddFavorites():
 
         publication = QComboBox(dialog)
         pubs = []
-        for pub in self.publications.values():
-            if pub[3] == "Bibles":
-                pubs.append(pub[1])
+        for pub in self.publications.keys():
+            if self.publications[pub][4] == 1:
+                pubs.append(f"{self.publications[pub][0]} ({pub})")
         publication.addItem('NONE')
         publication.addItems(sorted(pubs))
         publication.setStyleSheet("QComboBox { combobox-popup: 0; }");
 
         language = QComboBox(dialog)
+        langs = []
+        for lang in sorted(self.languages.keys()):
+            if self.languages[lang][3] == 1:
+                langs.append(self.languages[lang][0])
         language.addItem('NONE')
-        for lang in sorted(self.languages.values()):
-            language.addItem(lang[0])
+        language.addItems(sorted(langs))
         language.setMaxVisibleItems(15)
         language.setStyleSheet("QComboBox { combobox-popup: 0; }");
 
@@ -813,8 +816,9 @@ class AddFavorites():
         pub, lang = self.add_dialog()
         if pub == "NONE" or lang == "NONE":
             self.message = " Nothing added!"
-            return 
-        publication = [k for k, v in self.publications.items() if v[1] == pub][0]
+            return
+        pub = re.match('(.*?) \(.*?\)$', pub).group(1)
+        publication = [k for k, v in self.publications.items() if v[0] == pub][0]
         language = [k for k, v in self.languages.items() if v[0] == lang][0]
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
