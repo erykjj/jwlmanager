@@ -77,6 +77,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = False
         self.title_format = 'short'
         self.grouped = True
+        self.detailed = False
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
@@ -126,6 +127,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionShort_Title.triggered.connect(self.short_view)
         self.actionFull_Title.triggered.connect(self.full_view)
         self.actionGrouped.triggered.connect(self.grouping)
+        self.actionDetailed.triggered.connect(self.detailing)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -182,6 +184,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.title_format = 'full'
         self.regroup()
 
+
+    def detailing(self):
+        self.detailed = not self.detailed
+        self.regroup()
 
     def grouping(self):
         self.grouped = not self.grouped
@@ -299,6 +305,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSelect_All.setEnabled(True)
         self.actionUnselect_All.setEnabled(True)
         self.actionGrouped.setEnabled(True)
+        self.actionDetailed.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
         self.switchboard(self.combo_category.currentText())
 
