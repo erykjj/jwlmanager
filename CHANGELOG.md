@@ -3,20 +3,24 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.1.0] - 2022-01-11
+### Added
+
 - App icon
 - Implemented adding Favorites
 - Added detailed view
 
-### Changed
-
-- Speeded up reindexing
-
 ### Fixed
 
 - Corrected Bookmark count
+- Speeded up reindexing
 
-### Removed
-____
 ## [0.0.10] - 2022-01-08
 ### Added
 
@@ -67,6 +71,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.1.0
 [0.0.10]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.10
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
 [0.0.8]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
