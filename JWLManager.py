@@ -474,9 +474,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def add_favorite(self):
         text = AddFavorites(self.publications, self.languages).message
-        self.statusBar.showMessage(text, 3500)
-        self.regroup()
-        self.tree_selection()
+        self.statusBar.showMessage(text[1], 3500)
+        if text[0]:
+            self.archive_modified()
+            self.regroup()
+            self.tree_selection()
 
 
     def delete(self):
@@ -782,7 +784,7 @@ class AddFavorites():
     def __init__(self, publications = [], languages = []):
         self.publications = publications
         self.languages = languages
-        self.message = ""
+        self.message = (0, "")
 
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
@@ -805,7 +807,7 @@ class AddFavorites():
         for pub in self.publications.keys():
             if self.publications[pub][4] == 1:
                 pubs.append(f"{self.publications[pub][0]} ({pub})")
-        publication.addItem('NONE')
+        publication.addItem(' ')
         publication.addItems(sorted(pubs))
         publication.setStyleSheet("QComboBox { combobox-popup: 0; }");
 
@@ -814,7 +816,7 @@ class AddFavorites():
         for lang in sorted(self.languages.keys()):
             if self.languages[lang][3] == 1:
                 langs.append(self.languages[lang][0])
-        language.addItem('NONE')
+        language.addItem(' ')
         language.addItems(sorted(langs))
         language.setMaxVisibleItems(15)
         language.setStyleSheet("QComboBox { combobox-popup: 0; }");
@@ -833,7 +835,7 @@ class AddFavorites():
         if dialog.exec():
             return publication.currentText(), language.currentText()
         else:
-            return 'NONE', 'NONE'
+            return ' ', ' '
 
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
@@ -851,8 +853,8 @@ class AddFavorites():
 
     def add_favorite(self):
         pub, lang = self.add_dialog()
-        if pub == "NONE" or lang == "NONE":
-            self.message = " Nothing added!"
+        if pub == " " or lang == " ":
+            self.message = (0, " Nothing added!")
             return
         pub = re.match('(.*?) \(.*?\)$', pub).group(1)
         publication = [k for k, v in self.publications.items() if v[0] == pub][0]
@@ -860,11 +862,11 @@ class AddFavorites():
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
         if result:
-            self.message = f'Favorite for "{pub}" in {lang} already exists.'
+            self.message = (0, f'Favorite for "{pub}" in {lang} already exists.')
             return
         tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
-        self.message = f'Added favorite for "{pub}" in {lang}.'
+        self.message = (1, f'Added favorite for "{pub}" in {lang}.')
         return 1
 
 
