@@ -6,6 +6,7 @@
 ### Changed
 
 - Added Bible book number before name for better sorting
+- Made Grouped and Detailed view mutually exclusive
 
 ### Fixed
 
