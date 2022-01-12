@@ -191,10 +191,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def detailing(self):
         self.detailed = not self.detailed
+        if self.detailed:
+            self.grouped = False
+            self.actionGrouped.setChecked(False)
         self.regroup()
 
     def grouping(self):
         self.grouped = not self.grouped
+        if self.grouped:
+            self.detailed = False
+            self.actionDetailed.setChecked(False)
         self.regroup()
 
 
