@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.1.0'
+VERSION = 'v0.1.1'
 
 import os
 import re
@@ -716,7 +716,7 @@ class BuildTree():
                 title = (IsssueTitle, None)
         elif BookNumber:
             if self.detailed:
-                issue = (self.books[BookNumber], f"Book #{BookNumber}")
+                issue = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], '')
                 title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         else:
             if self.detailed:

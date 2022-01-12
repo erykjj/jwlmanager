@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Added Bible book number before name for better sorting
+
 ### Fixed
 
 ### Removed
