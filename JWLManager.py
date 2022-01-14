@@ -900,6 +900,7 @@ class DeleteItems():
     def delete(self, table, field):
         return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
 
+
 class ExportItems():
     def __init__(self, category='Note', items=[], fname='', current_archive=''):
         self.category = category
@@ -941,7 +942,7 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
     def export_bible(self):
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber,  l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,  n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n  JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId)  WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,  n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId)  WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])\
