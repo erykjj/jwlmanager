@@ -7,6 +7,7 @@
 
 - Added Bible book number before name for better sorting
 - Made Grouped and Detailed view mutually exclusive
+- Minor code clean-up
 
 ### Fixed
 

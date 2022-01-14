@@ -525,11 +525,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def reindex(self):
         # TODO: this alert may not be necessary
-        reply = QMessageBox.information(self, 'Reindex',
-                'This may take a few seconds. Proceed?',
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if reply == QMessageBox.No:
-            return
+        # reply = QMessageBox.information(self, 'Reindex',
+        #         'This may take a few seconds. Proceed?',
+        #         QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        # if reply == QMessageBox.No:
+        #     return
         self.trim_db()
         self.statusBar.showMessage(" Reindexing. Please wait...")
         app.processEvents()
