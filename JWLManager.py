@@ -533,15 +533,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        # self.pd = QProgressDialog("Please be patient...", None, 0, 14, self)
-        # self.pd.setWindowModality(Qt.WindowModal)
-        # self.pd.setWindowTitle('Reindexing')
-        # self.pd.setWindowFlag(Qt.FramelessWindowHint)
-        # self.pd.setModal(True)
-        # self.pd.setMinimumDuration(0)
         self.statusBar.showMessage(" Reindexing. Please wait...")
         app.processEvents()
-        # Reindex(self.pd)
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
@@ -1329,8 +1322,6 @@ class ImportNotes():
 
 class Reindex():
     def __init__(self):
-    # def __init__(self, progress):
-    #     self.progress = progress
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
@@ -1355,10 +1346,8 @@ class Reindex():
         self.cur.executescript(sql)
 
     def update_table(self, table, field):
-        # TODO: observe to make sure this works correctly
         app.processEvents()
         self.cur.execute(f"UPDATE {table} SET {field} = {field};")
-        # self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
         self.cur.execute('DROP TABLE CrossReference;')
