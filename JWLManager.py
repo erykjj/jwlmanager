@@ -887,36 +887,18 @@ class DeleteItems():
 
     def delete_items(self):
         if self.category == "Bookmarks":
-            return self.delete_bookmarks()
+            return self.delete("Bookmark", "PublicationLocationId")
         elif self.category == "Favorites":
-            return self.delete_favorites()
+            return self.delete("TagMap", "TagMapId")
         elif self.category == "Highlights":
-            return self.delete_highlights()
+            return self.delete("UserMark", "UserMarkId")
         elif self.category == "Notes":
-            return self.delete_notes()
+            return self.delete("Note", "NoteId")
         elif self.category == "Annotations":
-            return self.delete_annotations()
+            return self.delete("InputField", "TextTag")
 
-    def delete_annotations(self):
-        sql = f"DELETE FROM InputField WHERE TextTag IN {self.items};"
-        return self.cur.execute(sql).rowcount
-
-    def delete_bookmarks(self):
-        sql = f"DELETE FROM Bookmark WHERE PublicationLocationId IN {self.items};"
-        return self.cur.execute(sql).rowcount
-
-    def delete_favorites(self):
-        sql = f"DELETE FROM TagMap WHERE TagMapId IN {self.items};"
-        return self.cur.execute(sql).rowcount
-
-    def delete_highlights(self):
-        sql = f"DELETE FROM UserMark WHERE UserMarkId IN {self.items};"
-        return self.cur.execute(sql).rowcount
-
-    def delete_notes(self):
-        sql = f"DELETE FROM Note WHERE NoteId IN {self.items};"
-        return self.cur.execute(sql).rowcount
-
+    def delete(self, table, field):
+        return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
 
 class ExportItems():
     def __init__(self, category='Note', items=[], fname='', current_archive=''):
