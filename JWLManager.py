@@ -227,7 +227,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
 
     def regroup(self):
-        self.statusBar.showMessage(" Please wait...")
+        # self.statusBar.showMessage(" Please wait...")
         app.processEvents()
         tree = BuildTree(self.treeWidget, self.books, self.publications,
                           self.languages, self.combo_category.currentText(),
