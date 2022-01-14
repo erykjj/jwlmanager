@@ -575,6 +575,13 @@ class BuildTree():
         elif self.category == "Annotations":
             self.get_annotations()
 
+    def progress_dialog(self, steps):
+        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, None)
+        self.pd.setWindowModality(Qt.WindowModal)
+        self.pd.setWindowTitle('Parsing tree')
+        self.pd.setWindowFlag(Qt.FramelessWindowHint)
+        self.pd.setModal(True)
+        self.pd.setMinimumDuration(2)
 
     def get_annotations(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);"
@@ -611,7 +618,9 @@ class BuildTree():
 
     def get_highlights(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
-        for row in self.cur.execute(sql):
+        result = self.cur.execute(sql)
+        self.progress_dialog(result.rowcount)
+        for row in result:
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
             language = self.process_language(row[2])
@@ -633,7 +642,9 @@ class BuildTree():
             self.build_index(publication, language, issue, title, tag, color, item)
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
-        for row in self.cur.execute(sql):
+        result = self.cur.execute(sql)
+        self.progress_dialog(result.rowcount)
+        for row in result:
             item = row[4]
             publication = self.process_name(row[1] or '* MEDIA *')
             language = self.process_language(row[2])
@@ -641,6 +652,7 @@ class BuildTree():
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
             self.build_index(publication, language, issue, title, tag, color, item)
+            self.pd.setValue(self.pd.value() + 1)
 
 
     def process_name(self, name):
