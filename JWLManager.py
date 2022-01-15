@@ -772,6 +772,8 @@ class BuildTree():
             if level[0]:
                 index += f".{level[0]}"
                 parent = self.check_node(parent, level, index)
+            else:
+                break
         self.leaves[index].append(item)
         parent.setData(0, Qt.UserRole, index)
 
