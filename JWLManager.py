@@ -531,6 +531,7 @@ class Window(QMainWindow, Ui_MainWindow):
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
+        self.regroup()
 
 
 class BuildTree():
