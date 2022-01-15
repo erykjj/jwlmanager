@@ -231,7 +231,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.blockSignals(False)
 
     def regroup(self):
-        tree = BuildTree(self.treeWidget, self.books, self.publications,
+        tree = BuildTree(self, self.treeWidget, self.books, self.publications,
                          self.languages, self.combo_category.currentText(),
                          self.combo_grouping.currentText(), self.title_format,
                          self.detailed, self.grouped)
@@ -535,8 +535,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True):
+    def __init__(self, window, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True):
         self.tree = tree
+        self.window = window
         self.tree.clear()
         self.category = category
         self.detailed = detailed
@@ -553,7 +554,10 @@ class BuildTree():
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
+        tree.setUpdatesEnabled(False)
         self.build_tree()
+        tree.setUpdatesEnabled(True)
+        tree.repaint()
         con.commit()
         con.close()
 
@@ -571,7 +575,7 @@ class BuildTree():
             self.get_annotations()
 
     def progress_dialog(self, steps):
-        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1)
+        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, self.window)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Parsing tree')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -615,7 +619,7 @@ class BuildTree():
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
         result = self.cur.execute(sql).fetchall()
         items = len(result)
-        if (items > 5000) or (self.detailed & (items > 3000)):
+        if (items > 15000) or (self.detailed & (items > 10000)):
             self.progress_dialog(items)
             progress = True
         else:
@@ -646,7 +650,7 @@ class BuildTree():
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
         result = self.cur.execute(sql).fetchall()
         items = len(result)
-        if (items > 5000) or (self.detailed & (items > 3000)):
+        if (items > 15000) or (self.detailed & (items > 10000)):
             self.progress_dialog(items)
             progress = True
         else:
