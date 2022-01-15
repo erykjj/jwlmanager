@@ -794,8 +794,10 @@ class BuildTree():
     def add_node(self, parent, data):
         # To only allow selecting leaf nodes:
         # if self.detailed and parent != self.tree:
-        #     parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
+        #     # parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
+        #     parent.setData(0, Qt.CheckStateRole, None)
         child = QTreeWidgetItem(parent)
+        # child.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
         child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
         child.setText(0, data[0])
         if data[1]:
