@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Progress bar shown when a lot of elements need to be loaded and will slow down the app
+
 ### Changed
 
 - Added Bible book number before name for better sorting
@@ -10,6 +12,8 @@
 - Minor code clean-up
 
 ### Fixed
+
+- Fix for tree being constructed twice under some conditions
 
 ### Removed
 ____
