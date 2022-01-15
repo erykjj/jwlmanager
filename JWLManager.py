@@ -231,12 +231,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.blockSignals(False)
 
     def regroup(self):
-        # app.processEvents()
         tree = BuildTree(self.treeWidget, self.books, self.publications,
                          self.languages, self.combo_category.currentText(),
                          self.combo_grouping.currentText(), self.title_format,
                          self.detailed, self.grouped)
-        # self.statusBar.showMessage(" ", 1)
         self.leaves = tree.leaves
         self.total.setText(f"**{tree.total:,}**")
 
@@ -528,19 +526,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def reindex(self):
-        # TODO: this alert may not be necessary
-        # reply = QMessageBox.information(self, 'Reindex',
-        #         'This may take a few seconds. Proceed?',
-        #         QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        # if reply == QMessageBox.No:
-        #     return
         self.trim_db()
         self.statusBar.showMessage(" Reindexing. Please wait...")
-        # app.processEvents()
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
-        # self.regroup()
 
 
 class BuildTree():
