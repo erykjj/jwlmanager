@@ -65,6 +65,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setExpandsOnDoubleClick(False)
         self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
+        self.button_add.setVisible(False)
 
         self.set_vars()
         self.read_res()
@@ -80,7 +81,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
-        self.button_add.setVisible(False)
 
     def read_res(self):
         self.publications = {}
@@ -128,10 +128,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCode_Title.triggered.connect(self.code_view)
         self.actionShort_Title.triggered.connect(self.short_view)
         self.actionFull_Title.triggered.connect(self.full_view)
-        self.actionGrouped.triggered.connect(self.grouping)
-        self.actionDetailed.triggered.connect(self.detailing)
-        self.combo_category.currentTextChanged.connect(self.switchboard)
+        self.actionGrouped.triggered.connect(self.grouped_view)
+        self.actionDetailed.triggered.connect(self.detailed_view)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
+        self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.button_export.clicked.connect(self.export)
@@ -187,14 +187,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup()
 
 
-    def detailing(self):
+    def detailed_view(self):
         self.detailed = not self.detailed
         if self.detailed:
             self.grouped = False
             self.actionGrouped.setChecked(False)
         self.regroup()
 
-    def grouping(self):
+    def grouped_view(self):
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
@@ -203,7 +203,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def switchboard(self, selection):
-        self.combo_grouping.setCurrentText('Publication')
         if selection == "Notes":
             self.disable_options([], False, True, True)
         elif selection == "Highlights":
@@ -214,26 +213,30 @@ class Window(QMainWindow, Ui_MainWindow):
             self.disable_options([3,4], False, True, True)
         elif selection == "Favorites":
             self.disable_options([3,4], True, False, False)
-        self.regroup()
+        if self.combo_grouping.currentText() != 'Publication':
+            self.combo_grouping.setCurrentText('Publication')
+        else:
+            self.regroup()
 
     def disable_options(self, list=[], add=False, exp=False, imp=False):
         self.button_add.setVisible(add)
         self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
         self.button_import.setVisible(imp)
+        self.combo_grouping.blockSignals(True)
         for item in range(5):
             self.combo_grouping.model().item(item).setEnabled(True)
         for item in list:
             self.combo_grouping.model().item(item).setEnabled(False)
+        self.combo_grouping.blockSignals(False)
 
     def regroup(self):
-        # self.statusBar.showMessage(" Please wait...")
-        app.processEvents()
+        # app.processEvents()
         tree = BuildTree(self.treeWidget, self.books, self.publications,
-                          self.languages, self.combo_category.currentText(),
-                          self.combo_grouping.currentText(), self.title_format,
-                          self.detailed, self.grouped)
-        self.statusBar.showMessage(" ", 1)
+                         self.languages, self.combo_category.currentText(),
+                         self.combo_grouping.currentText(), self.title_format,
+                         self.detailed, self.grouped)
+        # self.statusBar.showMessage(" ", 1)
         self.leaves = tree.leaves
         self.total.setText(f"**{tree.total:,}**")
 
@@ -502,6 +505,7 @@ class Window(QMainWindow, Ui_MainWindow):
         result = DeleteItems(self.combo_category.currentText(), selected).result
         self.statusBar.showMessage(f" {result} items deleted", 3500)
         self.trim_db()
+        self.archive_modified()
         self.regroup()
         self.tree_selection()
 
@@ -532,11 +536,11 @@ class Window(QMainWindow, Ui_MainWindow):
         #     return
         self.trim_db()
         self.statusBar.showMessage(" Reindexing. Please wait...")
-        app.processEvents()
+        # app.processEvents()
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
-        self.regroup()
+        # self.regroup()
 
 
 class BuildTree():
@@ -576,12 +580,12 @@ class BuildTree():
             self.get_annotations()
 
     def progress_dialog(self, steps):
-        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, None)
+        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Parsing tree')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
         self.pd.setModal(True)
-        self.pd.setMinimumDuration(2)
+        self.pd.setMinimumDuration(0)
 
     def get_annotations(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);"
@@ -618,8 +622,13 @@ class BuildTree():
 
     def get_highlights(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
-        result = self.cur.execute(sql)
-        self.progress_dialog(result.rowcount)
+        result = self.cur.execute(sql).fetchall()
+        items = len(result)
+        if (items > 5000) or (self.detailed & (items > 3000)):
+            self.progress_dialog(items)
+            progress = True
+        else:
+            progress = False
         for row in result:
             item = row[4]
             publication = self.process_name(row[1] or 'MEDIA')
@@ -628,6 +637,8 @@ class BuildTree():
             tag = (None, None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
             self.build_index(publication, language, issue, title, tag, color, item)
+            if progress:
+                self.pd.setValue(self.pd.value() + 1)
 
     def get_notes(self):
         sql = "SELECT NoteId, GROUP_CONCAT(t.Name) FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
@@ -642,8 +653,13 @@ class BuildTree():
             self.build_index(publication, language, issue, title, tag, color, item)
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
-        result = self.cur.execute(sql)
-        self.progress_dialog(result.rowcount)
+        result = self.cur.execute(sql).fetchall()
+        items = len(result)
+        if (items > 5000) or (self.detailed & (items > 3000)):
+            self.progress_dialog(items)
+            progress = True
+        else:
+            progress = False
         for row in result:
             item = row[4]
             publication = self.process_name(row[1] or '* MEDIA *')
@@ -652,7 +668,8 @@ class BuildTree():
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
             self.build_index(publication, language, issue, title, tag, color, item)
-            self.pd.setValue(self.pd.value() + 1)
+            if progress:
+                self.pd.setValue(self.pd.value() + 1)
 
 
     def process_name(self, name):
