@@ -405,13 +405,22 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def tree_selection(self):
+        checked_leaves = []
         self.selected_items = 0
-        it = QTreeWidgetItemIterator(self.treeWidget,
-                  QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value().data(0, Qt.UserRole)
-            if index in self.leaves:
-                self.selected_items += len(self.leaves[index])
+
+        def recurse(parent):
+            for i in range(parent.childCount()):
+                child = parent.child(i)
+                grand_children = child.childCount()
+                if grand_children > 0:
+                    recurse(child)
+                else: 
+                    if child.checkState(0) == Qt.Checked:
+                        checked_leaves.append(child.data(0, Qt.UserRole))
+
+        recurse(self.treeWidget.invisibleRootItem())
+        for item in checked_leaves:
+            self.selected_items += len(self.leaves[item])
         self.selected.setText(f"**{self.selected_items:,}**")
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
@@ -619,7 +628,7 @@ class BuildTree():
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
         result = self.cur.execute(sql).fetchall()
         items = len(result)
-        if (items > 15000) or (self.detailed & (items > 10000)):
+        if (items > 5000) or (self.detailed & (items > 3000)):
             self.progress_dialog(items)
             progress = True
         else:
@@ -650,7 +659,7 @@ class BuildTree():
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
         result = self.cur.execute(sql).fetchall()
         items = len(result)
-        if (items > 15000) or (self.detailed & (items > 10000)):
+        if (items > 5000) or (self.detailed & (items > 3000)):
             self.progress_dialog(items)
             progress = True
         else:
