@@ -797,7 +797,7 @@ class BuildTree():
                 self.leaves[index] = []
             else:
                 parent = self.nodes[index]
-            parent.setData(1, Qt.DisplayRole, parent.data(1, Qt.DisplayRole) + 1)
+            counter[parent] += 1
             return parent
 
         def add_node(parent, data):
@@ -806,22 +806,22 @@ class BuildTree():
             #     # parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
             #     parent.setData(0, Qt.CheckStateRole, None)
             child = QTreeWidgetItem(parent)
-            # child.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
             child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
             child.setText(0, data[0])
             if data[1]:
                 child.setToolTip(0, f"          {data[1]}")
             child.setCheckState(0, Qt.Unchecked)
-            child.setData(1, Qt.DisplayRole, 0)
+            counter[child] = 0
             child.setTextAlignment(1, Qt.AlignCenter)
             return child
 
         items = len(self.current)
-        if (items > 10000) or (self.detailed & (items > 3000)):
+        if (items > 20000) or (self.detailed & (items > 3000)):
             progress_dialog(items)
             progress = True
         else:
             progress = False
+        counter = {}
         for record in self.current:
             self.total += 1
             parent = self.tree
@@ -835,6 +835,8 @@ class BuildTree():
             parent.setData(0, Qt.UserRole, index)
             if progress:
                 self.pd.setValue(self.pd.value() + 1)
+        for item in counter:
+            item.setData(1, Qt.DisplayRole, counter[item])
 
 
 class AddFavorites():
