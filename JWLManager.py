@@ -168,7 +168,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionShort_Title.setChecked(False)
         self.actionFull_Title.setChecked(False)
         self.title_format = 'code'
-        self.regroup(False)
+        self.regroup(True)
 
     def short_view(self):
         if self.title_format == 'short':
@@ -176,7 +176,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCode_Title.setChecked(False)
         self.actionFull_Title.setChecked(False)
         self.title_format = 'short'
-        self.regroup(False)
+        self.regroup(True)
 
     def full_view(self):
         if self.title_format == 'full':
@@ -184,7 +184,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionShort_Title.setChecked(False)
         self.actionCode_Title.setChecked(False)
         self.title_format = 'full'
-        self.regroup(False)
+        self.regroup(True)
 
 
     def detailed_view(self):
@@ -192,14 +192,14 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.detailed:
             self.grouped = False
             self.actionGrouped.setChecked(False)
-        self.regroup(False)
+        self.regroup(True)
 
     def grouped_view(self):
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
             self.actionDetailed.setChecked(False)
-        self.regroup(False)
+        self.regroup(True)
 
 
     def switchboard(self, selection):
@@ -214,9 +214,10 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == "Favorites":
             self.disable_options([3,4], True, False, False)
         if self.combo_grouping.currentText() != 'Publication':
+            self.combo_grouping.currentTextChanged.disconnect()
             self.combo_grouping.setCurrentText('Publication')
-        else:
-            self.regroup(True)
+            self.combo_grouping.currentTextChanged.connect(self.regroup)
+        self.regroup()
 
     def disable_options(self, list=[], add=False, exp=False, imp=False):
         self.button_add.setVisible(add)
@@ -230,8 +231,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
         self.combo_grouping.blockSignals(False)
 
-    def regroup(self, rescan=False):
-        if rescan:
+    def regroup(self, changed=False):
+        if not changed:
             self.current_data = []
         tree = BuildTree(self, self.treeWidget, self.books, self.publications,
                          self.languages, self.combo_category.currentText(),
@@ -486,7 +487,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.statusBar.showMessage(f" {count} items imported/updated", 3500)
         self.archive_modified()
-        self.regroup(True)
+        self.regroup()
         self.tree_selection()
 
 
@@ -495,7 +496,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(text[1], 3500)
         if text[0]:
             self.archive_modified()
-            self.regroup(True)
+            self.regroup()
             self.tree_selection()
 
 
@@ -517,7 +518,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(f" {result} items deleted", 3500)
         self.trim_db()
         self.archive_modified()
-        self.regroup(True)
+        self.regroup()
         self.tree_selection()
 
 
@@ -544,7 +545,7 @@ class Window(QMainWindow, Ui_MainWindow):
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
-        self.regroup(True)
+        self.regroup()
 
 
 class BuildTree():
@@ -560,7 +561,6 @@ class BuildTree():
         self.books = books
         self.title_format = title
         self.total = 0
-
         if len(current) > 0:
             self.current = current
         else:
