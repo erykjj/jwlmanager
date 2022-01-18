@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.1.1'
+VERSION = 'v0.2.0'
 
 import os
 import re
@@ -168,7 +168,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionShort_Title.setChecked(False)
         self.actionFull_Title.setChecked(False)
         self.title_format = 'code'
-        self.regroup()
+        self.regroup(False)
 
     def short_view(self):
         if self.title_format == 'short':
@@ -176,7 +176,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCode_Title.setChecked(False)
         self.actionFull_Title.setChecked(False)
         self.title_format = 'short'
-        self.regroup()
+        self.regroup(False)
 
     def full_view(self):
         if self.title_format == 'full':
@@ -184,7 +184,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionShort_Title.setChecked(False)
         self.actionCode_Title.setChecked(False)
         self.title_format = 'full'
-        self.regroup()
+        self.regroup(False)
 
 
     def detailed_view(self):
@@ -192,14 +192,14 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.detailed:
             self.grouped = False
             self.actionGrouped.setChecked(False)
-        self.regroup()
+        self.regroup(False)
 
     def grouped_view(self):
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
             self.actionDetailed.setChecked(False)
-        self.regroup()
+        self.regroup(False)
 
 
     def switchboard(self, selection):
@@ -216,7 +216,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.combo_grouping.currentText() != 'Publication':
             self.combo_grouping.setCurrentText('Publication')
         else:
-            self.regroup()
+            self.regroup(True)
 
     def disable_options(self, list=[], add=False, exp=False, imp=False):
         self.button_add.setVisible(add)
@@ -230,12 +230,15 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
         self.combo_grouping.blockSignals(False)
 
-    def regroup(self):
+    def regroup(self, rescan=False):
+        if rescan:
+            self.current_data = []
         tree = BuildTree(self, self.treeWidget, self.books, self.publications,
                          self.languages, self.combo_category.currentText(),
                          self.combo_grouping.currentText(), self.title_format,
-                         self.detailed, self.grouped)
+                         self.detailed, self.grouped, self.current_data)
         self.leaves = tree.leaves
+        self.current_data = tree.current
         self.total.setText(f"**{tree.total:,}**")
 
 
@@ -427,6 +430,15 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def export(self):
+
+        def export_file():
+            fname = ()
+            now = datetime.now().strftime("%Y-%m-%d")
+            fname = QFileDialog.getSaveFileName(self, 'Export file',
+                        f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt",
+                        "Text files (*.txt)")
+            return fname
+
         reply = QMessageBox.question(self, 'Export',
                 f"{self.selected_items} items will be EXPORTED. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
@@ -440,21 +452,13 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        fname = self.export_file()
+        fname = export_file()
         if fname[0] == '':
             self.statusBar.showMessage(" NOT exported!", 3500)
             return
         ExportItems(self.combo_category.currentText(), selected, fname[0],
             Path(self.current_archive).stem)
         self.statusBar.showMessage("Items exported", 3500)
-
-    def export_file(self):
-        fname = ()
-        now = datetime.now().strftime("%Y-%m-%d")
-        fname = QFileDialog.getSaveFileName(self, 'Export file',
-                    f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt",
-                    "Text files (*.txt)")
-        return fname
 
 
     def import_file(self):
@@ -482,7 +486,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.statusBar.showMessage(f" {count} items imported/updated", 3500)
         self.archive_modified()
-        self.regroup()
+        self.regroup(True)
         self.tree_selection()
 
 
@@ -491,7 +495,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(text[1], 3500)
         if text[0]:
             self.archive_modified()
-            self.regroup()
+            self.regroup(True)
             self.tree_selection()
 
 
@@ -513,7 +517,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(f" {result} items deleted", 3500)
         self.trim_db()
         self.archive_modified()
-        self.regroup()
+        self.regroup(True)
         self.tree_selection()
 
 
@@ -531,7 +535,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.clean_up()
 
     def clean_up(self):
-        rmtree(tmp_path, ignore_errors=True)
+       rmtree(tmp_path, ignore_errors=True)
 
 
     def reindex(self):
@@ -540,14 +544,13 @@ class Window(QMainWindow, Ui_MainWindow):
         Reindex()
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
-        self.regroup()
+        self.regroup(True)
 
 
 class BuildTree():
-    def __init__(self, window, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True):
+    def __init__(self, window, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True, current=[]):
         self.tree = tree
         self.window = window
-        self.tree.clear()
         self.category = category
         self.detailed = detailed
         self.grouping = grouping
@@ -556,22 +559,29 @@ class BuildTree():
         self.languages = languages
         self.books = books
         self.title_format = title
+        self.total = 0
+
+        if len(current) > 0:
+            self.current = current
+        else:
+            self.current = []
+            self.get_data()
+
         self.nodes = {}
         self.leaves = {}
-        self.total = 0
+
+        tree.setUpdatesEnabled(False)
+        self.tree.clear()
+        self.build_tree()
+        tree.setUpdatesEnabled(True)
+        tree.repaint()
+
+
+    def get_data(self):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
-        tree.setUpdatesEnabled(False)
-        self.build_tree()
-        tree.setUpdatesEnabled(True)
-        tree.repaint()
-        con.commit()
-        con.close()
-
-
-    def build_tree(self):
         if self.category == "Bookmarks":
             self.get_bookmarks()
         elif self.category == "Favorites":
@@ -582,138 +592,112 @@ class BuildTree():
             self.get_notes()
         elif self.category == "Annotations":
             self.get_annotations()
+        con.commit()
+        con.close()
 
-    def progress_dialog(self, steps):
-        self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, self.window)
-        self.pd.setWindowModality(Qt.WindowModal)
-        self.pd.setWindowTitle('Parsing tree')
-        self.pd.setWindowFlag(Qt.FramelessWindowHint)
-        self.pd.setModal(True)
-        self.pd.setMinimumDuration(0)
+    def process_data(self, sql):
+        for row in self.cur.execute(sql):
+            item = row[4]
+            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            language = self.process_language(row[2])
+            issue, title, year = self.process_title(year, row[3], row[5], row[6], row[7])
+            tag = ('', None)
+            color = ('Grey', None)
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            self.current.append(record)
 
     def get_annotations(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);"
-        for row in self.cur.execute(sql):
-            item = row[4]
-            group, publication, year = self.process_name(row[1] or '* MEDIA *', row[3])
-            language = self.process_language(row[2])
-            issue, title = self.process_title(year, row[3], row[5], row[6], row[7])
-            tag = ('', None)
-            color = ('Grey', None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
+        self.process_data(sql)
 
     def get_bookmarks(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);"
-        for row in self.cur.execute(sql):
-            item = row[4]
-            group, publication, year = self.process_name(row[1] or '* MEDIA *', row[3])
-            language = self.process_language(row[2])
-            issue, title = self.process_title(year, row[3], row[5], row[6], row[7])
-            tag = ('', None)
-            color = ('Grey', None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
+        self.process_data(sql)
 
     def get_favorites(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL order by tm.Position;"
         for row in self.cur.execute(sql):
             item = row[4]
-            group, publication, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title = self.process_title(year, row[3], None, None, None)
+            issue, title, year = self.process_title(year, row[3], None, None, None)
             tag = ("Favorite", None)
             color = ('Grey', None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            self.current.append(record)
 
     def get_highlights(self):
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
-        result = self.cur.execute(sql).fetchall()
-        items = len(result)
-        if (items > 5000) or (self.detailed & (items > 3000)):
-            self.progress_dialog(items)
-            progress = True
-        else:
-            progress = False
-        for row in result:
+        for row in self.cur.execute(sql):
             item = row[4]
-            group, publication, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title = self.process_title(year, row[3], row[6], row[7], row[8])
+            issue, title, year = self.process_title(year, row[3], row[6], row[7], row[8])
             tag = (None, None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
-            if progress:
-                self.pd.setValue(self.pd.value() + 1)
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            self.current.append(record)
 
     def get_notes(self):
         sql = "SELECT NoteId, GROUP_CONCAT(t.Name) FROM Note n JOIN TagMap tm USING (NoteId) JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
         for row in self.cur.execute(sql):
             item = row[0]
-            group = "Other"
-            publication = ("* INDEPENDENT *", None)
+            group = (None, None)
+            code = ("* INDEPENDENT *", None)
+            short = ("* INDEPENDENT *", None)
+            full = ("* INDEPENDENT *", None)
             year = None
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
             title = (None, None)
+            year = ('* NO DATE *', '')
             tag = (row[1] or "* UN-TAGGED *", None)
             color = ('Grey', None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            self.current.append(record)
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
-        result = self.cur.execute(sql).fetchall()
-        items = len(result)
-        if (items > 5000) or (self.detailed & (items > 3000)):
-            self.progress_dialog(items)
-            progress = True
-        else:
-            progress = False
-        for row in result:
+        for row in self.cur.execute(sql):
             item = row[4]
-            group, publication, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title = self.process_title(year, row[3], row[7], row[8], row[9])
+            issue, title, year = self.process_title(year, row[3], row[7], row[8], row[9])
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            self.build_index(group, publication, language, issue, title, tag, color, item)
-            if progress:
-                self.pd.setValue(self.pd.value() + 1)
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            self.current.append(record)
 
 
     def process_name(self, name, issue):
 
         def check_name(name):
-            tip = ''
-            group = ''
             if name in self.publications.keys():
-                group = self.publications[name][3]
-                if self.title_format == 'code':
-                    tip = self.publications[name][0]
-                elif self.title_format == 'short':
-                    tip = name
-                    name = self.publications[name][0]
-                else:
-                    tip = name
-                    name = self.publications[name][1]
-            return group, name, tip
+                group = (self.publications[name][3], '')
+                code = (name, self.publications[name][0])
+                short = (self.publications[name][0], name)
+                full = (self.publications[name][1], name)
+                return group, code, short, full
+            else:
+                return (None, None), (None, None), (None, None), (None, None)
 
+        year = None
         if name == 'ws' and issue == 0:
             name = 'ws-'
-        group, name, tip = check_name(name)
-        if tip:
-            return (group, ''), (name, tip), None
-        year = None
+        group, code, short, full = check_name(name)
+        if code[1]:
+            return group, code, short, full, year
+
         stripped = re.search('(.*?)(?!-)(\d+$)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
             name = prefix
-            group, name, tip = check_name(name)
+            group, code, short, full = check_name(name)
             if int(suffix) >= 50:
                 year = '19' + suffix
             else:
                 year = '20' + suffix
-        if not tip:
-            tip = '?'
-        return (group, ''), (name, tip), year
+        return group, code, short, full, year
 
     def process_language(self, lang):
         if lang in self.languages.keys():
@@ -741,83 +725,108 @@ class BuildTree():
                     tip = f"{mo} {int(d)}, {y}"
                 return (name, tip)
             else:
-                return ('', '')
+                return (None, None)
 
         issue = (year, None)
         title = (None, None)
-        if IssueTitle == '' or IssueTitle == None:
-            IssueTitle = "* NO MORE DETAIL *"
+        # if IssueTitle == '' or IssueTitle == None:
+        #     IssueTitle = "* NO MORE DETAIL *"
         if IssueTagNumber == "0":
             IssueTagNumber = None
         if IssueTagNumber:
             issue = process_issue(IssueTagNumber)
-            if self.detailed:
-                title = (IssueTitle, None)
+            title = (IssueTitle, None)
         elif BookNumber:
-            if self.detailed:
-                issue = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], '')
-                title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
+            issue = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], '')
+            title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         else:
-            if self.detailed:
-                title = (IssueTitle, None)
-        return issue, title
+            title = (IssueTitle, None)
+        if issue[0] and re.match('\d{4}', issue[0]):
+                year = (issue[0][:4], None)
+        else:
+                year = ('* NO DATE *', None)
+        return issue, title, year
 
-    def build_index(self, group, publication, language, issue, title, tag, color, item):
-        self.total += 1
-        index = ''
-        parent = self.tree
+
+    def build_tree(self):
+        if self.title_format == 'code':
+            publication = 'code'
+        elif self.title_format == 'short':
+            publication = 'short'
+        else:
+            publication = 'full'
         if self.grouping == "Publication":
             if self.grouped:
-                levels = (group, publication, language, issue, title)
+                levels = ['group', publication, 'language', 'issue']
             else:
-                levels = (publication, language, issue, title)
+                levels = [publication, 'language', 'issue']
         elif self.grouping == "Language":
-            levels = (language, publication, issue, title)
+            levels = ['language', publication, 'issue']
         elif self.grouping == "Tag":
-            levels = (tag, publication, language, issue, title)
+            levels = ['tag', publication, 'language', 'issue']
         elif self.grouping == "Color":
-            levels = (color, publication, language, issue, title)
+            levels = ['color', publication, 'language', 'issue']
         elif self.grouping == "Year":
-            if issue[0] and re.match('\d{4}', issue[0]):
-                year = (issue[0][:4], '')
-            else:
-                year = ('* NO DATE *', '')
-            if year[0] == issue[0]:
-                issue = ('', '')
-            levels = (year, publication, language, issue, title)
-        for level in levels:
-            if level[0]:
-                index += f".{level[0]}"
-                parent = self.check_node(parent, level, index)
-            else:
-                break
-        self.leaves[index].append(item)
-        parent.setData(0, Qt.UserRole, index)
+            levels = ['year', publication, 'language']
+        if self.detailed:
+            levels.append('title')
+        self.build_index(levels)
 
-    def check_node(self, parent, data, index):
-        if index not in self.nodes:
-            parent = self.nodes[index] = self.add_node(parent, data)
-            self.leaves[index] = []
+
+    def build_index(self, levels):
+
+        def progress_dialog(steps):
+            self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, self.window)
+            self.pd.setWindowModality(Qt.WindowModal)
+            self.pd.setWindowTitle('Parsing tree')
+            self.pd.setWindowFlag(Qt.FramelessWindowHint)
+            self.pd.setModal(True)
+            self.pd.setMinimumDuration(0)
+
+        def check_node(parent, data, index):
+            if index not in self.nodes:
+                parent = self.nodes[index] = add_node(parent, data)
+                self.leaves[index] = []
+            else:
+                parent = self.nodes[index]
+            parent.setData(1, Qt.DisplayRole, parent.data(1, Qt.DisplayRole) + 1)
+            return parent
+
+        def add_node(parent, data):
+            # To only allow selecting leaf nodes:
+            # if self.detailed and parent != self.tree:
+            #     # parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
+            #     parent.setData(0, Qt.CheckStateRole, None)
+            child = QTreeWidgetItem(parent)
+            # child.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
+            child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
+            child.setText(0, data[0])
+            if data[1]:
+                child.setToolTip(0, f"          {data[1]}")
+            child.setCheckState(0, Qt.Unchecked)
+            child.setData(1, Qt.DisplayRole, 0)
+            child.setTextAlignment(1, Qt.AlignCenter)
+            return child
+
+        items = len(self.current)
+        if (items > 10000) or (self.detailed & (items > 3000)):
+            progress_dialog(items)
+            progress = True
         else:
-            parent = self.nodes[index]
-        parent.setData(1, Qt.DisplayRole, parent.data(1, Qt.DisplayRole) + 1)
-        return parent
-
-    def add_node(self, parent, data):
-        # To only allow selecting leaf nodes:
-        # if self.detailed and parent != self.tree:
-        #     # parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
-        #     parent.setData(0, Qt.CheckStateRole, None)
-        child = QTreeWidgetItem(parent)
-        # child.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
-        child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
-        child.setText(0, data[0])
-        if data[1]:
-            child.setToolTip(0, f"          {data[1]}")
-        child.setCheckState(0, Qt.Unchecked)
-        child.setData(1, Qt.DisplayRole, 0)
-        child.setTextAlignment(1, Qt.AlignCenter)
-        return child
+            progress = False
+        for record in self.current:
+            self.total += 1
+            parent = self.tree
+            index = ''
+            for level in levels:
+                item = record[level]
+                if item[0]:
+                    index += f".{item[0]}"
+                    parent = check_node(parent, item, index)
+            self.leaves[index].append(record['item'])
+            parent.setData(0, Qt.UserRole, index)
+            if progress:
+                self.pd.setValue(self.pd.value() + 1)
 
 
 class AddFavorites():
