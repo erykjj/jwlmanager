@@ -20,10 +20,13 @@ ____
 - Made Grouped and Detailed view mutually exclusive
 - Code clean-up
 - README updated
+- Minor UI adjustment: slight increase in button height
+- Speeded up tree construction
 
 ### Fixed
 
 - Fix for tree being constructed twice under some conditions
+- Fix for missing items in detailed view
 
 ## [0.1.0] - 2022-01-11
 ### Added
