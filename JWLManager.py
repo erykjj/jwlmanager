@@ -600,10 +600,11 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title, year = self.process_title(year, row[3], row[5], row[6], row[7])
+            issue, year = self.process_title(year, row[3])
+            detail1, detail2 = self.process_detail(row[5], row[6], row[7])
             tag = ('', None)
             color = ('Grey', None)
-            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
     def get_annotations(self):
@@ -620,10 +621,12 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title, year = self.process_title(year, row[3], None, None, None)
+            issue, year = self.process_title(year, row[3])
+            detail1 = (None, None)
+            detail2 = (None, None)
             tag = ("Favorite", None)
             color = ('Grey', None)
-            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
     def get_highlights(self):
@@ -632,10 +635,11 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title, year = self.process_title(year, row[3], row[6], row[7], row[8])
+            issue, year = self.process_title(year, row[3])
+            detail1, detail2 = self.process_detail(row[6], row[7], row[8])
             tag = (None, None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
-            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
     def get_notes(self):
@@ -649,11 +653,12 @@ class BuildTree():
             year = None
             language = ("* MULTI-LANGUAGE *", None)
             issue = (None, None)
-            title = (None, None)
+            detail1 = (None, None)
+            detail2 = (None, None)
             year = ('* NO DATE *', '')
             tag = (row[1] or "* UN-TAGGED *", None)
             color = ('Grey', None)
-            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
@@ -661,10 +666,11 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, title, year = self.process_title(year, row[3], row[7], row[8], row[9])
+            issue, year = self.process_title(year, row[3])
+            detail1, detail2 = self.process_detail(row[7], row[8], row[9])
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
-            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'title': title, 'tag': tag, 'color': color}
+            record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
 
@@ -708,7 +714,7 @@ class BuildTree():
             tip = None
         return (name, tip)
 
-    def process_title(self, year, IssueTagNumber, BookNumber, ChapterNumber, IssueTitle):
+    def process_title(self, year, IssueTagNumber):
 
         def process_issue(doc):
             if doc:
@@ -727,25 +733,26 @@ class BuildTree():
             else:
                 return (None, None)
 
-        issue = (year, None)
-        title = (None, None)
-        # if IssueTitle == '' or IssueTitle == None:
-        #     IssueTitle = "* NO MORE DETAIL *"
-        if IssueTagNumber == "0":
-            IssueTagNumber = None
-        if IssueTagNumber:
+        # if IssueTagNumber == "0":
+        #     IssueTagNumber = None
+        if int(IssueTagNumber) > 0:
             issue = process_issue(IssueTagNumber)
-            title = (IssueTitle, None)
-        elif BookNumber:
-            issue = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], '')
-            title = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         else:
-            title = (IssueTitle, None)
+            issue = (year, None)
         if issue[0] and re.match('\d{4}', issue[0]):
                 year = (issue[0][:4], None)
         else:
                 year = ('* NO DATE *', None)
-        return issue, title, year
+        return issue, year
+
+    def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
+        if BookNumber:
+            detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
+            detail2 = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
+        else:
+            detail1 = (IssueTitle or '* NO DATA *', None)
+            detail2 = (None, None)
+        return detail1, detail2
 
 
     def build_tree(self):
@@ -769,7 +776,8 @@ class BuildTree():
         elif self.grouping == "Year":
             levels = ['year', publication, 'language']
         if self.detailed:
-            levels.append('title')
+            levels.append('detail1')
+            levels.append('detail2')
         self.build_index(levels)
 
 
