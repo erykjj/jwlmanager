@@ -3,6 +3,15 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.2.0] - 2022-01-17
+### Added
+
 - Progress bar shown when a lot of elements need to be loaded and will slow down the app
 
 ### Changed
@@ -16,8 +25,6 @@
 
 - Fix for tree being constructed twice under some conditions
 
-### Removed
-____
 ## [0.1.0] - 2022-01-11
 ### Added
 
@@ -80,6 +87,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.0
 [0.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.1.0
 [0.0.10]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.10
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
