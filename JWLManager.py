@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.0'
+VERSION = 'v0.2.1'
 
 import os
 import re
@@ -600,7 +600,7 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, year = self.process_title(year, row[3])
+            issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[5], row[6], row[7])
             tag = ('', None)
             color = ('Grey', None)
@@ -621,7 +621,7 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, year = self.process_title(year, row[3])
+            issue, year = self.process_date(year, row[3])
             detail1 = (None, None)
             detail2 = (None, None)
             tag = ("Favorite", None)
@@ -635,7 +635,7 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, year = self.process_title(year, row[3])
+            issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[6], row[7], row[8])
             tag = (None, None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
@@ -666,7 +666,7 @@ class BuildTree():
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
-            issue, year = self.process_title(year, row[3])
+            issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
             tag = (row[5] or "* UN-TAGGED *", None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
@@ -714,7 +714,7 @@ class BuildTree():
             tip = None
         return (name, tip)
 
-    def process_title(self, year, IssueTagNumber):
+    def process_date(self, year, IssueTagNumber):
 
         def process_issue(doc):
             if doc:
@@ -733,8 +733,6 @@ class BuildTree():
             else:
                 return (None, None)
 
-        # if IssueTagNumber == "0":
-        #     IssueTagNumber = None
         if int(IssueTagNumber) > 0:
             issue = process_issue(IssueTagNumber)
         else:
@@ -774,7 +772,7 @@ class BuildTree():
         elif self.grouping == "Color":
             levels = ['color', publication, 'language', 'issue']
         elif self.grouping == "Year":
-            levels = ['year', publication, 'language']
+            levels = ['year', publication, 'language', 'issue']
         if self.detailed:
             levels.append('detail1')
             levels.append('detail2')
@@ -801,10 +799,6 @@ class BuildTree():
             return parent
 
         def add_node(parent, data):
-            # To only allow selecting leaf nodes:
-            # if self.detailed and parent != self.tree:
-            #     # parent.setFlags(parent.flags() & ~Qt.ItemIsUserCheckable)
-            #     parent.setData(0, Qt.CheckStateRole, None)
             child = QTreeWidgetItem(parent)
             child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
             child.setText(0, data[0])
