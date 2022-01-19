@@ -5,13 +5,16 @@
 
 ### Changed
 
-- Re-added publication issue date to grouping by year
-- Speeded up tree construction even more
-
 ### Fixed
 
 ### Removed
 ____
+## [0.2.1] - 2022-01-19
+### Changed
+
+- Re-added publication issue date to grouping by year
+- Speeded up tree construction even more
+
 ## [0.2.0] - 2022-01-17
 ### Added
 
@@ -93,6 +96,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.1
 [0.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.0
 [0.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.1.0
 [0.0.10]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.10
