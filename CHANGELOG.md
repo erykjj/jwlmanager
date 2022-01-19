@@ -5,6 +5,9 @@
 
 ### Changed
 
+- Re-added publication issue date to grouping by year
+- Speeded up tree construction even more
+
 ### Fixed
 
 ### Removed

@@ -810,7 +810,7 @@ class BuildTree():
             return child
 
         items = len(self.current)
-        if (items > 20000) or (self.detailed & (items > 3000)):
+        if (items > 25000) or (self.detailed & (items > 3000)):
             progress_dialog(items)
             progress = True
         else:
@@ -819,14 +819,21 @@ class BuildTree():
         for record in self.current:
             self.total += 1
             parent = self.tree
-            index = ''
-            for level in levels:
-                item = record[level]
-                if item[0]:
-                    index += f".{item[0]}"
-                    parent = check_node(parent, item, index)
-            self.leaves[index].append(record['item'])
-            parent.setData(0, Qt.UserRole, index)
+            try:
+                index = ''
+                for level in levels:
+                    if record[level][0]:
+                        index += f".{record[level][0]}"
+                self.leaves[index].append(record['item'])
+            except:
+                index = ''
+                for level in levels:
+                    item = record[level]
+                    if item[0]:
+                        index += f".{item[0]}"
+                        parent = check_node(parent, item, index)
+                self.leaves[index].append(record['item'])
+                parent.setData(0, Qt.UserRole, index)
             if progress:
                 self.pd.setValue(self.pd.value() + 1)
         for item in counter:
