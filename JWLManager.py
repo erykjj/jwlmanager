@@ -566,10 +566,8 @@ class BuildTree():
         else:
             self.current = []
             self.get_data()
-
         self.nodes = {}
         self.leaves = {}
-
         tree.setUpdatesEnabled(False)
         self.tree.clear()
         self.build_tree()
@@ -692,17 +690,17 @@ class BuildTree():
         group, code, short, full = check_name(name)
         if code[1]:
             return group, code, short, full, year
-
-        stripped = re.search('(.*?)(?!-)(\d+$)', name)
+        stripped = re.search('(.*?)-?(\d+)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
             name = prefix
             group, code, short, full = check_name(name)
-            if int(suffix) >= 50:
-                year = '19' + suffix
-            else:
-                year = '20' + suffix
+            if len(suffix) == 2 :
+                if int(suffix) >= 50:
+                    year = '19' + suffix
+                else:
+                    year = '20' + suffix
         return group, code, short, full, year
 
     def process_language(self, lang):
@@ -792,10 +790,10 @@ class BuildTree():
         def check_node(parent, data, index):
             if index not in self.nodes:
                 parent = self.nodes[index] = add_node(parent, data)
-                self.leaves[index] = []
+                counter[index] = 1
             else:
                 parent = self.nodes[index]
-            counter[parent] += 1
+                counter[index] += 1
             return parent
 
         def add_node(parent, data):
@@ -805,7 +803,6 @@ class BuildTree():
             if data[1]:
                 child.setToolTip(0, f"          {data[1]}")
             child.setCheckState(0, Qt.Unchecked)
-            counter[child] = 0
             child.setTextAlignment(1, Qt.AlignCenter)
             return child
 
@@ -819,25 +816,33 @@ class BuildTree():
         for record in self.current:
             self.total += 1
             parent = self.tree
+            index = ''
+            segments = []
+            for level in levels:
+                item = record[level]
+                if item[0]:
+                    index += f"%{item[0]}"
+                    segments.append(index)
             try:
-                index = ''
-                for level in levels:
-                    if record[level][0]:
-                        index += f".{record[level][0]}"
                 self.leaves[index].append(record['item'])
+                for segment in segments:
+                    counter[segment] += 1
             except:
                 index = ''
                 for level in levels:
                     item = record[level]
                     if item[0]:
-                        index += f".{item[0]}"
+                        index += f"%{item[0]}"
                         parent = check_node(parent, item, index)
-                self.leaves[index].append(record['item'])
                 parent.setData(0, Qt.UserRole, index)
+                if index in self.leaves:
+                    self.leaves[index].append(record['item'])
+                else:
+                    self.leaves[index] = [record['item']]
             if progress:
                 self.pd.setValue(self.pd.value() + 1)
         for item in counter:
-            item.setData(1, Qt.DisplayRole, counter[item])
+            self.nodes[item].setData(1, Qt.DisplayRole, counter[item])
 
 
 class AddFavorites():
