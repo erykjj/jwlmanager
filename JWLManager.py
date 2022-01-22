@@ -1035,7 +1035,7 @@ class ExportItems():
 
     def export_highlights(self):
         self.export_highlight_header()
-        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM BlockRange b JOIN UserMark u USING(UserMarkId) JOIN Location l USING (LocationId) WHERE UserMarkId IN {self.items};"):
+        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
             self.export_file.write(f"\n{row[0]}")
             for item in range(1,13):
                 self.export_file.write(f",{row[item]}")
