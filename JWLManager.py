@@ -690,7 +690,7 @@ class BuildTree():
         group, code, short, full = check_name(name)
         if code[1]:
             return group, code, short, full, year
-        stripped = re.search('(.*?)-?(\d+)', name)
+        stripped = re.search('(.*?)(\d+$)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
