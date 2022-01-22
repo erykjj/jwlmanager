@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Highlights defined by BlockRange instead of UserMark
+
 ### Removed
 ____
 ## [0.2.1] - 2022-01-19

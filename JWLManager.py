@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.1'
+VERSION = 'v0.2.2'
 
 import os
 import re
@@ -628,15 +628,15 @@ class BuildTree():
             self.current.append(record)
 
     def get_highlights(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, UserMarkId, ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark JOIN Location l USING (LocationId);"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );"
         for row in self.cur.execute(sql):
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
-            detail1, detail2 = self.process_detail(row[6], row[7], row[8])
+            detail1, detail2 = self.process_detail(row[7], row[8], row[9])
             tag = (None, None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[5] or 0], None)
+            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Purple', 'Red', 'Orange')[row[6] or 0], None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
@@ -956,7 +956,7 @@ class DeleteItems():
         elif self.category == "Favorites":
             return self.delete("TagMap", "TagMapId")
         elif self.category == "Highlights":
-            return self.delete("UserMark", "UserMarkId")
+            return self.delete("BlockRange", "BlockRangeId")
         elif self.category == "Notes":
             return self.delete("Note", "NoteId")
         elif self.category == "Annotations":
