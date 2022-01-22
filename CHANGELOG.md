@@ -8,6 +8,7 @@
 ### Fixed
 
 - Highlights defined by BlockRange instead of UserMark
+- Slight adjustment to handle JW Broadcasting video segments in Favorites
 
 ### Removed
 ____
