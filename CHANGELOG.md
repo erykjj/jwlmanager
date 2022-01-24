@@ -5,10 +5,11 @@
 
 ### Changed
 
-### Fixed
-
 - Highlights defined by BlockRange instead of UserMark
+- Modified trim SQL to clean up unused UserMark records
 - Slight adjustment to handle JW Broadcasting video segments in Favorites
+
+### Fixed
 
 ### Removed
 ____

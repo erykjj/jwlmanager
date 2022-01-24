@@ -345,7 +345,7 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT PublicationLocationId FROM Bookmark)
               AND LocationId NOT IN (SELECT LocationId FROM InputField);
             DELETE FROM UserMark WHERE UserMarkId NOT IN (SELECT UserMarkId
-              FROM BlockRange) AND LocationId NOT IN
+              FROM BlockRange) OR LocationId NOT IN
               (SELECT LocationId FROM Location);
             DELETE FROM BlockRange WHERE UserMarkId NOT IN
               (SELECT UserMarkId FROM UserMark);
