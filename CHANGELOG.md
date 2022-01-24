@@ -5,14 +5,17 @@
 
 ### Changed
 
-- Highlights defined by BlockRange instead of UserMark
-- Modified trim SQL to clean up unused UserMark records
-- Slight adjustment to handle JW Broadcasting video segments in Favorites
-
 ### Fixed
 
 ### Removed
 ____
+## [0.2.2] - 2022-01-24
+### Changed
+
+- Highlights defined by BlockRange instead of UserMark
+- Modified trim SQL to clean up unused UserMark records
+- Slight adjustment to handle JW Broadcasting video segments in Favorites
+
 ## [0.2.1] - 2022-01-19
 ### Changed
 
@@ -100,6 +103,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.2.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.2
 [0.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.1
 [0.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.0
 [0.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.1.0
