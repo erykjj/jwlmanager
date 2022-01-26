@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.2'
+VERSION = 'v0.2.3'
 
 import os
 import re
@@ -92,7 +92,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.publications[row[0]] = row[1:]
         for row in cur.execute("SELECT * FROM Languages;"):
             self.languages[row[0]] = row[1:]
-        for row in cur.execute("SELECT BookNumber, StandardBookName FROM BookNames WHERE Language = 1;"):
+        for row in cur.execute("SELECT Number, Name FROM BibleBooks WHERE Language = 0;"):
             # Note: Bible books in English only
             self.books[row[0]] = row[1]
         con.close()
