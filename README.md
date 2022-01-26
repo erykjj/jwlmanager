@@ -3,7 +3,7 @@
 
 ## Purpose
 
-This application allows for viewing and performing various operations on a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). This resulting modified *.jwlibrary* file can then be restored within the app.
+This application allows for viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). A modified *.jwlibrary* file can then be restored within the app.
 
 In addition to the main functions of exporting, importing, and deleting, the application can also clean up any residual/unused records from the database and re-index the various tables within the database.
 
@@ -47,7 +47,7 @@ The ***View*** menu has some additional options (also accessible directly via th
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
 * **Unselect All (Ctrl+Z)** - unselect everything
-* **Detailed (Ctrl+D)** - add more detail to the tree: book and chapter in the case of the Bibles, article title (if provided in the archive) in case of other publications; be aware that **this will slow down the tree construction and selections** - depending on the number of items, so select preferably on the lower (more specific) levels and... wait patiently
+* **Detailed (Ctrl+D)** - add more detail to the tree: book and chapter in the case of the Bibles, article title (if provided in the archive) in case of other publications; be aware that **this will slow down the tree construction and selections** - depending on the number of items, so... wait patiently
 * **Grouped (Ctrl+G)** - when grouping by publication, this further classifies the publications by type (books, brochures, periodicals, etc.); Detailed and Grouped views are mutually exclusive
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
