@@ -3,7 +3,11 @@
 ## [Unreleased]
 ### Added
 
+- Handle unknown media items or publications in Favorites
+
 ### Changed
+
+- Cleaned up resources (unnecessary icons, etc.)
 
 ### Fixed
 

@@ -694,14 +694,16 @@ class BuildTree():
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
-            name = prefix
-            group, code, short, full = check_name(name)
             if len(suffix) == 2 :
                 if int(suffix) >= 50:
                     year = '19' + suffix
                 else:
                     year = '20' + suffix
-        return group, code, short, full, year
+            group, code, short, full = check_name(prefix)
+            if code[1]:
+                return group, code, short, full, year
+        else:
+            return ('* MEDIA *', None), (name, "?"), (name, "?"), (name, "?"), year
 
     def process_language(self, lang):
         if lang in self.languages.keys():
