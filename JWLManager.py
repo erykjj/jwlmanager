@@ -974,7 +974,7 @@ class ExportItems():
         self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.export_file = open(fname, 'w')
+        self.export_file = open(fname, 'w', encoding='utf-8')
         self.export_items()
         self.export_file.close
         con.close()
@@ -1008,7 +1008,7 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
     def export_bible(self):
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex,  n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId)  WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])\
@@ -1028,6 +1028,8 @@ class ExportItems():
 
     def export_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            if not row[2]:
+                print(row)
             tags = row[2] or ''
             txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags\
                     +"}===\n"+row[0]+"\n"+row[1].rstrip()
@@ -1189,7 +1191,7 @@ class ImportNotes():
     def __init__(self, fname=''):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.import_file = open(fname, 'r')
+        self.import_file = open(fname, 'r', encoding='utf-8')
         if self.pre_import():
             self.count = self.import_items()
         else:
