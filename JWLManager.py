@@ -1028,8 +1028,6 @@ class ExportItems():
 
     def export_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            if not row[2]:
-                print(row)
             tags = row[2] or ''
             txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags\
                     +"}===\n"+row[0]+"\n"+row[1].rstrip()
