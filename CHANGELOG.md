@@ -3,6 +3,15 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.2.3] - 2022-01-29
+### Added
+
 - Handle unknown media items or publications in Favorites
 
 ### Changed
@@ -11,8 +20,8 @@
 
 ### Fixed
 
-### Removed
-____
+- Fixed SQL for untagged notes
+
 ## [0.2.2] - 2022-01-24
 ### Changed
 
@@ -107,6 +116,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.2.3]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.3
 [0.2.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.2
 [0.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.1
 [0.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.0
