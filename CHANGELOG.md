@@ -17,6 +17,7 @@ ____
 ### Changed
 
 - Cleaned up resources (unnecessary icons, etc.)
+- Specify encoding for export/import files
 
 ### Fixed
 
