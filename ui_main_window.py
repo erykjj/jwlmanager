@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"JWL Manager", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"JWLManager", None))
         self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"&Open...", None))
 #if QT_CONFIG(shortcut)
         self.actionOpen.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
