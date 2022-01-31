@@ -9,6 +9,16 @@
 
 ### Removed
 ____
+## [0.2.4] - 2022-01-31
+### Changed
+
+- Slight adjustment in interface sizing and Help menu
+
+### Fixed
+
+- Fixed cases of unknown publications
+- Fixed cases where issue is not a date
+
 ## [0.2.3] - 2022-01-29
 ### Added
 
@@ -117,6 +127,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.2.4]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.4
 [0.2.3]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.3
 [0.2.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.2
 [0.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.1
