@@ -18,6 +18,7 @@ ____
 
 - Fixed cases of unknown publications
 - Fixed cases where issue is not a date
+- Fixed some still-used UserMark records being trimmed
 
 ## [0.2.3] - 2022-01-29
 ### Added
