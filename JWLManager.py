@@ -732,7 +732,7 @@ class BuildTree():
             else:
                 return (None, None)
 
-        if int(IssueTagNumber) > 0:
+        if int(IssueTagNumber) > 100000:
             issue = process_issue(IssueTagNumber)
         else:
             issue = (year, None)
