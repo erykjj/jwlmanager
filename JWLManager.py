@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.3'
+VERSION = 'v0.2.4'
 
 import os
 import re
@@ -660,6 +660,7 @@ class BuildTree():
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
         for row in self.cur.execute(sql):
+            print(row)
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
             language = self.process_language(row[2])
@@ -701,8 +702,7 @@ class BuildTree():
             group, code, short, full = check_name(prefix)
             if code[1]:
                 return group, code, short, full, year
-        else:
-            return ('* MEDIA *', None), (name, "?"), (name, "?"), (name, "?"), year
+        return ('* UNKNOWN *', None), (name, "?"), (name, "?"), (name, "?"), year
 
     def process_language(self, lang):
         if lang in self.languages.keys():
