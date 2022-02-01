@@ -344,7 +344,7 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT PublicationLocationId FROM Bookmark)
               AND LocationId NOT IN (SELECT LocationId FROM InputField);
             DELETE FROM UserMark WHERE LocationId NOT IN
-              (SELECT LocationId FROM Location WHERE Type = 1)
+              (SELECT LocationId FROM Location WHERE Type = 0)
               AND UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange);
             DELETE FROM BlockRange WHERE UserMarkId NOT IN
               (SELECT UserMarkId FROM UserMark);
@@ -1277,10 +1277,10 @@ class ImportNotes():
         return result[0]
 
 
-    def add_bible_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{attribs['ED']}', {attribs['LANG']}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1 );")
-        result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
-        return result[0]
+    # def add_bible_location(self, attribs):
+    #     self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{attribs['ED']}', {attribs['LANG']}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1 );")
+    #     result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
+    #     return result[0]
 
     def add_scripture_location(self, attribs):
         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
@@ -1288,11 +1288,10 @@ class ImportNotes():
         return result[0]
 
     def import_bible(self, attribs, title, note):
-        # TODO: add a separate UserMark for each note??
-        # or each chapter (instead of the whole Bible)
-        location_bible = self.add_bible_location(attribs)
+        # location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        usermark_id = self.add_usermark(attribs, location_bible)
+        # usermark_id = self.add_usermark(attribs, location_bible)
+        usermark_id = self.add_usermark(attribs, location_scripture)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
         if result:
             unique_id = result[0]
@@ -1306,7 +1305,6 @@ class ImportNotes():
 
 
     def add_publication_location(self, attribs):
-        # Note: added Type 0 to queries - different from jwl-admin!!!
         self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {attribs['ISSUE']}, '{attribs['PUB']}', {attribs['LANG']}, {attribs['DOC']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0);")
         result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0;").fetchone()
         return result[0]
