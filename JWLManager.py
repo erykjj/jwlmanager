@@ -343,9 +343,9 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
               (SELECT PublicationLocationId FROM Bookmark)
               AND LocationId NOT IN (SELECT LocationId FROM InputField);
-            DELETE FROM UserMark JOIN Location l USING (LocationId)
-              WHERE UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange)
-              AND l.Type = 0;
+            DELETE FROM UserMark WHERE LocationId NOT IN
+              (SELECT LocationIdFROM Location WHERE Type = 1)
+              AND UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange);
             DELETE FROM BlockRange WHERE UserMarkId NOT IN
               (SELECT UserMarkId FROM UserMark);
             DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
@@ -1292,7 +1292,6 @@ class ImportNotes():
         # or each chapter (instead of the whole Bible)
         location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        # usermark_id = self.add_usermark(attribs, location_scripture)
         usermark_id = self.add_usermark(attribs, location_bible)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
         if result:
