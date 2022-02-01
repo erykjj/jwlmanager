@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.5'
+VERSION = 'v0.3.0'
 
 import os
 import re
@@ -119,7 +119,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
-        # self.actionReindex.triggered.connect(self.reindex)
+        self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
         self.actionCollapse_All.triggered.connect(self.collapse_all)
         self.actionSelect_All.triggered.connect(self.select_all)
@@ -312,7 +312,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.file_loaded()
 
     def file_loaded(self):
-        # self.actionReindex.setEnabled(True)
+        self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave_As.setEnabled(True)
@@ -541,9 +541,21 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def reindex(self):
+        reply = QMessageBox.information(self, 'Reindex',
+                'This may take a few seconds.\nProceed?',
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if reply == QMessageBox.No:
+            return
         self.trim_db()
+        self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
+        self.pd.setWindowModality(Qt.WindowModal)
+        self.pd.setWindowTitle('Reindexing')
+        self.pd.setWindowFlag(Qt.FramelessWindowHint)
+        self.pd.setModal(True)
+        self.pd.setMinimumDuration(0)
         self.statusBar.showMessage(" Reindexing. Please wait...")
-        Reindex()
+        app.processEvents()
+        Reindex(self.pd)
         self.statusBar.showMessage(" Reindexed successfully", 3500)
         self.archive_modified()
         self.regroup()
@@ -1340,21 +1352,20 @@ class ImportNotes():
 
 
 class Reindex():
-    def __init__(self):
+    def __init__(self, progress):
+        self.progress = progress
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
                                 PRAGMA foreign_keys = 'OFF'; \
-                                PRAGMA ignore_check_constraints = TRUE; \
                                 BEGIN;")
         self.reindex_notes()
         self.reindex_highlights()
         self.reindex_tags()
         self.reindex_ranges()
         self.reindex_locations()
-        self.cur.executescript('PRAGMA foreign_keys = "ON"; \
-                                PRAGMA ignore_check_constraints = FALSE;')
+        self.cur.execute('PRAGMA foreign_keys = "ON";')
         con.commit()
         con.close()
 
@@ -1366,7 +1377,11 @@ class Reindex():
 
     def update_table(self, table, field):
         app.processEvents()
-        self.cur.execute(f"UPDATE {table} SET {field} = {field};")
+        sql = f"""
+            UPDATE {table} SET {field} = (SELECT New - 999999 FROM CrossReference WHERE CrossReference.Old = {table}.{field});
+            UPDATE {table} SET {field} = {field} + 999999;"""
+        self.cur.executescript(sql)
+        self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
         self.cur.execute('DROP TABLE CrossReference;')
