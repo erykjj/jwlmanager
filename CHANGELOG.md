@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Modified UserMark trimming SQL
+
 ### Fixed
 
 ### Removed
