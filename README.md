@@ -120,7 +120,7 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 #### REINDEX
 
-This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take a few seconds, depending on the number of records the database contains. It does not need to be run more than once in a while.
+This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take up to a minute, depending on the number of records the database contains. It does not need to be run more than once in a while.
 
 ____
 ## Feedback
