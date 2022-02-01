@@ -119,7 +119,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
-        self.actionReindex.triggered.connect(self.reindex)
+        # self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
         self.actionCollapse_All.triggered.connect(self.collapse_all)
         self.actionSelect_All.triggered.connect(self.select_all)
@@ -203,23 +203,24 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def switchboard(self, selection):
         if selection == "Notes":
-            self.disable_options([], False, True, True)
+            self.disable_options([], False, True, True, True)
         elif selection == "Highlights":
-            self.disable_options([3], False, True, True)
+            self.disable_options([3], False, True, True, False)
         elif selection == "Bookmarks":
-            self.disable_options([3,4], False, False, False)
+            self.disable_options([3,4], False, False, False, False)
         elif selection == "Annotations":
-            self.disable_options([3,4], False, True, True)
+            self.disable_options([3,4], False, True, True, False)
         elif selection == "Favorites":
-            self.disable_options([3,4], True, False, False)
+            self.disable_options([3,4], True, False, False, False)
         if self.combo_grouping.currentText() != 'Publication':
             self.combo_grouping.currentTextChanged.disconnect()
             self.combo_grouping.setCurrentText('Publication')
             self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.regroup()
 
-    def disable_options(self, list=[], add=False, exp=False, imp=False):
+    def disable_options(self, list=[], add=False, exp=False, imp=False, obscure=False):
         self.button_add.setVisible(add)
+        self.button_obscure.setVisible(obscure)
         self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
         self.button_import.setVisible(imp)
@@ -311,7 +312,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.file_loaded()
 
     def file_loaded(self):
-        self.actionReindex.setEnabled(True)
+        # self.actionReindex.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave_As.setEnabled(True)
@@ -425,6 +426,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in checked_leaves:
             self.selected_items += len(self.leaves[item])
         self.selected.setText(f"**{self.selected_items:,}**")
+        self.button_obscure.setEnabled(self.selected_items and self.combo_category.currentText() == 'Notes')
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
 
