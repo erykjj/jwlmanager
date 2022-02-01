@@ -6,6 +6,7 @@
 ### Changed
 
 - Modified UserMark trimming SQL
+- Readded reindexing function with progress bar
 
 ### Fixed
 
