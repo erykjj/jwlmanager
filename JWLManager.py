@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.2.4'
+VERSION = 'v0.2.5'
 
 import os
 import re
@@ -343,9 +343,9 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
               (SELECT PublicationLocationId FROM Bookmark)
               AND LocationId NOT IN (SELECT LocationId FROM InputField);
-            DELETE FROM UserMark WHERE NOT (UserMarkId IN (SELECT UserMarkId
-              FROM BlockRange) OR LocationId IN
-              (SELECT LocationId FROM Location));
+            DELETE FROM UserMark JOIN Location l USING (LocationId)
+              WHERE UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange)
+              AND l.Type = 0;
             DELETE FROM BlockRange WHERE UserMarkId NOT IN
               (SELECT UserMarkId FROM UserMark);
             DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
@@ -1288,8 +1288,11 @@ class ImportNotes():
         return result[0]
 
     def import_bible(self, attribs, title, note):
+        # TODO: add a separate UserMark for each note??
+        # or each chapter (instead of the whole Bible)
         location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
+        # usermark_id = self.add_usermark(attribs, location_scripture)
         usermark_id = self.add_usermark(attribs, location_bible)
         result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']};").fetchone()
         if result:
