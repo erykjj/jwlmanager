@@ -209,9 +209,9 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == "Highlights":
             self.disable_options([3], False, True, True, False)
         elif selection == "Bookmarks":
-            self.disable_options([3,4], False, False, False, False)
+            self.disable_options([3,4], False, False, False, True)
         elif selection == "Annotations":
-            self.disable_options([3,4], False, True, True, False)
+            self.disable_options([3,4], False, True, True, True)
         elif selection == "Favorites":
             self.disable_options([3,4], True, False, False, False)
         if self.combo_grouping.currentText() != 'Publication':
@@ -427,9 +427,9 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in checked_leaves:
             self.selected_items += len(self.leaves[item])
         self.selected.setText(f"**{self.selected_items:,}**")
-        self.button_obscure.setEnabled(self.selected_items and self.combo_category.currentText() == 'Notes')
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
+        self.button_obscure.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Bookmarks', 'Annotations'))
 
 
     def export(self):
@@ -526,7 +526,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def obscure(self):
         reply = QMessageBox.warning(self, 'Obscure',
-                f"Are you sure you want to\nOBSCURE these {self.selected_items} notes?",
+                f"Are you sure you want to\nOBSCURE these {self.selected_items} items?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
@@ -538,7 +538,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        result = ObscureItems(self.combo_category.currentText(), selected).result
+        ObscureItems(self.combo_category.currentText(), selected)
         self.statusBar.showMessage(f" {self.selected_items} items obscured", 3500)
         self.archive_modified()
         self.regroup()
@@ -1378,14 +1378,13 @@ class ObscureItems():
     def __init__(self, category='Note', items=[]):
         self.category = category
         self.items = items
-        # self.items = str(items).replace('[', '(').replace(']', ')')
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
         self.m = regex.compile('\p{L}')
-        self.result = self.obscure_items()
+        self.obscure_items()
         con.commit()
         con.close()
 
@@ -1395,7 +1394,7 @@ class ObscureItems():
         i = 0
         s = ''
         for c in str:
-            if m.match(c):
+            if self.m.match(c):
                 if c.isupper():
                     s += self.m.sub(lst[i].upper(), c)
                 else:
@@ -1407,33 +1406,78 @@ class ObscureItems():
                 s += c
         return s
 
-    def obscure_notes(self, item):
-        title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
-        title = self.obscure_text(title).replace("'", "''")
-        content = self.obscure_text(content).replace("'", "''")
-        if location not in self.locations:
-            self.locations.append(location)
-        try:
-            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-        except:
-            print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+    def obscure_notes(self):
+        for item in self.items:
+            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
+            title = self.obscure_text(title).replace("'", "''")
+            content = self.obscure_text(content).replace("'", "''")
+            if location not in self.locations:
+                self.locations.append(location)
+            try:
+                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            except:
+                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
 
-    def obscure_location(self, location):
-        title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
-        if not title:
-            return
-        title = self.obscure_text(title).replace("'", "''")
-        try:
-            self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
-        except:
-            print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+    def obscure_locations(self, locations):
+        for location in locations:
+            title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
+            if not title:
+                return
+            title = self.obscure_text(title).replace("'", "''")
+            try:
+                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+            except:
+                print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
 
     def obscure_items(self):
-        self.locations = []
+        if self.category == "Bookmarks":
+            locations = self.obscure_bookmarks()
+        elif self.category == "Notes":
+            locations = self.obscure_notes()
+        elif self.category == "Annotations":
+            locations = self.obscure_annotations()
+        self.obscure_locations(locations)
+
+    def obscure_annotations(self):
+        locations = []
         for item in self.items:
-            self.obscure_notes(item)
-        for location in self.locations:
-            self.obscure_location(location)
+            content, location = self.cur.execute(f"SELECT Value, LocationId FROM InputField WHERE TextTag = {item};").fetchone()
+            content = self.obscure_text(content).replace("'", "''")
+            if location not in locations:
+                locations.append(location)
+            try:
+                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = {item};")
+            except:
+                print(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = {item};")
+        return locations
+
+    def obscure_bookmarks(self):
+        locations = []
+        for item in self.items:
+            title, content, location = self.cur.execute(f"SELECT Title, Snippet, LocationId FROM Bookmark WHERE PublicationLocationId = {item};").fetchone()
+            title = self.obscure_text(title).replace("'", "''")
+            content = self.obscure_text(content).replace("'", "''")
+            if location not in locations:
+                locations.append(location)
+            try:
+                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
+            except:
+                print(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
+        return locations
+
+    def obscure_notes(self):
+        locations = []
+        for item in self.items:
+            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
+            title = self.obscure_text(title).replace("'", "''")
+            content = self.obscure_text(content).replace("'", "''")
+            if location not in locations:
+                locations.append(location)
+            try:
+                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            except:
+                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+        return locations
 
 
 class Reindex():
