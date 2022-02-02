@@ -40,6 +40,7 @@ from PySide2.QtWidgets import *
 
 from datetime import datetime
 from pathlib import Path
+from random import randint
 from shutil import rmtree
 from tempfile import mkdtemp
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -137,6 +138,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_import.clicked.connect(self.import_file)
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
+        self.button_obscure.clicked.connect(self.obscure)
 
 
     def expand_all(self):
@@ -518,6 +520,79 @@ class Window(QMainWindow, Ui_MainWindow):
         result = DeleteItems(self.combo_category.currentText(), selected).result
         self.statusBar.showMessage(f" {result} items deleted", 3500)
         self.trim_db()
+        self.archive_modified()
+        self.regroup()
+        self.tree_selection()
+
+
+    def obscure(self):
+
+        def obscure_text(str):
+            lst = list(words[randint(0,len(words)-1)])
+            l = len(lst)
+            i = 0
+            s = ''
+            for c in str:
+                if m.match(c):
+                    if c.isupper():
+                        s += m.sub(lst[i].upper(), c)
+                    else:
+                        s += m.sub(lst[i], c)
+                    i += 1
+                    if i == l:
+                        i = 0
+                else:
+                    s += c
+            return s
+
+        def obscure_notes(item):
+            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
+            title = obscure_text(title).replace("'", "''") or ''
+            content = obscure_text(content).replace("'", "''") or ''
+            if location not in locations:
+                locations.append(location)
+            try:
+                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            except:
+                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+
+        def obscure_location(location):
+            title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
+            if not title:
+                return
+            title = obscure_text(title).replace("'", "''")
+            try:
+                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+            except:
+                print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+
+        reply = QMessageBox.warning(self, 'Obscure',
+                f"Are you sure you want to\nOBSCURE these {self.selected_items} notes?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.No:
+            return
+
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF';")
+        words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
+        m = regex.compile('\p{L}')
+        locations = []
+
+        it = QTreeWidgetItemIterator(self.treeWidget,
+                  QTreeWidgetItemIterator.Checked)
+        for item in it:
+            index = item.value().data(0, Qt.UserRole)
+            if index in self.leaves:
+                for id in self.leaves[index]:
+                    obscure_notes(id)
+        for location in locations:
+            obscure_location(location)
+
+        con.commit()
+        con.close()
+        self.statusBar.showMessage(f" {self.selected_items} items obscured", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
