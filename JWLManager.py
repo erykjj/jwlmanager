@@ -29,7 +29,7 @@ SOFTWARE.
 VERSION = 'v0.3.0'
 
 import os
-import re
+import regex
 import sqlite3
 import sys
 import uuid
@@ -703,7 +703,7 @@ class BuildTree():
         group, code, short, full = check_name(name)
         if code[1]:
             return group, code, short, full, year
-        stripped = re.search('(.*?)(\d+$)', name)
+        stripped = regex.search('(.*?)(\d+$)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
@@ -749,7 +749,7 @@ class BuildTree():
             issue = process_issue(IssueTagNumber)
         else:
             issue = (year, None)
-        if issue[0] and re.match('\d{4}', issue[0]):
+        if issue[0] and regex.match('\d{4}', issue[0]):
                 year = (issue[0][:4], None)
         else:
                 year = ('* NO DATE *', None)
@@ -935,7 +935,7 @@ class AddFavorites():
         if pub == " " or lang == " ":
             self.message = (0, " Nothing added!")
             return
-        pub = re.match('(.*?) \(.*?\)$', pub).group(1)
+        pub = regex.match('(.*?) \(.*?\)$', pub).group(1)
         publication = [k for k, v in self.publications.items() if v[0] == pub][0]
         language = [k for k, v in self.languages.items() if v[0] == lang][0]
         location = self.add_location(publication, language)
@@ -1088,7 +1088,7 @@ class ImportAnnotations():
 
     def pre_import(self):
         line = self.import_file.readline()
-        if re.search('{ANNOTATIONS}', line):
+        if regex.search('{ANNOTATIONS}', line):
             return True
         else:
             QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {ANNOTATIONS} tag line', QMessageBox.Abort)
@@ -1096,13 +1096,13 @@ class ImportAnnotations():
 
     def import_items(self):
         count = 0
-        while not re.match("\*\*\*\*\*", self.import_file.readline()):
+        while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             try:
                 count += 1
-                attribs = re.split(',', line.rstrip(), 6)
+                attribs = regex.split(',', line.rstrip(), 6)
                 location_id = self.add_location(attribs)
                 value = attribs[6].replace(r"\n", "\n")
                 if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
@@ -1136,7 +1136,7 @@ class ImportHighlights():
 
     def pre_import(self):
         line = self.import_file.readline()
-        if re.search('{HIGHLIGHTS}', line):
+        if regex.search('{HIGHLIGHTS}', line):
             return True
         else:
             QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {HIGHLIGHTS} tag line', QMessageBox.Abort)
@@ -1144,13 +1144,13 @@ class ImportHighlights():
 
     def import_items(self):
         count = 0
-        while not re.match("\*\*\*\*\*", self.import_file.readline()):
+        while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
         self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             try:
                 count += 1
-                attribs = re.split(',', line.rstrip().replace("None", ""))
+                attribs = regex.split(',', line.rstrip().replace("None", ""))
                 if attribs[6]:
                     location_id = self.add_scripture_location(attribs)
                 else:
@@ -1212,7 +1212,7 @@ class ImportNotes():
 
     def pre_import(self):
         line = self.import_file.readline()
-        m = re.search('\{TITLE=(.?)\}', line)
+        m = regex.search('\{TITLE=(.?)\}', line)
         if m:
             title_char = m.group(1) or ''
         else:
@@ -1244,7 +1244,7 @@ class ImportNotes():
         count = 0
         self.cur.execute("BEGIN;")
         notes = self.import_file.read().replace("'", "''")
-        for item in re.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, re.S):
+        for item in regex.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, regex.S):
             try:
                 count += 1
                 attribs = self.process_header(item.group(1))
@@ -1268,7 +1268,7 @@ class ImportNotes():
 
     def process_header(self, line):
         attribs = {}
-        for (key, value) in re.findall('{(.*?)=(.*?)}', line):
+        for (key, value) in regex.findall('{(.*?)=(.*?)}', line):
             attribs[key] = value
         return attribs
 
