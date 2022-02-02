@@ -1441,14 +1441,14 @@ class ObscureItems():
     def obscure_annotations(self):
         locations = []
         for item in self.items:
-            content, location = self.cur.execute(f"SELECT Value, LocationId FROM InputField WHERE TextTag = {item};").fetchone()
+            content, location = self.cur.execute(f"SELECT Value, LocationId FROM InputField WHERE TextTag = '{item}';").fetchone()
             content = self.obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
             try:
-                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = {item};")
+                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
             except:
-                print(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = {item};")
+                print(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
         return locations
 
     def obscure_bookmarks(self):
