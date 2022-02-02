@@ -525,78 +525,25 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def obscure(self):
-        # TODO: move to class
-        # add: obscure bookmarks and annotations
-
-        def obscure_text(str):
-            lst = list(words[randint(0,len(words)-1)])
-            l = len(lst)
-            i = 0
-            s = ''
-            for c in str:
-                if m.match(c):
-                    if c.isupper():
-                        s += m.sub(lst[i].upper(), c)
-                    else:
-                        s += m.sub(lst[i], c)
-                    i += 1
-                    if i == l:
-                        i = 0
-                else:
-                    s += c
-            return s
-
-        def obscure_notes(item):
-            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
-            title = obscure_text(title).replace("'", "''")
-            content = obscure_text(content).replace("'", "''")
-            if location not in locations:
-                locations.append(location)
-            try:
-                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-            except:
-                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-
-        def obscure_location(location):
-            title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
-            if not title:
-                return
-            title = obscure_text(title).replace("'", "''")
-            try:
-                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
-            except:
-                print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
-
         reply = QMessageBox.warning(self, 'Obscure',
                 f"Are you sure you want to\nOBSCURE these {self.selected_items} notes?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
-        self.cur = con.cursor()
-        self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF';")
-        words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
-        m = regex.compile('\p{L}')
-        locations = []
-
+        selected = []
         it = QTreeWidgetItemIterator(self.treeWidget,
                   QTreeWidgetItemIterator.Checked)
         for item in it:
             index = item.value().data(0, Qt.UserRole)
             if index in self.leaves:
                 for id in self.leaves[index]:
-                    obscure_notes(id)
-        for location in locations:
-            obscure_location(location)
-
-        con.commit()
-        con.close()
+                    selected.append(id)
+        result = ObscureItems(self.combo_category.currentText(), selected).result
         self.statusBar.showMessage(f" {self.selected_items} items obscured", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
+
 
 
     def closeEvent(self, event):
@@ -1425,6 +1372,68 @@ class ImportNotes():
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
+
+
+class ObscureItems():
+    def __init__(self, category='Note', items=[]):
+        self.category = category
+        self.items = items
+        # self.items = str(items).replace('[', '(').replace(']', ')')
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF';")
+        self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
+        self.m = regex.compile('\p{L}')
+        self.result = self.obscure_items()
+        con.commit()
+        con.close()
+
+    def obscure_text(self, str):
+        lst = list(self.words[randint(0,len(self.words)-1)])
+        l = len(lst)
+        i = 0
+        s = ''
+        for c in str:
+            if m.match(c):
+                if c.isupper():
+                    s += self.m.sub(lst[i].upper(), c)
+                else:
+                    s += self.m.sub(lst[i], c)
+                i += 1
+                if i == l:
+                    i = 0
+            else:
+                s += c
+        return s
+
+    def obscure_notes(self, item):
+        title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
+        title = self.obscure_text(title).replace("'", "''")
+        content = self.obscure_text(content).replace("'", "''")
+        if location not in self.locations:
+            self.locations.append(location)
+        try:
+            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+        except:
+            print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+
+    def obscure_location(self, location):
+        title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
+        if not title:
+            return
+        title = self.obscure_text(title).replace("'", "''")
+        try:
+            self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+        except:
+            print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
+
+    def obscure_items(self):
+        self.locations = []
+        for item in self.items:
+            self.obscure_notes(item)
+        for location in self.locations:
+            self.obscure_location(location)
 
 
 class Reindex():

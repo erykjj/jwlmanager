@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Added obscuring function for Notes
+
 ### Changed
 
 - Modified UserMark trimming SQL
