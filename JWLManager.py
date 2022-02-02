@@ -526,6 +526,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def obscure(self):
+        # TODO: move to class
+        # add: obscure bookmarks and annotations
 
         def obscure_text(str):
             lst = list(words[randint(0,len(words)-1)])
@@ -547,8 +549,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def obscure_notes(item):
             title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
-            title = obscure_text(title).replace("'", "''") or ''
-            content = obscure_text(content).replace("'", "''") or ''
+            title = obscure_text(title).replace("'", "''")
+            content = obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
             try:
@@ -1445,17 +1447,17 @@ class Reindex():
         con.close()
 
     def make_table(self, table):
-        sql = f"""
-            CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT);
-            INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};"""
-        self.cur.executescript(sql)
+        self.cur.executescript(f"""
+            CREATE TABLE CrossReference (Old INTEGER,
+              New INTEGER PRIMARY KEY AUTOINCREMENT);
+            INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};""")
 
     def update_table(self, table, field):
         app.processEvents()
-        sql = f"""
-            UPDATE {table} SET {field} = (SELECT New - 999999 FROM CrossReference WHERE CrossReference.Old = {table}.{field});
-            UPDATE {table} SET {field} = {field} + 999999;"""
-        self.cur.executescript(sql)
+        self.cur.executescript(f"""
+            UPDATE {table} SET {field} = (SELECT -New FROM CrossReference
+              WHERE CrossReference.Old = {table}.{field});
+            UPDATE {table} SET {field} = abs({field});""")
         self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
