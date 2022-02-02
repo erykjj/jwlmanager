@@ -1441,7 +1441,8 @@ class Reindex():
         self.reindex_tags()
         self.reindex_ranges()
         self.reindex_locations()
-        self.cur.execute('PRAGMA foreign_keys = "ON";')
+        self.cur.executescript('PRAGMA foreign_keys = "ON"; \
+                                VACUUM;')
         con.commit()
         con.close()
 
