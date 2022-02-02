@@ -120,7 +120,7 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 #### OBSCURE
 
-If you need to share your complete archive, but have some personal or confidential information, you can use this option to selectively over-write title and text fields in your Annotations, Bookmarks and Notes. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. Of course, there is no way to reverse this step, so don't loose the original.
+If you need to share your complete archive, but have some personal or confidential information, you can use this option to selectively over-write title and text fields in your Annotations, Bookmarks and Notes. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. Of course, there is no way to reverse this step, so don't loose the original. You can export your obscured Notes to confirm.
 
 #### REINDEX
 
