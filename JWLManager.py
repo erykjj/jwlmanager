@@ -1475,18 +1475,15 @@ class ObscureItems():
             content = self.obscure_text(content).replace("'", "''")
             if location not in self.locations:
                 self.locations.append(location)
-            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = ' {content}' WHERE NoteId = {item};")
 
     def obscure_locations(self, locations):
         for location in locations:
+            print(f"SELECT Title FROM Location WHERE LocationId = {location};")
             title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
-            if not title:
-                return
-            title = self.obscure_text(title).replace("'", "''")
-            try:
+            if title:
+                title = self.obscure_text(title).replace("'", "''")
                 self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
-            except:
-                print(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
 
     def obscure_items(self):
         if self.category == "Bookmarks":
@@ -1501,41 +1498,37 @@ class ObscureItems():
         locations = []
         for item in self.items:
             content, location = self.cur.execute(f"SELECT Value, LocationId FROM InputField WHERE TextTag = '{item}';").fetchone()
-            content = self.obscure_text(content).replace("'", "''")
+            if content:
+                content = self.obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
-            try:
-                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
-            except:
-                print(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
+            self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
         return locations
 
     def obscure_bookmarks(self):
         locations = []
         for item in self.items:
             title, content, location = self.cur.execute(f"SELECT Title, Snippet, LocationId FROM Bookmark WHERE PublicationLocationId = {item};").fetchone()
-            title = self.obscure_text(title).replace("'", "''")
-            content = self.obscure_text(content).replace("'", "''")
+            if title:
+                title = self.obscure_text(title).replace("'", "''")
+            if content:
+                content = self.obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
-            try:
-                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
-            except:
-                print(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
+            self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
         return locations
 
     def obscure_notes(self):
         locations = []
         for item in self.items:
             title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
-            title = self.obscure_text(title).replace("'", "''")
-            content = self.obscure_text(content).replace("'", "''")
+            if title:
+                title = self.obscure_text(title).replace("'", "''")
+            if content:
+                content = self.obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
-            try:
-                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-            except:
-                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
         return locations
 
 
