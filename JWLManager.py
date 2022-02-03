@@ -452,8 +452,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == '':
             self.statusBar.showMessage(" NOT exported!", 3500)
             return
-        ExportItems(self.combo_category.currentText(), selected, fname[0],
+        ei = ExportItems(self.combo_category.currentText(), selected, fname[0],
             Path(self.current_archive).stem)
+        if ei.aborted:
+            self.clean_up()
+            sys.exit()
         self.statusBar.showMessage("Items exported", 3500)
 
 
@@ -471,23 +474,30 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(" Importing. Please wait...")
         app.processEvents()
         if self.combo_category.currentText() == 'Annotations':
-            count = ImportAnnotations(fname[0]).count
+            i = ImportAnnotations(fname[0])
         elif self.combo_category.currentText() == 'Highlights':
-            count = ImportHighlights(fname[0]).count
+            i = ImportHighlights(fname[0])
         elif self.combo_category.currentText() == 'Notes':
-            count = ImportNotes(fname[0]).count
-        if not count:
+            i = ImportNotes(fname[0])
+        if i.aborted:
+            self.clean_up()
+            sys.exit()
+        if not i.count:
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
         self.trim_db()
-        self.statusBar.showMessage(f" {count} items imported/updated", 3500)
+        self.statusBar.showMessage(f" {i.count} items imported/updated", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
 
 
     def add_favorite(self):
-        text = AddFavorites(self.publications, self.languages).message
+        af = AddFavorites(self.publications, self.languages)
+        if af.aborted:
+            self.clean_up()
+            sys.exit()
+        text = af.message
         self.statusBar.showMessage(text[1], 3500)
         if text[0]:
             self.archive_modified()
@@ -509,8 +519,11 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        result = DeleteItems(self.combo_category.currentText(), selected).result
-        self.statusBar.showMessage(f" {result} items deleted", 3500)
+        di = DeleteItems(self.combo_category.currentText(), selected)
+        if di.aborted:
+            self.clean_up()
+            sys.exit()
+        self.statusBar.showMessage(f" {di.result} items deleted", 3500)
         self.trim_db()
         self.archive_modified()
         self.regroup()
@@ -531,12 +544,14 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        ObscureItems(self.combo_category.currentText(), selected)
+        oi = ObscureItems(self.combo_category.currentText(), selected)
+        if oi.aborted:
+            self.clean_up()
+            sys.exit()
         self.statusBar.showMessage(f" {self.selected_items} items obscured", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
-
 
 
     def closeEvent(self, event):
@@ -880,15 +895,21 @@ class AddFavorites():
         self.publications = publications
         self.languages = languages
         self.message = (0, "")
-
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF';")
-        self.add_favorite()
-        self.cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        self.aborted = False
+        try:
+            self.add_favorite()
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: AddFavorites\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def add_dialog(self):
@@ -968,16 +989,22 @@ class AddFavorites():
 class DeleteItems():
     def __init__(self, category='Note', items=[]):
         self.category = category
-        self.items = str(items).replace('[', '(').replace(']', ')')
-
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF';")
-        self.result = self.delete_items()
-        self.cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        self.aborted = False
+        try:
+            self.items = str(items).replace('[', '(').replace(']', ')')
+            self.result = self.delete_items()
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: DeleteItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def delete_items(self):
@@ -999,13 +1026,18 @@ class DeleteItems():
 class ExportItems():
     def __init__(self, category='Note', items=[], fname='', current_archive=''):
         self.category = category
-        self.items = str(items).replace('[', '(').replace(']', ')')
         self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.export_file = open(fname, 'w', encoding='utf-8')
-        self.export_items()
-        self.export_file.close
+        self.aborted = False
+        try:
+            self.items = str(items).replace('[', '(').replace(']', ')')
+            self.export_file = open(fname, 'w', encoding='utf-8')
+            self.export_items()
+            self.export_file.close
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ExportItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
         con.close()
 
     def export_items(self):
@@ -1094,12 +1126,24 @@ class ImportAnnotations():
     def __init__(self, fname=''):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.import_file = open(fname, 'r')
-        if self.pre_import():
-            self.count = self.import_items()
-        else:
-            self.count = 0
-        self.import_file.close
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        self.aborted = False
+        try:
+            self.import_file = open(fname, 'r')
+            if self.pre_import():
+                self.count = self.import_items()
+            else:
+                self.count = 0
+            self.import_file.close
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportAnnotations\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1114,7 +1158,6 @@ class ImportAnnotations():
         count = 0
         while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
-        self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             try:
                 count += 1
@@ -1129,7 +1172,6 @@ class ImportAnnotations():
                 QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
-        self.cur.execute("COMMIT;")
         return count
 
     def add_location(self, attribs):
@@ -1142,12 +1184,24 @@ class ImportHighlights():
     def __init__(self, fname=''):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.import_file = open(fname, 'r')
-        if self.pre_import():
-            self.count = self.import_items()
-        else:
-            self.count = 0
-        self.import_file.close
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        self.aborted = False
+        try:
+            self.import_file = open(fname, 'r')
+            if self.pre_import():
+                self.count = self.import_items()
+            else:
+                self.count = 0
+            self.import_file.close
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportHighlights\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1162,7 +1216,6 @@ class ImportHighlights():
         count = 0
         while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
-        self.cur.execute("BEGIN;")
         for line in self.import_file.readlines():
             try:
                 count += 1
@@ -1176,7 +1229,6 @@ class ImportHighlights():
                 QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
-        self.cur.execute("COMMIT;")
         return count
 
     def add_scripture_location(self, attribs):
@@ -1218,12 +1270,24 @@ class ImportNotes():
     def __init__(self, fname=''):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
-        self.import_file = open(fname, 'r', encoding='utf-8')
-        if self.pre_import():
-            self.count = self.import_items()
-        else:
-            self.count = 0
-        self.import_file.close
+        self.cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        self.aborted = False
+        try:
+            self.import_file = open(fname, 'r', encoding='utf-8')
+            if self.pre_import():
+                self.count = self.import_items()
+            else:
+                self.count = 0
+            self.import_file.close
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportNotes\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1258,7 +1322,6 @@ class ImportNotes():
 
     def import_items(self):
         count = 0
-        self.cur.execute("BEGIN;")
         notes = self.import_file.read().replace("'", "''")
         for item in regex.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, regex.S):
             try:
@@ -1279,7 +1342,6 @@ class ImportNotes():
                 QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
-        self.cur.execute("COMMIT;")
         return count
 
     def process_header(self, line):
@@ -1374,11 +1436,18 @@ class ObscureItems():
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF';")
+                                PRAGMA journal_mode = 'OFF'; \
+                                BEGIN; ")
         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
         self.m = regex.compile('\p{L}')
-        self.obscure_items()
-        con.commit()
+        self.aborted = False
+        try:
+            self.obscure_items()
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ObscureItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def obscure_text(self, str):
@@ -1406,10 +1475,7 @@ class ObscureItems():
             content = self.obscure_text(content).replace("'", "''")
             if location not in self.locations:
                 self.locations.append(location)
-            try:
-                self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-            except:
-                print(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
 
     def obscure_locations(self, locations):
         for location in locations:
@@ -1482,14 +1548,20 @@ class Reindex():
                                 PRAGMA journal_mode = 'OFF'; \
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
-        self.reindex_notes()
-        self.reindex_highlights()
-        self.reindex_tags()
-        self.reindex_ranges()
-        self.reindex_locations()
-        self.cur.executescript('PRAGMA foreign_keys = "ON"; \
-                                VACUUM;')
-        con.commit()
+        self.aborted = False
+        try:
+            self.reindex_notes()
+            self.reindex_highlights()
+            self.reindex_tags()
+            self.reindex_ranges()
+            self.reindex_locations()
+            self.cur.executescript('PRAGMA foreign_keys = "ON"; \
+                                    VACUUM;')
+            con.commit()
+        except:
+            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: Reindex\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+            self.aborted = True
+            self.cur.execute("ROLLBACK;")
         con.close()
 
     def make_table(self, table):

@@ -4,11 +4,13 @@
 ### Added
 
 - Added obscuring function for Annotations, Bookmarks and Notes
+- Added general exception handling
 
 ### Changed
 
 - Modified UserMark trimming SQL
 - Readded reindexing function with progress bar
+- Code clean-up
 
 ### Fixed
 
