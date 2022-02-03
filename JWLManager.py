@@ -28,11 +28,7 @@ SOFTWARE.
 
 VERSION = 'v0.3.0'
 
-import os
-import regex
-import sqlite3
-import sys
-import uuid
+import os, random, regex, shutil, sqlite3, sys, tempfile, uuid
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -40,9 +36,6 @@ from PySide2.QtWidgets import *
 
 from datetime import datetime
 from pathlib import Path
-from random import randint
-from shutil import rmtree
-from tempfile import mkdtemp
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from ui_main_window import Ui_MainWindow
@@ -560,7 +553,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.clean_up()
 
     def clean_up(self):
-       rmtree(tmp_path, ignore_errors=True)
+       shutil.rmtree(tmp_path, ignore_errors=True)
 
 
     def reindex(self):
@@ -1389,7 +1382,7 @@ class ObscureItems():
         con.close()
 
     def obscure_text(self, str):
-        lst = list(self.words[randint(0,len(self.words)-1)])
+        lst = list(self.words[random.randint(0,len(self.words)-1)])
         l = len(lst)
         i = 0
         s = ''
@@ -1553,7 +1546,7 @@ class Reindex():
 
 
 if __name__ == "__main__":
-    tmp_path = mkdtemp(prefix='JWLManager_')
+    tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     app = QApplication(sys.argv)
 
     font = QFont();
