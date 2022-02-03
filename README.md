@@ -133,7 +133,8 @@ Feel free to [get in touch](https://gitlab.com/erykj/jwlmanager/-/issues) and po
 
 ## Follow
 
-![icons/rss-36.png](https://gitlab.com/erykj/jwlmanager/-/tags?format=atom)
+![](icons/rss-36.png)
+[Tags RSS](https://gitlab.com/erykj/jwlmanager/-/tags?format=atom)
 
 ____
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
