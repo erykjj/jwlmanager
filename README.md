@@ -77,7 +77,7 @@ You need to provide a text file with the Notes, Highlights or Annotations to imp
 Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, overlapping highlights will be added and the color changed to the one being imported.
 
 The accepted format for the Notes import file is like this:
-
+    
     {TITLE=»}
     ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}===
     » Title
