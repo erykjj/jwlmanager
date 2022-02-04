@@ -113,6 +113,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
+        self.actionObscure.triggered.connect(self.obscure)
         self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
         self.actionCollapse_All.triggered.connect(self.collapse_all)
@@ -131,7 +132,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_import.clicked.connect(self.import_file)
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
-        self.button_obscure.clicked.connect(self.obscure)
 
 
     def expand_all(self):
@@ -198,24 +198,23 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def switchboard(self, selection):
         if selection == "Notes":
-            self.disable_options([], False, True, True, True)
+            self.disable_options([], False, True, True)
         elif selection == "Highlights":
-            self.disable_options([3], False, True, True, True)
+            self.disable_options([3], False, True, True)
         elif selection == "Bookmarks":
-            self.disable_options([3,4], False, False, False, True)
+            self.disable_options([3,4], False, False, False)
         elif selection == "Annotations":
-            self.disable_options([3,4], False, True, True, True)
+            self.disable_options([3,4], False, True, True)
         elif selection == "Favorites":
-            self.disable_options([3,4], True, False, False, False)
+            self.disable_options([3,4], True, False, False)
         if self.combo_grouping.currentText() != 'Publication':
             self.combo_grouping.currentTextChanged.disconnect()
             self.combo_grouping.setCurrentText('Publication')
             self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.regroup()
 
-    def disable_options(self, list=[], add=False, exp=False, imp=False, obscure=False):
+    def disable_options(self, list=[], add=False, exp=False, imp=False):
         self.button_add.setVisible(add)
-        self.button_obscure.setVisible(obscure)
         self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
         self.button_import.setVisible(imp)
@@ -308,6 +307,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def file_loaded(self):
         self.actionReindex.setEnabled(True)
+        self.actionObscure.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave_As.setEnabled(True)
@@ -408,7 +408,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def tree_selection(self):
         checked_leaves = []
         self.selected_items = 0
-
         def recurse(parent):
             for i in range(parent.childCount()):
                 child = parent.child(i)
@@ -418,14 +417,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 else: 
                     if child.checkState(0) == Qt.Checked:
                         checked_leaves.append(child.data(0, Qt.UserRole))
-
         recurse(self.treeWidget.invisibleRootItem())
         for item in checked_leaves:
             self.selected_items += len(self.leaves[item])
         self.selected.setText(f"**{self.selected_items:,}**")
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
-        self.button_obscure.setEnabled(self.selected_items)
 
 
     def export(self):
@@ -537,28 +534,20 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def obscure(self):
         reply = QMessageBox.warning(self, 'Obscure',
-                f"Are you sure you want to\nOBSCURE these {self.selected_items} items?",
+                f"Are you sure you want to\nOBSCURE all text fields?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(" Obscuring. Please wait...")
         app.processEvents()
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget,
-                  QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value().data(0, Qt.UserRole)
-            if index in self.leaves:
-                for id in self.leaves[index]:
-                    selected.append(id)
-        oi = ObscureItems(self.combo_category.currentText(), selected)
+        oi = ObscureItems()
         if oi.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f" {self.selected_items} items obscured", 3500)
+        self.statusBar.showMessage(f" Database obscured", 3500)
         self.archive_modified()
         self.regroup()
-        self.tree_selection()
+        # self.tree_selection()
 
 
     def closeEvent(self, event):
@@ -1449,7 +1438,10 @@ class ObscureItems():
         self.m = regex.compile('\p{L}')
         self.aborted = False
         try:
-            self.obscure_items()
+            self.obscure_annotations()
+            self.obscure_bookmarks()
+            self.obscure_notes()
+            self.obscure_locations()
             con.commit()
         except:
             QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ObscureItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
@@ -1475,68 +1467,43 @@ class ObscureItems():
                 s += c
         return s
 
-    def obscure_locations(self, locations):
-        for location in locations:
-            title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
+    def obscure_locations(self):
+        rows = self.cur.execute(f"SELECT Title, LocationId FROM Location;").fetchall()
+        for row in rows:
+            title, item = row
             if title:
                 title = self.obscure_text(title).replace("'", "''")
-                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
-
-    def obscure_items(self):
-        if self.category == "Annotations":
-            locations = self.obscure_annotations()
-        elif self.category == "Bookmarks":
-            locations = self.obscure_bookmarks()
-        elif self.category == "Highlights":
-            locations = self.obscure_highlights()
-        else:
-            locations = self.obscure_notes()
-        self.obscure_locations(locations)
+                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {item};")
 
     def obscure_annotations(self):
-        locations = []
-        for item in self.items:
-            content, location = self.cur.execute(f"SELECT Value, LocationId FROM InputField WHERE TextTag = '{item}';").fetchone()
+        rows = self.cur.execute(f"SELECT Value, TextTag FROM InputField;").fetchall()
+        for row in rows:
+            content, item = row
             if content:
                 content = self.obscure_text(content).replace("'", "''")
-            if location not in locations:
-                locations.append(location)
-            self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
-        return locations
+                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
 
     def obscure_bookmarks(self):
-        locations = []
-        for item in self.items:
-            title, content, location = self.cur.execute(f"SELECT Title, Snippet, LocationId FROM Bookmark WHERE BookmarkId = {item};").fetchone()
+        rows = self.cur.execute(f"SELECT Title, Snippet, BookmarkId FROM Bookmark;").fetchall()
+        for row in rows:
+            title, content, item = row
             if title:
                 title = self.obscure_text(title).replace("'", "''")
             if content:
                 content = self.obscure_text(content).replace("'", "''")
-            if location not in locations:
-                locations.append(location)
-            self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};")
-        return locations
-
-    def obscure_highlights(self):
-        locations = []
-        for item in self.items:
-            location = self.cur.execute(f"SELECT LocationId FROM UserMark JOIN BlockRange b USING (UserMarkID) WHERE b.BlockRangeId = '{item}';").fetchone()[0]
-            if location not in locations:
-                locations.append(location)
-        return locations
+                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};")
+            else:
+                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}' WHERE BookmarkId = {item};")
 
     def obscure_notes(self):
-        locations = []
-        for item in self.items:
-            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
+        rows = self.cur.execute(f"SELECT Title, Content, NoteId FROM Note;").fetchall()
+        for row in rows:
+            title, content, item = row
             if title:
                 title = self.obscure_text(title).replace("'", "''")
             if content:
                 content = self.obscure_text(content).replace("'", "''")
-            if location and location not in locations:
-                locations.append(location)
             self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
-        return locations
 
 
 class Reindex():
