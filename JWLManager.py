@@ -1526,7 +1526,7 @@ class ObscureItems():
                 title = self.obscure_text(title).replace("'", "''")
             if content:
                 content = self.obscure_text(content).replace("'", "''")
-            if location not in locations:
+            if location and location not in locations:
                 locations.append(location)
             self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
         return locations
