@@ -118,11 +118,11 @@ Here is an example blue note for Jude 21 (in  Spanish):
 
 On a side-note, I format my notes with Markdown syntax (as above) for, even though JW Library doesn't allow rich-text formatting in the notes, that may change in the future and it should then be realtively easy to convert.
 
+## UTILITIES
+
 #### OBSCURE
 
-If you need to share your complete archive, but have some personal or confidential information, you can use this option to selectively over-write title and text fields in your Annotations, Bookmarks and Notes, as well as title field in the associated publications. For Highlights, only the latter applies.
-
-The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. Of course, there is no way to reverse this step, so don't loose the original. You can export your obscured Notes to confirm; or check the detailed view.
+If you need to share your complete archive but have some personal or confidential information, you can use this option to over-write text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. You can export your obscured Notes to confirm; or check the detailed view. Only tags are not obscured.
 
 #### REINDEX
 
