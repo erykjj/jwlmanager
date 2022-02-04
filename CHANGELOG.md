@@ -11,6 +11,7 @@
 
 - Modified UserMark trimming SQL
 - Readded reindexing function with progress bar
+- Disabled detailed view on file open
 - Code clean-up
 
 ### Fixed
