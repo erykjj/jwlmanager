@@ -28,6 +28,7 @@ SOFTWARE.
 
 VERSION = 'v0.3.0'
 
+
 import os, random, regex, shutil, sqlite3, sys, tempfile, uuid
 
 from PySide2.QtCore import *
@@ -59,7 +60,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
-
         self.set_vars()
         self.read_res()
         self.center()
@@ -1064,7 +1064,8 @@ class ExportItems():
             'LINE AFTER HEADER IS NOTE TITLE',
             'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
             'SEPARATE TAGS WITH "," (commas)',
-            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}']))
+            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n',
+            'FILE SHOULD TERMINATE WITH "==={END}==="']))
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1350,7 +1351,6 @@ class ImportNotes():
             attribs[key] = value
         return attribs
 
-
     def process_tags(self, note_id, tags):
         self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
         for tag in tags.split(','):
@@ -1530,7 +1530,6 @@ class ObscureItems():
                 locations.append(location)
             self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
         return locations
-
 
 
 class Reindex():
