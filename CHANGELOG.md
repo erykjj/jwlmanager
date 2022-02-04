@@ -14,6 +14,8 @@
 
 ### Fixed
 
+- Fixed Bookmark selection
+
 ### Removed
 ____
 ## [0.2.4] - 2022-01-31
