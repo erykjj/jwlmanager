@@ -200,7 +200,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if selection == "Notes":
             self.disable_options([], False, True, True, True)
         elif selection == "Highlights":
-            self.disable_options([3], False, True, True, False)
+            self.disable_options([3], False, True, True, True)
         elif selection == "Bookmarks":
             self.disable_options([3,4], False, False, False, True)
         elif selection == "Annotations":
@@ -422,7 +422,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f"**{self.selected_items:,}**")
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
-        self.button_obscure.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Bookmarks', 'Annotations'))
+        self.button_obscure.setEnabled(self.selected_items)
 
 
     def export(self):
@@ -1468,15 +1468,6 @@ class ObscureItems():
                 s += c
         return s
 
-    def obscure_notes(self):
-        for item in self.items:
-            title, content, location = self.cur.execute(f"SELECT Title, Content, LocationId FROM Note WHERE NoteId = {item};").fetchone()
-            title = self.obscure_text(title).replace("'", "''")
-            content = self.obscure_text(content).replace("'", "''")
-            if location not in self.locations:
-                self.locations.append(location)
-            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = ' {content}' WHERE NoteId = {item};")
-
     def obscure_locations(self, locations):
         for location in locations:
             title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
@@ -1485,12 +1476,14 @@ class ObscureItems():
                 self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {location};")
 
     def obscure_items(self):
-        if self.category == "Bookmarks":
-            locations = self.obscure_bookmarks()
-        elif self.category == "Notes":
-            locations = self.obscure_notes()
-        elif self.category == "Annotations":
+        if self.category == "Annotations":
             locations = self.obscure_annotations()
+        elif self.category == "Bookmarks":
+            locations = self.obscure_bookmarks()
+        elif self.category == "Highlights":
+            locations = self.obscure_highlights()
+        else:
+            locations = self.obscure_notes()
         self.obscure_locations(locations)
 
     def obscure_annotations(self):
@@ -1517,6 +1510,14 @@ class ObscureItems():
             self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};")
         return locations
 
+    def obscure_highlights(self):
+        locations = []
+        for item in self.items:
+            location = self.cur.execute(f"SELECT LocationId FROM UserMark JOIN BlockRange b USING (UserMarkID) WHERE b.BlockRangeId = '{item}';").fetchone()[0]
+            if location not in locations:
+                locations.append(location)
+        return locations
+
     def obscure_notes(self):
         locations = []
         for item in self.items:
@@ -1529,6 +1530,7 @@ class ObscureItems():
                 locations.append(location)
             self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
         return locations
+
 
 
 class Reindex():

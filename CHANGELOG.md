@@ -3,7 +3,7 @@
 ## [Unreleased]
 ### Added
 
-- Added obscuring function for Annotations, Bookmarks and Notes
+- Added obscuring function
 - Added general exception handling
 
 ### Changed
