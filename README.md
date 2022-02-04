@@ -21,8 +21,8 @@ $ python3 JWLManager.py
 Or, make it executable first and run directly:
 
 ```
-$ chmod u+x ./JWLManager.py
-$ ./JWLManager.py
+$ chmod u+x JWLManager.py
+$ JWLManager.py
 ```
 
 You may have to `pip install` some of the required libraries (*PySide2*, etc.).
@@ -77,7 +77,7 @@ You need to provide a text file with the Notes, Highlights or Annotations to imp
 Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, overlapping highlights will be added and the color changed to the one being imported.
 
 The accepted format for the Notes import file is like this:
-
+```
     {TITLE=»}
     ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}===
     » Title
@@ -93,7 +93,7 @@ The accepted format for the Notes import file is like this:
     Multi-line...
     ...note
     ==={END}===
-
+```
 The **{TITLE=}** attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with this character (in this case "»"). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted before notes from the import file are imported. Otherwise, notes with same title at same location will be over-written, but those where the title was modified even slightly will create an almost duplicate note.
 
 Each note definition starts with an attribute line. **{CAT=}** define the category. The **{LANG=}** attribute defines the language of the note (0 = English; 1 = Spanish; 2 = German; 3 = French; 4 = Italian; 5 = Brazilian Portuguese; 6 = Dutch; 7 = Japanese, etc.),  and **{ED=}** defines the Bible edition to associate the note with ("nwtsty" = Study Bible; "Rbi8" = Reference Bible) - **{PUB=}** for publications.
@@ -122,7 +122,7 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 If you need to share your complete archive, but have some personal or confidential information, you can use this option to selectively over-write title and text fields in your Annotations, Bookmarks and Notes, as well as title field in the associated publications. For Highlights, only the latter applies.
 
-The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. Of course, there is no way to reverse this step, so don't loose the original. You can export your obscured Notes to confirm.
+The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. Of course, there is no way to reverse this step, so don't loose the original. You can export your obscured Notes to confirm; or check the detailed view.
 
 #### REINDEX
 
