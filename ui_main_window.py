@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windownLZcDs.ui'
+## Form generated from reading UI file 'main_windoweljgmq.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -109,7 +109,7 @@ class Ui_MainWindow(object):
         self.actionGrouped = QAction(MainWindow)
         self.actionGrouped.setObjectName(u"actionGrouped")
         self.actionGrouped.setCheckable(True)
-        self.actionGrouped.setChecked(True)
+        self.actionGrouped.setChecked(False)
         self.actionGrouped.setEnabled(False)
         self.actionNew = QAction(MainWindow)
         self.actionNew.setObjectName(u"actionNew")
@@ -120,6 +120,12 @@ class Ui_MainWindow(object):
         self.actionDetailed.setObjectName(u"actionDetailed")
         self.actionDetailed.setCheckable(True)
         self.actionDetailed.setEnabled(False)
+        self.actionObscure = QAction(MainWindow)
+        self.actionObscure.setObjectName(u"actionObscure")
+        self.actionObscure.setEnabled(False)
+        icon14 = QIcon()
+        icon14.addFile(self.resource_path('icons/icons8-invisible-64.png'), QSize(), QIcon.Normal, QIcon.Off)
+        self.actionObscure.setIcon(icon14)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_2 = QGridLayout(self.centralwidget)
@@ -190,23 +196,6 @@ class Ui_MainWindow(object):
         self.button_add.setObjectName(u"button_add")
         self.button_add.setEnabled(True)
         self.button_add.setGeometry(QRect(440, 10, 85, 28))
-        self.button_obscure = QPushButton(self.frame_info)
-        self.button_obscure.setObjectName(u"button_obscure")
-        self.button_obscure.setEnabled(False)
-        self.button_obscure.setGeometry(QRect(440, 10, 85, 28))
-        self.button_obscure.raise_()
-        self.label_total.raise_()
-        self.label_selected.raise_()
-        self.total.raise_()
-        self.selected.raise_()
-        self.label_category.raise_()
-        self.combo_category.raise_()
-        self.label_grouping.raise_()
-        self.combo_grouping.raise_()
-        self.button_export.raise_()
-        self.button_delete.raise_()
-        self.button_import.raise_()
-        self.button_add.raise_()
 
         self.gridLayout_2.addWidget(self.frame_info, 0, 0, 1, 1)
 
@@ -253,9 +242,11 @@ class Ui_MainWindow(object):
         self.menuTitle_View = QMenu(self.menuView)
         self.menuTitle_View.setObjectName(u"menuTitle_View")
         self.menuTitle_View.setEnabled(False)
-        icon14 = QIcon()
-        icon14.addFile(self.resource_path('icons/icons8-list-64.png'), QSize(), QIcon.Normal, QIcon.On)
-        self.menuTitle_View.setIcon(icon14)
+        icon15 = QIcon()
+        icon15.addFile(self.resource_path('icons/icons8-list-64.png'), QSize(), QIcon.Normal, QIcon.On)
+        self.menuTitle_View.setIcon(icon15)
+        self.menu_Utilities = QMenu(self.menubar)
+        self.menu_Utilities.setObjectName(u"menu_Utilities")
         MainWindow.setMenuBar(self.menubar)
         self.statusBar = QStatusBar(MainWindow)
         self.statusBar.setObjectName(u"statusBar")
@@ -271,13 +262,13 @@ class Ui_MainWindow(object):
 
         self.menubar.addAction(self.menu_file.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
+        self.menubar.addAction(self.menu_Utilities.menuAction())
         self.menubar.addAction(self.menu_help.menuAction())
         self.menu_file.addAction(self.actionNew)
         self.menu_file.addAction(self.actionOpen)
+        self.menu_file.addSeparator()
         self.menu_file.addAction(self.actionSave)
         self.menu_file.addAction(self.actionSave_As)
-        self.menu_file.addSeparator()
-        self.menu_file.addAction(self.actionReindex)
         self.menu_file.addSeparator()
         self.menu_file.addAction(self.actionQuit)
         self.menu_help.addAction(self.actionHelp)
@@ -296,6 +287,8 @@ class Ui_MainWindow(object):
         self.menuTitle_View.addAction(self.actionCode_Title)
         self.menuTitle_View.addAction(self.actionShort_Title)
         self.menuTitle_View.addAction(self.actionFull_Title)
+        self.menu_Utilities.addAction(self.actionObscure)
+        self.menu_Utilities.addAction(self.actionReindex)
 
         self.retranslateUi(MainWindow)
 
@@ -320,9 +313,6 @@ class Ui_MainWindow(object):
         self.actionImport.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+I", None))
 #endif // QT_CONFIG(shortcut)
         self.actionReindex.setText(QCoreApplication.translate("MainWindow", u"&Reindex", None))
-#if QT_CONFIG(shortcut)
-        self.actionReindex.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+R", None))
-#endif // QT_CONFIG(shortcut)
         self.actionQuit.setText(QCoreApplication.translate("MainWindow", u"&Quit", None))
 #if QT_CONFIG(shortcut)
         self.actionQuit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
@@ -394,6 +384,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.actionDetailed.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+D", None))
 #endif // QT_CONFIG(shortcut)
+        self.actionObscure.setText(QCoreApplication.translate("MainWindow", u"&Obscure", None))
         self.label_total.setText(QCoreApplication.translate("MainWindow", u"Total: ", None))
         self.label_selected.setText(QCoreApplication.translate("MainWindow", u"Selected: ", None))
         self.total.setText("")
@@ -428,7 +419,6 @@ class Ui_MainWindow(object):
         self.button_delete.setText(QCoreApplication.translate("MainWindow", u"&Delete", None))
         self.button_import.setText(QCoreApplication.translate("MainWindow", u"&Import", None))
         self.button_add.setText(QCoreApplication.translate("MainWindow", u"&Add", None))
-        self.button_obscure.setText(QCoreApplication.translate("MainWindow", u"&Obscure", None))
         ___qtreewidgetitem = self.treeWidget.headerItem()
         ___qtreewidgetitem.setText(1, QCoreApplication.translate("MainWindow", u"Count", None));
         self.menu_file.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
@@ -438,6 +428,7 @@ class Ui_MainWindow(object):
         self.menuTitle_View.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.menuTitle_View.setTitle(QCoreApplication.translate("MainWindow", u"&Title View", None))
+        self.menu_Utilities.setTitle(QCoreApplication.translate("MainWindow", u"&Utilities", None))
     # retranslateUi
 
     def resource_path(self, relative_path):
