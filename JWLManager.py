@@ -318,6 +318,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionGrouped.setEnabled(True)
         self.actionDetailed.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
+        if self.detailed:
+            self.detailed = False
+            self.actionDetailed.setChecked(False)
         self.switchboard(self.combo_category.currentText())
 
 

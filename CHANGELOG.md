@@ -5,6 +5,7 @@
 
 - Added obscuring function
 - Added general exception handling
+- More status bar information on action being taken
 
 ### Changed
 
