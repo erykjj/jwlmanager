@@ -3,6 +3,15 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.3.0] - 2022-02-04
+### Added
+
 - Added obscuring function
 - Added general exception handling
 - More status bar information on action being taken
@@ -12,14 +21,13 @@
 - Modified UserMark trimming SQL
 - Readded reindexing function with progress bar
 - Disabled detailed view on file open
+- Disabled grouped view on file open
 - Code clean-up
 
 ### Fixed
 
 - Fixed Bookmark selection
 
-### Removed
-____
 ## [0.2.4] - 2022-01-31
 ### Changed
 
@@ -139,6 +147,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.3.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.0
 [0.2.4]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.4
 [0.2.3]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.3
 [0.2.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.2

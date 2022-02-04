@@ -1152,6 +1152,7 @@ class ImportAnnotations():
             return False
 
     def import_items(self):
+        # TODO: this needs to be adjusted
         count = 0
         while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
@@ -1211,6 +1212,7 @@ class ImportHighlights():
 
     def import_items(self):
         count = 0
+        # TODO: this needs to be adjusted
         while not regex.match("\*\*\*\*\*", self.import_file.readline()):
             pass
         for line in self.import_file.readlines():
