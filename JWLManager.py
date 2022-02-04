@@ -511,6 +511,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
+        self.statusBar.showMessage(" Deleting. Please wait...")
+        app.processEvents()
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget,
                   QTreeWidgetItemIterator.Checked)
@@ -536,6 +538,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
+        self.statusBar.showMessage(" Obscuring. Please wait...")
+        app.processEvents()
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget,
                   QTreeWidgetItemIterator.Checked)
