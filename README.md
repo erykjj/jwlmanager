@@ -78,21 +78,21 @@ Editing or creating a Highlights or Annotations import file is *not* recommended
 
 The accepted format for the Notes import file is like this:
 ```
-    {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}===
-    » Title
-    Multi-line...
-    ...note
-    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{TAGS=research}===
-    » Title
-    Multi-line...
-    ...
-    ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}===
-    » Title
-    Multi-line...
-    ...note
-    ==={END}===
+{TITLE=»}
+==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}===
+» Title
+Multi-line...
+...note
+==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{TAGS=research}===
+» Title
+Multi-line...
+...
+...note
+==={CAT=INDEPENDENT}{TAGS=personal}===
+» Title
+Multi-line...
+...note
+==={END}===
 ```
 The **{TITLE=}** attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with this character (in this case "»"). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted before notes from the import file are imported. Otherwise, notes with same title at same location will be over-written, but those where the title was modified even slightly will create an almost duplicate note.
 
