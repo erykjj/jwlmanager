@@ -69,7 +69,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText('')
         self.modified = False
         self.title_format = 'short'
-        self.grouped = True
+        self.grouped = False
         self.detailed = False
         self.save_filename = ""
         self.current_archive = ""
