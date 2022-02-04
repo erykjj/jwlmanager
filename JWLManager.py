@@ -654,7 +654,7 @@ class BuildTree():
         self.process_data(sql)
 
     def get_bookmarks(self):
-        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, PublicationLocationId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);"
+        sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);"
         self.process_data(sql)
 
     def get_favorites(self):
@@ -1009,7 +1009,7 @@ class DeleteItems():
 
     def delete_items(self):
         if self.category == "Bookmarks":
-            return self.delete("Bookmark", "PublicationLocationId")
+            return self.delete("Bookmark", "BookmarkId")
         elif self.category == "Favorites":
             return self.delete("TagMap", "TagMapId")
         elif self.category == "Highlights":
@@ -1479,7 +1479,6 @@ class ObscureItems():
 
     def obscure_locations(self, locations):
         for location in locations:
-            print(f"SELECT Title FROM Location WHERE LocationId = {location};")
             title = self.cur.execute(f"SELECT Title FROM Location WHERE LocationId = {location};").fetchone()[0]
             if title:
                 title = self.obscure_text(title).replace("'", "''")
@@ -1508,14 +1507,14 @@ class ObscureItems():
     def obscure_bookmarks(self):
         locations = []
         for item in self.items:
-            title, content, location = self.cur.execute(f"SELECT Title, Snippet, LocationId FROM Bookmark WHERE PublicationLocationId = {item};").fetchone()
+            title, content, location = self.cur.execute(f"SELECT Title, Snippet, LocationId FROM Bookmark WHERE BookmarkId = {item};").fetchone()
             if title:
                 title = self.obscure_text(title).replace("'", "''")
             if content:
                 content = self.obscure_text(content).replace("'", "''")
             if location not in locations:
                 locations.append(location)
-            self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE PublicationLocationId = {item};")
+            self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};")
         return locations
 
     def obscure_notes(self):
