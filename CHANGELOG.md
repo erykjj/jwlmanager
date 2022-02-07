@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Adjusted Annotation and Highlight import to accept more general CSV files
+
 ### Fixed
 
 ### Removed
