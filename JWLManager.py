@@ -1212,22 +1212,21 @@ class ImportHighlights():
 
     def import_items(self):
         count = 0
-        # TODO: this needs to be adjusted
-        while not regex.match("\*\*\*\*\*", self.import_file.readline()):
-            pass
-        for line in self.import_file.readlines():
-            try:
-                count += 1
-                attribs = regex.split(',', line.rstrip().replace("None", ""))
-                if attribs[6]:
-                    location_id = self.add_scripture_location(attribs)
-                else:
-                    location_id = self.add_publication_location(attribs)
-                self.import_highlight(attribs, location_id)
-            except:
-                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
-                self.cur.execute("ROLLBACK;")
-                return 0
+        line = self.import_file.readline()
+        for line in self.import_file:
+            if regex.match("(.*?,){12}", line):
+                try:
+                    count += 1
+                    attribs = regex.split(',', line.rstrip().replace("None", ""))
+                    if attribs[6]:
+                        location_id = self.add_scripture_location(attribs)
+                    else:
+                        location_id = self.add_publication_location(attribs)
+                    self.import_highlight(attribs, location_id)
+                except:
+                    QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                    self.cur.execute("ROLLBACK;")
+                    return 0
         return count
 
     def add_scripture_location(self, attribs):
@@ -1395,6 +1394,7 @@ class ImportNotes():
 
 
     def add_publication_location(self, attribs):
+        # TODO: check: note stickies visible for languages other than the desired (inidicated) - could it be we need a UserMark for another language assigned to the note to "trick" it??
         self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {attribs['ISSUE']}, '{attribs['PUB']}', {attribs['LANG']}, {attribs['DOC']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0);")
         result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0;").fetchone()
         return result[0]

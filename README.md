@@ -72,7 +72,7 @@ Exporting of Annotations and Highlights is also possible - not so much with a vi
 
 #### IMPORT
 
-You need to provide a text file with the Notes, Highlights or Annotations to import. You can use the file produced by exporting. Or you can create your own - for importing Notes.
+You need to provide a text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting. Or you can create your own - for importing Notes.
 
 Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, overlapping highlights will be added and the color changed to the one being imported.
 
