@@ -1152,24 +1152,22 @@ class ImportAnnotations():
             return False
 
     def import_items(self):
-        # TODO: this needs to be adjusted
         count = 0
-        while not regex.match("\*\*\*\*\*", self.import_file.readline()):
-            pass
-        for line in self.import_file.readlines():
-            try:
-                count += 1
-                attribs = regex.split(',', line.rstrip(), 6)
-                location_id = self.add_location(attribs)
-                value = attribs[6].replace(r"\n", "\n")
-                if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
-                    self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
-                else:
-                    self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{value}');")
-            except:
-                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
-                self.cur.execute("ROLLBACK;")
-                return 0
+        for line in self.import_file:
+            if regex.match("^\d+,\d+,\w+,", line):
+                try:
+                    count += 1
+                    attribs = regex.split(',', line.rstrip(), 6)
+                    location_id = self.add_location(attribs)
+                    value = attribs[6].replace(r"\n", "\n")
+                    if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
+                        self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}'")
+                    else:
+                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{value}');")
+                except:
+                    QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                    self.cur.execute("ROLLBACK;")
+                    return 0
         return count
 
     def add_location(self, attribs):
@@ -1212,9 +1210,8 @@ class ImportHighlights():
 
     def import_items(self):
         count = 0
-        line = self.import_file.readline()
         for line in self.import_file:
-            if regex.match("(.*?,){12}", line):
+            if regex.match("^(\d+,){6}", line):
                 try:
                     count += 1
                     attribs = regex.split(',', line.rstrip().replace("None", ""))
