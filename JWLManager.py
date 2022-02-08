@@ -462,7 +462,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def import_file(self):
         reply = QMessageBox.warning(self, 'Import',
-                "Make sure your import file is properly formatted.\n\nImporting will modify the archive. Proceed?",
+                "Make sure your import file is UTF-8 encoded\nand properly formatted.\n\nImporting will modify the archive. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
@@ -1129,7 +1129,7 @@ class ImportAnnotations():
                                 BEGIN;")
         self.aborted = False
         try:
-            self.import_file = open(fname, 'r')
+            self.import_file = open(fname, 'r', encoding='utf-8')
             if self.pre_import():
                 self.count = self.import_items()
             else:
@@ -1186,7 +1186,7 @@ class ImportHighlights():
                                 BEGIN;")
         self.aborted = False
         try:
-            self.import_file = open(fname, 'r')
+            self.import_file = open(fname, 'r', encoding='utf-8')
             if self.pre_import():
                 self.count = self.import_items()
             else:
