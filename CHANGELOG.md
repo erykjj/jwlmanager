@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Better handling of export/import file encoding (UTF-8)
+
 ### Changed
 
 - Adjusted Annotation and Highlight import to accept more general CSV files
