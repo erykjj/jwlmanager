@@ -1061,7 +1061,8 @@ class ExportItems():
             'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
             'SEPARATE TAGS WITH "," (commas)',
             'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n',
-            'FILE SHOULD TERMINATE WITH "==={END}==="']))
+            'FILE SHOULD TERMINATE WITH "==={END}==="\n',
+            'ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)']))
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1100,7 +1101,7 @@ class ExportItems():
                 self.export_file.write(f",{row[item]}")
 
     def export_highlight_header(self):
-        self.export_file.write('{HIGHLIGHTS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
+        self.export_file.write('{HIGHLIGHTS}\n\nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1114,7 +1115,7 @@ class ExportItems():
                 self.export_file.write(f",{string}")
 
     def export_annotations_header(self):
-        self.export_file.write('{ANNOTATIONS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
+        self.export_file.write('{ANNOTATIONS}\n\nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1129,7 +1130,7 @@ class ImportAnnotations():
                                 BEGIN;")
         self.aborted = False
         try:
-            self.import_file = open(fname, 'r', encoding='utf-8')
+            self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
             if self.pre_import():
                 self.count = self.import_items()
             else:
@@ -1271,7 +1272,7 @@ class ImportNotes():
                                 BEGIN;")
         self.aborted = False
         try:
-            self.import_file = open(fname, 'r', encoding='utf-8')
+            self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
             if self.pre_import():
                 self.count = self.import_items()
             else:
