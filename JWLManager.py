@@ -685,11 +685,11 @@ class BuildTree():
         for row in self.cur.execute(sql):
             item = row[0]
             group = (None, None)
-            code = ("* INDEPENDENT *", None)
-            short = ("* INDEPENDENT *", None)
-            full = ("* INDEPENDENT *", None)
+            code = ("* FREE *", None)
+            short = ("* FREE *", None)
+            full = ("* FREE *", None)
             year = None
-            language = ("* MULTI-LANGUAGE *", None)
+            language = ("* NO LANGUAGE *", None)
             issue = (None, None)
             detail1 = (None, None)
             detail2 = (None, None)
@@ -787,7 +787,7 @@ class BuildTree():
             detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
             detail2 = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
         else:
-            detail1 = (IssueTitle or '* NO DATA *', None)
+            detail1 = (IssueTitle or '* BLANK *', None)
             detail2 = (None, None)
         return detail1, detail2
 
