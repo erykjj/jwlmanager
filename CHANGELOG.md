@@ -3,16 +3,22 @@
 ## [Unreleased]
 ### Added
 
-- Better handling of export/import file encoding (UTF-8)
-
 ### Changed
-
-- Adjusted Annotation and Highlight import to accept more general CSV files
 
 ### Fixed
 
 ### Removed
 ____
+## [0.3.1] - 2022-02-10
+### Added
+
+- Better handling of export/import file encoding (UTF-8)
+- App icon under Mac OS
+
+### Changed
+
+- Adjusted Annotation and Highlight import to accept more general CSV files
+
 ## [0.3.0] - 2022-02-04
 ### Added
 
@@ -151,6 +157,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.3.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.1
 [0.3.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.0
 [0.2.4]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.4
 [0.2.3]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.3
