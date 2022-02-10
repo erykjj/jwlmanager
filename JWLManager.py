@@ -251,10 +251,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def about(self):
         dialog = QMessageBox(self, self, "", "", QMessageBox.Ok)
+        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode("utf-8")
         text = f"""
             <h2 style="text-align: center;"><span style="color: #800080;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JWLManager</span></h2>
             <h4 style="text-align: center;">&nbsp;&nbsp;&nbsp;{VERSION}</h4>
             <p style="text-align: center;"><em>&nbsp;&nbsp;&nbsp;&copy;2022 Eryk J.</em></p>
+            <p style="text-align: center;"><em>&nbsp;&nbsp;&nbsp;{contact}</em></p>
             <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="https://gitlab.com/erykj/jwlmanager">https://gitlab.com/erykj/jwlmanager</a></span></p>
                 """
         dialog.setText(text)
