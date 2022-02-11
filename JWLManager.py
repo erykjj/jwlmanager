@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.3.1'
+VERSION = 'v0.3.2'
 
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, uuid
@@ -1290,7 +1290,7 @@ class ImportNotes():
 
     def pre_import(self):
         line = self.import_file.readline()
-        m = regex.search('\{TITLE=(.?)\}', line)
+        m = regex.search('{TITLE=(.?)}', line)
         if m:
             title_char = m.group(1) or ''
         else:
@@ -1321,7 +1321,7 @@ class ImportNotes():
     def import_items(self):
         count = 0
         notes = self.import_file.read().replace("'", "''")
-        for item in regex.finditer('===(\{.*?\})===\n(.*?)\n(.*?)(?=\n===\{)', notes, regex.S):
+        for item in regex.finditer('===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S):
             try:
                 count += 1
                 attribs = self.process_header(item.group(1))
