@@ -928,8 +928,7 @@ class AddFavorites():
         dialog = QDialog()
         dialog.setWindowTitle("Add Favorite")
         label = QLabel(dialog)
-        label.setText("Select the publication and language to add.\nMake sure the publication exists in the selected language!")
-
+        label.setText("Select the edition and language to add.\nMake sure the edition exists in the selected language!\n")
         publication = QComboBox(dialog)
         pubs = []
         for pub in self.publications.keys():
@@ -938,7 +937,6 @@ class AddFavorites():
         publication.addItem(' ')
         publication.addItems(sorted(pubs))
         publication.setStyleSheet("QComboBox { combobox-popup: 0; }");
-
         language = QComboBox(dialog)
         langs = []
         for lang in sorted(self.languages.keys()):
@@ -948,18 +946,18 @@ class AddFavorites():
         language.addItems(sorted(langs))
         language.setMaxVisibleItems(15)
         language.setStyleSheet("QComboBox { combobox-popup: 0; }");
-
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(dialog.accept)
         buttons.rejected.connect(dialog.reject)
-
-        layout = QVBoxLayout(dialog)
+        layout = QVBoxLayout()
         layout.addWidget(label)
-        layout.addWidget(publication)
-        layout.addWidget(language)
+        form = QFormLayout()
+        form.addRow("Edition:", publication)
+        form.addRow("Language:", language)
+        layout.addLayout(form)
         layout.addWidget(buttons)
         dialog.setLayout(layout)
-
+        dialog.setWindowFlag(Qt.FramelessWindowHint)
         if dialog.exec():
             return publication.currentText(), language.currentText()
         else:

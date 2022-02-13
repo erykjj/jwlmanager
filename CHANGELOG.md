@@ -5,6 +5,9 @@
 
 ### Changed
 
+- Adjusted About dialog box
+- Adjusted Add Favorite dialog box
+
 ### Fixed
 
 ### Removed
