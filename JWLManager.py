@@ -250,22 +250,36 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.show()
 
     def about(self):
-        dialog = QMessageBox(self, self, "", "", QMessageBox.Ok)
+        year = datetime.now().year
+        web = "https://gitlab.com/erykj/jwlmanager"
         contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode("utf-8")
         text = f"""
-            <h2 style="text-align: center;"><span style="color: #800080;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JWLManager</span></h2>
-            <h4 style="text-align: center;">&nbsp;&nbsp;&nbsp;{VERSION}</h4>
-            <p style="text-align: center;"><em>&nbsp;&nbsp;&nbsp;&copy;2022 Eryk J.</em></p>
-            <p style="text-align: center;"><em>&nbsp;&nbsp;&nbsp;{contact}</em></p>
-            <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="https://gitlab.com/erykj/jwlmanager">https://gitlab.com/erykj/jwlmanager</a></span></p>
+            <h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2>
+            <h4 style="text-align: center;">{VERSION}</h4>
+            <p style="text-align: center;"><small>MIT&copy;{year} Eryk J.</small></p>
+            <p style="text-align: center;"><em>{contact}</em></p>
+            <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>
                 """
-        dialog.setText(text)
+        dialog = QDialog()
+        outer = QVBoxLayout()
+        top = QHBoxLayout()
+        icon = QLabel(dialog)
+        icon.setPixmap(self.resource_path('icons/project_72.png'))
+        icon.setGeometry(12,12,72,72)
+        icon.setAlignment(Qt.AlignTop)
+        top.addWidget(icon)
         label = QLabel(dialog)
-        label.setPixmap(self.resource_path('icons/project_72.png'))
-        label.setGeometry(10,12,72,72)  
+        label.setText(text)
+        top.addWidget(label)
+        button = QDialogButtonBox(QDialogButtonBox.Ok)
+        button.accepted.connect(dialog.accept)
+        bottom = QHBoxLayout()
+        bottom.addWidget(button)
+        outer.addLayout(top)
+        outer.addLayout(bottom)
+        dialog.setLayout(outer)
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
-
 
     def new_file(self):
         if self.modified:
