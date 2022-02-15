@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Better error handling and reporting
+
 ### Changed
 
 - Adjusted About dialog box

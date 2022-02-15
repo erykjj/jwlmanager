@@ -28,8 +28,7 @@ SOFTWARE.
 
 VERSION = 'v0.3.2'
 
-
-import os, random, regex, shutil, sqlite3, sys, tempfile, uuid
+import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -232,6 +231,9 @@ class Window(QMainWindow, Ui_MainWindow):
                          self.languages, self.combo_category.currentText(),
                          self.combo_grouping.currentText(), self.title_format,
                          self.detailed, self.grouped, self.current_data)
+        if tree.aborted:
+            self.clean_up()
+            sys.exit()
         self.leaves = tree.leaves
         self.current_data = tree.current
         self.total.setText(f"**{tree.total:,}**")
@@ -280,6 +282,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setLayout(outer)
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
+
 
     def new_file(self):
         if self.modified:
@@ -468,9 +471,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == '':
             self.statusBar.showMessage(" NOT exported!", 3500)
             return
-        ei = ExportItems(self.combo_category.currentText(), selected, fname[0],
+        fn = ExportItems(self.combo_category.currentText(), selected, fname[0],
             Path(self.current_archive).stem)
-        if ei.aborted:
+        if fn.aborted:
             self.clean_up()
             sys.exit()
         self.statusBar.showMessage("Items exported", 3500)
@@ -490,30 +493,30 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(" Importing. Please wait...")
         app.processEvents()
         if self.combo_category.currentText() == 'Annotations':
-            i = ImportAnnotations(fname[0])
+            fn = ImportAnnotations(fname[0])
         elif self.combo_category.currentText() == 'Highlights':
-            i = ImportHighlights(fname[0])
+            fn = ImportHighlights(fname[0])
         elif self.combo_category.currentText() == 'Notes':
-            i = ImportNotes(fname[0])
-        if i.aborted:
+            fn = ImportNotes(fname[0])
+        if fn.aborted:
             self.clean_up()
             sys.exit()
-        if not i.count:
+        if not fn.count:
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
         self.trim_db()
-        self.statusBar.showMessage(f" {i.count} items imported/updated", 3500)
+        self.statusBar.showMessage(f" {fn.count} items imported/updated", 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
 
 
     def add_favorite(self):
-        af = AddFavorites(self.publications, self.languages)
-        if af.aborted:
+        fn = AddFavorites(self.publications, self.languages)
+        if fn.aborted:
             self.clean_up()
             sys.exit()
-        text = af.message
+        text = fn.message
         self.statusBar.showMessage(text[1], 3500)
         if text[0]:
             self.archive_modified()
@@ -537,11 +540,11 @@ class Window(QMainWindow, Ui_MainWindow):
             if index in self.leaves:
                 for id in self.leaves[index]:
                     selected.append(id)
-        di = DeleteItems(self.combo_category.currentText(), selected)
-        if di.aborted:
+        fn = DeleteItems(self.combo_category.currentText(), selected)
+        if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f" {di.result} items deleted", 3500)
+        self.statusBar.showMessage(f" {fn.result} items deleted", 3500)
         self.trim_db()
         self.archive_modified()
         self.regroup()
@@ -556,14 +559,38 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         self.statusBar.showMessage(" Obscuring. Please wait...")
         app.processEvents()
-        oi = ObscureItems()
-        if oi.aborted:
+        fn = ObscureItems()
+        if fn.aborted:
             self.clean_up()
             sys.exit()
         self.statusBar.showMessage(f" Database obscured", 3500)
         self.archive_modified()
         self.regroup()
         # self.tree_selection()
+
+
+    def reindex(self):
+        reply = QMessageBox.information(self, 'Reindex',
+                'This may take a few seconds.\nProceed?',
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if reply == QMessageBox.No:
+            return
+        self.trim_db()
+        self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
+        self.pd.setWindowModality(Qt.WindowModal)
+        self.pd.setWindowTitle('Reindexing')
+        self.pd.setWindowFlag(Qt.FramelessWindowHint)
+        self.pd.setModal(True)
+        self.pd.setMinimumDuration(0)
+        self.statusBar.showMessage(" Reindexing. Please wait...")
+        app.processEvents()
+        fn = Reindex(self.pd)
+        if fn.aborted:
+            self.clean_up()
+            sys.exit()
+        self.statusBar.showMessage(" Reindexed successfully", 3500)
+        self.archive_modified()
+        self.regroup()
 
 
     def closeEvent(self, event):
@@ -583,27 +610,6 @@ class Window(QMainWindow, Ui_MainWindow):
        shutil.rmtree(tmp_path, ignore_errors=True)
 
 
-    def reindex(self):
-        reply = QMessageBox.information(self, 'Reindex',
-                'This may take a few seconds.\nProceed?',
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if reply == QMessageBox.No:
-            return
-        self.trim_db()
-        self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
-        self.pd.setWindowModality(Qt.WindowModal)
-        self.pd.setWindowTitle('Reindexing')
-        self.pd.setWindowFlag(Qt.FramelessWindowHint)
-        self.pd.setModal(True)
-        self.pd.setMinimumDuration(0)
-        self.statusBar.showMessage(" Reindexing. Please wait...")
-        app.processEvents()
-        Reindex(self.pd)
-        self.statusBar.showMessage(" Reindexed successfully", 3500)
-        self.archive_modified()
-        self.regroup()
-
-
 class BuildTree():
     def __init__(self, window, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True, current=[]):
         self.tree = tree
@@ -617,18 +623,23 @@ class BuildTree():
         self.books = books
         self.title_format = title
         self.total = 0
-        if len(current) > 0:
-            self.current = current
-        else:
-            self.current = []
-            self.get_data()
-        self.nodes = {}
-        self.leaves = {}
-        tree.setUpdatesEnabled(False)
-        self.tree.clear()
-        self.build_tree()
-        tree.setUpdatesEnabled(True)
-        tree.repaint()
+        self.aborted = False
+        try:
+            if len(current) > 0:
+                self.current = current
+            else:
+                self.current = []
+                self.get_data()
+            self.nodes = {}
+            self.leaves = {}
+            tree.setUpdatesEnabled(False)
+            self.tree.clear()
+            self.build_tree()
+            tree.setUpdatesEnabled(True)
+            tree.repaint()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.aborted = True
 
 
     def get_data(self):
@@ -902,6 +913,14 @@ class BuildTree():
             self.nodes[item].setData(1, Qt.DisplayRole, counter[item])
 
 
+class DebugInfo():
+    def __init__(self, ex):
+        tb_lines = traceback.format_exception(ex.__class__, ex, ex.__traceback__)
+        tb_text = ''.join(tb_lines)
+        QMessageBox.critical(None, 'Error!', f'Oops! Something went wrong:\n\n{tb_text}\nTake note of what you were doing and inform the developer. The app will terminate.', QMessageBox.Abort)
+
+
+
 class AddFavorites():
     def __init__(self, publications = [], languages = []):
         self.publications = publications
@@ -918,10 +937,9 @@ class AddFavorites():
             self.add_favorite()
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: AddFavorites\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def add_dialog(self):
@@ -1011,10 +1029,9 @@ class DeleteItems():
             self.result = self.delete_items()
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: DeleteItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def delete_items(self):
@@ -1045,8 +1062,8 @@ class ExportItems():
             self.export_file = open(fname, 'w', encoding='utf-8')
             self.export_items()
             self.export_file.close
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ExportItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
         con.close()
 
@@ -1152,10 +1169,9 @@ class ImportAnnotations():
             self.import_file.close
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportAnnotations\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1209,10 +1225,9 @@ class ImportHighlights():
             self.import_file.close
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportHighlights\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1294,10 +1309,9 @@ class ImportNotes():
             self.import_file.close
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ImportNotes\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def pre_import(self):
@@ -1456,10 +1470,9 @@ class ObscureItems():
             self.obscure_notes()
             self.obscure_locations()
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: ObscureItems\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
         con.close()
 
     def obscure_text(self, str):
@@ -1538,10 +1551,10 @@ class Reindex():
             self.cur.executescript('PRAGMA foreign_keys = "ON"; \
                                     VACUUM;')
             con.commit()
-        except:
-            QMessageBox.critical(None, 'Error!', 'Oops! Something went wrong: Reindex\nTake note of what you were doing\nand inform the developer.\nThe app will terminate.', QMessageBox.Abort)
+        except Exception as ex:
+            DebugInfo(ex)
             self.aborted = True
-            self.cur.execute("ROLLBACK;")
+            self.progress.close()
         con.close()
 
     def make_table(self, table):
@@ -1600,11 +1613,9 @@ class Reindex():
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     app = QApplication(sys.argv)
-
     font = QFont();
     font.setPixelSize(16);
     app.setFont(font);
-
     win = Window()
     win.show()
     sys.exit(app.exec_())
