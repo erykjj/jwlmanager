@@ -3,7 +3,7 @@
 ## [Unreleased]
 ### Added
 
-- Better error handling and reporting
+- Better exception handling and reporting
 
 ### Changed
 
