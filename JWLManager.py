@@ -918,7 +918,26 @@ class DebugInfo():
     def __init__(self, ex):
         tb_lines = traceback.format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
-        QMessageBox.critical(None, 'Error!', f'Oops! Something went wrong:\n\n{tb_text}\nTake note of what you were doing and inform the developer. The app will terminate.', QMessageBox.Abort)
+    #     QMessageBox.critical(None, 'Error!', f'Oops! Something went wrong...\n\n{tb_text}\nTake note of what you were doing and inform the developer. The app will terminate.', QMessageBox.Abort)
+        dialog = QDialog()
+        dialog.setMinimumSize(500, 375)
+        dialog.setWindowTitle("Error!")
+        label1 = QLabel()
+        label1.setText('Oops! Something went wrong...\n\nTake note of what you were doing and inform the developer:')
+        text = QTextEdit()
+        text.setReadOnly(True)
+        text.setText(f"{APP} {VERSION}\n\n{tb_text}")
+        label2 = QLabel()
+        label2.setText('The app will terminate.')
+        button = QDialogButtonBox(QDialogButtonBox.Abort)
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(label1)
+        layout.addWidget(text)
+        layout.addWidget(label2)
+        layout.addWidget(button)
+        dialog.setLayout(layout)
+        button.clicked.connect(dialog.close)
+        dialog.exec()
 
 
 
