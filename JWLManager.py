@@ -1154,7 +1154,7 @@ class ExportItems():
                 self.export_file.write(f",{row[item]}")
 
     def export_highlight_header(self):
-        self.export_file.write('{HIGHLIGHTS}\n\nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
+        self.export_file.write('{HIGHLIGHTS}\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1239,7 +1239,7 @@ class ImportHighlights():
                                 BEGIN;")
         self.aborted = False
         try:
-            self.import_file = open(fname, 'r', encoding='utf-8')
+            self.import_file = open(fname, 'r')
             if self.pre_import():
                 self.count = self.import_items()
             else:
