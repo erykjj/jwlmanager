@@ -32,7 +32,7 @@ You can find a zipped folder with a **Windows executable** and a **Mac OS app** 
 ____
 ## Operation
 
-#### VIEW
+### View
 
 Open a *.jwlibrary* backup archive to see the Annotations (the editable progress fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either the publication, the language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
 
@@ -120,7 +120,7 @@ Here is an example blue note for Jude 21 (in  Spanish):
 
 On a side-note, I format my notes with Markdown syntax (as above) for, even though JW Library doesn't allow rich-text formatting in the notes, that may change in the future and it should then be realtively easy to convert.
 
-## UTILITIES
+### Utilities
 
 #### OBSCURE
 
