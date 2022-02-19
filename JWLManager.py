@@ -245,7 +245,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
-        text.setMarkdown(open(self.resource_path('README.md')).read())
+        text.setMarkdown(open(self.resource_path('README.md'), encoding='utf-8').read())
         layout = QHBoxLayout(dialog)
         layout.addWidget(text)
         dialog.setLayout(layout)
