@@ -920,7 +920,7 @@ class DebugInfo():
         tb_text = ''.join(tb_lines)
     #     QMessageBox.critical(None, 'Error!', f'Oops! Something went wrong...\n\n{tb_text}\nTake note of what you were doing and inform the developer. The app will terminate.', QMessageBox.Abort)
         dialog = QDialog()
-        dialog.setMinimumSize(500, 375)
+        dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle("Error!")
         label1 = QLabel()
         label1.setText('Oops! Something went wrong...\n\nTake note of what you were doing and inform the developer:')
