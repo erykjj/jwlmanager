@@ -1372,7 +1372,8 @@ class ImportNotes():
         for item in regex.finditer('===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S):
             try:
                 count += 1
-                attribs = self.process_header(item.group(1))
+                header = item.group(1)
+                attribs = self.process_header(header)
                 title = item.group(2)
                 note = item.group(3)
                 if attribs['CAT'] == 'BIBLE':
@@ -1385,7 +1386,8 @@ class ImportNotes():
                     QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
                     return 0
             except:
-                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                # QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{attribs}', QMessageBox.Abort)
+                QMessageBox.critical(None, 'Error!', f'Error on import!\nFaulting entry #{count}:\n{header}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
         return count
