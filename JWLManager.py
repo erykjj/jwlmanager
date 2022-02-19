@@ -402,6 +402,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if reply == QMessageBox.No:
                 return self.save_file()
         self.save_filename = fname[0]
+        self.working_dir = Path(fname[0]).parent
         self.status_label.setText(f"{Path(fname[0]).stem}  ")
         self.zipfile()
 
@@ -472,6 +473,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname[0] == '':
             self.statusBar.showMessage(" NOT exported!", 3500)
             return
+        self.working_dir = Path(fname[0]).parent
         fn = ExportItems(self.combo_category.currentText(), selected, fname[0],
             Path(self.current_archive).stem)
         if fn.aborted:
