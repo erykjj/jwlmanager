@@ -12,6 +12,9 @@
 
 ### Fixed
 
+- Working directory changed on save and export
+- Export files weren't always UTF-8 encoded
+
 ### Removed
 ____
 ## [0.3.1] - 2022-02-10
