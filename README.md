@@ -32,8 +32,6 @@ You can find a zipped folder with a **Windows executable** and a **Mac OS app** 
 ____
 ## Operation
 
-#### VIEW
-
 Open a *.jwlibrary* backup archive to see the Annotations (the editable progress fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either the publication, the language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
 
 Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* FREE \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* UN-TAGGED \**. And in the Detailed view, any publication with no additional information will show *\* BLANK \**.
@@ -41,6 +39,8 @@ Notes that are not associated with any publication (created directly in the Pers
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
 
 The items are initially **sorted** by decreasing count. Clicking on the column headers allows for sorting the tree as well; clicking the same header again reverses the sort.
+
+#### View
 
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
 
