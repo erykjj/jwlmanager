@@ -1375,7 +1375,6 @@ class ImportNotes():
                 header = item.group(1)
                 title = item.group(2)
                 note = item.group(3)
-                print(header)
                 attribs = self.process_header(header)
                 if attribs['CAT'] == 'BIBLE':
                     self.import_bible(attribs, title, note)

@@ -32,7 +32,7 @@ You can find a zipped folder with a **Windows executable** and a **Mac OS app** 
 ____
 ## Operation
 
-### View
+#### VIEW
 
 Open a *.jwlibrary* backup archive to see the Annotations (the editable progress fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either the publication, the language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
 
@@ -58,21 +58,21 @@ The ***View*** menu has some additional options (also accessible directly via th
 
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* file in case you need to restore after messing up ;-)
 
-#### ADD
+#### Add
 
 For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. **Make sure the Bible translation you add exists in the selected language**, as strange things can happen if it does not. Let me know if a language is missing from the drop-down selection.
 
-#### DELETE
+#### Delete
 
 Select the Category and the item(s) you wish to eliminate from the database. For example, you may want to remove highlighting you made in some older magazines, or bookmarks you never knew you had, or clear your favorites completely, etc.
 
-#### EXPORT
+#### Eport
 
 This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else).
 
 Exporting of Annotations and Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 
-#### IMPORT
+#### Import
 
 You need to provide a text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting. Or you can create your own. The Higlights file is a CSV text file with a **{HIGHLIGHTS}** header. The Annotations file is also a CSV file, starting with **{ANNOTATIONS}**.
 
@@ -120,13 +120,13 @@ Here is an example blue note for Jude 21 (in  Spanish):
 
 On a side-note, I format my notes with Markdown syntax (as above) for, even though JW Library doesn't allow rich-text formatting in the notes, that may change in the future and it should then be realtively easy to convert.
 
-### Utilities
+#### UTILITIES
 
-#### OBSCURE
+#### Obscure
 
 If you need to share your complete archive but have some personal or confidential information, you can use this option to over-write text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. You can export your obscured Notes to confirm; or check the detailed view. Only tags are not obscured.
 
-#### REINDEX
+#### Reindex
 
 This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take up to a minute, depending on the number of records the database contains. It does not need to be run more than once in a while.
 
