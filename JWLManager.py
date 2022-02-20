@@ -87,6 +87,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for row in cur.execute("SELECT Number, Name FROM BibleBooks WHERE Language = 0;"):
             # Note: Bible books in English only
             self.books[row[0]] = row[1]
+        cur.close()
         con.close()
 
     def resource_path(self, relative_path):
@@ -371,9 +372,10 @@ class Window(QMainWindow, Ui_MainWindow):
               NOT IN (SELECT NoteId FROM Note);
             DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
             PRAGMA foreign_keys = 'ON';
-            COMMIT;
             VACUUM;"""
         cur.executescript(sql)
+        con.commit()
+        cur.close()
         con.close()
         self.archive_modified()
 
@@ -662,6 +664,7 @@ class BuildTree():
         elif self.category == "Annotations":
             self.get_annotations()
         con.commit()
+        self.cur.close()
         con.close()
 
     def process_data(self, sql):
@@ -921,7 +924,6 @@ class DebugInfo():
     def __init__(self, ex):
         tb_lines = traceback.format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
-    #     QMessageBox.critical(None, 'Error!', f'Oops! Something went wrong...\n\n{tb_text}\nTake note of what you were doing and inform the developer. The app will terminate.', QMessageBox.Abort)
         dialog = QDialog()
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle("Error!")
@@ -963,6 +965,7 @@ class AddFavorites():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def add_dialog(self):
@@ -1055,6 +1058,7 @@ class DeleteItems():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def delete_items(self):
@@ -1088,6 +1092,7 @@ class ExportItems():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def export_items(self):
@@ -1179,7 +1184,7 @@ class ImportAnnotations():
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA journal_mode = 'MEMORY'; \
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
@@ -1195,6 +1200,7 @@ class ImportAnnotations():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def pre_import(self):
@@ -1235,7 +1241,7 @@ class ImportHighlights():
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA journal_mode = 'MEMORY'; \
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
@@ -1251,6 +1257,7 @@ class ImportHighlights():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def pre_import(self):
@@ -1316,10 +1323,10 @@ class ImportHighlights():
 
 class ImportNotes():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/userData.db", isolation_level="DEFERRED")
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA journal_mode = 'MEMORY'; \
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
@@ -1335,6 +1342,7 @@ class ImportNotes():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def pre_import(self):
@@ -1353,12 +1361,13 @@ class ImportNotes():
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
         if results < 1:
             return 0
-        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\" WILL BE DELETED before importing.\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\" WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == "No":
           return 0
-        results = self.cur.execute("DELETE FROM Note WHERE Title GLOB '{title_char}*';")
-        self.cur.execute("DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);")
-        self.cur.execute("DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);")
+        results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
+        # Already in Trim:
+        # self.cur.execute("DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);")
+        # self.cur.execute("DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);")
         return results
 
     def import_items(self):
@@ -1491,6 +1500,7 @@ class ObscureItems():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
+        self.cur.close()
         con.close()
 
     def obscure_text(self, str):
@@ -1573,6 +1583,7 @@ class Reindex():
             DebugInfo(ex)
             self.aborted = True
             self.progress.close()
+        self.cur.close()
         con.close()
 
     def make_table(self, table):
