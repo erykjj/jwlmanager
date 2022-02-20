@@ -353,7 +353,6 @@ class Window(QMainWindow, Ui_MainWindow):
             PRAGMA temp_store = 2;
             PRAGMA journal_mode = 'OFF';
             PRAGMA foreign_keys = 'OFF';
-            BEGIN;
             DELETE FROM Note WHERE (Title IS NULL OR Title = '')
               AND (Content IS NULL OR Content = '');
             DELETE FROM Location WHERE LocationId NOT IN
