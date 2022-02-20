@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windoweljgmq.ui'
+## Form generated from reading UI file 'main_windowJhNUuv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 5.15.2
 ##
@@ -145,7 +145,7 @@ class Ui_MainWindow(object):
         self.label_total.setGeometry(QRect(10, 10, 45, 28))
         self.label_selected = QLabel(self.frame_info)
         self.label_selected.setObjectName(u"label_selected")
-        self.label_selected.setGeometry(QRect(220, 10, 70, 28))
+        self.label_selected.setGeometry(QRect(225, 10, 70, 28))
         self.total = QLabel(self.frame_info)
         self.total.setObjectName(u"total")
         self.total.setGeometry(QRect(55, 10, 100, 28))
@@ -153,7 +153,7 @@ class Ui_MainWindow(object):
         self.total.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.selected = QLabel(self.frame_info)
         self.selected.setObjectName(u"selected")
-        self.selected.setGeometry(QRect(295, 10, 100, 28))
+        self.selected.setGeometry(QRect(300, 10, 100, 28))
         self.selected.setTextFormat(Qt.MarkdownText)
         self.selected.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.label_category = QLabel(self.frame_info)
@@ -167,10 +167,10 @@ class Ui_MainWindow(object):
         self.combo_category.addItem("")
         self.combo_category.setObjectName(u"combo_category")
         self.combo_category.setEnabled(False)
-        self.combo_category.setGeometry(QRect(85, 40, 120, 28))
+        self.combo_category.setGeometry(QRect(85, 40, 130, 28))
         self.label_grouping = QLabel(self.frame_info)
         self.label_grouping.setObjectName(u"label_grouping")
-        self.label_grouping.setGeometry(QRect(220, 40, 70, 28))
+        self.label_grouping.setGeometry(QRect(225, 40, 70, 28))
         self.combo_grouping = QComboBox(self.frame_info)
         self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
@@ -179,7 +179,7 @@ class Ui_MainWindow(object):
         self.combo_grouping.addItem("")
         self.combo_grouping.setObjectName(u"combo_grouping")
         self.combo_grouping.setEnabled(False)
-        self.combo_grouping.setGeometry(QRect(295, 40, 120, 28))
+        self.combo_grouping.setGeometry(QRect(300, 40, 130, 28))
         self.button_export = QPushButton(self.frame_info)
         self.button_export.setObjectName(u"button_export")
         self.button_export.setEnabled(False)

@@ -485,7 +485,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def import_file(self):
         reply = QMessageBox.warning(self, 'Import',
-                "Make sure your import file is UTF-8 encoded\nand properly formatted.\n\nImporting will modify the archive. Proceed?",
+                "Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
@@ -1353,7 +1353,7 @@ class ImportNotes():
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
         if results < 1:
             return 0
-        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\"\nWILL BE DELETED before importing\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\" WILL BE DELETED before importing.\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == "No":
           return 0
         results = self.cur.execute("DELETE FROM Note WHERE Title GLOB '{title_char}*';")
