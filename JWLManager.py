@@ -338,6 +338,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionGrouped.setEnabled(True)
         self.actionDetailed.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
+        self.selected.setText("**0**")
         if self.detailed:
             self.detailed = False
             self.actionDetailed.setChecked(False)
