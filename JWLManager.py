@@ -1315,7 +1315,7 @@ class ImportHighlights():
 
 class ImportNotes():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/userData.db", isolation_level="DEFERRED")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1355,15 +1355,9 @@ class ImportNotes():
         answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\"\nWILL BE DELETED before importing\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == "No":
           return 0
-        sql = f"""
-            PRAGMA foreign_keys = 'OFF';
-            DELETE FROM Note WHERE Title GLOB '{title_char}*';"""
-        results = self.cur.executescript(sql)
-        sql = """
-            DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);
-            DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
-            PRAGMA foreign_keys = 'ON';"""
-        self.cur.executescript(sql)
+        results = self.cur.execute("DELETE FROM Note WHERE Title GLOB '{title_char}*';")
+        self.cur.execute("DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);")
+        self.cur.execute("DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);")
         return results
 
     def import_items(self):
