@@ -9,6 +9,7 @@
 
 - Adjusted About dialog box
 - Adjusted Add Favorite dialog box
+- Cosmetic/UI adjustments
 
 ### Fixed
 
