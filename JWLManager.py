@@ -873,7 +873,7 @@ class BuildTree():
             child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
             child.setText(0, data[0])
             if data[1]:
-                child.setToolTip(0, f"     {data[1]}")
+                child.setToolTip(0, f" {data[1]}")
             child.setCheckState(0, Qt.Unchecked)
             child.setTextAlignment(1, Qt.AlignCenter)
             return child
