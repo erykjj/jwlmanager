@@ -14,6 +14,8 @@
 
 - Working directory changed on save and export
 - Export files weren't always UTF-8 encoded
+- Fixed SQL rollback on aborted import
+- Selected item count not reset when new archive created
 
 ### Removed
 ____
