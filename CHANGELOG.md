@@ -3,6 +3,15 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.3.2] - 2022-02-20
+### Added
+
 - Better exception handling and reporting
 
 ### Changed
@@ -16,10 +25,8 @@
 - Working directory changed on save and export
 - Export files weren't always UTF-8 encoded
 - Fixed SQL rollback on aborted import
-- Selected item count not reset when new archive created
+- Selected item count reset when new archive created
 
-### Removed
-____
 ## [0.3.1] - 2022-02-10
 ### Added
 
@@ -168,6 +175,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.3.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.2
 [0.3.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.1
 [0.3.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.0
 [0.2.4]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.2.4
