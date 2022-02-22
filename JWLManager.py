@@ -26,9 +26,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.3.2'
+VERSION = 'v0.3.3'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+from tkinter import EXCEPTION
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -927,7 +928,7 @@ class DebugInfo():
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle("Error!")
         label1 = QLabel()
-        label1.setText('Oops! Something went wrong...\n\nTake note of what you were doing and inform the developer:')
+        label1.setText("<p style='text-align: left;'>Oops! Something went wrong...</p></p><p style='text-align: left;'>Take note of what you were doing and <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>inform the developer</a>:</p>")
         text = QTextEdit()
         text.setReadOnly(True)
         text.setText(f"{APP} {VERSION}\n\n{tb_text}")
