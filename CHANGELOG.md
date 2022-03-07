@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed for icons/README not found when script executed from outside of directory
+
 ### Removed
 ____
 ## [0.3.2] - 2022-02-20
