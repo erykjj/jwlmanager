@@ -26,10 +26,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+# TODO: no icons when launched from outside of project directory
+
 VERSION = 'v0.3.3'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
-from tkinter import EXCEPTION
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -95,7 +96,8 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             base_path = sys._MEIPASS
         except Exception:
-            base_path = os.path.abspath(".")
+            # base_path = os.path.abspath(".")
+            base_path = PROJECT_PATH 
         return os.path.join(base_path, relative_path)
 
 
@@ -247,8 +249,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
-        # text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
-        text.setMarkdown(open(PROJECT_PATH / "README.md", encoding='utf-8').read())
+        text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
         layout = QHBoxLayout(dialog)
         layout.addWidget(text)
         dialog.setLayout(layout)
