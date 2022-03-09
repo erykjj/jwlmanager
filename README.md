@@ -27,7 +27,9 @@ $ JWLManager.py
 
 You may have to `pip install` some of the required libraries (*PySide2*, etc.).
 
-You can find a zipped folder with a **Windows executable** and a **Mac OS app** in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
+#### Multi-platform
+
+You can find a **Windows executable** and a **Mac OS app** in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
 
 ____
 ## Operation
