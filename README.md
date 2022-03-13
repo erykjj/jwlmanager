@@ -25,7 +25,7 @@ $ chmod u+x JWLManager.py
 $ JWLManager.py
 ```
 
-You may have to `pip install` some of the required libraries (*PySide2*, etc.).
+You may have to `pip install` some of the required libraries (*PySide2*, *regex*).
 
 #### Multi-platform
 
