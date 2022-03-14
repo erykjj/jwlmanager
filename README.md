@@ -3,7 +3,7 @@
 
 ## Purpose
 
-This application allows viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). A modified *.jwlibrary* file can then be restored within the app.
+This application enables viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). A modified *.jwlibrary* file can then be restored within the app.
 
 In addition to the main functions of exporting, importing, and deleting, the application can also clean up any residual/unused records from the database and re-index the various tables within the database.
 
@@ -12,7 +12,7 @@ ____
 
 This is a Python3 script implementing the Qt5 framework.
 
-If you have Python3 installed, execute to run:
+If you have Python3 installed, execute to run (from inside JWLManager folder):
 
 ```
 $ python3 JWLManager.py
