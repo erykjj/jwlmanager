@@ -7,6 +7,8 @@ This application enables viewing and performing various operations on the *user*
 
 In addition to the main functions of exporting, importing, and deleting, the application can also clean up any residual/unused records from the database and re-index the various tables within the database.
 
+![preview](res/JWLManager.gif)
+
 ____
 ## Usage
 
@@ -121,6 +123,8 @@ Here is an example blue note for Jude 21 (in  Spanish):
     3. ejerciendo **fe** en el sacrificio redentor de Jesucristo, que hace posible la _vida eterna_
 
 On a side-note, I format my notes with Markdown syntax (as above) for, even though JW Library doesn't allow rich-text formatting in the notes, that may change in the future and it should then be realtively easy to convert.
+
+![notes](res/notes.png)
 
 #### UTILITIES
 
