@@ -60,7 +60,7 @@ The ***View*** menu has some additional options (also accessible directly via th
   * **Short Title** - abbreviated title
   * **Full Title** - complete title
 
-**Right-clicking** on a line in the Notes category will bring up a window with a preview of the selected items, provided there aren't too many.
+**Right-clicking** on a line in the Notes or Annotations categories will bring up a window with a preview of the selected items, provided there aren't too many.
 
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* file in case you need to restore after messing up ;-)
 
