@@ -131,6 +131,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
+        self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
         self.button_export.clicked.connect(self.export)
         self.button_import.clicked.connect(self.import_file)
         self.button_add.clicked.connect(self.add_favorite)
@@ -157,6 +159,42 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.setExpanded(item, False)
         else:
             self.treeWidget.expandRecursively(item, -1)
+
+    def right_clicked(self):
+
+        def recurse(parent):
+            selected.append(parent.data(0, Qt.UserRole))
+            for i in range(parent.childCount()):
+                child = parent.child(i)
+                recurse(child)
+
+        if self.combo_category.currentText() != "Notes":
+            return
+        selected = []
+        items = []
+        recurse(self.treeWidget.currentItem())
+        for row in selected:
+            if row in self.leaves:
+                for id in self.leaves[row]:
+                    items.append(id)
+
+        if len(items) > 500:
+            QMessageBox.critical(self, 'Warning', f"You are trying to preview {len(items)} items.\nPlease select a smaller subset.", QMessageBox.Cancel)
+            return
+        fn = PreviewItems(self.combo_category.currentText(), items, self.books)
+        if fn.aborted:
+            self.clean_up()
+            sys.exit()
+        dialog = QDialog(self)
+        dialog.setWindowTitle("NOTE PREVIEW")
+        dialog.setMinimumSize(800, 800)
+        text = QTextEdit(dialog)
+        text.setReadOnly(True)
+        text.setHtml(fn.txt)
+        layout = QHBoxLayout(dialog)
+        layout.addWidget(text)
+        dialog.setLayout(layout)
+        dialog.show()
 
 
     def code_view(self):
@@ -433,8 +471,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def tree_selection(self):
-        checked_leaves = []
-        self.selected_items = 0
+
         def recurse(parent):
             for i in range(parent.childCount()):
                 child = parent.child(i)
@@ -444,6 +481,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 else: 
                     if child.checkState(0) == Qt.Checked:
                         checked_leaves.append(child.data(0, Qt.UserRole))
+
+        checked_leaves = []
+        self.selected_items = 0
         recurse(self.treeWidget.invisibleRootItem())
         for item in checked_leaves:
             self.selected_items += len(self.leaves[item])
@@ -1181,6 +1221,66 @@ class ExportItems():
         self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
         self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
+
+
+
+class PreviewItems():
+    def __init__(self, category='Note', items=[], books=[]):
+        self.category = category
+        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        self.cur = con.cursor()
+        self.books = books
+        self.aborted = False
+        self.txt = ""
+        try:
+            self.items = str(items).replace('[', '(').replace(']', ')')
+            # self.preview_items()
+            self.preview_notes()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.aborted = True
+        self.cur.close()
+        con.close()
+
+    # def preview_items(self):
+    #     if self.category == "Notes":
+    #         return self.preview_notes()
+    #     elif self.category == "Annotations":
+    #         return self.preview_annotations()
+
+    def preview_notes(self):
+        self.preview_bible()
+        self.preview_publications()
+        self.preview_independent()
+
+
+    def preview_bible(self):
+        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[3] or "NO TITLE"
+            note = regex.sub('\n', '<br />', row[4].rstrip())
+            self.txt += f"<i>{self.books[row[0]]} {row[1]}:{row[2]}</i> - <b>{title}</b><br />{note}<br /><hr />"
+
+    def preview_publications(self):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[0] or "NO TITLE"
+            note = regex.sub('\n', '<br />', row[1].rstrip())
+            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
+
+    def preview_independent(self):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[0] or "NO TITLE"
+            note = regex.sub('\n', '<br />', row[1].rstrip())
+            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
+
+
+    # def preview_annotations(self):
+    #     self.preview_annotations_header()
+    #     for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"):
+    #         for item in range(1,7):
+    #             string = str(row[item]).replace("\n", r"\n")
+
+    # def preview_annotations_header(self):
+    #     self.preview_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
 
 
 class ImportAnnotations():
