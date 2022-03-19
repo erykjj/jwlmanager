@@ -26,8 +26,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-# TODO: no icons when launched from outside of project directory
-
 VERSION = 'v0.3.3'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
@@ -100,7 +98,6 @@ class Window(QMainWindow, Ui_MainWindow):
             # base_path = os.path.abspath(".")
             base_path = PROJECT_PATH 
         return os.path.join(base_path, relative_path)
-
 
     def center(self):
         qr = self.frameGeometry()
@@ -340,6 +337,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 return
         self.status_label.setStyleSheet("color:  black;")
         self.status_label.setText("* NEW ARCHIVE *  ")
+        global db_name
+        try:
+            os.remove(f"{tmp_path}/manifest.json")
+            os.remove(f"{tmp_path}/{db_name}")
+        except OSError as e:
+            pass
+        db_name = 'userData.db'
         with ZipFile(self.resource_path("res/blank.jwlibrary"),"r") as zipped:
             zipped.extractall(tmp_path)
         file = open(f"{tmp_path}/manifest.json", 'w')
@@ -365,8 +369,18 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path(fname[0]).parent
         self.status_label.setStyleSheet("color:  black;")
         self.status_label.setText(f"{Path(fname[0]).stem}  ")
+        global db_name
+        try:
+            os.remove(f"{tmp_path}/manifest.json")
+            os.remove(f"{tmp_path}/{db_name}")
+        except OSError as e:
+            pass
         with ZipFile(fname[0],"r") as zipped:
             zipped.extractall(tmp_path)
+        if os.path.exists(f"{tmp_path}/user_data.db"):
+            db_name = 'user_data.db' # iPhone & iPad backups
+        else:
+            db_name = 'userData.db'
         self.file_loaded()
 
     def file_loaded(self):
@@ -402,7 +416,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def trim_db(self):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         cur = con.cursor()
         sql = """
             PRAGMA temp_store = 2;
@@ -466,7 +480,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def zipfile(self):
         with ZipFile(self.save_filename, "w", compression=ZIP_DEFLATED) as newzip:
             newzip.write(f"{tmp_path}/manifest.json", "manifest.json")
-            newzip.write(f"{tmp_path}/userData.db", "userData.db")
+            newzip.write(f"{tmp_path}/{db_name}", db_name)
         self.archive_saved()
 
 
@@ -608,7 +622,6 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(f" {fn.result} items deleted", 3500)
         self.trim_db()
-        self.archive_modified()
         self.regroup()
         self.tree_selection()
 
@@ -705,7 +718,7 @@ class BuildTree():
 
 
     def get_data(self):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
@@ -1007,7 +1020,7 @@ class AddFavorites():
         self.publications = publications
         self.languages = languages
         self.message = (0, "")
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1099,7 +1112,7 @@ class AddFavorites():
 class DeleteItems():
     def __init__(self, category='Notes', items=[]):
         self.category = category
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1137,7 +1150,7 @@ class ExportItems():
     def __init__(self, category='Notes', items=[], fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.aborted = False
         try:
@@ -1238,7 +1251,7 @@ class ExportItems():
 class PreviewItems():
     def __init__(self, category='Notes', items=[], books=[]):
         self.category = category
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.books = books
         self.aborted = False
@@ -1287,7 +1300,7 @@ class PreviewItems():
 
 class ImportAnnotations():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1344,7 +1357,7 @@ class ImportAnnotations():
 
 class ImportHighlights():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1429,7 +1442,7 @@ class ImportHighlights():
 
 class ImportNotes():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1587,7 +1600,7 @@ class ImportNotes():
 
 class ObscureItems():
     def __init__(self):
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1667,7 +1680,7 @@ class ObscureItems():
 class Reindex():
     def __init__(self, progress):
         self.progress = progress
-        con = sqlite3.connect(f"{tmp_path}/userData.db")
+        con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1745,6 +1758,7 @@ class Reindex():
 
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
+    db_name = "userData.db"
     app = QApplication(sys.argv)
     font = QFont();
     font.setPixelSize(16);
