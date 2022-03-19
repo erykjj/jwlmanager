@@ -60,6 +60,8 @@ The ***View*** menu has some additional options (also accessible directly via th
   * **Short Title** - abbreviated title
   * **Full Title** - complete title
 
+**Right-clicking** on a line in the Notes section will bring up a window with a preview of the selected items, provided it is not too large.
+
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* file in case you need to restore after messing up ;-)
 
 #### Add
@@ -130,7 +132,7 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 #### Obscure
 
-If you need to share your complete archive but have some personal or confidential information, you can use this option to over-write text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. You can export your obscured Notes to confirm; or check the detailed view. Only tags are not obscured.
+If you need to share your complete archive but have some personal or confidential information, you can use this option to over-write text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm: check the detailed view or right-click on a Notes item to see the preview. Only tags are not obscured.
 
 #### Reindex
 
