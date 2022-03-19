@@ -775,9 +775,9 @@ class BuildTree():
         for row in self.cur.execute(sql):
             item = row[0]
             group = (None, None)
-            code = ("* FREE *", None)
-            short = ("* FREE *", None)
-            full = ("* FREE *", None)
+            code = ("* OTHER *", None)
+            short = ("* OTHER *", None)
+            full = ("* OTHER *", None)
             year = None
             language = ("* NO LANGUAGE *", None)
             issue = (None, None)

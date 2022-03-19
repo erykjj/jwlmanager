@@ -8,6 +8,8 @@
 
 ### Changed
 
+- Independent notes (not related to any publication) are now listed as OTHER (instead of FREE)
+
 ### Fixed
 
 - Fixed for icons/README not found when script executed from outside of directory
