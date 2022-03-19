@@ -168,7 +168,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 child = parent.child(i)
                 recurse(child)
 
-        if self.combo_category.currentText() != "Notes":
+        if self.combo_category.currentText() not in ("Notes", "Annotations"):
             return
         selected = []
         items = []
@@ -186,7 +186,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         dialog = QDialog(self)
-        dialog.setWindowTitle("NOTE PREVIEW")
+        dialog.setWindowTitle("DATA VIEWER")
         dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
@@ -660,7 +660,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, window, tree, books, publications, languages, category='Note', grouping='Publication', title='code', detailed=False, grouped=True, current=[]):
+    def __init__(self, window, tree, books, publications, languages, category='Notes', grouping='Publication', title='code', detailed=False, grouped=True, current=[]):
         self.tree = tree
         self.window = window
         self.category = category
@@ -1085,7 +1085,7 @@ class AddFavorites():
 
 
 class DeleteItems():
-    def __init__(self, category='Note', items=[]):
+    def __init__(self, category='Notes', items=[]):
         self.category = category
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
@@ -1122,7 +1122,7 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category='Note', items=[], fname='', current_archive=''):
+    def __init__(self, category='Notes', items=[], fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/userData.db")
@@ -1225,7 +1225,7 @@ class ExportItems():
 
 
 class PreviewItems():
-    def __init__(self, category='Note', items=[], books=[]):
+    def __init__(self, category='Notes', items=[], books=[]):
         self.category = category
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
@@ -1584,9 +1584,7 @@ class ImportNotes():
 
 
 class ObscureItems():
-    def __init__(self, category='Note', items=[]):
-        self.category = category
-        self.items = items
+    def __init__(self):
         con = sqlite3.connect(f"{tmp_path}/userData.db")
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
