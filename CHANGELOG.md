@@ -3,7 +3,8 @@
 ## [Unreleased]
 ### Added
 
-- Added preview for notes (with right-click)
+- Added data view for Notes (with right-click)
+- Added data view for Annotations (with right-click)
 
 ### Changed
 
