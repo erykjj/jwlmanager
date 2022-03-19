@@ -12,6 +12,7 @@
 
 ### Fixed
 
+- MAJOR FIX: backups made on iPhone/iPad devices have a different db name, which would make the app crash
 - Fixed for icons/README not found when script executed from outside of directory
 - Fixed opening URLs in default browser
 
