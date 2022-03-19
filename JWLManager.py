@@ -1223,7 +1223,6 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
 
-
 class PreviewItems():
     def __init__(self, category='Notes', items=[], books=[]):
         self.category = category
@@ -1234,25 +1233,20 @@ class PreviewItems():
         self.txt = ""
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
-            # self.preview_items()
-            self.preview_notes()
+            self.preview_items()
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
         self.cur.close()
         con.close()
 
-    # def preview_items(self):
-    #     if self.category == "Notes":
-    #         return self.preview_notes()
-    #     elif self.category == "Annotations":
-    #         return self.preview_annotations()
-
-    def preview_notes(self):
-        self.preview_bible()
-        self.preview_publications()
-        self.preview_independent()
-
+    def preview_items(self):
+        if self.category == "Notes":
+            self.preview_bible()
+            self.preview_publications()
+            self.preview_independent()
+        elif self.category == "Annotations":
+            self.preview_annotations()
 
     def preview_bible(self):
         for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
@@ -1272,15 +1266,11 @@ class PreviewItems():
             note = regex.sub('\n', '<br />', row[1].rstrip())
             self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
 
-
-    # def preview_annotations(self):
-    #     self.preview_annotations_header()
-    #     for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"):
-    #         for item in range(1,7):
-    #             string = str(row[item]).replace("\n", r"\n")
-
-    # def preview_annotations_header(self):
-    #     self.preview_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
+    def preview_annotations(self):
+        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE TextTag IN {self.items};"):
+            title = row[0] or "NO TITLE"
+            note = regex.sub('\n', '<br />', row[1].rstrip())
+            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
 
 
 class ImportAnnotations():
