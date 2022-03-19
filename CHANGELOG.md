@@ -3,11 +3,14 @@
 ## [Unreleased]
 ### Added
 
+- Added preview for notes (with right-click)
+
 ### Changed
 
 ### Fixed
 
 - Fixed for icons/README not found when script executed from outside of directory
+- Fixed opening URLs in default browser
 
 ### Removed
 ____
