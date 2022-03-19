@@ -51,6 +51,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
+        self.setAcceptDrops(True)
         self.status_label = QLabel("No archive selected  ")
         self.status_label.setStyleSheet("font: italic;")
         self.status_label.setStyleSheet("color:  grey;")
@@ -386,6 +387,18 @@ class Window(QMainWindow, Ui_MainWindow):
             self.detailed = False
             self.actionDetailed.setChecked(False)
         self.switchboard(self.combo_category.currentText())
+
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        files = [u.toLocalFile() for u in event.mimeData().urls()]
+        for f in files:
+            print(f)
 
 
     def trim_db(self):
@@ -987,7 +1000,6 @@ class DebugInfo():
         dialog.setLayout(layout)
         button.clicked.connect(dialog.close)
         dialog.exec()
-
 
 
 class AddFavorites():
@@ -1729,7 +1741,6 @@ class Reindex():
         self.update_table('TagMap', 'LocationId')
         self.update_table('PlaylistMedia', 'LocationId')
         self.drop_table()
-
 
 
 if __name__ == "__main__":
