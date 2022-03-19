@@ -352,7 +352,7 @@ class Window(QMainWindow, Ui_MainWindow):
         file.close
         self.file_loaded()
 
-    def load_file(self):
+    def load_file(self, archive = ''):
         if self.modified:
             reply = QMessageBox.question(self, 'Save', 'Save current archive?', 
                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
@@ -361,21 +361,23 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.save_file()
             elif reply == QMessageBox.Cancel:
                 return
-        fname = QFileDialog.getOpenFileName(self, 'Open archive', 
-                str(self.working_dir),"JW Library archives (*.jwlibrary)")
-        if fname[0] == "":
-            return
-        self.current_archive = Path(fname[0])
-        self.working_dir = Path(fname[0]).parent
+        if not archive:
+            fname = QFileDialog.getOpenFileName(self, 'Open archive', 
+                    str(self.working_dir),"JW Library archives (*.jwlibrary)")
+            if fname[0] == "":
+                return
+            archive = fname[0]
+        self.current_archive = Path(archive)
+        self.working_dir = Path(archive).parent
         self.status_label.setStyleSheet("color:  black;")
-        self.status_label.setText(f"{Path(fname[0]).stem}  ")
+        self.status_label.setText(f"{Path(archive).stem}  ")
         global db_name
         try:
             os.remove(f"{tmp_path}/manifest.json")
             os.remove(f"{tmp_path}/{db_name}")
         except OSError as e:
             pass
-        with ZipFile(fname[0],"r") as zipped:
+        with ZipFile(archive,"r") as zipped:
             zipped.extractall(tmp_path)
         if os.path.exists(f"{tmp_path}/user_data.db"):
             db_name = 'user_data.db' # iPhone & iPad backups
@@ -410,10 +412,10 @@ class Window(QMainWindow, Ui_MainWindow):
             event.ignore()
 
     def dropEvent(self, event):
-        files = [u.toLocalFile() for u in event.mimeData().urls()]
-        for f in files:
-            print(f)
-
+        file = event.mimeData().urls()[0].toLocalFile()
+        suffix = Path(file).suffix
+        if suffix == ".jwlibrary":
+            self.load_file(file)
 
     def trim_db(self):
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
