@@ -5,6 +5,8 @@
 
 - Added data view for Notes (with right-click)
 - Added data view for Annotations (with right-click)
+- Added drag-and-drop functionality to open archives
+- Added drag-and-drop for importing
 
 ### Changed
 

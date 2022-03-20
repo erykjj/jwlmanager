@@ -29,6 +29,7 @@ SOFTWARE.
 VERSION = 'v0.3.3'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+from unicodedata import category
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -416,6 +417,22 @@ class Window(QMainWindow, Ui_MainWindow):
         suffix = Path(file).suffix
         if suffix == ".jwlibrary":
             self.load_file(file)
+        elif self.current_archive == "":
+            QMessageBox.warning(self, 'Error', 'No archive has been opened!', QMessageBox.Cancel)
+        elif suffix == ".txt":
+            with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
+                header = f.readline().strip()
+            if header == r"{ANNOTATIONS}":
+                self.import_file(file, 'Annotations')
+            elif header == r"{HIGHLIGHTS}":
+                self.import_file(file, 'Highlights')
+            elif regex.search("{TITLE=", header):
+                self.import_file(file, 'Notes')
+            else:
+                QMessageBox.warning(self, 'Error', f'File "{file}" not recognized!', QMessageBox.Cancel)
+        else:
+            QMessageBox.warning(self, 'Error', f'File "{file}" not recognized!', QMessageBox.Cancel)
+
 
     def trim_db(self):
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
@@ -557,25 +574,28 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage("Items exported", 3500)
 
 
-    def import_file(self):
+    def import_file(self, file='', category = ''):
         reply = QMessageBox.warning(self, 'Import',
                 "Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?",
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
-        if fname[0] == "":
-            self.statusBar.showMessage(" NOT imported!", 3500)
-            return
-        self.working_dir = Path(fname[0]).parent
+        if not file:
+            fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
+            if fname[0] == "":
+                self.statusBar.showMessage(" NOT imported!", 3500)
+                return
+            file = fname[0]
+            category = self.combo_category.currentText()
+        self.working_dir = Path(file).parent
         self.statusBar.showMessage(" Importing. Please wait...")
         app.processEvents()
-        if self.combo_category.currentText() == 'Annotations':
-            fn = ImportAnnotations(fname[0])
-        elif self.combo_category.currentText() == 'Highlights':
-            fn = ImportHighlights(fname[0])
-        elif self.combo_category.currentText() == 'Notes':
-            fn = ImportNotes(fname[0])
+        if category == 'Annotations':
+            fn = ImportAnnotations(file)
+        elif category == 'Highlights':
+            fn = ImportHighlights(file)
+        elif category == 'Notes':
+            fn = ImportNotes(file)
         if fn.aborted:
             self.clean_up()
             sys.exit()
