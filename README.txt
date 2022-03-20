@@ -11,6 +11,8 @@ In addition to the main functions of exporting, importing, and deleting, the
 application can also clean up any residual/unused records from the database and
 re-index the various tables within the database.
 
+[preview]
+
 --------------------------------------------------------------------------------
 
 Usage
@@ -41,10 +43,10 @@ fields in some of the newer publications), Bookmarks, Favorites, Highlights, and
 Notes (Category) that are stored within it. These will be organized in a tree
 view, which you can group (Grouping) by either the publication, the language,
 and (depending on what you are currently viewing) you may also have the option
-to group by year, color or tag.
+to group by year, color or tag. Drag-and-drop to open also works.
 
 Notes that are not associated with any publication (created directly in the
-Personal Study space), are listed as * FREE * and with * NO LANGUAGE *. Notes
+Personal Study space), are listed as * OTHER * and with * NO LANGUAGE *. Notes
 that aren’t tagged will be listed as * UN-TAGGED *. And in the Detailed view,
 any publication with no additional information will show * BLANK *.
 
@@ -77,6 +79,9 @@ combination shortcut):
     -   Code - publication code
     -   Short Title - abbreviated title
     -   Full Title - complete title
+
+Right-clicking on a line in the Notes or Annotations categories will bring up a
+window with a preview of the selected items, provided there aren’t too many.
 
 If you modify an archive and intend to use the results to re-import into JW
 Library, make sure to save it (with a new name). KEEP A BACKUP of your original
@@ -111,6 +116,7 @@ You need to provide a text file (UTF-8 encoded) with the Notes, Highlights or
 Annotations to import. You can use the file produced by exporting. Or you can
 create your own. The Higlights file is a CSV text file with a {HIGHLIGHTS}
 header. The Annotations file is also a CSV file, starting with {ANNOTATIONS}.
+You can simply drag-and-drop the import file into the app.
 
 Editing or creating a Highlights or Annotations import file is not recommended.
 Rather, exported Highlights or Annotations can be merged into another archive.
@@ -194,6 +200,8 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even
 though JW Library doesn’t allow rich-text formatting in the notes, that may
 change in the future and it should then be realtively easy to convert.
 
+[notes]
+
 UTILITIES
 
 Obscure
@@ -202,9 +210,9 @@ If you need to share your complete archive but have some personal or
 confidential information, you can use this option to over-write text fields in
 your archive. The length of the text remains the same, leaving all numbers and
 punctuation in place, but replacing alphabetic characters with meaningless
-expressions such as ‘obscured’, ‘yada’, ‘bla’, ‘gibberish’ or ‘børk’. You can
-export your obscured Notes to confirm; or check the detailed view. Only tags are
-not obscured.
+expressions such as ‘obscured’, ‘yada’, ‘bla’, ‘gibberish’ or ‘børk’. To
+confirm: check the detailed view or right-click on a Notes item to see the
+preview. Only tags are not obscured.
 
 Reindex
 
@@ -218,6 +226,10 @@ database contains. It does not need to be run more than once in a while.
 Feedback
 
 Feel free to get in touch and post any issues and suggestions.
+
+Follow
+
+[] Tags RSS
 
 --------------------------------------------------------------------------------
 

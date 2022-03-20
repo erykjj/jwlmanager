@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.3.3'
+VERSION = 'v0.4.0'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 

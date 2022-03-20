@@ -3,6 +3,15 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+____
+## [0.4.0] - 2022-03-20
+### Added
+
 - Added data view for Notes (with right-click)
 - Added data view for Annotations (with right-click)
 - Added drag-and-drop functionality to open archives
@@ -18,8 +27,6 @@
 - Fixed for icons/README not found when script executed from outside of directory
 - Fixed opening URLs in default browser
 
-### Removed
-____
 ## [0.3.2] - 2022-02-20
 ### Added
 
@@ -186,6 +193,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[0.4.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.4.0
 [0.3.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.2
 [0.3.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.1
 [0.3.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.0
