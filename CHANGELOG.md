@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Modified formatting on data view to include NoteId of each Note
+
 ### Fixed
 
 ### Removed

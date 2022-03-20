@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.4.0'
+VERSION = 'v0.4.1'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
@@ -1295,28 +1295,40 @@ class PreviewItems():
             self.preview_annotations()
 
     def preview_bible(self):
-        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[3] or "NO TITLE"
-            note = regex.sub('\n', '<br />', row[4].rstrip())
-            self.txt += f"<i>{self.books[row[0]]} {row[1]}:{row[2]}</i> - <b>{title}</b><br />{note}<br /><hr />"
+        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[3] or "* NO TITLE *"
+            if row[4]:
+                note = regex.sub('\n', '<br />', row[4].rstrip())
+            else:
+                note = "* NO TEXT *"
+            self.txt += f"[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_publications(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or "NO TITLE"
-            note = regex.sub('\n', '<br />', row[1].rstrip())
-            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[0] or "* NO TITLE *"
+            if row[1]:
+                note = regex.sub('\n', '<br />', row[1].rstrip())
+            else:
+                note = "* NO TEXT *"
+            self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_independent(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or "NO TITLE"
-            note = regex.sub('\n', '<br />', row[1].rstrip())
-            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+            title = row[0] or "* NO TITLE *"
+            if row[1]:
+                note = regex.sub('\n', '<br />', row[1].rstrip())
+            else:
+                note = "* NO TEXT *"
+            self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_annotations(self):
         for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE TextTag IN {self.items};"):
-            title = row[0] or "NO TITLE"
-            note = regex.sub('\n', '<br />', row[1].rstrip())
-            self.txt += f"<b>{title}</b><br />{note}<br /><hr />"
+            title = row[0]
+            if row[1]:
+                note = regex.sub('\n', '<br />', row[1].rstrip())
+            else:
+                note = "* NO TEXT *"
+            self.txt += f"<b>{title}</b><br />{note}<hr />"
 
 
 class ImportAnnotations():
