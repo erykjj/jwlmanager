@@ -29,7 +29,6 @@ SOFTWARE.
 VERSION = 'v0.3.3'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
-from unicodedata import category
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -417,7 +416,7 @@ class Window(QMainWindow, Ui_MainWindow):
         suffix = Path(file).suffix
         if suffix == ".jwlibrary":
             self.load_file(file)
-        elif self.current_archive == "":
+        elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, 'Error', 'No archive has been opened!', QMessageBox.Cancel)
         elif suffix == ".txt":
             with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
