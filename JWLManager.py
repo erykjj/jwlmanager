@@ -284,7 +284,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help(self):
-        dialog = QDialog(self)
+        dialog = QDialog()
         dialog.setWindowTitle("README")
         dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
@@ -307,8 +307,8 @@ class Window(QMainWindow, Ui_MainWindow):
             <p style="text-align: center;"><em>{contact}</em></p>
             <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>
                 """
-        dialog = QDialog()
-        dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+        dialog = QDialog(self)
+        # dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
         outer = QVBoxLayout()
         top = QHBoxLayout()
         icon = QLabel(dialog)
