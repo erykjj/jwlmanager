@@ -52,7 +52,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setAcceptDrops(True)
         self.status_label = QLabel("No archive selected  ")
         self.status_label.setStyleSheet("font: italic;")
-        self.status_label.setStyleSheet("color:  grey;")
+        self.status_label.setStyleSheet("color: grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.setSortingEnabled(True)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
@@ -96,7 +96,6 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             base_path = sys._MEIPASS
         except Exception:
-            # base_path = os.path.abspath(".")
             base_path = PROJECT_PATH 
         return os.path.join(base_path, relative_path)
 
@@ -270,10 +269,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, changed=False):
         if not changed:
             self.current_data = []
-        tree = BuildTree(self, self.treeWidget, self.books, self.publications,
-                         self.languages, self.combo_category.currentText(),
-                         self.combo_grouping.currentText(), self.title_format,
-                         self.detailed, self.grouped, self.current_data)
+        tree = BuildTree(self, self.treeWidget, self.books, self.publications,self.languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.detailed, self.grouped, self.current_data)
         if tree.aborted:
             self.clean_up()
             sys.exit()
@@ -306,13 +302,7 @@ class Window(QMainWindow, Ui_MainWindow):
         owner = "Eryk J."
         web = "https://gitlab.com/erykj/jwlmanager"
         contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode("utf-8")
-        text = f"""
-            <h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2>
-            <h4 style="text-align: center;">{VERSION}</h4>
-            <p style="text-align: center;"><small>{year} {owner}</small></p>
-            <p style="text-align: center;"><em>{contact}</em></p>
-            <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>
-                """
+        text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><em>{contact}</em></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
         dialog = QDialog(self)
         outer = QVBoxLayout()
         top = QHBoxLayout()
@@ -345,7 +335,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.save_file()
             elif reply == QMessageBox.Cancel:
                 return
-        self.status_label.setStyleSheet("color:  black;")
+        self.status_label.setStyleSheet("color: black;")
         self.status_label.setText("* NEW ARCHIVE *  ")
         global db_name
         try:
@@ -364,22 +354,19 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def load_file(self, archive = ''):
         if self.modified:
-            reply = QMessageBox.question(self, 'Save', 'Save current archive?', 
-                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
-                QMessageBox.Yes)
+            reply = QMessageBox.question(self, 'Save', 'Save current archive?', QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 self.save_file()
             elif reply == QMessageBox.Cancel:
                 return
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, 'Open archive', 
-                    str(self.working_dir),"JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),"JW Library archives (*.jwlibrary)")
             if fname[0] == "":
                 return
             archive = fname[0]
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
-        self.status_label.setStyleSheet("color:  black;")
+        self.status_label.setStyleSheet("color: black;")
         self.status_label.setText(f"{Path(archive).stem}  ")
         global db_name
         try:
@@ -392,7 +379,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if os.path.exists(f"{tmp_path}/user_data.db"):
             db_name = 'user_data.db' # iPhone & iPad backups
         else:
-            db_name = 'userData.db'
+            db_name = 'userData.db' # Windows & Android
         self.file_loaded()
 
     def file_loaded(self):
@@ -486,12 +473,9 @@ class Window(QMainWindow, Ui_MainWindow):
         fname = ()
         if self.save_filename == '':
             now = datetime.now().strftime("%Y-%m-%d")
-            fname = QFileDialog.getSaveFileName(self, 'Save archive',
-                        f"{self.working_dir}/MODIFIED_{now}.jwlibrary",
-                        "JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getSaveFileName(self, 'Save archive', f"{self.working_dir}/MODIFIED_{now}.jwlibrary", "JW Library archives (*.jwlibrary)")
         else:
-            fname = QFileDialog.getSaveFileName(self, 'Save archive',
-                        self.save_filename, "JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getSaveFileName(self, 'Save archive', self.save_filename, "JW Library archives (*.jwlibrary)")
         if fname[0] == '':
             self.statusBar.showMessage(" NOT saved!", 3500)
             return False
@@ -552,19 +536,14 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_file():
             fname = ()
             now = datetime.now().strftime("%Y-%m-%d")
-            fname = QFileDialog.getSaveFileName(self, 'Export file',
-                        f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt",
-                        "Text files (*.txt)")
+            fname = QFileDialog.getSaveFileName(self, 'Export file', f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt", "Text files (*.txt)")
             return fname
 
-        reply = QMessageBox.question(self, 'Export',
-                f"{self.selected_items} items will be EXPORTED. Proceed?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        reply = QMessageBox.question(self, 'Export', f"{self.selected_items} items will be EXPORTED. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget,
-                  QTreeWidgetItemIterator.Checked)
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
             index = item.value().data(0, Qt.UserRole)
             if index in self.leaves:
@@ -584,9 +563,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def import_file(self, file='', category = ''):
-        reply = QMessageBox.warning(self, 'Import',
-                "Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, 'Import', "Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         if not file:
@@ -632,16 +609,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def delete(self):
-        reply = QMessageBox.warning(self, 'Delete',
-                f"Are you sure you want to\nDELETE these {self.selected_items} items?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, 'Delete', f"Are you sure you want to\nDELETE these {self.selected_items} items?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(" Deleting. Please wait...")
         app.processEvents()
         selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget,
-                  QTreeWidgetItemIterator.Checked)
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
             index = item.value().data(0, Qt.UserRole)
             if index in self.leaves:
@@ -658,9 +632,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def obscure(self):
-        reply = QMessageBox.warning(self, 'Obscure',
-                f"Are you sure you want to\nOBSCURE all text fields?",
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, 'Obscure', f"Are you sure you want to\nOBSCURE all text fields?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(" Obscuring. Please wait...")
@@ -676,9 +648,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def reindex(self):
-        reply = QMessageBox.information(self, 'Reindex',
-                'This may take a few seconds.\nProceed?',
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        reply = QMessageBox.information(self, 'Reindex', 'This may take a few seconds.\nProceed?', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         self.trim_db()
@@ -833,7 +803,7 @@ class BuildTree():
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
-        sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # other
+        sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # Bible & publication
         for row in self.cur.execute(sql):
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
@@ -893,8 +863,7 @@ class BuildTree():
             if doc:
                 y = str(doc)[0:4]
                 m = str(doc)[4:6]
-                mo = ('Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June', 'July',
-                      'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.')[int(m)-1]
+                mo = ('Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June', 'July', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.')[int(m)-1]
                 d = str(doc)[6:]
                 if d == '00':
                     name = f"{y}-{m}"
@@ -911,9 +880,9 @@ class BuildTree():
         else:
             issue = (year, None)
         if issue[0] and regex.match('\d{4}', issue[0]):
-                year = (issue[0][:4], None)
+            year = (issue[0][:4], None)
         else:
-                year = ('* NO DATE *', None)
+            year = ('* NO DATE *', None)
         return issue, year
 
     def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
@@ -1211,6 +1180,7 @@ class ExportItems():
         self.export_file.write('\n==={END}===')
 
     def export_note_header(self):
+        # Note: added invisible char on first line to force UTF-8 encoding
         self.export_file.write('\n'.join(['{TITLE=}\n ',
             'MODIFY FIELD ABOVE BEFORE RE-IMPORTING',
             'LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n',
@@ -1229,26 +1199,20 @@ class ExportItems():
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
-            txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])\
-                +"}{BK="+str(row[2])+"}{CH="+str(row[3])+"}{VER="+str(row[4])\
-                +"}{COLOR="+color+"}{TAGS="+tags+"}===\n"+row[6]+"\n"+row[7].rstrip()
+            txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])+"}{BK="+str(row[2])+"}{CH="+str(row[3])+"}{VER="+str(row[4])+"}{COLOR="+color+"}{TAGS="+tags+"}===\n"+row[6]+"\n"+row[7].rstrip()
             self.export_file.write(txt)
 
     def export_publications(self):
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
-            txt = "\n==={CAT=PUBLICATION}{LANG="+str(row[0])+"}{PUB="\
-                    +str(row[1])+"}{ISSUE="+str(row[2])+"}{DOC="+str(row[3])\
-                    +"}{BLOCK="+str(row[4])+"}{COLOR="+color+"}{TAGS="+tags\
-                    +"}===\n"+row[6]+"\n"+row[7].rstrip()
+            txt = "\n==={CAT=PUBLICATION}{LANG="+str(row[0])+"}{PUB="+str(row[1])+"}{ISSUE="+str(row[2])+"}{DOC="+str(row[3])+"}{BLOCK="+str(row[4])+"}{COLOR="+color+"}{TAGS="+tags+"}===\n"+row[6]+"\n"+row[7].rstrip()
             self.export_file.write(txt)
 
     def export_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             tags = row[2] or ''
-            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags\
-                    +"}===\n"+row[0]+"\n"+row[1].rstrip()
+            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags+"}===\n"+row[0]+"\n"+row[1].rstrip()
             self.export_file.write(txt)
 
 
@@ -1527,9 +1491,6 @@ class ImportNotes():
         if answer == "No":
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
-        # Already in Trim:
-        # self.cur.execute("DELETE FROM TagMap WHERE NoteId NOT IN (SELECT NoteId FROM Note);")
-        # self.cur.execute("DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);")
         return results
 
     def import_items(self):
