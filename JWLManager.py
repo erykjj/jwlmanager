@@ -67,6 +67,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def set_vars(self):
         self.total.setText('')
+        self.help_window = None
         self.modified = False
         self.title_format = 'short'
         self.grouped = False
@@ -282,18 +283,24 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help(self):
-        dialog = QDialog(self)
-        dialog.setWindowFlags(Qt.Window)
-        dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
-        dialog.setWindowTitle("Help")
-        dialog.setMinimumSize(1024, 800)
-        text = QTextEdit(dialog)
-        text.setReadOnly(True)
-        text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
-        layout = QHBoxLayout(dialog)
-        layout.addWidget(text)
-        dialog.setLayout(layout)
-        dialog.show()
+        if self.help_window:
+            self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+            self.help_window.raise_()
+            # self.help_window.activateWindow()
+            # self.help_window.show()
+        else:
+            self.help_window = QDialog(self)
+            self.help_window.setWindowFlags(Qt.Window)
+            self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+            self.help_window.setWindowTitle("Help")
+            self.help_window.setMinimumSize(1024, 800)
+            text = QTextEdit(self.help_window)
+            text.setReadOnly(True)
+            text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
+            layout = QHBoxLayout(self.help_window)
+            layout.addWidget(text)
+            self.help_window.setLayout(layout)
+            self.help_window.show()
 
     def about(self):
         year = f"MIT ©{datetime.now().year}"

@@ -5,12 +5,13 @@
 
 ### Changed
 
-- Modified formatting on data view to include NoteId of each Note
+- Modified formatting on Data Viewer to include NoteId of each Note
 
 ### Fixed
 
 - Stop showing additional icon on taskbar when About dialog is opened
 - Help window has own taskbar entry with app icon
+- Only one instance of Help window
 - Data Viewer windows have own taskbar entry with app icon and selection title
 
 ### Removed
