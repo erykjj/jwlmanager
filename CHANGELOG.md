@@ -9,6 +9,9 @@
 
 ### Fixed
 
+- Stop showing additional icon on taskbar when About dialog is opened
+- Help window has own taskbar entry with app icon
+
 ### Removed
 ____
 ## [0.4.0] - 2022-03-20

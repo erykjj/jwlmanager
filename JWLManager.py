@@ -26,13 +26,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-# TODO: some dialogs (About) aren't using the app icon
 # TODO: other dialogs (Help & Data View) don't show on the status-bar when minimized!
 
 VERSION = 'v0.4.1'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
-from typing import Any
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -284,9 +282,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help(self):
-        dialog = QDialog()
-        dialog.setWindowTitle("README")
-        dialog.setMinimumSize(800, 800)
+        dialog = QDialog(self)
+        dialog.setWindowFlags(Qt.Window)
+        dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+        dialog.setWindowTitle("Help")
+        dialog.setMinimumSize(1024, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
         text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
@@ -308,7 +308,6 @@ class Window(QMainWindow, Ui_MainWindow):
             <p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>
                 """
         dialog = QDialog(self)
-        # dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
         outer = QVBoxLayout()
         top = QHBoxLayout()
         icon = QLabel(dialog)
