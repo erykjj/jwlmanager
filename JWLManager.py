@@ -286,8 +286,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.help_window:
             self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
             self.help_window.raise_()
-            # self.help_window.activateWindow()
-            # self.help_window.show()
+            self.help_window.activateWindow()
         else:
             self.help_window = QDialog(self)
             self.help_window.setWindowFlags(Qt.Window)
