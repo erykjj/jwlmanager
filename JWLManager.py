@@ -279,6 +279,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help(self):
+        # TODO: Reopen Help window where it was before
+
+        def reset_pointer():
+            self.help_window = None
+
         if self.help_window:
             self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
             self.help_window.raise_()
@@ -288,7 +293,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.help_window.setWindowFlags(Qt.Window)
             self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
             self.help_window.setWindowTitle("Help")
-            self.help_window.setMinimumSize(1024, 800)
+            self.help_window.setMinimumSize(1020, 800)
             text = QTextEdit(self.help_window)
             text.setReadOnly(True)
             text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
@@ -296,6 +301,7 @@ class Window(QMainWindow, Ui_MainWindow):
             layout.addWidget(text)
             self.help_window.setLayout(layout)
             self.help_window.show()
+            self.help_window.finished.connect(reset_pointer())
 
     def about(self):
         year = f"MIT ©{datetime.now().year}"
