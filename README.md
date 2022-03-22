@@ -3,18 +3,16 @@
 
 ## Purpose
 
-This application enables viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup file (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). A modified *.jwlibrary* file can then be restored within the app.
+This application enables viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study > Backup and Restore > Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
 
-In addition to the main functions of exporting, importing, and deleting, the application can also clean up any residual/unused records from the database and re-index the various tables within the database.
+In addition to the main functions of **viewing, exporting, importing, and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** by exporting the desired items and importing them into an existent archive or into a new one.
 
 ![preview](res/JWLManager.gif)
 
 ____
 ## Usage
 
-This is a Python3 script implementing the Qt5 framework.
-
-If you have Python3 installed, execute to run (from inside JWLManager folder):
+This is a Python3 application implementing the Qt5 framework. If you have Python3 installed, execute to run (from inside JWLManager folder):
 
 ```
 $ python3 JWLManager.py
@@ -62,7 +60,7 @@ The ***View*** menu has some additional options (also accessible directly via th
 
 **Right-clicking** on a line in the Notes or Annotations categories will bring up a window with a preview of the selected items, provided there aren't too many. The ID of each note is provided for reference.
 
-If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* file in case you need to restore after messing up ;-)
+If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* archive in case you need to restore after messing up ;-)
 
 #### Add
 
