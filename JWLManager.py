@@ -63,11 +63,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.set_vars()
         self.read_res()
         self.center()
+        self.help_init()
         self.connect_signals()
 
     def set_vars(self):
         self.total.setText('')
-        self.help_window = None
         self.modified = False
         self.title_format = 'short'
         self.grouped = False
@@ -184,7 +184,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         dialog = QDialog(self)
-        dialog.setWindowFlags(Qt.Window)
+        dialog.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
         dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
         dialog.setWindowTitle(f"Data Viewer: {selection.data(0,0)}")
         dialog.setMinimumSize(800, 800)
@@ -278,30 +278,27 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText(f"**{tree.total:,}**")
 
 
+    def help_init(self):
+        self.help_window = QDialog(self)
+        self.help_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
+        self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+        self.help_window.setWindowTitle("Help")
+        self.help_window.setMinimumSize(1020, 800)
+        text = QTextEdit(self.help_window)
+        text.setReadOnly(True)
+        text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
+        layout = QHBoxLayout(self.help_window)
+        layout.addWidget(text)
+        self.help_window.setLayout(layout)
+        self.help_window.rejected.connect(self.help_window.hide())
+
     def help(self):
         # TODO: Reopen Help window where it was before
-
-        def reset_pointer():
-            self.help_window = None
-
-        if self.help_window:
-            self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-            self.help_window.raise_()
-            self.help_window.activateWindow()
-        else:
-            self.help_window = QDialog(self)
-            self.help_window.setWindowFlags(Qt.Window)
-            self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
-            self.help_window.setWindowTitle("Help")
-            self.help_window.setMinimumSize(1020, 800)
-            text = QTextEdit(self.help_window)
-            text.setReadOnly(True)
-            text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
-            layout = QHBoxLayout(self.help_window)
-            layout.addWidget(text)
-            self.help_window.setLayout(layout)
-            self.help_window.show()
-            self.help_window.finished.connect(reset_pointer())
+        self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+        # self.help_window.move(self.help_position)
+        self.help_window.show()
+        self.help_window.raise_()
+        self.help_window.activateWindow()
 
     def about(self):
         year = f"MIT ©{datetime.now().year}"
