@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Help window size and position saved while app is open
+
 ### Changed
 
 - Modified formatting on Data Viewer to include NoteId of each Note

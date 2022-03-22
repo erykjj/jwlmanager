@@ -278,24 +278,32 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText(f"**{tree.total:,}**")
 
 
+    def help_hide(self):
+        self.help_size = self.help_window.size()
+        self.help_pos = self.help_window.pos()
+        self.help_window.hide()
+
     def help_init(self):
         self.help_window = QDialog(self)
         self.help_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
         self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
         self.help_window.setWindowTitle("Help")
-        self.help_window.setMinimumSize(1020, 800)
+        self.help_window.resize(1020, 800)
+        self.help_window.setMinimumSize(300, 300)
         text = QTextEdit(self.help_window)
         text.setReadOnly(True)
         text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
         layout = QHBoxLayout(self.help_window)
         layout.addWidget(text)
         self.help_window.setLayout(layout)
-        self.help_window.rejected.connect(self.help_window.hide())
+        self.help_size = self.help_window.size()
+        self.help_pos = self.help_window.pos()
 
     def help(self):
-        # TODO: Reopen Help window where it was before
         self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-        # self.help_window.move(self.help_position)
+        self.help_window.finished.connect(self.help_hide())
+        self.help_window.resize(self.help_size)
+        self.help_window.move(self.help_pos)
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
