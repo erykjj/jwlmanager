@@ -11,6 +11,7 @@
 
 - Stop showing additional icon on taskbar when About dialog is opened
 - Help window has own taskbar entry with app icon
+- Data Viewer windows have own taskbar entry with app icon and selection title
 
 ### Removed
 ____

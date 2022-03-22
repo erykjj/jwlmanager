@@ -26,8 +26,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-# TODO: other dialogs (Help & Data View) don't show on the status-bar when minimized!
-
 VERSION = 'v0.4.1'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
@@ -172,12 +170,12 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         selected = []
         items = []
-        recurse(self.treeWidget.currentItem())
+        selection = self.treeWidget.currentItem()
+        recurse(selection)
         for row in selected:
             if row in self.leaves:
                 for id in self.leaves[row]:
                     items.append(id)
-
         if len(items) > 500:
             QMessageBox.critical(self, 'Warning', f"You are trying to preview {len(items)} items.\nPlease select a smaller subset.", QMessageBox.Cancel)
             return
@@ -186,7 +184,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         dialog = QDialog(self)
-        dialog.setWindowTitle("DATA VIEWER")
+        dialog.setWindowFlags(Qt.Window)
+        dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+        dialog.setWindowTitle(f"Data Viewer: {selection.data(0,0)}")
         dialog.setMinimumSize(800, 800)
         text = QTextEdit(dialog)
         text.setReadOnly(True)
