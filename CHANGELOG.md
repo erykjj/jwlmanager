@@ -3,18 +3,19 @@
 ## [Unreleased]
 ### Added
 
-- Remember Help window size and position saved while app is open
-
 ### Changed
 
-- Modified formatting on Data Viewer to include NoteId of each Note
+- Data Viewer
+  - Modified formatting to include NoteId of each Note
+  - Single instance with own taskbar entry and selection in title
+  - Remember window size and position while app is open
+- Help window
+  - Only one instance with own taskbar entry
+  - Remember window size and position while app is open
 
 ### Fixed
 
 - Stop showing additional icon on taskbar when About dialog is opened
-- Help window has own taskbar entry with app icon
-- Only one instance of Help window
-- Data Viewer windows have own taskbar entry with app icon and selection title
 
 ### Removed
 ____

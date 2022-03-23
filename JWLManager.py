@@ -63,7 +63,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.set_vars()
         self.read_res()
         self.center()
-        self.help_init()
+        self.init_windows()
         self.connect_signals()
 
     def set_vars(self):
@@ -75,6 +75,39 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
+
+    def init_windows(self):
+
+        def init_help():
+            self.help_window = QDialog(self)
+            self.help_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
+            self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+            self.help_window.setWindowTitle("Help")
+            self.help_window.resize(1020, 800)
+            self.help_window.move(400,400)
+            self.help_window.setMinimumSize(300, 300)
+            text = QTextEdit(self.help_window)
+            text.setReadOnly(True)
+            text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
+            layout = QHBoxLayout(self.help_window)
+            layout.addWidget(text)
+            self.help_window.setLayout(layout)
+
+        def init_viewer():
+            self.viewer_window = QDialog(self)
+            self.viewer_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
+            self.viewer_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+            self.viewer_window.setWindowTitle(f"Data Viewer")
+            self.viewer_window.resize(600, 800)
+            self.viewer_window.move(400,400)
+            self.viewer_window.setMinimumSize(300, 300)
+            self.viewer_text = QTextEdit(self.viewer_window)
+            layout = QHBoxLayout(self.viewer_window)
+            layout.addWidget(self.viewer_text)
+            self.viewer_window.setLayout(layout)
+
+        init_help()
+        init_viewer()
 
     def read_res(self):
         self.publications = {}
@@ -183,18 +216,13 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        dialog = QDialog(self)
-        dialog.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
-        dialog.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
-        dialog.setWindowTitle(f"Data Viewer: {selection.data(0,0)}")
-        dialog.setMinimumSize(800, 800)
-        text = QTextEdit(dialog)
-        text.setReadOnly(True)
-        text.setHtml(fn.txt)
-        layout = QHBoxLayout(dialog)
-        layout.addWidget(text)
-        dialog.setLayout(layout)
-        dialog.show()
+        self.viewer_text.setHtml(fn.txt)
+        self.viewer_window.setWindowTitle(f"Data Viewer: {selection.data(0,0)}")
+        self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+        self.viewer_window.finished.connect(self.viewer_window.hide())
+        self.viewer_window.show()
+        self.viewer_window.raise_()
+        self.viewer_window.activateWindow()
 
 
     def code_view(self):
@@ -277,21 +305,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.current_data = tree.current
         self.total.setText(f"**{tree.total:,}**")
 
-
-    def help_init(self):
-        self.help_window = QDialog(self)
-        self.help_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
-        self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
-        self.help_window.setWindowTitle("Help")
-        self.help_window.resize(1020, 800)
-        self.help_window.move(400,400)
-        self.help_window.setMinimumSize(300, 300)
-        text = QTextEdit(self.help_window)
-        text.setReadOnly(True)
-        text.setMarkdown(open(self.resource_path('./README.md'), encoding='utf-8').read())
-        layout = QHBoxLayout(self.help_window)
-        layout.addWidget(text)
-        self.help_window.setLayout(layout)
 
     def help(self):
         self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
