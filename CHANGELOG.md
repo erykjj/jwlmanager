@@ -3,7 +3,7 @@
 ## [Unreleased]
 ### Added
 
-- Help window size and position saved while app is open
+- Remember Help window size and position saved while app is open
 
 ### Changed
 
