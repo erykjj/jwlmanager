@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v0.4.1'
+VERSION = 'v1.0.0'
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
@@ -80,11 +80,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def init_help():
             self.help_window = QDialog(self)
-            self.help_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
+            self.help_window.setWindowFlags(Qt.Window)
             self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
             self.help_window.setWindowTitle("Help")
             self.help_window.resize(1020, 812)
-            self.help_window.move(400,1020)
+            self.help_window.move(50, 50)
             self.help_window.setMinimumSize(300, 300)
             text = QTextEdit(self.help_window)
             text.setReadOnly(True)
@@ -95,11 +95,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def init_viewer():
             self.viewer_window = QDialog(self)
-            self.viewer_window.setWindowFlags(Qt.Window | Qt.WA_DeleteOnClose)
+            self.viewer_window.setWindowFlags(Qt.Window)
             self.viewer_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
             self.viewer_window.setWindowTitle(f"Data Viewer")
             self.viewer_window.resize(640, 812)
-            self.viewer_window.move(400,1020)
+            self.viewer_window.move(50, 50)
             self.viewer_window.setMinimumSize(300, 300)
             self.viewer_text = QTextEdit(self.viewer_window)
             layout = QHBoxLayout(self.viewer_window)
@@ -140,8 +140,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def connect_signals(self):
         self.actionQuit.triggered.connect(self.close)
-        self.actionHelp.triggered.connect(self.help)
-        self.actionAbout.triggered.connect(self.about)
+        self.actionHelp.triggered.connect(self.help_box)
+        self.actionAbout.triggered.connect(self.about_box)
         self.actionNew.triggered.connect(self.new_file)
         self.actionOpen.triggered.connect(self.load_file)
         self.actionQuit.triggered.connect(self.clean_up)
@@ -306,14 +306,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText(f"**{tree.total:,}**")
 
 
-    def help(self):
+    def help_box(self):
         self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.help_window.finished.connect(self.help_window.hide())
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
 
-    def about(self):
+    def about_box(self):
         year = f"MIT ©{datetime.now().year}"
         owner = "Eryk J."
         web = "https://gitlab.com/erykj/jwlmanager"
