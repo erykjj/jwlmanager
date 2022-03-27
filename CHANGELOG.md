@@ -5,20 +5,25 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+____
+## [1.0.0] - 2022-03-27
+### Changed
+
 - Data Viewer
   - Modified formatting to include NoteId of each Note
-  - Single instance with own taskbar entry and selection in title
+  - Single instance with selection in title
   - Remember window size and position while app is open
 - Help window
-  - Only one instance with own taskbar entry
+  - Only one instance
   - Remember window size and position while app is open
 
 ### Fixed
 
 - Stop showing additional icon on taskbar when About dialog is opened
 
-### Removed
-____
 ## [0.4.0] - 2022-03-20
 ### Added
 
@@ -203,6 +208,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[1.0.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.0
 [0.4.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.4.0
 [0.3.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.2
 [0.3.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.1
@@ -215,5 +221,5 @@ ____
 [0.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.1.0
 [0.0.10]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.10
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
-[0.0.8]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
-[0.0.7]: https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.7
+[0.0.8]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
+[0.0.7]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.7
