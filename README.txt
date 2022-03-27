@@ -3,23 +3,22 @@ JWLManager
 Purpose
 
 This application enables viewing and performing various operations on the user
-data stored in a .jwlibrary backup file (created from within the JW Library
+data stored in a .jwlibrary backup archive (created from within the JW Library
 app[1]: Personal Study > Backup and Restore > Create a backup). A modified
-.jwlibrary file can then be restored within the app.
+.jwlibrary archive can then be restored within the app.
 
-In addition to the main functions of exporting, importing, and deleting, the
-application can also clean up any residual/unused records from the database and
-re-index the various tables within the database.
-
-[preview]
+In addition to the main functions of viewing, exporting, importing, and
+deleting, the application can also clean up any residual/unused records from the
+database and re-index the various tables within the database. Items from
+different backups can be merged by exporting the desired items and importing
+them into an existent archive or into a new one.
 
 --------------------------------------------------------------------------------
 
 Usage
 
-This is a Python3 script implementing the Qt5 framework.
-
-If you have Python3 installed, execute to run (from inside JWLManager folder):
+This is a Python3 application implementing the Qt5 framework. If you have
+Python3 installed, execute to run (from inside JWLManager folder):
 
     $ python3 JWLManager.py
 
@@ -81,19 +80,20 @@ combination shortcut):
     -   Full Title - complete title
 
 Right-clicking on a line in the Notes or Annotations categories will bring up a
-window with a preview of the selected items, provided there aren’t too many.
+window with a preview of the selected items, provided there aren’t too many. The
+ID of each note is provided for reference.
 
 If you modify an archive and intend to use the results to re-import into JW
 Library, make sure to save it (with a new name). KEEP A BACKUP of your original
-.jwlibrary file in case you need to restore after messing up ;-)
+.jwlibrary archive in case you need to restore after messing up ;-)
 
 Add
 
 For Favorites only. Used for adding a Bible translation to your favorites, since
 there is no direct way of doing that in the JW Library app itself. Make sure the
-Bible translation you add exists in the selected language, as strange things can
-happen if it does not. Let me know if a language is missing from the drop-down
-selection.
+Bible translation you add exists in the selected language (as strange things can
+happen if it does not). Let me know if a required language is missing from the
+drop-down selection.
 
 Delete
 
@@ -121,7 +121,7 @@ You can simply drag-and-drop the import file into the app.
 Editing or creating a Highlights or Annotations import file is not recommended.
 Rather, exported Highlights or Annotations can be merged into another archive.
 Any conflicting/duplicate entries will be replaced. In the case of Highlights,
-overlapping highlights will be added and the color changed to the one being
+overlapping highlights will be combined and the color changed to the one being
 imported.
 
 The accepted format for the Notes import file is like this:
@@ -200,8 +200,6 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even
 though JW Library doesn’t allow rich-text formatting in the notes, that may
 change in the future and it should then be realtively easy to convert.
 
-[notes]
-
 UTILITIES
 
 Obscure
@@ -226,10 +224,6 @@ database contains. It does not need to be run more than once in a while.
 Feedback
 
 Feel free to get in touch and post any issues and suggestions.
-
-Follow
-
-[] Tags RSS
 
 --------------------------------------------------------------------------------
 
