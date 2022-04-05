@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Corrected slight mixup on Notes & Highlights color names
+
 ### Removed
 ____
 ## [1.0.0] - 2022-03-27
