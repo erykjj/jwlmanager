@@ -13,6 +13,8 @@ database and re-index the various tables within the database. Items from
 different backups can be merged by exporting the desired items and importing
 them into an existent archive or into a new one.
 
+[preview]
+
 --------------------------------------------------------------------------------
 
 Usage
@@ -174,10 +176,10 @@ attributes associated with locations within a publication - they are, obviously,
 a bit more complicated to create, so it’s best to simply modify the export file
 and re-import.
 
-The {COLOR=} setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = purple; 5 =
-red; 6 = orange) indicates the color of the note. The words themselves will not
-be highlighted; instead, there will be a colored sticky in the left margin next
-to the verse with the note.
+The {COLOR=} setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 =
+orange; 6 = purple) indicates the color of the note. The words themselves will
+not be highlighted; instead, there will be a colored sticky in the left margin
+next to the verse with the note.
 
 {TAGS=} is used to add one or more tags to each note. If empty, no tag is added;
 if a note is replacing/updating another, its tags will be updated or removed.
@@ -199,6 +201,8 @@ Here is an example blue note for Jude 21 (in Spanish):
 On a side-note, I format my notes with Markdown syntax (as above) for, even
 though JW Library doesn’t allow rich-text formatting in the notes, that may
 change in the future and it should then be realtively easy to convert.
+
+[notes]
 
 UTILITIES
 
@@ -224,6 +228,10 @@ database contains. It does not need to be run more than once in a while.
 Feedback
 
 Feel free to get in touch and post any issues and suggestions.
+
+Follow
+
+[] Tags RSS
 
 --------------------------------------------------------------------------------
 
