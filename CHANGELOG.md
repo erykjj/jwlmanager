@@ -7,10 +7,13 @@
 
 ### Fixed
 
-- Corrected slight mixup on Notes & Highlights color names
-
 ### Removed
 ____
+## [1.0.1] - 2022-04-07
+### Fixed
+
+- Corrected slight mixup on Notes & Highlights color names
+
 ## [1.0.0] - 2022-03-27
 ### Changed
 
@@ -210,6 +213,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[1.0.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.1
 [1.0.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.0
 [0.4.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.4.0
 [0.3.2]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.3.2
