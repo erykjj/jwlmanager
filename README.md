@@ -106,6 +106,8 @@ Each note definition starts with an attribute line. **{CAT=}** define the catego
 
 **Note**: the notes and "stickies" appear in all Bibles; the only difference is the Bible that is referenced at the bottom of the note in the "Personal Study" section. For some strange reason, the colored stickies *do not* show up in the Bible that is referenced, though the notes are there in the reference pane, and the stickies do show in all the other Bibles (the default gray note icons do show correctly). This may be a bug (feature?) in the app itself. For now, to have colored note icons, I import my notes as for the Reference Bible (*Rbi8*); this way I can see the stickies in the Study Bible (*nwtsty*).
 
+**Note**: on export, notes are separated from highlights. Thus, to simplify importing, they will be placed at the *beginning* of the paragraph or verse that they are attached to.
+
 For Bible notes, **{BK=}{CH=}{VER=}** are all numeric and refer to the number of the book (1-66), the chapter and the verse, respectively. For books with just one chapter, use "1" for the chapter number. **{ISSUE=}{DOC=}{BLOCK=}** are the attributes associated with locations within a publication - they are, obviously, a bit more complicated to create, so it's best to simply modify the export file and re-import.
 
 The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) indicates the color of the note. The words themselves will not be highlighted; instead, there will be a colored sticky in the left margin next to the verse with the note.
