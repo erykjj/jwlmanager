@@ -8,6 +8,7 @@
 ### Fixed
 
 - Fixed export/import of special Bible notes (in a book header, for example, instead of a regular verse)
+- Fixed gray stickies not showing
 
 ### Removed
 ____
