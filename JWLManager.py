@@ -1581,8 +1581,8 @@ class ImportNotes():
     def import_bible(self, attribs, title, note):
         location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        usermark_id = self.add_usermark(attribs, location_bible)
-        # usermark_id = self.add_usermark(attribs, location_scripture)
+        # usermark_id = self.add_usermark(attribs, location_bible)
+        usermark_id = self.add_usermark(attribs, location_scripture)
         block_type = 2
         try:
             block_type = int(attribs['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
