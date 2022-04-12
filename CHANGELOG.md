@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed export/import of special Bible notes (in a book header, for example, instead of a regular verse)
+
 ### Removed
 ____
 ## [1.0.1] - 2022-04-07
