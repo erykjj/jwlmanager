@@ -5,15 +5,20 @@
 
 ### Changed
 
-- More precise Bible note location for re-linking with highlights
+### Fixed
+
+### Removed
+____
+## [1.1.0]
+### Changed
+
+- More precise Note location for re-linking with highlights
 
 ### Fixed
 
 - Fixed export/import of special Bible notes (in a book header, for example, instead of a regular verse)
 - Fixed gray stickies not showing
 
-### Removed
-____
 ## [1.0.1] - 2022-04-07
 ### Fixed
 
@@ -218,6 +223,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[1.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.1.0
 [1.0.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.1
 [1.0.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.0
 [0.4.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.4.0
