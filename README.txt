@@ -161,13 +161,20 @@ Dutch; 7 = Japanese, etc.), and {ED=} defines the Bible edition to associate the
 note with (“nwtsty” = Study Bible; “Rbi8” = Reference Bible) - {PUB=} for
 publications.
 
-Note: the notes and “stickies” appear in all Bibles; the only difference is the
-Bible that is referenced at the bottom of the note in the “Personal Study”
-section. For some strange reason, the stickies do not show up in the Bible that
-is referenced, though the notes are there in the reference pane, and the
-stickies do show in all the other Bibles. This may be a bug (feature?) in the
-app itself. For now, I reference my notes with the Reference Bible (Rbi8) so
-that I can see the stickies in the Study Bible (nwtsty).
+Note: unless the corresponding colored highlights are also imported, the
+imported notes are placed at the beginning of the paragraph or verse that they
+are attached to.
+
+Note: if separated from their corresponding colored highlights, the note
+“stickies” appear in all Bibles except the Bible that is referenced at the
+bottom of the note in the “Personal Study” section, though the notes themselves
+are there in the reference pane (the default gray note icons do show correctly).
+The stickies do show in all the other Bibles. This may be a bug (or a feature?)
+in the app itself. For now, to have colored note icons (without any
+highlighting), I import my notes as for the Reference Bible (Rbi8); this way I
+can see the stickies in the Study Bible (nwtsty).
+
+[notes]
 
 For Bible notes, {BK=}{CH=}{VER=} are all numeric and refer to the number of the
 book (1-66), the chapter and the verse, respectively. For books with just one
@@ -201,8 +208,6 @@ Here is an example blue note for Jude 21 (in Spanish):
 On a side-note, I format my notes with Markdown syntax (as above) for, even
 though JW Library doesn’t allow rich-text formatting in the notes, that may
 change in the future and it should then be realtively easy to convert.
-
-[notes]
 
 UTILITIES
 

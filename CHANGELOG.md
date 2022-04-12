@@ -5,6 +5,8 @@
 
 ### Changed
 
+- More precise Bible note location for re-linking with highlights
+
 ### Fixed
 
 - Fixed export/import of special Bible notes (in a book header, for example, instead of a regular verse)
