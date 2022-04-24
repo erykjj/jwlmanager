@@ -1592,13 +1592,15 @@ class ImportNotes():
             block_type = int(attribs['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
         except:
             pass
-        result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']} AND BlockType = {block_type};").fetchone()
+        result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']} AND BlockType = {block_type};").fetchone()
         if result:
             unique_id = result[0]
-            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}' WHERE Guid = '{unique_id}';"
+            date = attribs['DATE'] or result[1]
+            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
             unique_id = uuid.uuid1()
-            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']});"
+            date = attribs['DATE'] or result[1]
+            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{date}');"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
