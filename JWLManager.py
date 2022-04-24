@@ -1612,13 +1612,15 @@ class ImportNotes():
     def import_publication(self, attribs, title, note):
         location_id = self.add_publication_location(attribs)
         usermark_id = self.add_usermark(attribs, location_id)
-        result = self.cur.execute(f"SELECT Guid FROM Note WHERE LocationId = {location_id} AND Title = '{title}' AND BlockIdentifier = {attribs['BLOCK']};").fetchone()
+        result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE LocationId = {location_id} AND Title = '{title}' AND BlockIdentifier = {attribs['BLOCK']};").fetchone()
         if result:
             unique_id = result[0]
-            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}' WHERE Guid = '{unique_id}';"
+            date = attribs['DATE'] or result[1]
+            sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
+            date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
             unique_id = uuid.uuid1()
-            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']});"
+            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{date}');"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
