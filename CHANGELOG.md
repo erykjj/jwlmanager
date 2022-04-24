@@ -9,7 +9,12 @@
 
 ### Removed
 ____
-## [1.1.0]
+## [1.2.0] - 2022-04-24
+### Added
+
+- Last modification date field of notes can now be exported and imported (see README)
+
+## [1.1.0] - 2022-04-12
 ### Changed
 
 - More precise Note location for re-linking with highlights
@@ -223,6 +228,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
 [1.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.1.0
 [1.0.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.1
 [1.0.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.0

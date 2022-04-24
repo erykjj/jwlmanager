@@ -26,9 +26,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-# TODO: LastModified date with note export/import
-
-
 VERSION = 'v1.2.0'
 
 
