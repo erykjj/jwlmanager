@@ -129,16 +129,16 @@ imported.
 The accepted format for the Notes import file is like this:
 
     {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}===
+    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}{DATE=2021-10-19}===
     » Title
     Multi-line...
     ...note
-    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{TAGS=research}===
+    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{TAGS=research}{DATE=}===
     » Title
     Multi-line...
     ...
     ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}===
+    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2021-10-19}===
     » Title
     Multi-line...
     ...note
@@ -191,6 +191,12 @@ next to the verse with the note.
 {TAGS=} is used to add one or more tags to each note. If empty, no tag is added;
 if a note is replacing/updating another, its tags will be updated or removed.
 
+{DATE=} is the date of last modification for each note in the format yyyy-mm-dd.
+If empty, and the note is new, the date of import is used; if the note is
+updated, the currently-set date is retained. Keep in mind that if you are using
+the option to first delete the notes with a special {TITLE=} character, the
+historical date will also need to be reimported.
+
 Each note has to start with such a header. The very next line after the header
 is the note title. Titles will be automatically abbreviated with inner words
 being replaced with “[…]” in order to meet the length limit and display
@@ -199,7 +205,7 @@ or the file-terminating header ==={END}===.
 
 Here is an example blue note for Jude 21 (in Spanish):
 
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=65}{CH=1}{VER=21}{COLOR=3}{TAGS=}===
+    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=65}{CH=1}{VER=21}{COLOR=3}{TAGS=}{DATE=}===
     » para mantenerse en el amor de Dios
     1. _edificándonos sobre nuestra santísima fe_ mediante el **estudio** diligente de la Palabra de Dios y la participación en la obra de predicar
     2. _**orando** con espíritu santo_, o en armonía con su influencia
