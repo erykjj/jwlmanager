@@ -9,6 +9,11 @@
 
 ### Removed
 ____
+## [1.2.1] - 2022-04-25
+### Fixed
+
+- Fix for date not being set correctly on Note import
+
 ## [1.2.0] - 2022-04-24
 ### Added
 
@@ -228,6 +233,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
+[1.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.1
 [1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
 [1.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.1.0
 [1.0.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.1
