@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v1.2.0'
+VERSION = 'v1.2.1'
 
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
@@ -1596,7 +1596,7 @@ class ImportNotes():
             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
             unique_id = uuid.uuid1()
-            date = attribs['DATE'] or result[1]
+            date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
             sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{date}');"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
