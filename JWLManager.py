@@ -26,7 +26,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-VERSION = 'v1.2.1'
+VERSION = 'v1.2.2'
 
 
 import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
@@ -43,7 +43,7 @@ from ui_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
-APP = Path(__file__).stem
+APP = 'JWLManager'
 
 
 class Window(QMainWindow, Ui_MainWindow):
