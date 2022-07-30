@@ -13,8 +13,6 @@ database and re-index the various tables within the database. Items from
 different backups can be merged by exporting the desired items and importing
 them into an existent archive or into a new one.
 
-[preview]
-
 --------------------------------------------------------------------------------
 
 Usage
@@ -33,7 +31,7 @@ You may have to pip install some of the required libraries (PySide2, regex).
 
 Multi-platform
 
-You can find a Windows executable and a Mac OS app in the Releases section.
+You can find a Windows executable and a Mac OS app in the Releases section (https://github.com/erykjj/jwlmanager/releases).
 
 --------------------------------------------------------------------------------
 
@@ -174,8 +172,6 @@ in the app itself. For now, to have colored note icons (without any
 highlighting), I import my notes as for the Reference Bible (Rbi8); this way I
 can see the stickies in the Study Bible (nwtsty).
 
-[notes]
-
 For Bible notes, {BK=}{CH=}{VER=} are all numeric and refer to the number of the
 book (1-66), the chapter and the verse, respectively. For books with just one
 chapter, use “1” for the chapter number. {ISSUE=}{DOC=}{BLOCK=} are the
@@ -236,15 +232,15 @@ database contains. It does not need to be run more than once in a while.
 
 --------------------------------------------------------------------------------
 
-Feedback
+Feedback: https://github.com/erykjj/jwlmanager/issues
 
 Feel free to get in touch and post any issues and suggestions.
 
 Follow
 
-[] Tags RSS
+RSS: https://github.com/erykjj/jwlmanager/releases.atom
 
 --------------------------------------------------------------------------------
 
 [1] JW Library is a registered trademark of Watch Tower Bible and Tract Society
-of Pennsylvania.
+of Pennsylvania (https://www.jw.org/en/online-help/jw-library/).
