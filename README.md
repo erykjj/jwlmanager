@@ -29,7 +29,7 @@ You may have to `pip install` some of the required libraries (*PySide2*, *regex*
 
 #### Multi-platform
 
-You can find a **Windows executable** and a **Mac OS app** in the [Releases](https://gitlab.com/erykj/jwlmanager/-/releases) section.
+You can find a **Windows executable** and a **Mac OS app** in the [Releases](https://github.com/erykjj/jwlmanager/releases) section.
 
 ____
 ## Operation
@@ -143,12 +143,12 @@ This function cleans up and re-orders the records in the archive database. It is
 ____
 ## Feedback
 
-Feel free to [get in touch](https://gitlab.com/erykj/jwlmanager/-/issues) and post any issues and suggestions.
+Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and suggestions.
 
 ## Follow
 
 ![](icons/rss-36.png)
-[Tags RSS](https://gitlab.com/erykj/jwlmanager/-/tags?format=atom)
+[Tags RSS](https://github.com/erykjj/jwlmanager/releases.atom)
 
 ____
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.

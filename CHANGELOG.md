@@ -5,6 +5,9 @@
 
 ### Changed
 
+- Link to Github repo in About box
+- Links to Github in README
+
 ### Fixed
 
 ### Removed
