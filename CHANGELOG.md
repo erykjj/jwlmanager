@@ -236,7 +236,7 @@ ____
 - Implemented viewing, deleting, exporting, reindexing, saving
 ____
 [Unreleased]: https://gitlab.com/erykj/jwlmanager
-[1.2.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.1
+[1.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.1
 [1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
 [1.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.1.0
 [1.0.1]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.0.1
