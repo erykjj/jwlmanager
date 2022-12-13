@@ -1422,7 +1422,7 @@ class ImportHighlights():
     def import_items(self):
         count = 0
         for line in self.import_file:
-            if regex.match("^(\d+,){6}", line):
+            if regex.match(r"^(\d+,){6}", line):
                 try:
                     count += 1
                     attribs = regex.split(',', line.rstrip().replace("None", ""))
@@ -1648,7 +1648,7 @@ class ObscureItems():
                                 PRAGMA journal_mode = 'OFF'; \
                                 BEGIN; ")
         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
-        self.m = regex.compile('\p{L}')
+        self.m = regex.compile(r'\p{L}')
         self.aborted = False
         try:
             self.obscure_annotations()
