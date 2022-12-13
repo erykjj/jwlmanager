@@ -11,6 +11,8 @@
 
 ### Fixed
 
+- Fixed regex strings type-check warnings (minor)
+
 ### Removed
 ____
 ## [1.2.1] - 2022-04-25
