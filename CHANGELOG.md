@@ -11,7 +11,7 @@
 
 ### Fixed
 
-- Fixed regex strings type-check warnings (minor)
+- Fixed some minor type-check warnings
 
 ### Removed
 ____
