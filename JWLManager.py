@@ -1802,9 +1802,9 @@ if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     db_name = "userData.db"
     app = QApplication(sys.argv)
-    font = QFont();
-    font.setPixelSize(16);
-    app.setFont(font);
+    font = QFont()
+    font.setPixelSize(16)
+    app.setFont(font)
     win = Window()
     win.show()
     sys.exit(app.exec_())
