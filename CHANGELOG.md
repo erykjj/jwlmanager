@@ -7,6 +7,7 @@
 
 - Link to Github repo in About box
 - Links to Github in README
+- Modified README to highlight multi-platform support
 
 ### Fixed
 
