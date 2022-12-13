@@ -919,6 +919,7 @@ class BuildTree():
             publication = 'short'
         else:
             publication = 'full'
+        levels = []
         if self.grouping == "Publication":
             if self.grouped:
                 levels = ['group', publication, 'language', 'issue']
@@ -1112,7 +1113,12 @@ class AddFavorites():
         if pub == " " or lang == " ":
             self.message = (0, " Nothing added!")
             return
-        pub = regex.match(r'(.*?) \(.*?\)$', pub).group(1)
+        result = regex.match(r'(.*?) \(.*?\)$', pub)
+        if result:
+            pub = result.group(1)
+        else:
+            self.message = (0, " Nothing added!")
+            return
         publication = [k for k, v in self.publications.items() if v[0] == pub][0]
         language = [k for k, v in self.languages.items() if v[0] == lang][0]
         location = self.add_location(publication, language)
