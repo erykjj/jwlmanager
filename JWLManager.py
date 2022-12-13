@@ -851,7 +851,7 @@ class BuildTree():
         group, code, short, full = check_name(name)
         if code[1]:
             return group, code, short, full, year
-        stripped = regex.search('(.*?)(\d+$)', name)
+        stripped = regex.search(r'(.*?)(\d+$)', name)
         if stripped:
             prefix = stripped.group(1)
             suffix = stripped.group(2)
@@ -896,7 +896,7 @@ class BuildTree():
             issue = process_issue(IssueTagNumber)
         else:
             issue = (year, None)
-        if issue[0] and regex.match('\d{4}', issue[0]):
+        if issue[0] and regex.match(r'\d{4}', issue[0]):
             year = (issue[0][:4], None)
         else:
             year = ('* NO DATE *', None)
@@ -1112,7 +1112,7 @@ class AddFavorites():
         if pub == " " or lang == " ":
             self.message = (0, " Nothing added!")
             return
-        pub = regex.match('(.*?) \(.*?\)$', pub).group(1)
+        pub = regex.match(r'(.*?) \(.*?\)$', pub).group(1)
         publication = [k for k, v in self.publications.items() if v[0] == pub][0]
         language = [k for k, v in self.languages.items() if v[0] == lang][0]
         location = self.add_location(publication, language)
@@ -1365,7 +1365,7 @@ class ImportAnnotations():
     def import_items(self):
         count = 0
         for line in self.import_file:
-            if regex.match("^\d+,\d+,\w+,", line):
+            if regex.match(r"^\d+,\d+,\w+,", line):
                 try:
                     count += 1
                     attribs = regex.split(',', line.rstrip(), 6)
