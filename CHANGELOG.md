@@ -12,6 +12,8 @@
 ### Fixed
 
 - Fixed some minor type-check warnings
+- Fixed SQL for discarding unused records (trimming the DB)
+- Blank/new archive had incomplete table structure
 
 ### Removed
 ____
