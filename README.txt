@@ -2,10 +2,10 @@ JWLManager
 
 Purpose
 
-This application enables viewing and performing various operations on the user
-data stored in a .jwlibrary backup archive (created from within the JW Library
-app[1]: Personal Study > Backup and Restore > Create a backup). A modified
-.jwlibrary archive can then be restored within the app.
+This is a multi-platform application for viewing and performing various
+operations on the user data stored in a .jwlibrary backup archive (created from
+within the JW Library app*: Personal Study > Backup and Restore > Create a
+backup). A modified .jwlibrary archive can then be restored within the app.
 
 In addition to the main functions of viewing, exporting, importing, and
 deleting, the application can also clean up any residual/unused records from the
@@ -17,21 +17,24 @@ them into an existent archive or into a new one.
 
 Usage
 
-This is a Python3 application implementing the Qt5 framework. If you have
-Python3 installed, execute to run (from inside JWLManager folder):
+Windows and Mac OS
+
+Simply launch the Windows executable or Mac OS app as usual.
+
+Linux
+
+Execute to run (from inside JWLManager folder):
 
     $ python3 JWLManager.py
 
 Or, make it executable first and run directly:
 
-    $ chmod u+x JWLManager.py
-    $ JWLManager.py
+    $ chmod +x JWLManager.py
+    $ ./JWLManager.py
 
 You may have to pip install some of the required libraries (PySide2, regex).
 
-Multi-platform
-
-You can find a Windows executable and a Mac OS app in the Releases section (https://github.com/erykjj/jwlmanager/releases).
+Do let me know if you have any difficulties ;-)
 
 --------------------------------------------------------------------------------
 
@@ -172,6 +175,8 @@ in the app itself. For now, to have colored note icons (without any
 highlighting), I import my notes as for the Reference Bible (Rbi8); this way I
 can see the stickies in the Study Bible (nwtsty).
 
+[notes]
+
 For Bible notes, {BK=}{CH=}{VER=} are all numeric and refer to the number of the
 book (1-66), the chapter and the verse, respectively. For books with just one
 chapter, use “1” for the chapter number. {ISSUE=}{DOC=}{BLOCK=} are the
@@ -232,15 +237,9 @@ database contains. It does not need to be run more than once in a while.
 
 --------------------------------------------------------------------------------
 
-Feedback: https://github.com/erykjj/jwlmanager/issues
+Feedback
 
 Feel free to get in touch and post any issues and suggestions.
 
-Follow
-
-RSS: https://github.com/erykjj/jwlmanager/releases.atom
-
---------------------------------------------------------------------------------
-
-[1] JW Library is a registered trademark of Watch Tower Bible and Tract Society
-of Pennsylvania (https://www.jw.org/en/online-help/jw-library/).
+* JW Library is a registered trademark of Watch Tower Bible and Tract Society
+of Pennsylvania.
