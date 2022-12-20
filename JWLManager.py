@@ -358,7 +358,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             os.remove(f"{tmp_path}/manifest.json")
             os.remove(f"{tmp_path}/{db_name}")
-        except OSError as e:
+        except:
             pass
         db_name = 'userData.db'
         with ZipFile(self.resource_path("res/blank.jwlibrary"),"r") as zipped:
@@ -389,7 +389,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             os.remove(f"{tmp_path}/manifest.json")
             os.remove(f"{tmp_path}/{db_name}")
-        except OSError as e:
+        except:
             pass
         with ZipFile(archive,"r") as zipped:
             zipped.extractall(tmp_path)
@@ -671,7 +671,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(f" Database obscured", 3500)
         self.archive_modified()
         self.regroup()
-        # self.tree_selection()
 
 
     def reindex(self):
@@ -1585,20 +1584,13 @@ class ImportNotes():
         return result[0]
 
 
-    def add_bible_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{attribs['ED']}', {attribs['LANG']}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1 );")
-        result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
-        return result[0]
-
     def add_scripture_location(self, attribs):
         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
         result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']};").fetchone()
         return result[0]
 
     def import_bible(self, attribs, title, note):
-        location_bible = self.add_bible_location(attribs)
         location_scripture = self.add_scripture_location(attribs)
-        # usermark_id = self.add_usermark(attribs, location_bible)
         usermark_id = self.add_usermark(attribs, location_scripture)
         block_type = 2
         try:
