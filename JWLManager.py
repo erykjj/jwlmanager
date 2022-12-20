@@ -29,13 +29,14 @@ SOFTWARE.
 VERSION = 'v1.2.2'
 
 
-import os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+import json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 from datetime import datetime
+from filehash import FileHash
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
@@ -517,6 +518,29 @@ class Window(QMainWindow, Ui_MainWindow):
         self.zipfile()
 
     def zipfile(self):
+
+        def usermark_count():
+            con = sqlite3.connect(f"{tmp_path}/{db_name}")
+            cur = con.cursor()
+            sql = "SELECT count(UserMarkId) FROM UserMark;"
+            um = cur.execute(sql).fetchone()[0]
+            cur.close()
+            con.close()
+            return um
+
+        def update_manifest():
+            with open(f"{tmp_path}/manifest.json", 'r') as json_file:
+                m = json.load(json_file)
+            m["userDataBackup"]["userMarkCount"] = usermark_count()
+            m["userDataBackup"]["lastModifiedDate"] = datetime.now().strftime("%Y-%m-%dT%H:%M")
+            sha256hash = FileHash('sha256')
+            m["userDataBackup"]["hash"] = sha256hash.hash_file(f"{tmp_path}/{db_name}")
+            m["userDataBackup"]["databaseName"] = db_name
+            with open(f"{tmp_path}/manifest.json", 'w') as json_file:
+                json.dump(m, json_file, indent=None)
+            return
+
+        update_manifest()
         with ZipFile(self.save_filename, "w", compression=ZIP_DEFLATED) as newzip:
             newzip.write(f"{tmp_path}/manifest.json", "manifest.json")
             newzip.write(f"{tmp_path}/{db_name}", db_name)
