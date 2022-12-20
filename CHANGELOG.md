@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- More precise manifest file included in saved archives
+
 ### Changed
 
 - Link to Github repo in About box
