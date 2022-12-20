@@ -467,7 +467,7 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT UserMarkId FROM UserMark);
             DELETE FROM UserMark WHERE UserMarkId NOT IN
               (SELECT UserMarkId FROM BlockRange) AND UserMarkId NOT IN
-              (SELECT UserMarkId FROM Note);
+              (SELECT UserMarkId FROM Note WHERE UserMarkId NOT NULL);
 
             DELETE FROM Location WHERE LocationId NOT IN
               (SELECT LocationId FROM UserMark) AND LocationId NOT IN
