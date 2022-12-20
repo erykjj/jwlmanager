@@ -3,6 +3,16 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [1.2.2] - 2022-12-20
+### Added
+
 - More precise manifest file included in saved archives
 
 ### Changed
@@ -17,8 +27,6 @@
 - Fixed SQL for discarding unused records (trimming the DB)
 - Blank/new archive had incomplete table structure
 
-### Removed
-____
 ## [1.2.1] - 2022-04-25
 ### Fixed
 
@@ -241,8 +249,10 @@ ____
 ### Added
 
 - Implemented viewing, deleting, exporting, reindexing, saving
+
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[1.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.2
 [1.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.1
 [1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
 [1.1.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.1.0
