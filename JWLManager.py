@@ -454,8 +454,20 @@ class Window(QMainWindow, Ui_MainWindow):
             PRAGMA temp_store = 2;
             PRAGMA journal_mode = 'OFF';
             PRAGMA foreign_keys = 'OFF';
+
             DELETE FROM Note WHERE (Title IS NULL OR Title = '')
               AND (Content IS NULL OR Content = '');
+
+            DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
+              NOT IN (SELECT NoteId FROM Note);
+            DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+
+            DELETE FROM BlockRange WHERE UserMarkId NOT IN
+              (SELECT UserMarkId FROM UserMark);
+            DELETE FROM UserMark WHERE UserMarkId NOT IN
+              (SELECT UserMarkId FROM BlockRange) AND UserMarkId NOT IN
+              (SELECT UserMarkId FROM Note);
+
             DELETE FROM Location WHERE LocationId NOT IN
               (SELECT LocationId FROM UserMark) AND LocationId NOT IN
               (SELECT LocationId FROM Note WHERE LocationId IS NOT NULL)
@@ -464,15 +476,13 @@ class Window(QMainWindow, Ui_MainWindow):
               (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
               (SELECT PublicationLocationId FROM Bookmark)
               AND LocationId NOT IN (SELECT LocationId FROM InputField);
+
             DELETE FROM UserMark WHERE LocationId NOT IN
               (SELECT LocationId FROM Location);
-            DELETE FROM BlockRange WHERE UserMarkId NOT IN
-              (SELECT UserMarkId FROM UserMark);
-            DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
-              NOT IN (SELECT NoteId FROM Note);
-            DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+
             PRAGMA foreign_keys = 'ON';
-            VACUUM;"""
+            VACUUM;
+            """
         cur.executescript(sql)
         con.commit()
         cur.close()
