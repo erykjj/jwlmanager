@@ -14,7 +14,7 @@ ____
 
 ### [Windows and Mac OS](https://github.com/erykjj/jwlmanager/releases)
 
-Simply launch the **Windows executable** or **Mac OS app** as usual.
+Simply launch the **Windows executable**[^2] or **Mac OS app** as usual.
 
 ### Linux
 
@@ -152,3 +152,4 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 [![](icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
+[^2]: Windows Defender and other anti-virus alerts: see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805)
