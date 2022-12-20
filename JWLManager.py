@@ -35,7 +35,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from datetime import datetime
+from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -364,10 +364,20 @@ class Window(QMainWindow, Ui_MainWindow):
         db_name = 'userData.db'
         with ZipFile(self.resource_path("res/blank"),"r") as zipped:
             zipped.extractall(tmp_path)
-        file = open(f"{tmp_path}/manifest.json", 'w')
-        text = r'{"name":"UserDataBackup","creationDate":"' + datetime.now().strftime("%Y-%m-%d") + r'","version":1,"type":0,"userDataBackup":{"userMarkCount":0,"lastModifiedDate":"' + datetime.now().strftime("%Y-%m-%dT%H:%M") + r'","deviceName":"JWLManager","databaseName":"userData.db","hash":"","schemaVersion":8}}'
-        file.write(text)
-        file.close
+        m = {
+            "name": "UserDataBackup",
+            "creationDate": datetime.now().strftime("%Y-%m-%d"),
+            "version": 1,
+            "type": 0,
+            "userDataBackup": {
+                "userMarkCount": 0,
+                "lastModifiedDate": datetime.now(timezone.utc).isoformat(timespec='seconds'),
+                "deviceName": "JWLManager",
+                "databaseName": "userData.db",
+                "hash": "",
+                "schemaVersion": 8 } }
+        with open(f"{tmp_path}/manifest.json", 'w') as json_file:
+                json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
 
     def load_file(self, archive = ''):
@@ -532,12 +542,12 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(f"{tmp_path}/manifest.json", 'r') as json_file:
                 m = json.load(json_file)
             m["userDataBackup"]["userMarkCount"] = usermark_count()
-            m["userDataBackup"]["lastModifiedDate"] = datetime.now().strftime("%Y-%m-%dT%H:%M")
+            m["userDataBackup"]["lastModifiedDate"] = datetime.now(timezone.utc).isoformat(timespec='seconds')
             sha256hash = FileHash('sha256')
             m["userDataBackup"]["hash"] = sha256hash.hash_file(f"{tmp_path}/{db_name}")
             m["userDataBackup"]["databaseName"] = db_name
             with open(f"{tmp_path}/manifest.json", 'w') as json_file:
-                json.dump(m, json_file, indent=None)
+                json.dump(m, json_file, indent=None, separators=(',', ':'))
             return
 
         update_manifest()
