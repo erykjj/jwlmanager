@@ -151,6 +151,6 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 
 ____
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-[^2]: Packaged with Python 3.8.10/PySide2 (Qt5) and compatible with MS Windows 7 and up. For Windows Defender and other anti-virus alerts see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805).
+[^2]: Packaged with Python 3.8.10/PySide2 (Qt5) and compatible with MS Windows 7 and up. For **Windows Defender "unknown publisher" alerts** see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805).
 [^3]: Packaged with Python 3.7.9/PySide2 (Qt5) and compatible with macOS 10.13 (High Sierra) and up.
 [^4]: `pip3 install filehash PySide6 regex`.
