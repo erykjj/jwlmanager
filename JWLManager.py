@@ -31,16 +31,16 @@ VERSION = 'v1.2.2'
 
 import json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+from PySide6.QtWidgets import *
 
 from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from ui_main_window import Ui_MainWindow
+from ui6_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -325,7 +325,7 @@ class Window(QMainWindow, Ui_MainWindow):
         outer = QVBoxLayout()
         top = QHBoxLayout()
         icon = QLabel(dialog)
-        icon.setPixmap(self.resource_path('icons/project_72.png'))
+        icon.setPixmap(QPixmap(self.resource_path('icons/project_72.png')))
         icon.setGeometry(12,12,72,72)
         icon.setAlignment(Qt.AlignTop)
         top.addWidget(icon)
@@ -1849,4 +1849,4 @@ if __name__ == "__main__":
     app.setFont(font)
     win = Window()
     win.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
