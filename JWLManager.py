@@ -40,7 +40,7 @@ from filehash import FileHash
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from ui6_main_window import Ui_MainWindow
+from res.ui6_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -83,7 +83,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def init_help():
             self.help_window = QDialog(self)
             self.help_window.setWindowFlags(Qt.Window)
-            self.help_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+            self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
             self.help_window.setWindowTitle("Help")
             self.help_window.resize(1020, 812)
             self.help_window.move(50, 50)
@@ -98,7 +98,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def init_viewer():
             self.viewer_window = QDialog(self)
             self.viewer_window.setWindowFlags(Qt.Window)
-            self.viewer_window.setWindowIcon((QIcon(self.resource_path('icons/project_72.png'))))
+            self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
             self.viewer_window.setWindowTitle(f"Data Viewer")
             self.viewer_window.resize(640, 812)
             self.viewer_window.move(50, 50)
@@ -325,7 +325,7 @@ class Window(QMainWindow, Ui_MainWindow):
         outer = QVBoxLayout()
         top = QHBoxLayout()
         icon = QLabel(dialog)
-        icon.setPixmap(QPixmap(self.resource_path('icons/project_72.png')))
+        icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
         icon.setGeometry(12,12,72,72)
         icon.setAlignment(Qt.AlignTop)
         top.addWidget(icon)

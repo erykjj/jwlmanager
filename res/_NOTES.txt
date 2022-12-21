@@ -1,0 +1,33 @@
+pandoc --from markdown --to plain --columns=80 -o README.txt README.md
+
+-------
+
+Windows (zipped folder): JWLManager_v.zip
+Windows (stand-alone): JWLManager_v.exe
+macOS (zipped app): JWLManager_v.app.zip
+
+-------
+
+in ui....py file, add:
+
+import os, import sys
+
+    def resource_path(self, relative_path):
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+
+
+replace all u"icons/(.*?)" with self.resource_path\('icons/$1'\)
+
+____________________
+
+WINDOWS: change into destination dir and execute:
+pyinstaller -F --noconfirm --windowed --icon "T:/JWLManager/icons/JWLManager.ico" --clean --no-embed-manifest --add-data "T:/JWLManager/icons;icons/" --add-data "T:/JWLManager/res;res/" --add-data "T:/JWLManager/CHANGELOG.md;." --add-data "T:/JWLManager/LICENSE;." --add-data "T:/JWLManager/README.md;." --add-data "T:/JWLManager/README.txt;."  "T:/JWLManager/JWLManager.py"
+
+pyinstaller -D --noconfirm --windowed --icon "T:/JWLManager/icons/JWLManager.ico" --clean --no-embed-manifest --add-data "T:/JWLManager/icons;icons/" --add-data "T:/JWLManager/res;res/" --add-data "T:/JWLManager/CHANGELOG.md;." --add-data "T:/JWLManager/LICENSE;." --add-data "T:/JWLManager/README.md;." --add-data "T:/JWLManager/README.txt;."  "T:/JWLManager/JWLManager.py"
+
+MAC OS: change into zero/output directory and execute:
+pyinstaller -D --noconfirm --console --osx-bundle-identifier "org.infiniti.jwlmanager" --noconfirm --onedir --windowed --icon "/Users/zero/Sync/JWLManager/icons/JWLManager.icns" --clean --add-data "/Users/zero/Sync/JWLManager/icons:icons/" --add-data "/Users/zero/Sync/JWLManager/res:res/" --add-data "/Users/zero/Sync/JWLManager/CHANGELOG.md:." --add-data "/Users/zero/Sync/JWLManager/LICENSE:." --add-data "/Users/zero/Sync/JWLManager/README.md:."  --add-data "/Users/zero/Sync/JWLManager/README.txt:." "/Users/zero/Sync/JWLManager/JWLManager.py" "/Users/zero/Sync/JWLManager/JWLManager.py"
