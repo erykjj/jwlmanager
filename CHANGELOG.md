@@ -5,8 +5,8 @@
 
 ### Changed
 
-- Transition from Qt5 to Qt6 (PySide2 to PySide6) --> Qt6 branch
-  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there will be a separate Qt5 branch with releases for older operating systems
+- Transition from Qt5 to Qt6 (PySide2 to PySide6) --> master branch
+  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there will be a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with releases for older operating systems
 
 ### Fixed
 
