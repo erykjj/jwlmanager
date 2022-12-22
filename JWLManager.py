@@ -26,10 +26,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+APP = 'JWLManager'
 VERSION = 'v1.3.0'
 
 
-import json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+import gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
 from PySide6.QtCore import *
 from PySide6.QtGui import *
@@ -44,7 +45,9 @@ from res.ui6_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
-APP = 'JWLManager'
+localedir = PROJECT_PATH / 'res/locale'
+translate = gettext.translation(APP, localedir, fallback=True)
+_ = translate.gettext
 
 
 class Window(QMainWindow, Ui_MainWindow):
