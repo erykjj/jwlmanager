@@ -45,9 +45,10 @@ from res.ui6_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
-localedir = PROJECT_PATH / 'res/locale'
-translate = gettext.translation(APP, localedir, fallback=True)
+localedir = PROJECT_PATH / 'res/locales/'
+translate = gettext.translation('messages', localedir, fallback=True, languages=['es'])
 _ = translate.gettext
+translate.install()
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -55,7 +56,7 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.setAcceptDrops(True)
-        self.status_label = QLabel("No archive selected  ")
+        self.status_label = QLabel(_('No archive selected  '))
         self.status_label.setStyleSheet("font: italic;")
         self.status_label.setStyleSheet("color: grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
@@ -87,7 +88,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.help_window = QDialog(self)
             self.help_window.setWindowFlags(Qt.Window)
             self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            self.help_window.setWindowTitle("Help")
+            self.help_window.setWindowTitle(_('Help'))
             self.help_window.resize(1020, 812)
             self.help_window.move(50, 50)
             self.help_window.setMinimumSize(300, 300)
@@ -102,7 +103,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window = QDialog(self)
             self.viewer_window.setWindowFlags(Qt.Window)
             self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            self.viewer_window.setWindowTitle(f"Data Viewer")
+            self.viewer_window.setWindowTitle(_('Data Viewer'))
             self.viewer_window.resize(640, 812)
             self.viewer_window.move(50, 50)
             self.viewer_window.setMinimumSize(300, 300)
@@ -204,7 +205,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 child = parent.child(i)
                 recurse(child)
 
-        if self.combo_category.currentText() not in ("Notes", "Annotations"):
+        if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
             return
         selected = []
         items = []
@@ -271,15 +272,15 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def switchboard(self, selection):
-        if selection == "Notes":
+        if selection == _('Notes'):
             self.disable_options([], False, True, True)
-        elif selection == "Highlights":
+        elif selection == _('Highlights'):
             self.disable_options([3], False, True, True)
-        elif selection == "Bookmarks":
+        elif selection == _('Bookmarks'):
             self.disable_options([3,4], False, False, False)
-        elif selection == "Annotations":
+        elif selection == _('Annotations'):
             self.disable_options([3,4], False, True, True)
-        elif selection == "Favorites":
+        elif selection == _('Favorites'):
             self.disable_options([3,4], True, False, False)
         if self.combo_grouping.currentText() != 'Publication':
             self.combo_grouping.currentTextChanged.disconnect()
@@ -357,7 +358,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif reply == QMessageBox.Cancel:
                 return
         self.status_label.setStyleSheet("color: black;")
-        self.status_label.setText("* NEW ARCHIVE *  ")
+        self.status_label.setText(_('* NEW ARCHIVE *  '))
         global db_name
         try:
             os.remove(f"{tmp_path}/manifest.json")
@@ -391,7 +392,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif reply == QMessageBox.Cancel:
                 return
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),"JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),_('JW Library archives (*.jwlibrary)'))
             if fname[0] == "":
                 return
             archive = fname[0]
@@ -518,7 +519,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             fname = QFileDialog.getSaveFileName(self, 'Save archive', self.save_filename, "JW Library archives (*.jwlibrary)")
         if fname[0] == '':
-            self.statusBar.showMessage(" NOT saved!", 3500)
+            self.statusBar.showMessage(_(' NOT saved!'), 3500)
             return False
         elif Path(fname[0]) == self.current_archive:
             reply = QMessageBox.critical(self, 'Save', "It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?",
@@ -570,7 +571,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = False
         self.actionSave.setEnabled(False)
         self.status_label.setStyleSheet("font: normal;")
-        self.statusBar.showMessage(" Saved", 3500)
+        self.statusBar.showMessage(_(' Saved'), 3500)
 
 
     def tree_selection(self):
@@ -615,7 +616,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     selected.append(id)
         fname = export_file()
         if fname[0] == '':
-            self.statusBar.showMessage(" NOT exported!", 3500)
+            self.statusBar.showMessage(_(' NOT exported!'), 3500)
             return
         self.working_dir = Path(fname[0]).parent
         fn = ExportItems(self.combo_category.currentText(), selected, fname[0],
@@ -623,7 +624,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage("Items exported", 3500)
+        self.statusBar.showMessage(_('Items exported'), 3500)
 
 
     def import_file(self, file='', category = ''):
@@ -633,12 +634,12 @@ class Window(QMainWindow, Ui_MainWindow):
         if not file:
             fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
             if fname[0] == "":
-                self.statusBar.showMessage(" NOT imported!", 3500)
+                self.statusBar.showMessage(_(' NOT imported!'), 3500)
                 return
             file = fname[0]
             category = self.combo_category.currentText()
         self.working_dir = Path(file).parent
-        self.statusBar.showMessage(" Importing. Please wait...")
+        self.statusBar.showMessage(_(' Importing. Please wait...'))
         app.processEvents()
         if category == 'Annotations':
             fn = ImportAnnotations(file)
@@ -676,7 +677,7 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, 'Delete', f"Are you sure you want to\nDELETE these {self.selected_items} items?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(" Deleting. Please wait...")
+        self.statusBar.showMessage(_(' Deleting. Please wait...'))
         app.processEvents()
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
@@ -699,13 +700,13 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, 'Obscure', f"Are you sure you want to\nOBSCURE all text fields?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(" Obscuring. Please wait...")
+        self.statusBar.showMessage(_(' Obscuring. Please wait...'))
         app.processEvents()
         fn = ObscureItems()
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f" Database obscured", 3500)
+        self.statusBar.showMessage(_(' Database obscured'), 3500)
         self.archive_modified()
         self.regroup()
 
@@ -715,19 +716,19 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog("Please wait...", None, 0, 14, self)
+        self.pd = QProgressDialog(_('Please wait...'), None, 0, 14, self)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
         self.pd.setModal(True)
         self.pd.setMinimumDuration(0)
-        self.statusBar.showMessage(" Reindexing. Please wait...")
+        self.statusBar.showMessage(_(' Reindexing. Please wait...'))
         app.processEvents()
         fn = Reindex(self.pd)
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(" Reindexed successfully", 3500)
+        self.statusBar.showMessage(_(' Reindexed successfully'), 3500)
         self.archive_modified()
         self.regroup()
 
@@ -786,15 +787,15 @@ class BuildTree():
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
-        if self.category == "Bookmarks":
+        if self.category == _('Bookmarks'):
             self.get_bookmarks()
-        elif self.category == "Favorites":
+        elif self.category == _('Favorites'):
             self.get_favorites()
-        elif self.category == "Highlights":
+        elif self.category == _('Highlights'):
             self.get_highlights()
-        elif self.category == "Notes":
+        elif self.category == _('Notes'):
             self.get_notes()
-        elif self.category == "Annotations":
+        elif self.category == _('Annotations'):
             self.get_annotations()
         con.commit()
         self.cur.close()
@@ -852,16 +853,16 @@ class BuildTree():
         for row in self.cur.execute(sql):
             item = row[0]
             group = (None, None)
-            code = ("* OTHER *", None)
-            short = ("* OTHER *", None)
-            full = ("* OTHER *", None)
+            code = (_('* OTHER *'), None)
+            short = (_('* OTHER *'), None)
+            full = (_('* OTHER *'), None)
             year = None
-            language = ("* NO LANGUAGE *", None)
+            language = (_('* NO LANGUAGE *'), None)
             issue = (None, None)
             detail1 = (None, None)
             detail2 = (None, None)
             year = ('* NO DATE *', '')
-            tag = (row[1] or "* UN-TAGGED *", None)
+            tag = (row[1] or _('* UN-TAGGED *'), None)
             color = ('Grey', None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
@@ -873,7 +874,7 @@ class BuildTree():
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
-            tag = (row[5] or "* UN-TAGGED *", None)
+            tag = (row[5] or _('* UN-TAGGED *'), None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Red', 'Orange', 'Purple')[row[6] or 0], None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
@@ -951,7 +952,7 @@ class BuildTree():
     def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
         if BookNumber:
             detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
-            detail2 = ("Ch. " + str(ChapterNumber).rjust(3, ' '), None)
+            detail2 = (_('Ch. ') + str(ChapterNumber).rjust(3, ' '), None)
         else:
             detail1 = (IssueTitle or '* BLANK *', None)
             detail2 = (None, None)
@@ -966,18 +967,18 @@ class BuildTree():
         else:
             publication = 'full'
         levels = []
-        if self.grouping == "Publication":
+        if self.grouping == _('Publication'):
             if self.grouped:
                 levels = ['group', publication, 'language', 'issue']
             else:
                 levels = [publication, 'language', 'issue']
-        elif self.grouping == "Language":
+        elif self.grouping == _('Language'):
             levels = ['language', publication, 'issue']
-        elif self.grouping == "Tag":
+        elif self.grouping == _('Tag'):
             levels = ['tag', publication, 'language', 'issue']
-        elif self.grouping == "Color":
+        elif self.grouping == _('Color'):
             levels = ['color', publication, 'language', 'issue']
-        elif self.grouping == "Year":
+        elif self.grouping == _('Year'):
             levels = ['year', publication, 'language', 'issue']
         if self.detailed:
             levels.append('detail1')
@@ -988,7 +989,7 @@ class BuildTree():
     def build_index(self, levels):
 
         def progress_dialog(steps):
-            self.pd = QProgressDialog("Please be patient...", None, 0, steps-1, self.window)
+            self.pd = QProgressDialog(_('Please be patient...'), None, 0, steps-1, self.window)
             self.pd.setWindowModality(Qt.WindowModal)
             self.pd.setWindowTitle('Parsing tree')
             self.pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -1059,7 +1060,7 @@ class DebugInfo():
         tb_text = ''.join(tb_lines)
         dialog = QDialog()
         dialog.setMinimumSize(650, 375)
-        dialog.setWindowTitle("Error!")
+        dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
         label1.setText("<p style='text-align: left;'>Oops! Something went wrong...</p></p><p style='text-align: left;'>Take note of what you were doing and <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>inform the developer</a>:</p>")
         label1.setOpenExternalLinks(True)
@@ -1103,7 +1104,7 @@ class AddFavorites():
 
     def add_dialog(self):
         dialog = QDialog()
-        dialog.setWindowTitle("Add Favorite")
+        dialog.setWindowTitle(_('Add Favorite'))
         label = QLabel(dialog)
         label.setText("Select the edition and language to add.\nMake sure the edition exists in the selected language!\n")
         publication = QComboBox(dialog)
@@ -1129,8 +1130,8 @@ class AddFavorites():
         layout = QVBoxLayout()
         layout.addWidget(label)
         form = QFormLayout()
-        form.addRow("Edition:", publication)
-        form.addRow("Language:", language)
+        form.addRow(_('Edition:'), publication)
+        form.addRow(_('Language:'), language)
         layout.addLayout(form)
         layout.addWidget(buttons)
         dialog.setLayout(layout)
@@ -1157,7 +1158,7 @@ class AddFavorites():
     def add_favorite(self):
         pub, lang = self.add_dialog()
         if pub == " " or lang == " ":
-            self.message = (0, " Nothing added!")
+            self.message = (0, _(' Nothing added!'))
             return
         result = regex.match(r'(.*?) \(.*?\)$', pub)
         if result:
@@ -1200,15 +1201,15 @@ class DeleteItems():
         con.close()
 
     def delete_items(self):
-        if self.category == "Bookmarks":
+        if self.category == _('Bookmarks'):
             return self.delete("Bookmark", "BookmarkId")
-        elif self.category == "Favorites":
+        elif self.category == _('Favorites'):
             return self.delete("TagMap", "TagMapId")
-        elif self.category == "Highlights":
+        elif self.category == _('Highlights'):
             return self.delete("BlockRange", "BlockRangeId")
-        elif self.category == "Notes":
+        elif self.category == _('Notes'):
             return self.delete("Note", "NoteId")
-        elif self.category == "Annotations":
+        elif self.category == _('Annotations'):
             return self.delete("InputField", "TextTag")
 
     def delete(self, table, field):
@@ -1234,11 +1235,11 @@ class ExportItems():
         con.close()
 
     def export_items(self):
-        if self.category == "Highlights":
+        if self.category == _('Highlights'):
             return self.export_highlights()
-        elif self.category == "Notes":
+        elif self.category == _('Notes'):
             return self.export_notes()
-        elif self.category == "Annotations":
+        elif self.category == _('Annotations'):
             return self.export_annotations()
 
     def export_notes(self):
@@ -1338,38 +1339,38 @@ class PreviewItems():
         con.close()
 
     def preview_items(self):
-        if self.category == "Notes":
+        if self.category == _('Notes'):
             self.preview_bible()
             self.preview_publications()
             self.preview_independent()
-        elif self.category == "Annotations":
+        elif self.category == _('Annotations'):
             self.preview_annotations()
 
     def preview_bible(self):
         for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[3] or "* NO TITLE *"
+            title = row[3] or _('* NO TITLE *')
             if row[4]:
                 note = regex.sub('\n', '<br />', row[4].rstrip())
             else:
-                note = "* NO TEXT *"
+                note = _('* NO TEXT *')
             self.txt += f"[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_publications(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or "* NO TITLE *"
+            title = row[0] or _('* NO TITLE *')
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = "* NO TEXT *"
+                note = _('* NO TEXT *')
             self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or "* NO TITLE *"
+            title = row[0] or _('* NO TITLE *')
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = "* NO TEXT *"
+                note = _('* NO TEXT *')
             self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_annotations(self):
@@ -1378,7 +1379,7 @@ class PreviewItems():
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = "* NO TEXT *"
+                note = _('* NO TEXT *')
             self.txt += f"<b>{title}</b><br />{note}<hr />"
 
 
@@ -1846,7 +1847,10 @@ class Reindex():
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     db_name = "userData.db"
+    translator = QTranslator()
+    translator.load('res/locales/ui_es.qm')
     app = QApplication(sys.argv)
+    app.installTranslator(translator)
     font = QFont()
     font.setPixelSize(16)
     app.setFont(font)
