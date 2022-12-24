@@ -1848,7 +1848,7 @@ if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     db_name = "userData.db"
     translator = QTranslator()
-    translator.load('res/locales/ui_es.qm')
+    translator.load('res/locales/es.qm')
     app = QApplication(sys.argv)
     app.installTranslator(translator)
     font = QFont()
