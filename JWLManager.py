@@ -53,7 +53,7 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.setAcceptDrops(True)
-        self.status_label = QLabel(_('No archive selected  '))
+        self.status_label = QLabel(_('No archive selected')+'  ')
         self.status_label.setStyleSheet("font: italic;")
         self.status_label.setStyleSheet("color: grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
@@ -356,7 +356,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif reply == QMessageBox.Cancel:
                 return
         self.status_label.setStyleSheet("color: black;")
-        self.status_label.setText(_('* NEW ARCHIVE *  '))
+        self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         global db_name
         try:
             os.remove(f"{tmp_path}/manifest.json")
@@ -390,7 +390,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif reply == QMessageBox.Cancel:
                 return
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),_('JW Library archives (*.jwlibrary)'))
+            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
             if fname[0] == "":
                 return
             archive = fname[0]
@@ -517,7 +517,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             fname = QFileDialog.getSaveFileName(self, 'Save archive', self.save_filename, "JW Library archives (*.jwlibrary)")
         if fname[0] == '':
-            self.statusBar.showMessage(_(' NOT saved!'), 3500)
+            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return False
         elif Path(fname[0]) == self.current_archive:
             reply = QMessageBox.critical(self, 'Save', "It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?",
@@ -569,7 +569,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = False
         self.actionSave.setEnabled(False)
         self.status_label.setStyleSheet("font: normal;")
-        self.statusBar.showMessage(_(' Saved'), 3500)
+        self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
     def tree_selection(self):
@@ -614,7 +614,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     selected.append(id)
         fname = export_file()
         if fname[0] == '':
-            self.statusBar.showMessage(_(' NOT exported!'), 3500)
+            self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
         self.working_dir = Path(fname[0]).parent
         fn = ExportItems(self.combo_category.currentText(), selected, fname[0],
@@ -632,12 +632,12 @@ class Window(QMainWindow, Ui_MainWindow):
         if not file:
             fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
             if fname[0] == "":
-                self.statusBar.showMessage(_(' NOT imported!'), 3500)
+                self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
                 return
             file = fname[0]
             category = self.combo_category.currentText()
         self.working_dir = Path(file).parent
-        self.statusBar.showMessage(_(' Importing. Please wait...'))
+        self.statusBar.showMessage(' '+_('Importing. Please wait...'))
         app.processEvents()
         if category == 'Annotations':
             fn = ImportAnnotations(file)
@@ -675,7 +675,7 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, 'Delete', f"Are you sure you want to\nDELETE these {self.selected_items} items?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(_(' Deleting. Please wait...'))
+        self.statusBar.showMessage(' '+_('Deleting. Please wait...'))
         app.processEvents()
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
@@ -698,13 +698,13 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, 'Obscure', f"Are you sure you want to\nOBSCURE all text fields?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(_(' Obscuring. Please wait...'))
+        self.statusBar.showMessage(' '+_('Obscuring. Please wait...'))
         app.processEvents()
         fn = ObscureItems()
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(_(' Database obscured'), 3500)
+        self.statusBar.showMessage(' '+_('Database obscured'), 3500)
         self.archive_modified()
         self.regroup()
 
@@ -720,13 +720,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
         self.pd.setModal(True)
         self.pd.setMinimumDuration(0)
-        self.statusBar.showMessage(_(' Reindexing. Please wait...'))
+        self.statusBar.showMessage(' '+_('Reindexing. Please wait...'))
         app.processEvents()
         fn = Reindex(self.pd)
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(_(' Reindexed successfully'), 3500)
+        self.statusBar.showMessage(' '+_('Reindexed successfully'), 3500)
         self.archive_modified()
         self.regroup()
 
@@ -851,16 +851,16 @@ class BuildTree():
         for row in self.cur.execute(sql):
             item = row[0]
             group = (None, None)
-            code = (_('* OTHER *'), None)
-            short = (_('* OTHER *'), None)
-            full = (_('* OTHER *'), None)
+            code = ('* '+_('OTHER')+' *', None)
+            short = ('* '+_('OTHER')+' *', None)
+            full = ('* '+_('OTHER')+' *', None)
             year = None
-            language = (_('* NO LANGUAGE *'), None)
+            language = ('* '+_('NO LANGUAGE')+' *', None)
             issue = (None, None)
             detail1 = (None, None)
             detail2 = (None, None)
             year = ('* NO DATE *', '')
-            tag = (row[1] or _('* UN-TAGGED *'), None)
+            tag = (row[1] or '* '+_('UN-TAGGED')+' *', None)
             color = ('Grey', None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
@@ -872,7 +872,7 @@ class BuildTree():
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
-            tag = (row[5] or _('* UN-TAGGED *'), None)
+            tag = (row[5] or '* '+_('UN-TAGGED')+' *', None)
             color = (('Grey', 'Yellow', 'Green', 'Blue', 'Red', 'Orange', 'Purple')[row[6] or 0], None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
@@ -950,7 +950,7 @@ class BuildTree():
     def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
         if BookNumber:
             detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
-            detail2 = (_('Ch. ') + str(ChapterNumber).rjust(3, ' '), None)
+            detail2 = (_('Ch.'+' ') + str(ChapterNumber).rjust(3, ' '), None)
         else:
             detail1 = (IssueTitle or '* BLANK *', None)
             detail2 = (None, None)
@@ -1128,8 +1128,8 @@ class AddFavorites():
         layout = QVBoxLayout()
         layout.addWidget(label)
         form = QFormLayout()
-        form.addRow(_('Edition:'), publication)
-        form.addRow(_('Language:'), language)
+        form.addRow(_('Edition')+':', publication)
+        form.addRow(_('Language')+':', language)
         layout.addLayout(form)
         layout.addWidget(buttons)
         dialog.setLayout(layout)
@@ -1156,7 +1156,7 @@ class AddFavorites():
     def add_favorite(self):
         pub, lang = self.add_dialog()
         if pub == " " or lang == " ":
-            self.message = (0, _(' Nothing added!'))
+            self.message = (0, ' '+_('Nothing added!'))
             return
         result = regex.match(r'(.*?) \(.*?\)$', pub)
         if result:
@@ -1346,29 +1346,29 @@ class PreviewItems():
 
     def preview_bible(self):
         for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[3] or _('* NO TITLE *')
+            title = row[3] or '* '+_('NO TITLE')+' *'
             if row[4]:
                 note = regex.sub('\n', '<br />', row[4].rstrip())
             else:
-                note = _('* NO TEXT *')
+                note = '* '+_('NO TEXT')+' *'
             self.txt += f"[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_publications(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or _('* NO TITLE *')
+            title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = _('* NO TEXT *')
+                note = '* '+_('NO TEXT')+' *'
             self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or _('* NO TITLE *')
+            title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = _('* NO TEXT *')
+                note = '* '+_('NO TEXT')+' *'
             self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_annotations(self):
@@ -1377,7 +1377,7 @@ class PreviewItems():
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
-                note = _('* NO TEXT *')
+                note = '* '+_('NO TEXT')+' *'
             self.txt += f"<b>{title}</b><br />{note}<hr />"
 
 
