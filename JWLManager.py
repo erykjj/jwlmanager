@@ -41,7 +41,7 @@ from filehash import FileHash
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from res.ui6_main_window import Ui_MainWindow
+from res.ui_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
