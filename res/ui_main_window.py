@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowaxIxPL.ui'
+## Form generated from reading UI file 'main_windowAkKdIl.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.1
 ##
@@ -172,26 +172,26 @@ class Ui_MainWindow(object):
         self.combo_grouping.addItem("")
         self.combo_grouping.setObjectName(u"combo_grouping")
         self.combo_grouping.setEnabled(False)
-        self.combo_grouping.setGeometry(QRect(280, 30, 140, 28))
+        self.combo_grouping.setGeometry(QRect(310, 30, 140, 28))
         self.total = QLabel(self.info)
         self.total.setObjectName(u"total")
-        self.total.setGeometry(QRect(95, 0, 75, 28))
+        self.total.setGeometry(QRect(120, 0, 80, 28))
         self.total.setTextFormat(Qt.MarkdownText)
         self.total.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.label_grouping = QLabel(self.info)
         self.label_grouping.setObjectName(u"label_grouping")
-        self.label_grouping.setGeometry(QRect(190, 30, 85, 28))
+        self.label_grouping.setGeometry(QRect(220, 30, 85, 28))
         self.selected = QLabel(self.info)
         self.selected.setObjectName(u"selected")
-        self.selected.setGeometry(QRect(95, 30, 75, 28))
+        self.selected.setGeometry(QRect(120, 30, 80, 28))
         self.selected.setTextFormat(Qt.MarkdownText)
         self.selected.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.label_selected = QLabel(self.info)
         self.label_selected.setObjectName(u"label_selected")
-        self.label_selected.setGeometry(QRect(5, 30, 85, 28))
+        self.label_selected.setGeometry(QRect(5, 30, 110, 28))
         self.label_category = QLabel(self.info)
         self.label_category.setObjectName(u"label_category")
-        self.label_category.setGeometry(QRect(190, 0, 85, 28))
+        self.label_category.setGeometry(QRect(220, 0, 85, 28))
         self.combo_category = QComboBox(self.info)
         self.combo_category.addItem("")
         self.combo_category.addItem("")
@@ -200,10 +200,10 @@ class Ui_MainWindow(object):
         self.combo_category.addItem("")
         self.combo_category.setObjectName(u"combo_category")
         self.combo_category.setEnabled(False)
-        self.combo_category.setGeometry(QRect(280, 0, 140, 28))
+        self.combo_category.setGeometry(QRect(310, 0, 140, 28))
         self.label_total = QLabel(self.info)
         self.label_total.setObjectName(u"label_total")
-        self.label_total.setGeometry(QRect(5, 0, 85, 28))
+        self.label_total.setGeometry(QRect(5, 0, 110, 28))
 
         self.horizontalLayout.addWidget(self.info)
 
