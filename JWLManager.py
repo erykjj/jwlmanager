@@ -1848,12 +1848,12 @@ def get_language():
 
     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
     group = language_group.add_mutually_exclusive_group(required=False)
-    group.add_argument('-de', action='store_true', help='German (Deutch)')
+    group.add_argument('-de', action='store_true', help='German (Deutsch)')
     group.add_argument('-en', action='store_true', help='English (default)')
-    group.add_argument('-es', action='store_true', help='Spanish (Español)')
-    group.add_argument('-fr', action='store_true', help='French (Français)')
-    group.add_argument('-it', action='store_true', help='Italian (Italiano)')
-    group.add_argument('-pt', action='store_true', help='Portuguese (Português)')
+    group.add_argument('-es', action='store_true', help='Spanish (español)')
+    group.add_argument('-fr', action='store_true', help='French (français)')
+    group.add_argument('-it', action='store_true', help='Italian (italiano)')
+    group.add_argument('-pt', action='store_true', help='Portuguese (português)')
     args = vars(parser.parse_args())
     lang = 'en'
     for l in args.keys():
