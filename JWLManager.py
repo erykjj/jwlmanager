@@ -30,11 +30,12 @@ APP = 'JWLManager'
 VERSION = 'v1.3.0'
 
 
-import gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from PySide6.QtQml import *
 
 from datetime import datetime, timezone
 from filehash import FileHash
@@ -164,6 +165,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionFull_Title.triggered.connect(self.full_view)
         self.actionGrouped.triggered.connect(self.grouped_view)
         self.actionDetailed.triggered.connect(self.detailed_view)
+        # TODO: action for Import & Language selection
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -1844,13 +1846,35 @@ class Reindex():
         self.drop_table()
 
 
+def set_language():
+    parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
+    parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
+
+    language_group = parser.add_argument_group('interface language', '-en or leave out for English')
+    group = language_group.add_mutually_exclusive_group(required=False)
+    group.add_argument('-de', action='store_true', help='German (Deutch)')
+    group.add_argument('-en', action='store_true', help='English (default)')
+    group.add_argument('-es', action='store_true', help='Spanish (Español)')
+    group.add_argument('-fr', action='store_true', help='French (Français)')
+    group.add_argument('-it', action='store_true', help='Italian (Italiano)')
+    group.add_argument('-pt', action='store_true', help='Portuguese (Português)')
+    args = vars(parser.parse_args())
+    lang = 'en'
+    for l in args.keys():
+        if args[l]:
+            lang = l
+    return lang
+
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     db_name = "userData.db"
+    lang = set_language()
     translator = QTranslator()
-    translator.load('res/locales/es.qm')
+    translator.load(f'res/locales/{lang}.qm')
     app = QApplication(sys.argv)
     app.installTranslator(translator)
+    # app.removeTranslator(translator)
+    # QQmlEngine.retranslate()
     font = QFont()
     font.setPixelSize(16)
     app.setFont(font)
