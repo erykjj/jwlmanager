@@ -27,7 +27,7 @@ SOFTWARE.
 """
 
 APP = 'JWLManager'
-VERSION = 'v1.3.0'
+VERSION = 'v2.0.0'
 
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
