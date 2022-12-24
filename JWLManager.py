@@ -46,10 +46,6 @@ from res.ui_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
-localedir = PROJECT_PATH / 'res/locales/'
-translate = gettext.translation('messages', localedir, fallback=True, languages=['es'])
-_ = translate.gettext
-translate.install()
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -1846,7 +1842,7 @@ class Reindex():
         self.drop_table()
 
 
-def set_language():
+def get_language():
     parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
 
@@ -1865,16 +1861,26 @@ def set_language():
             lang = l
     return lang
 
+def set_language(lang):
+    localedir = PROJECT_PATH / 'res/locales/'
+    translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
+    _ = translate.gettext
+    translate.install()
+    translator = QTranslator()
+    translator.load(f'res/locales/{lang}.qm')
+    return translator
+
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
     db_name = "userData.db"
-    lang = set_language()
-    translator = QTranslator()
-    translator.load(f'res/locales/{lang}.qm')
+
     app = QApplication(sys.argv)
+    lang = get_language()
+    translator = set_language(lang)
     app.installTranslator(translator)
     # app.removeTranslator(translator)
     # QQmlEngine.retranslate()
+
     font = QFont()
     font.setPixelSize(16)
     app.setFont(font)
