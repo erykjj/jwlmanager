@@ -48,7 +48,7 @@ msgid ""
 "Please select a smaller subset."
 msgstr ""
 "Está intentando visualizar {} elementos.\n"
-"Favor seleccionar una cantidad menor.
+"Favor seleccionar una cantidad menor."
 
 #: JWLManager.py:279 JWLManager.py:458 JWLManager.py:796 JWLManager.py:1210
 #: JWLManager.py:1240
