@@ -668,7 +668,7 @@ class Window(QMainWindow, Ui_MainWindow):
             file = fname[0]
             category = self.combo_category.currentText()
         self.working_dir = Path(file).parent
-        self.statusBar.showMessage(' '+_('Importing. Please wait...'))
+        self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
         if category == 'Annotations':
             fn = ImportAnnotations(file)
@@ -706,7 +706,7 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(' '+_('Deleting. Please wait...'))
+        self.statusBar.showMessage(' '+_('Deleting. Please wait…'))
         app.processEvents()
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
@@ -729,7 +729,7 @@ class Window(QMainWindow, Ui_MainWindow):
         reply = QMessageBox.warning(self, _('Obscure'), _('Are you sure you want to\nOBSCURE all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(' '+_('Obscuring. Please wait...'))
+        self.statusBar.showMessage(' '+_('Obscuring. Please wait…'))
         app.processEvents()
         fn = ObscureItems()
         if fn.aborted:
@@ -745,13 +745,13 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog(_('Please wait...'), None, 0, 14, self)
+        self.pd = QProgressDialog(_('Please wait…'), None, 0, 14, self)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
         self.pd.setModal(True)
         self.pd.setMinimumDuration(0)
-        self.statusBar.showMessage(' '+_('Reindexing. Please wait...'))
+        self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
         app.processEvents()
         fn = Reindex(self.pd)
         if fn.aborted:
@@ -1018,7 +1018,7 @@ class BuildTree():
     def build_index(self, levels):
 
         def progress_dialog(steps):
-            self.pd = QProgressDialog(_('Please be patient...'), None, 0, steps-1, self.window)
+            self.pd = QProgressDialog(_('Please be patient…'), None, 0, steps-1, self.window)
             self.pd.setWindowModality(Qt.WindowModal)
             self.pd.setWindowTitle('Parsing tree')
             self.pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -1091,7 +1091,7 @@ class DebugInfo():
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
-        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong...')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>"+_('inform the developer')+"</a>:</p>")
+        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>"+_('inform the developer')+"</a>:</p>")
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
