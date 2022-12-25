@@ -1,5 +1,5 @@
 # JWLManager
-==**Looking for help with translation**==[^*]
+**Looking for help with translation on [Weblate](https://hosted.weblate.org/projects/jwlmanager/)**[^*]
 
 
 ## Purpose
