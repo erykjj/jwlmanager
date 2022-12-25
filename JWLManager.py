@@ -46,6 +46,10 @@ from res.ui_main_window import Ui_MainWindow
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
+localedir = PROJECT_PATH / 'res/locales/'
+translate = gettext.translation('messages', localedir, fallback=True, languages=['en', 'es', 'de', 'fr', 'it', 'pt'])
+_ = translate.gettext
+translate.install()
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -1861,14 +1865,6 @@ def get_language():
             lang = l
     return lang
 
-def set_language(lang):
-    localedir = PROJECT_PATH / 'res/locales/'
-    translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
-    _ = translate.gettext
-    translate.install()
-    translator = QTranslator()
-    translator.load(f'res/locales/{lang}.qm')
-    return translator
 
 if __name__ == "__main__":
     tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
@@ -1876,7 +1872,8 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     lang = get_language()
-    translator = set_language(lang)
+    translator = QTranslator()
+    translator.load(f'res/locales/{lang}.qm')
     app.installTranslator(translator)
     # app.removeTranslator(translator)
     # QQmlEngine.retranslate()
