@@ -214,14 +214,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 for id in self.leaves[row]:
                     items.append(id)
         if len(items) > 500:
-            QMessageBox.critical(self, 'Warning', f"You are trying to preview {len(items)} items.\nPlease select a smaller subset.", QMessageBox.Cancel)
+            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
             return
         fn = PreviewItems(self.combo_category.currentText(), items, self.books)
         if fn.aborted:
             self.clean_up()
             sys.exit()
         self.viewer_text.setHtml(fn.txt)
-        self.viewer_window.setWindowTitle(f"Data Viewer: {selection.data(0,0)}")
+        self.viewer_window.setWindowTitle(_('Data Viewer')+f": {selection.data(0,0)}")
         self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.viewer_window.finished.connect(self.viewer_window.hide())
         self.viewer_window.show()
@@ -348,7 +348,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def new_file(self):
         if self.modified:
-            reply = QMessageBox.question(self, 'Save', 'Save current archive?', 
+            reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), 
                 QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
                 QMessageBox.Yes)
             if reply == QMessageBox.Yes:
@@ -384,13 +384,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def load_file(self, archive = ''):
         if self.modified:
-            reply = QMessageBox.question(self, 'Save', 'Save current archive?', QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+            reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 self.save_file()
             elif reply == QMessageBox.Cancel:
                 return
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, 'Open archive', str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
             if fname[0] == "":
                 return
             archive = fname[0]
@@ -444,20 +444,20 @@ class Window(QMainWindow, Ui_MainWindow):
         if suffix == ".jwlibrary":
             self.load_file(file)
         elif not self.combo_category.isEnabled():
-            QMessageBox.warning(self, 'Error', 'No archive has been opened!', QMessageBox.Cancel)
+            QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
         elif suffix == ".txt":
             with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
                 header = f.readline().strip()
             if header == r"{ANNOTATIONS}":
-                self.import_file(file, 'Annotations')
+                self.import_file(file, _('Annotations'))
             elif header == r"{HIGHLIGHTS}":
-                self.import_file(file, 'Highlights')
+                self.import_file(file, _('Highlights'))
             elif regex.search("{TITLE=", header):
-                self.import_file(file, 'Notes')
+                self.import_file(file, _('Notes'))
             else:
-                QMessageBox.warning(self, 'Error', f'File "{file}" not recognized!', QMessageBox.Cancel)
+                QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
         else:
-            QMessageBox.warning(self, 'Error', f'File "{file}" not recognized!', QMessageBox.Cancel)
+            QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
 
 
     def trim_db(self):
@@ -513,14 +513,14 @@ class Window(QMainWindow, Ui_MainWindow):
         fname = ()
         if self.save_filename == '':
             now = datetime.now().strftime("%Y-%m-%d")
-            fname = QFileDialog.getSaveFileName(self, 'Save archive', f"{self.working_dir}/MODIFIED_{now}.jwlibrary", "JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f"{self.working_dir}/MODIFIED_{now}.jwlibrary", _('JW Library archives')+'(*.jwlibrary)')
         else:
-            fname = QFileDialog.getSaveFileName(self, 'Save archive', self.save_filename, "JW Library archives (*.jwlibrary)")
+            fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
         if fname[0] == '':
             self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return False
         elif Path(fname[0]) == self.current_archive:
-            reply = QMessageBox.critical(self, 'Save', "It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?",
+            reply = QMessageBox.critical(self, _('Save'), _("It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?"),
               QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if reply == QMessageBox.No:
                 return self.save_file()
@@ -599,10 +599,10 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_file():
             fname = ()
             now = datetime.now().strftime("%Y-%m-%d")
-            fname = QFileDialog.getSaveFileName(self, 'Export file', f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt", "Text files (*.txt)")
+            fname = QFileDialog.getSaveFileName(self, _('Export file'), f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt", _('Text files')+' (*.txt)')
             return fname
 
-        reply = QMessageBox.question(self, 'Export', f"{self.selected_items} items will be EXPORTED. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        reply = QMessageBox.question(self, _('Export'), f"{self.selected_items} "+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         selected = []
@@ -626,11 +626,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def import_file(self, file='', category = ''):
-        reply = QMessageBox.warning(self, 'Import', "Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Import'), _('Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         if not file:
-            fname = QFileDialog.getOpenFileName(self, 'Import file', f"{self.working_dir}/", "Import files (*.txt)")
+            fname = QFileDialog.getOpenFileName(self, _('Import file'), f"{self.working_dir}/", _('Import files')+' (*.txt)')
             if fname[0] == "":
                 self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
                 return
@@ -652,7 +652,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(" NOT imported!", 3500)
             return
         self.trim_db()
-        self.statusBar.showMessage(f" {fn.count} items imported/updated", 3500)
+        self.statusBar.showMessage(f" {fn.count} "+_('items imported/updated'), 3500)
         self.archive_modified()
         self.regroup()
         self.tree_selection()
@@ -672,7 +672,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def delete(self):
-        reply = QMessageBox.warning(self, 'Delete', f"Are you sure you want to\nDELETE these {self.selected_items} items?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Deleting. Please wait...'))
@@ -688,14 +688,14 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f" {fn.result} items deleted", 3500)
+        self.statusBar.showMessage(f" {fn.result} "+_('items deleted'), 3500)
         self.trim_db()
         self.regroup()
         self.tree_selection()
 
 
     def obscure(self):
-        reply = QMessageBox.warning(self, 'Obscure', f"Are you sure you want to\nOBSCURE all text fields?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Obscure'), _('Are you sure you want to\nOBSCURE all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Obscuring. Please wait...'))
@@ -710,7 +710,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def reindex(self):
-        reply = QMessageBox.information(self, 'Reindex', 'This may take a few seconds.\nProceed?', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         self.trim_db()
@@ -733,7 +733,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def closeEvent(self, event):
         if self.modified:
-            reply = QMessageBox.question(self, 'Exit', 'Save before quitting?', QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+            reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 if self.save_file() == False:
                      event.ignore()
@@ -908,14 +908,14 @@ class BuildTree():
             group, code, short, full = check_name(prefix)
             if code[1]:
                 return group, code, short, full, year
-        return ('* UNKNOWN *', None), (name, "?"), (name, "?"), (name, "?"), year
+        return ('* '+_('UNKNOWN')+' *', None), (name, "?"), (name, "?"), (name, "?"), year
 
     def process_language(self, lang):
         if lang in self.languages.keys():
             name = self.languages[lang][0]
             tip = self.languages[lang][1]
         else:
-            name = f"Language #{lang}"
+            name = _('Language')+f" #{lang}"
             tip = None
         return (name, tip)
 
@@ -1060,7 +1060,7 @@ class DebugInfo():
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
-        label1.setText("<p style='text-align: left;'>Oops! Something went wrong...</p></p><p style='text-align: left;'>Take note of what you were doing and <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>inform the developer</a>:</p>")
+        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong...')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://gitlab.com/erykj/jwlmanager/-/issues'>"+_('inform the developer')+"</a>:</p>")
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
@@ -1104,7 +1104,7 @@ class AddFavorites():
         dialog = QDialog()
         dialog.setWindowTitle(_('Add Favorite'))
         label = QLabel(dialog)
-        label.setText("Select the edition and language to add.\nMake sure the edition exists in the selected language!\n")
+        label.setText(_('Select the edition and language to add.\nMake sure the edition exists in the selected language!\n'))
         publication = QComboBox(dialog)
         pubs = []
         for pub in self.publications.keys():
@@ -1169,16 +1169,16 @@ class AddFavorites():
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
         if result:
-            self.message = (0, f'Favorite for "{pub}" in {lang} already exists.')
+            self.message = (0, _('Favorite for "{}" in {} already exists.').format(pub, lang))
             return
         tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
-        self.message = (1, f'Added favorite for "{pub}" in {lang}.')
+        self.message = (1, _('Added favorite for "{}" in {}.').format(pub, lang))
         return 1
 
 
 class DeleteItems():
-    def __init__(self, category='Notes', items=[]):
+    def __init__(self, category=_('Notes'), items=[]):
         self.category = category
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
@@ -1215,7 +1215,7 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category='Notes', items=[], fname='', current_archive=''):
+    def __init__(self, category=_('Notes'), items=[], fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
@@ -1250,17 +1250,17 @@ class ExportItems():
     def export_note_header(self):
         # Note: added invisible char on first line to force UTF-8 encoding
         self.export_file.write('\n'.join(['{TITLE=}\n ',
-            'MODIFY FIELD ABOVE BEFORE RE-IMPORTING',
-            'LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n',
-            'EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.',
-            'BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n',
-            'LINE AFTER HEADER IS NOTE TITLE',
-            'REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n',
-            'SEPARATE TAGS WITH "," (commas)',
-            'OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n',
-            'FILE SHOULD TERMINATE WITH "==={END}==="\n',
-            'ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)']))
-        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+            _('MODIFY FIELD ABOVE BEFORE RE-IMPORTING'),
+            _('LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
+            _('EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.'),
+            _('BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n'),
+            _('LINE AFTER HEADER IS NOTE TITLE'),
+            _('REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n'),
+            _('SEPARATE TAGS WITH "," (commas)'),
+            _('OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n'),
+            _('FILE SHOULD TERMINATE WITH "==={END}==="\n'),
+            _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')]))
+        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
     def export_bible(self):
@@ -1301,7 +1301,7 @@ class ExportItems():
 
     def export_highlight_header(self):
         self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
-        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
@@ -1315,7 +1315,7 @@ class ExportItems():
 
     def export_annotations_header(self):
         self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
-        self.export_file.write(f"\n\nExported from {self.current_archive}\nby {APP} ({VERSION}) on {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
+        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d at %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
@@ -1410,7 +1410,7 @@ class ImportAnnotations():
         if regex.search('{ANNOTATIONS}', line):
             return True
         else:
-            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {ANNOTATIONS} tag line', QMessageBox.Abort)
+            QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {ANNOTATIONS} tag line'), QMessageBox.Abort)
             return False
 
     def import_items(self):
@@ -1427,7 +1427,7 @@ class ImportAnnotations():
                     else:
                         self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{value}');")
                 except:
-                    QMessageBox.critical(None, 'Error!', f'Error on import!\n\nFaulting entry (#{count}):\n{line}', QMessageBox.Abort)
+                    QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                     self.cur.execute("ROLLBACK;")
                     return 0
         return count
@@ -1467,7 +1467,7 @@ class ImportHighlights():
         if regex.search('{HIGHLIGHTS}', line):
             return True
         else:
-            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing {HIGHLIGHTS} tag line', QMessageBox.Abort)
+            QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {HIGHLIGHTS} tag line'), QMessageBox.Abort)
             return False
 
     def import_items(self):
@@ -1483,7 +1483,7 @@ class ImportHighlights():
                         location_id = self.add_publication_location(attribs)
                     self.import_highlight(attribs, location_id)
                 except:
-                    QMessageBox.critical(None, 'Error!', f'Error on import!\n\nFaulting entry (#{count}):\n{line}', QMessageBox.Abort)
+                    QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                     self.cur.execute("ROLLBACK;")
                     return 0
         return count
@@ -1553,7 +1553,7 @@ class ImportNotes():
         if m:
             title_char = m.group(1) or ''
         else:
-            QMessageBox.critical(None, 'Error!', 'Wrong import file format:\nMissing or malformed {TITLE=} attribute line', QMessageBox.Abort)
+            QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {TITLE=} attribute line'), QMessageBox.Abort)
             return False
         if title_char:
             self.delete_notes(title_char)
@@ -1563,7 +1563,7 @@ class ImportNotes():
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
         if results < 1:
             return 0
-        answer = QMessageBox.warning(None, 'Warning', f"{results} notes starting with \"{title_char}\" WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)", QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        answer = QMessageBox.warning(None, _('Warning'), f"{results} "+_('notes starting with')+f" \"{title_char}\" "+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == "No":
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
@@ -1586,10 +1586,10 @@ class ImportNotes():
                 elif attribs['CAT'] == 'INDEPENDENT':
                     self.import_independent(attribs, title, note)
                 else:
-                    QMessageBox.critical(None, 'Error!', f'Wrong import file format:\nMalformed header:\n{attribs}', QMessageBox.Abort)
+                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMalformed header')+f':\n{attribs}', QMessageBox.Abort)
                     return 0
             except:
-                QMessageBox.critical(None, 'Error!', f'Error on import!\n\nFaulting entry (#{count}):\n{header}', QMessageBox.Abort)
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                 self.cur.execute("ROLLBACK;")
                 return 0
         return count
