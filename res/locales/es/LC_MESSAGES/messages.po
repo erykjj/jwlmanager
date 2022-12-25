@@ -1,0 +1,459 @@
+# Spanish translations for JWLManager.
+# Copyright (C) 2022 Eryk J.
+# This file is distributed under the MIT license.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: JWLManager v2.0.0\n"
+"Report-Msgid-Bugs-To: see 'About...' dialog\n"
+"POT-Creation-Date: 2022-12-24 19:24-0500\n"
+"PO-Revision-Date: 2022-12-24 19:26-0500\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.11.0\n"
+
+#: JWLManager.py:60
+msgid "No archive selected"
+msgstr "Ningún archivo seleccionado"
+
+#: JWLManager.py:92
+msgid "Help"
+msgstr "Ayuda"
+
+#: JWLManager.py:107 JWLManager.py:228
+msgid "Data Viewer"
+msgstr "Visualizar Data"
+
+#: JWLManager.py:210 JWLManager.py:277 JWLManager.py:460 JWLManager.py:798
+#: JWLManager.py:1185 JWLManager.py:1212 JWLManager.py:1222 JWLManager.py:1242
+#: JWLManager.py:1344
+msgid "Notes"
+msgstr "Notas"
+
+#: JWLManager.py:210 JWLManager.py:283 JWLManager.py:456 JWLManager.py:800
+#: JWLManager.py:1214 JWLManager.py:1244 JWLManager.py:1348
+msgid "Annotations"
+msgstr "Anotaciones"
+
+#: JWLManager.py:221 JWLManager.py:1570
+msgid "Warning"
+msgstr "Aviso"
+
+#: JWLManager.py:221
+msgid ""
+"You are trying to preview {} items.\n"
+"Please select a smaller subset."
+msgstr ""
+"Está intentando visualizar {} elementos.\n"
+"Favor seleccionar una cantidad menor.
+
+#: JWLManager.py:279 JWLManager.py:458 JWLManager.py:796 JWLManager.py:1210
+#: JWLManager.py:1240
+msgid "Highlights"
+msgstr "Resaltados"
+
+#: JWLManager.py:281 JWLManager.py:792 JWLManager.py:1206
+msgid "Bookmarks"
+msgstr "Marcadores"
+
+#: JWLManager.py:285 JWLManager.py:794 JWLManager.py:1208
+msgid "Favorites"
+msgstr "Favoritos"
+
+#: JWLManager.py:355 JWLManager.py:391 JWLManager.py:527
+msgid "Save"
+msgstr "Guardar"
+
+#: JWLManager.py:355 JWLManager.py:391
+msgid "Save current archive?"
+msgstr "Guardar archivo?"
+
+#: JWLManager.py:363
+msgid "NEW ARCHIVE"
+msgstr "ARCHIVO NUEVO"
+
+#: JWLManager.py:397
+msgid "Open archive"
+msgstr "Abrir archivo"
+
+#: JWLManager.py:397 JWLManager.py:520 JWLManager.py:522
+msgid "JW Library archives"
+msgstr "Archivos de JW Library"
+
+#: JWLManager.py:451 JWLManager.py:462 JWLManager.py:464
+msgid "Error"
+msgstr "Error"
+
+#: JWLManager.py:451
+msgid "No archive has been opened!"
+msgstr "¡Ningún archivo está abierto!"
+
+#: JWLManager.py:462 JWLManager.py:464
+msgid "File \"{}\" not recognized!"
+msgstr "¡Archivo \"{}\" no reconocido!"
+
+#: JWLManager.py:520 JWLManager.py:522
+msgid "Save archive"
+msgstr "Guardar archivo"
+
+#: JWLManager.py:524
+msgid "NOT saved!"
+msgstr "¡NO se guardó!"
+
+#: JWLManager.py:527
+msgid ""
+"It's recommended to save under another name.\n"
+"Are you absolutely sure you want to replace the original?"
+msgstr ""
+"Se recomienda guardar con otro nombre.\"
+"¿Está muy seguro que desea reemplazar al original?"
+
+#: JWLManager.py:576
+msgid "Saved"
+msgstr "Guardado"
+
+#: JWLManager.py:606
+msgid "Export file"
+msgstr "Archivo de exportación"
+
+#: JWLManager.py:606
+msgid "Text files"
+msgstr "Archivos de texto"
+
+#: JWLManager.py:609
+msgid "Export"
+msgstr "Exportar"
+
+#: JWLManager.py:609
+msgid "items will be EXPORTED. Proceed?"
+msgstr "elementos serán EXPORTADOS. ¿Proceder?"
+
+#: JWLManager.py:621
+msgid "NOT exported!"
+msgstr "¡NO se ha exportado!"
+
+#: JWLManager.py:629
+msgid "Items exported"
+msgstr "Elementos exportados"
+
+#: JWLManager.py:633
+msgid "Import"
+msgstr "Importar"
+
+#: JWLManager.py:633
+msgid ""
+"Make sure your import file is UTF-8 encoded and properly formatted.\n"
+"\n"
+"Importing will modify the archive. Proceed?"
+msgstr ""
+"Asegúrese que su archivo esté en UTF-8 y formateado correctamente.\n"
+"\n"
+"La importación modificará el presente archivo. ¿Proceder?"
+
+#: JWLManager.py:637
+msgid "Import file"
+msgstr "Archivo para importar"
+
+#: JWLManager.py:637
+msgid "Import files"
+msgstr "Archivos de importación"
+
+#: JWLManager.py:639
+msgid "NOT imported!"
+msgstr "¡NO se ha importado!"
+
+#: JWLManager.py:644
+msgid "Importing. Please wait..."
+msgstr "Importando. Espere..."
+
+#: JWLManager.py:659
+msgid "items imported/updated"
+msgstr "elementos importados/actualizados"
+
+#: JWLManager.py:679
+msgid "Delete"
+msgstr "Eliminar"
+
+#: JWLManager.py:679
+msgid ""
+"Are you sure you want to\n"
+"DELETE these {} items?"
+msgstr ""
+"¿Está seguro que desea\n"
+"ELIMINAR estos {} elementos?"
+
+#: JWLManager.py:682
+msgid "Deleting. Please wait..."
+msgstr "Eliminando. Espere..."
+
+#: JWLManager.py:695
+msgid "items deleted"
+msgstr "elementos elimindados"
+
+#: JWLManager.py:702
+msgid "Obscure"
+msgstr "Ocultar"
+
+#: JWLManager.py:702
+msgid ""
+"Are you sure you want to\n"
+"OBSCURE all text fields?"
+msgstr ""
+"¿Está seguro que desea\n"
+"OCULTAR todos los campos de texto?"
+
+#: JWLManager.py:705
+msgid "Obscuring. Please wait..."
+msgstr "Ocultando. Espere..."
+
+#: JWLManager.py:711
+msgid "Database obscured"
+msgstr "Datos ocultados"
+
+#: JWLManager.py:717
+msgid "Reindex"
+msgstr "Reindexar"
+
+#: JWLManager.py:717
+msgid ""
+"This may take a few seconds.\n"
+"Proceed?"
+msgstr ""
+"Esto podría demorar.\n"
+"¿Proceder?"
+
+#: JWLManager.py:721
+msgid "Please wait..."
+msgstr "Tenga paciencia..."
+
+#: JWLManager.py:727
+msgid "Reindexing. Please wait..."
+msgstr "Reindexando. Espere..."
+
+#: JWLManager.py:733
+msgid "Reindexed successfully"
+msgstr "Reindexado exitosamente"
+
+#: JWLManager.py:740
+msgid "Exit"
+msgstr "Salir"
+
+#: JWLManager.py:740
+msgid "Save before quitting?"
+msgstr "¿Guardar antes de salir?"
+
+#: JWLManager.py:858 JWLManager.py:859 JWLManager.py:860
+msgid "OTHER"
+msgstr "OTROS"
+
+#: JWLManager.py:862
+msgid "NO LANGUAGE"
+msgstr "SIN IDIOMA"
+
+#: JWLManager.py:867 JWLManager.py:879
+msgid "UN-TAGGED"
+msgstr "SIN ETIQUETA"
+
+#: JWLManager.py:915
+msgid "UNKNOWN"
+msgstr "DESCONOCIDO"
+
+#: JWLManager.py:922 JWLManager.py:977 JWLManager.py:1136
+msgid "Language"
+msgstr "Idioma"
+
+#: JWLManager.py:957
+msgid "Ch."
+msgstr "Cap."
+
+#: JWLManager.py:972
+msgid "Publication"
+msgstr "Publicación"
+
+#: JWLManager.py:979
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: JWLManager.py:981
+msgid "Color"
+msgstr "Color"
+
+#: JWLManager.py:983
+msgid "Year"
+msgstr "Año"
+
+#: JWLManager.py:994
+msgid "Please be patient..."
+msgstr "Tenga paciencia..."
+
+#: JWLManager.py:1065 JWLManager.py:1417 JWLManager.py:1434 JWLManager.py:1474
+#: JWLManager.py:1490 JWLManager.py:1560 JWLManager.py:1593 JWLManager.py:1596
+msgid "Error!"
+msgstr "¡Error!"
+
+#: JWLManager.py:1067
+msgid "Oops! Something went wrong..."
+msgstr "¡Oh-oh! Algo salió mal..."
+
+#: JWLManager.py:1067
+msgid "Take note of what you were doing and"
+msgstr "Tome note de lo que está haciendo y"
+
+#: JWLManager.py:1067
+msgid "inform the developer"
+msgstr "avise al diseñador"
+
+#: JWLManager.py:1109
+msgid "Add Favorite"
+msgstr "Añadir Favorito"
+
+#: JWLManager.py:1111
+msgid ""
+"Select the edition and language to add.\n"
+"Make sure the edition exists in the selected language!\n"
+msgstr ""
+"Seleccione la edicón y el idioma para añadir.\n"
+"¡Asegúrese de que tal edición existe en ese idioma!\n"
+
+#: JWLManager.py:1135
+msgid "Edition"
+msgstr "Edición"
+
+#: JWLManager.py:1163
+msgid "Nothing added!"
+msgstr "¡Nada se añadió!"
+
+#: JWLManager.py:1176
+msgid "Favorite for \"{}\" in {} already exists."
+msgstr "Favorito para \"{}\" en {} ya existe."
+
+#: JWLManager.py:1180
+msgid "Added favorite for \"{}\" in {}."
+msgstr "Se añadió favorito para \"{}\" en {}."
+
+#: JWLManager.py:1257
+msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
+msgstr "MODIFIQE EL CAMPO ARRIBA ANTES DE IMPORTAR"
+
+#: JWLManager.py:1258
+msgid ""
+"LEAVE {TITLE=} (empty) IF YOU DON'T WANT TO DELETE ANY NOTES WHILE "
+"IMPORTING\n"
+msgstr ""
+"DEJE {TITLE=} (vacío) SI NO DESEA ELIMINAR NINGUNA NOTA AL "
+"IMPORTAR\n"
+
+#: JWLManager.py:1259
+msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
+msgstr "CADA NOTA COMIENZA CON UN ENCABEZAMIENTO DE CATEGORÍA, ETC."
+
+#: JWLManager.py:1260
+msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
+msgstr "TENGA CUIDADO AL MODIFICAR LOS ATRIBUTOS\n"
+
+#: JWLManager.py:1261
+msgid "LINE AFTER HEADER IS NOTE TITLE"
+msgstr "LA LÍNEA DESPUÉS DEL ENCABEZAMIENTO ES TÍTULO DE LA NOTA"
+
+#: JWLManager.py:1262
+msgid ""
+"REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
+"HEADER\n"
+msgstr ""
+"EL RESTO ES EL CUERPO; PUEDE SER DE VARIAS LÍNEAS Y ES TERMINADO POR "
+"OTRO ENCABEZAMIENTO\n"
+
+#: JWLManager.py:1263
+msgid "SEPARATE TAGS WITH \",\" (commas)"
+msgstr "SEPARE ETIQUETAS CON \",\" (coma)"
+
+#: JWLManager.py:1264
+msgid "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
+msgstr "O DEJE VACÍO (SIN ETIQUETA): {TAGS=biblia,notas} O {TAGS=}\n"
+
+#: JWLManager.py:1265
+msgid "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
+msgstr "EL ARCHIVO DEBE TERMINAR CON \"==={END}===\"\n"
+
+#: JWLManager.py:1266
+msgid "ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)"
+msgstr "ASEGÚRESE QUE EL ARCHIVO ESTÉ EN FORMATO UTF-8 (UNICODE)"
+
+#: JWLManager.py:1267 JWLManager.py:1308 JWLManager.py:1322
+msgid "Exported from"
+msgstr "Exportado de"
+
+#: JWLManager.py:1267 JWLManager.py:1308 JWLManager.py:1322
+msgid "by"
+msgstr "por"
+
+#: JWLManager.py:1267 JWLManager.py:1308 JWLManager.py:1322
+msgid "on"
+msgstr "en"
+
+#: JWLManager.py:1353 JWLManager.py:1362 JWLManager.py:1371
+msgid "NO TITLE"
+msgstr "SIN TÍTULO"
+
+#: JWLManager.py:1357 JWLManager.py:1366 JWLManager.py:1375 JWLManager.py:1384
+msgid "NO TEXT"
+msgstr "SIN TEXTO"
+
+#: JWLManager.py:1417
+msgid ""
+"Wrong import file format:\n"
+"Missing {ANNOTATIONS} tag line"
+msgstr ""
+"Formato de importación incorrecto:\n"
+"Falta encabezado {ANNOTATIONS}"
+
+#: JWLManager.py:1434 JWLManager.py:1490 JWLManager.py:1596
+msgid ""
+"Error on import!\n"
+"\n"
+"Faulting entry"
+msgstr ""
+"¡Error al importar!\n"
+"\n"
+"Producido por"
+
+#: JWLManager.py:1474
+msgid ""
+"Wrong import file format:\n"
+"Missing {HIGHLIGHTS} tag line"
+msgstr ""
+"Formato de importación incorrecto:\n"
+"Falta encabezado {HIGHLIGHTS}"
+
+#: JWLManager.py:1560
+msgid ""
+"Wrong import file format:\n"
+"Missing or malformed {TITLE=} attribute line"
+msgstr ""
+"Formato de importación incorrecto:\n"
+"Encabezado {TITLE=} faltante o malformado"
+
+#: JWLManager.py:1570
+msgid "notes starting with"
+msgstr "notas que comienzan con"
+
+#: JWLManager.py:1570
+msgid ""
+"WILL BE DELETED before importing.\n"
+"\n"
+"Proceed with deletion? (NO to skip)"
+msgstr ""
+"SERÁN ELIMINADAS antes de importar.\n"
+"\n"
+"¿Proceder con la eliminación? (NO para omitir)"
+
+#: JWLManager.py:1593
+msgid ""
+"Wrong import file format:\n"
+"Malformed header"
+msgstr ""
+"Formato de importación incorrecto:\n"
+"Encabezado malformado"
