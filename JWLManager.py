@@ -45,12 +45,39 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from res.ui_main_window import Ui_MainWindow
 
 
+#### Initial language setting based on passed arguments
+
+def get_language():
+    parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
+    parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
+    language_group = parser.add_argument_group('interface language', '-en or leave out for English')
+    group = language_group.add_mutually_exclusive_group(required=False)
+    group.add_argument('-de', action='store_true', help='German (Deutsch)')
+    group.add_argument('-en', action='store_true', help='English (default)')
+    group.add_argument('-es', action='store_true', help='Spanish (español)')
+    group.add_argument('-fr', action='store_true', help='French (français)')
+    group.add_argument('-it', action='store_true', help='Italian (italiano)')
+    group.add_argument('-pt', action='store_true', help='Portuguese (português)')
+    args = vars(parser.parse_args())
+    lang = 'en'
+    for l in args.keys():
+        if args[l]:
+            lang = l
+    return lang
+
+
 PROJECT_PATH = Path(__file__).resolve().parent
+tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
+db_name = "userData.db"
+
+lang = get_language()
 localedir = PROJECT_PATH / 'res/locales/'
-translate = gettext.translation('messages', localedir, fallback=True, languages=['en', 'es', 'de', 'fr', 'it', 'pt'])
+translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
 _ = translate.gettext
 translate.install()
 
+
+#### Main app classes
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -954,7 +981,7 @@ class BuildTree():
     def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
         if BookNumber:
             detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
-            detail2 = (_('Ch.'+' ') + str(ChapterNumber).rjust(3, ' '), None)
+            detail2 = (_('Ch.')+' ' + str(ChapterNumber).rjust(3, ' '), None)
         else:
             detail1 = (IssueTitle or '* BLANK *', None)
             detail2 = (None, None)
@@ -1866,12 +1893,10 @@ def get_language():
     return lang
 
 
-if __name__ == "__main__":
-    tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
-    db_name = "userData.db"
+#### Main app initialization
 
+if __name__ == "__main__":
     app = QApplication(sys.argv)
-    lang = get_language()
     translator = QTranslator()
     translator.load(f'res/locales/{lang}.qm')
     app.installTranslator(translator)
