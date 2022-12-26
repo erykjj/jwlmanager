@@ -6,7 +6,7 @@
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation></translation>
+        <translation>JWLManager</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -144,7 +144,7 @@
     <message>
         <location filename="main_window.ui" line="567"/>
         <source>Ctrl+O</source>
-        <translation></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="580"/>
@@ -159,7 +159,7 @@
     <message>
         <location filename="main_window.ui" line="586"/>
         <source>Ctrl+S</source>
-        <translation></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="598"/>
@@ -174,7 +174,7 @@
     <message>
         <location filename="main_window.ui" line="610"/>
         <source>Ctrl+Q</source>
-        <translation></translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="619"/>
@@ -194,7 +194,7 @@
     <message>
         <location filename="main_window.ui" line="649"/>
         <source>Ctrl+Alt+S</source>
-        <translation></translation>
+        <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="661"/>
@@ -209,7 +209,7 @@
     <message>
         <location filename="main_window.ui" line="667"/>
         <source>Ctrl+E</source>
-        <translation></translation>
+        <translation>Ctrl+E</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="679"/>
@@ -224,7 +224,7 @@
     <message>
         <location filename="main_window.ui" line="685"/>
         <source>Ctrl+C</source>
-        <translation></translation>
+        <translation>Ctrl+C</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="697"/>
@@ -239,7 +239,7 @@
     <message>
         <location filename="main_window.ui" line="703"/>
         <source>Ctrl+A</source>
-        <translation></translation>
+        <translation>Ctrl+A</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="715"/>
@@ -254,7 +254,7 @@
     <message>
         <location filename="main_window.ui" line="721"/>
         <source>Ctrl+Z</source>
-        <translation></translation>
+        <translation>Ctrl+Z</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="732"/>
@@ -299,7 +299,7 @@
     <message>
         <location filename="main_window.ui" line="780"/>
         <source>Ctrl+G</source>
-        <translation></translation>
+        <translation>Ctrl+G</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="789"/>
@@ -314,7 +314,7 @@
     <message>
         <location filename="main_window.ui" line="795"/>
         <source>Ctrl+N</source>
-        <translation></translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="806"/>
@@ -324,7 +324,7 @@
     <message>
         <location filename="main_window.ui" line="809"/>
         <source>Ctrl+D</source>
-        <translation></translation>
+        <translation>Ctrl+D</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="821"/>
@@ -339,37 +339,37 @@
     <message>
         <location filename="main_window.ui" line="836"/>
         <source>Ctrl+I</source>
-        <translation></translation>
+        <translation>Ctrl+I</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="847"/>
         <source>English</source>
-        <translation></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="855"/>
         <source>español</source>
-        <translation></translation>
+        <translation>español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="863"/>
         <source>Deutsch</source>
-        <translation></translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="871"/>
         <source>français</source>
-        <translation></translation>
+        <translation>français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="879"/>
         <source>português</source>
-        <translation></translation>
+        <translation>português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="887"/>
         <source>italiano</source>
-        <translation></translation>
+        <translation>italiano</translation>
     </message>
 </context>
 </TS>
