@@ -1,4 +1,4 @@
-# JWLManager
+# JWLManager - v2[^#]
 **Looking for help with translation on [Weblate](https://hosted.weblate.org/projects/jwlmanager/)**[^*]
 
 
@@ -15,7 +15,7 @@ ____
 
 ### [Windows and Mac OS](https://github.com/erykjj/jwlmanager/releases)
 
-Simply launch the **Windows executable**[^2] or **macOS app**[^3] as usual.
+Simply launch the **Windows executable**[^2] or **macOS app** as usual.
 
 ### Linux
 
@@ -32,7 +32,7 @@ $ chmod +x JWLManager.py
 $ ./JWLManager.py
 ```
 
-You *may* have to install some of the required libraries[^4]. Do [let me know](https://github.com/erykjj/jwlmanager/issues) if you have any difficulties ;-)
+You *may* have to install some of the required libraries[^3]. Do [let me know](https://github.com/erykjj/jwlmanager/issues) if you have any difficulties ;-)
 
 ____
 ## Operation
@@ -151,10 +151,8 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 [![](icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 ____
+[^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 10.14 and up). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
 [^*]: To start with: French, German, Italian and Portuguese. Chinese and Russian (and any other volunteers) also appreciated. Please contact me at the email in the *About...* box in the app.
-
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-
-[^2]: Packaged with Python 3.8.10/PySide2 (Qt5) and compatible with MS Windows 7 and up. For **Windows Defender "unknown publisher" alerts** see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805).
-[^3]: Packaged with Python 3.7.9/PySide2 (Qt5) and compatible with macOS 10.13 (High Sierra) and up.
-[^4]: `pip3 install filehash PySide6 regex`.
+[^2]: For **Windows Defender "unknown publisher" alerts** see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805).
+[^3]: `pip3 install filehash PySide6 regex`.
