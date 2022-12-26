@@ -7,12 +7,16 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.0\n"
 "Report-Msgid-Bugs-To: see 'About...' dialog\n"
 "POT-Creation-Date: 2022-12-24 19:24-0500\n"
-"PO-Revision-Date: 2022-12-24 19:26-0500\n"
+"PO-Revision-Date: 2022-12-26 13:29+0000\n"
+"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/jwlmanager/"
+"app-strings/es/>\n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: JWLManager.py:60
@@ -108,7 +112,7 @@ msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
-"Se recomienda guardar con otro nombre.\"
+"Se recomienda guardar con otro nombre.\n"
 "¿Está muy seguro que desea reemplazar al original?"
 
 #: JWLManager.py:576
@@ -167,7 +171,7 @@ msgstr "¡NO se ha importado!"
 
 #: JWLManager.py:644
 msgid "Importing. Please wait..."
-msgstr "Importando. Espere..."
+msgstr "Importando. Espere…"
 
 #: JWLManager.py:659
 msgid "items imported/updated"
@@ -187,7 +191,7 @@ msgstr ""
 
 #: JWLManager.py:682
 msgid "Deleting. Please wait..."
-msgstr "Eliminando. Espere..."
+msgstr "Eliminando. Espere…"
 
 #: JWLManager.py:695
 msgid "items deleted"
@@ -207,7 +211,7 @@ msgstr ""
 
 #: JWLManager.py:705
 msgid "Obscuring. Please wait..."
-msgstr "Ocultando. Espere..."
+msgstr "Ocultando. Espere…"
 
 #: JWLManager.py:711
 msgid "Database obscured"
@@ -227,11 +231,11 @@ msgstr ""
 
 #: JWLManager.py:721
 msgid "Please wait..."
-msgstr "Tenga paciencia..."
+msgstr "Tenga paciencia…"
 
 #: JWLManager.py:727
 msgid "Reindexing. Please wait..."
-msgstr "Reindexando. Espere..."
+msgstr "Reindexando. Espere…"
 
 #: JWLManager.py:733
 msgid "Reindexed successfully"
@@ -287,7 +291,7 @@ msgstr "Año"
 
 #: JWLManager.py:994
 msgid "Please be patient..."
-msgstr "Tenga paciencia..."
+msgstr "Tenga paciencia…"
 
 #: JWLManager.py:1065 JWLManager.py:1417 JWLManager.py:1434 JWLManager.py:1474
 #: JWLManager.py:1490 JWLManager.py:1560 JWLManager.py:1593 JWLManager.py:1596
@@ -296,7 +300,7 @@ msgstr "¡Error!"
 
 #: JWLManager.py:1067
 msgid "Oops! Something went wrong..."
-msgstr "¡Oh-oh! Algo salió mal..."
+msgstr "¡Oh-oh! Algo salió mal…"
 
 #: JWLManager.py:1067
 msgid "Take note of what you were doing and"

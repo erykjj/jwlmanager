@@ -7,14 +7,16 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.0\n"
 "Report-Msgid-Bugs-To: see 'About...' dialog\n"
 "POT-Creation-Date: 2022-12-24 19:24-0500\n"
-"PO-Revision-Date: 2022-12-24 20:13-0500\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2022-12-25 14:43+0000\n"
+"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
+"Language-Team: English <https://hosted.weblate.org/projects/jwlmanager/"
+"app-strings/en/>\n"
 "Language: en\n"
-"Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: JWLManager.py:60
@@ -169,7 +171,7 @@ msgstr "NOT imported!"
 
 #: JWLManager.py:644
 msgid "Importing. Please wait..."
-msgstr "Importing. Please wait..."
+msgstr "Importing. Please wait…"
 
 #: JWLManager.py:659
 msgid "items imported/updated"
@@ -189,7 +191,7 @@ msgstr ""
 
 #: JWLManager.py:682
 msgid "Deleting. Please wait..."
-msgstr "Deleting. Please wait..."
+msgstr "Deleting. Please wait…"
 
 #: JWLManager.py:695
 msgid "items deleted"
@@ -209,7 +211,7 @@ msgstr ""
 
 #: JWLManager.py:705
 msgid "Obscuring. Please wait..."
-msgstr "Obscuring. Please wait..."
+msgstr "Obscuring. Please wait…"
 
 #: JWLManager.py:711
 msgid "Database obscured"
@@ -229,11 +231,11 @@ msgstr ""
 
 #: JWLManager.py:721
 msgid "Please wait..."
-msgstr "Please wait..."
+msgstr "Please wait…"
 
 #: JWLManager.py:727
 msgid "Reindexing. Please wait..."
-msgstr "Reindexing. Please wait..."
+msgstr "Reindexing. Please wait…"
 
 #: JWLManager.py:733
 msgid "Reindexed successfully"
@@ -289,7 +291,7 @@ msgstr "Year"
 
 #: JWLManager.py:994
 msgid "Please be patient..."
-msgstr "Please be patient..."
+msgstr "Please be patient…"
 
 #: JWLManager.py:1065 JWLManager.py:1417 JWLManager.py:1434 JWLManager.py:1474
 #: JWLManager.py:1490 JWLManager.py:1560 JWLManager.py:1593 JWLManager.py:1596
@@ -298,7 +300,7 @@ msgstr "Error!"
 
 #: JWLManager.py:1067
 msgid "Oops! Something went wrong..."
-msgstr "Oops! Something went wrong..."
+msgstr "Oops! Something went wrong…"
 
 #: JWLManager.py:1067
 msgid "Take note of what you were doing and"
@@ -459,4 +461,3 @@ msgid ""
 msgstr ""
 "Wrong import file format:\n"
 "Malformed header"
-
