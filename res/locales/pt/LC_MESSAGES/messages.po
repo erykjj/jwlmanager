@@ -345,8 +345,7 @@ msgstr ""
 
 #: JWLManager.py:1262
 msgid ""
-"REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
-"HEADER\n"
+"REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n"
 msgstr ""
 
 #: JWLManager.py:1263
@@ -426,7 +425,3 @@ msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
-
-#~ msgid "Ch. "
-#~ msgstr ""
-
