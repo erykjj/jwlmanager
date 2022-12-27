@@ -423,4 +423,3 @@ msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
-

@@ -255,7 +255,7 @@ msgid "Language"
 msgstr ""
 
 #: JWLManager.py:957
-msgid "Ch. "
+msgid "Ch."
 msgstr ""
 
 #: JWLManager.py:972
@@ -426,4 +426,7 @@ msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
+
+#~ msgid "Ch. "
+#~ msgstr ""
 
