@@ -139,7 +139,7 @@
     <message>
         <location filename="main_window.ui" line="564"/>
         <source>&amp;Open...</source>
-        <translation>&amp;Abrir...</translation>
+        <translation>&amp;Abrir…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="567"/>
@@ -179,17 +179,17 @@
     <message>
         <location filename="main_window.ui" line="619"/>
         <source>&amp;About...</source>
-        <translation>&amp;Acerca de...</translation>
+        <translation>&amp;Acerca de…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="643"/>
         <source>Save &amp;As...</source>
-        <translation>Guardar &amp;como...</translation>
+        <translation>Guardar &amp;como…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="646"/>
         <source>Save archive as...</source>
-        <translation>Guardar archivo como...</translation>
+        <translation>Guardar archivo como…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="649"/>
@@ -334,7 +334,7 @@
     <message>
         <location filename="main_window.ui" line="833"/>
         <source>&amp;Import...</source>
-        <translation>&amp;Importar...</translation>
+        <translation>&amp;Importar…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="836"/>
