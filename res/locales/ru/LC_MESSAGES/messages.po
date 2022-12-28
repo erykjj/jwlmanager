@@ -214,10 +214,6 @@ msgid ""
 "Proceed?"
 msgstr ""
 
-#: ../../../JWLManager.py:755
-msgid "Reindexing. Please wait…"
-msgstr ""
-
 #: ../../../JWLManager.py:761
 msgid "Reindexed successfully"
 msgstr ""
