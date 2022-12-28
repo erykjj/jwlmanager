@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowfiCrky.ui'
+## Form generated from reading UI file 'main_windowDTrcLl.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.1
 ##
@@ -390,6 +390,9 @@ class Ui_MainWindow(object):
         self.actionSave.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))
 #endif // QT_CONFIG(shortcut)
         self.actionReindex.setText(QCoreApplication.translate("MainWindow", u"&Reindex", None))
+#if QT_CONFIG(tooltip)
+        self.actionReindex.setToolTip(QCoreApplication.translate("MainWindow", u"Optimize database", None))
+#endif // QT_CONFIG(tooltip)
         self.actionQuit.setText(QCoreApplication.translate("MainWindow", u"&Quit", None))
 #if QT_CONFIG(tooltip)
         self.actionQuit.setToolTip(QCoreApplication.translate("MainWindow", u"Exit", None))
@@ -463,7 +466,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.actionDetailed.setText(QCoreApplication.translate("MainWindow", u"&Detailed", None))
 #if QT_CONFIG(tooltip)
-        self.actionDetailed.setToolTip(QCoreApplication.translate("MainWindow", u"Detailed listing", None))
+        self.actionDetailed.setToolTip(QCoreApplication.translate("MainWindow", u"Detailed view", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.actionDetailed.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+D", None))
@@ -474,7 +477,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.actionImport.setText(QCoreApplication.translate("MainWindow", u"&Import\u2026", None))
 #if QT_CONFIG(tooltip)
-        self.actionImport.setToolTip(QCoreApplication.translate("MainWindow", u"Import from backup", None))
+        self.actionImport.setToolTip(QCoreApplication.translate("MainWindow", u"Import from export file", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.actionImport.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+I", None))
@@ -497,7 +500,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(tooltip)
         self.actionPT.setText(QCoreApplication.translate("MainWindow", u"Portugu\u00eas", None))
 #if QT_CONFIG(tooltip)
-        self.actionPT.setToolTip(QCoreApplication.translate("MainWindow", u"po", None))
+        self.actionPT.setToolTip(QCoreApplication.translate("MainWindow", u"pt", None))
 #endif // QT_CONFIG(tooltip)
         self.actionIT.setText(QCoreApplication.translate("MainWindow", u"Italiano", None))
 #if QT_CONFIG(tooltip)
@@ -543,7 +546,7 @@ class Ui_MainWindow(object):
         self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"&Help", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"&View", None))
 #if QT_CONFIG(tooltip)
-        self.menuTitle_View.setToolTip("")
+        self.menuTitle_View.setToolTip(QCoreApplication.translate("MainWindow", u"Title display format", None))
 #endif // QT_CONFIG(tooltip)
         self.menuTitle_View.setTitle(QCoreApplication.translate("MainWindow", u"Title View", None))
 #if QT_CONFIG(tooltip)
