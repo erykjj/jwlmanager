@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-12-28 11:26-0500\n"
-"PO-Revision-Date: 2022-12-28 11:30-0500\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: es\n"
+"PO-Revision-Date: 2022-12-28 16:49+0000\n"
+"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:105
@@ -225,11 +226,6 @@ msgid ""
 msgstr ""
 "Esto podría demorar.\n"
 "¿Proceder?"
-
-#: ../../../JWLManager.py:755
-#, fuzzy
-msgid "Reindexing. Please wait…"
-msgstr "Reindexando. Espere…"
 
 #: ../../../JWLManager.py:761
 msgid "Reindexed successfully"
@@ -455,3 +451,31 @@ msgid ""
 msgstr ""
 "Formato de importación incorrecto:\n"
 "Encabezado malformado"
+
+#: JWLManager.py:682
+msgid "Deleting. Please wait..."
+msgstr "Eliminando. Espere…"
+
+#: JWLManager.py:705
+msgid "Obscuring. Please wait..."
+msgstr "Ocultando. Espere…"
+
+#: JWLManager.py:721
+msgid "Please wait..."
+msgstr "Tenga paciencia…"
+
+#: JWLManager.py:727
+msgid "Reindexing. Please wait..."
+msgstr "Reindexando. Espere…"
+
+#: JWLManager.py:994
+msgid "Please be patient..."
+msgstr "Tenga paciencia…"
+
+#: JWLManager.py:1067
+msgid "Oops! Something went wrong..."
+msgstr "!Oh-oh! Algo salió mal…"
+
+#: JWLManager.py:644
+msgid "Importing. Please wait..."
+msgstr "Importando. Espere…"
