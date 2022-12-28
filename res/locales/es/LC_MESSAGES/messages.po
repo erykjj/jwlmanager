@@ -178,11 +178,6 @@ msgstr "Archivos de importación"
 msgid "NOT imported!"
 msgstr "¡NO se ha importado!"
 
-#: ../../../JWLManager.py:672
-#, fuzzy
-msgid "Importing. Please wait…"
-msgstr "Importando. Espere…"
-
 #: ../../../JWLManager.py:687
 msgid "items imported/updated"
 msgstr "elementos importados/actualizados"
@@ -198,11 +193,6 @@ msgid ""
 msgstr ""
 "¿Está seguro que desea\n"
 "ELIMINAR estos {} elementos?"
-
-#: ../../../JWLManager.py:710
-#, fuzzy
-msgid "Deleting. Please wait…"
-msgstr "Eliminando. Espere…"
 
 #: ../../../JWLManager.py:723
 msgid "items deleted"
@@ -220,11 +210,6 @@ msgstr ""
 "¿Está seguro que desea\n"
 "OCULTAR todos los campos de texto?"
 
-#: ../../../JWLManager.py:733
-#, fuzzy
-msgid "Obscuring. Please wait…"
-msgstr "Ocultando. Espere…"
-
 #: ../../../JWLManager.py:739
 msgid "Database obscured"
 msgstr "Datos ocultados"
@@ -240,11 +225,6 @@ msgid ""
 msgstr ""
 "Esto podría demorar.\n"
 "¿Proceder?"
-
-#: ../../../JWLManager.py:749
-#, fuzzy
-msgid "Please wait…"
-msgstr "Tenga paciencia…"
 
 #: ../../../JWLManager.py:755
 #, fuzzy
@@ -305,22 +285,12 @@ msgstr "Color"
 msgid "Year"
 msgstr "Año"
 
-#: ../../../JWLManager.py:1022
-#, fuzzy
-msgid "Please be patient…"
-msgstr "Tenga paciencia…"
-
 #: ../../../JWLManager.py:1093 ../../../JWLManager.py:1445
 #: ../../../JWLManager.py:1462 ../../../JWLManager.py:1502
 #: ../../../JWLManager.py:1518 ../../../JWLManager.py:1588
 #: ../../../JWLManager.py:1621 ../../../JWLManager.py:1624
 msgid "Error!"
 msgstr "¡Error!"
-
-#: ../../../JWLManager.py:1095
-#, fuzzy
-msgid "Oops! Something went wrong…"
-msgstr "¡Oh-oh! Algo salió mal…"
 
 #: ../../../JWLManager.py:1095
 msgid "Take note of what you were doing and"
@@ -485,4 +455,3 @@ msgid ""
 msgstr ""
 "Formato de importación incorrecto:\n"
 "Encabezado malformado"
-
