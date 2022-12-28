@@ -136,7 +136,7 @@
     </message>
     <message>
         <location filename="main_window.ui" line="564"/>
-        <source>&amp;Open...</source>
+        <source>&amp;Open…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -176,17 +176,17 @@
     </message>
     <message>
         <location filename="main_window.ui" line="619"/>
-        <source>&amp;About...</source>
+        <source>&amp;About…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="643"/>
-        <source>Save &amp;As...</source>
+        <source>Save &amp;As…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="646"/>
-        <source>Save archive as...</source>
+        <source>Save archive as…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -331,7 +331,7 @@
     </message>
     <message>
         <location filename="main_window.ui" line="833"/>
-        <source>&amp;Import...</source>
+        <source>&amp;Import…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
