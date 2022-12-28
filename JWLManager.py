@@ -118,9 +118,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.connect_signals()
 
     def set_vars(self):
-        self.publications = publications
-        self.languages = languages
-        self.books = books
         self.total.setText('')
         self.modified = False
         self.title_format = 'short'
@@ -251,7 +248,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if len(items) > 500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), items, self.books)
+        fn = PreviewItems(self.combo_category.currentText(), items, books)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -336,7 +333,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, changed=False):
         if not changed:
             self.current_data = []
-        tree = BuildTree(self, self.treeWidget, self.books, self.publications,self.languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.detailed, self.grouped, self.current_data)
+        tree = BuildTree(self, self.treeWidget, books, publications,languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.detailed, self.grouped, self.current_data)
         if tree.aborted:
             self.clean_up()
             sys.exit()
@@ -694,7 +691,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def add_favorite(self):
-        fn = AddFavorites(self.publications, self.languages)
+        fn = AddFavorites(publications, languages)
         if fn.aborted:
             self.clean_up()
             sys.exit()
