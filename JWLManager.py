@@ -27,7 +27,7 @@ SOFTWARE.
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.0.0'
+VERSION = 'v2.0.1'
 
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
@@ -65,12 +65,30 @@ def get_language():
             lang = l
     return lang
 
+def read_res(lang):
+    global publications, languages, books
+    publications = {}
+    languages = {}
+    books = {}
+    con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
+    cur = con.cursor()
+    for row in cur.execute("SELECT * FROM Languages;"):
+        languages[row[0]] = row[1:]
+        if row[3] == lang:
+            ui_lang = row[0]
+    for row in cur.execute(f"SELECT * FROM Publications WHERE Language = {ui_lang};"):
+        publications[row[1]] = row[2:]
+    for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {ui_lang};"):
+        books[row[0]] = row[1]
+    cur.close()
+    con.close()
 
 PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
 db_name = "userData.db"
 
 lang = get_language()
+read_res(lang)
 localedir = PROJECT_PATH / 'res/locales/'
 translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
 _ = translate.gettext
@@ -95,12 +113,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
         self.set_vars()
-        self.read_res()
         self.center()
         self.init_windows()
         self.connect_signals()
 
     def set_vars(self):
+        self.publications = publications
+        self.languages = languages
+        self.books = books
         self.total.setText('')
         self.modified = False
         self.title_format = 'short'
@@ -142,22 +162,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         init_help()
         init_viewer()
-
-    def read_res(self):
-        self.publications = {}
-        self.languages = {}
-        self.books = {}
-        con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
-        cur = con.cursor()
-        for row in cur.execute("SELECT * FROM Publications;"):
-            self.publications[row[0]] = row[1:]
-        for row in cur.execute("SELECT * FROM Languages;"):
-            self.languages[row[0]] = row[1:]
-        for row in cur.execute("SELECT Number, Name FROM BibleBooks WHERE Language = 0;"):
-            # Note: Bible books in English only
-            self.books[row[0]] = row[1]
-        cur.close()
-        con.close()
 
     def resource_path(self, relative_path):
         try:
@@ -1898,7 +1902,7 @@ def get_language():
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     translator = QTranslator()
-    translator.load(f'res/locales/{lang}.qm')
+    translator.load(f'res/locales/UI/{lang}.qm')
     app.installTranslator(translator)
     # app.removeTranslator(translator)
     # QQmlEngine.retranslate()
