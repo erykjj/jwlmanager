@@ -11,27 +11,27 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Publication</source>
-        <translation type="unfinished"></translation>
+        <translation>Publikation</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprache</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Yahr</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Tag</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Farbe</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="176"/>
@@ -51,27 +51,27 @@
     <message>
         <location filename="main_window.ui" line="250"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Notizen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Markierungen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Favoriten</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Lesezeichen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="270"/>
         <source>Annotations</source>
-        <translation type="unfinished"></translation>
+        <translation>Annotationen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="284"/>
