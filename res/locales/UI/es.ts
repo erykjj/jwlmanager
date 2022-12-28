@@ -124,7 +124,7 @@
     <message>
         <location filename="main_window.ui" line="509"/>
         <source>Title display format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato de visualización del título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="512"/>
@@ -184,7 +184,7 @@
     <message>
         <location filename="main_window.ui" line="622"/>
         <source>Optimize database</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimizar base de datos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="631"/>
@@ -355,7 +355,7 @@
         <location filename="main_window.ui" line="839"/>
         <source>Detailed listing</source>
         <oldsource>Detailed view</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Listado detallado</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="842"/>
@@ -380,12 +380,12 @@
     <message>
         <location filename="main_window.ui" line="872"/>
         <source>Import from export file</source>
-        <translation type="unfinished"></translation>
+        <translation>Importar desde archivo de exportación</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="933"/>
         <source>pt</source>
-        <translation type="unfinished"></translation>
+        <translation>pt</translation>
     </message>
     <message>
         <source>Import from backup</source>
