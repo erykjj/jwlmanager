@@ -350,14 +350,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="836"/>
-        <source>&amp;Detailed</source>
-        <oldsource>Detailed listing</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="839"/>
-        <source>Detailed view</source>
+        <source>Detailed listing</source>
+        <oldsource>Detailed view</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
