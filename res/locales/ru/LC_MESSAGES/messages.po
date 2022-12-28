@@ -172,10 +172,6 @@ msgstr ""
 msgid "NOT imported!"
 msgstr ""
 
-#: ../../../JWLManager.py:672
-msgid "Importing. Please wait…"
-msgstr ""
-
 #: ../../../JWLManager.py:687
 msgid "items imported/updated"
 msgstr ""
@@ -188,10 +184,6 @@ msgstr ""
 msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
-msgstr ""
-
-#: ../../../JWLManager.py:710
-msgid "Deleting. Please wait…"
 msgstr ""
 
 #: ../../../JWLManager.py:723
@@ -208,10 +200,6 @@ msgid ""
 "OBSCURE all text fields?"
 msgstr ""
 
-#: ../../../JWLManager.py:733
-msgid "Obscuring. Please wait…"
-msgstr ""
-
 #: ../../../JWLManager.py:739
 msgid "Database obscured"
 msgstr ""
@@ -224,10 +212,6 @@ msgstr ""
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
-msgstr ""
-
-#: ../../../JWLManager.py:749
-msgid "Please wait…"
 msgstr ""
 
 #: ../../../JWLManager.py:755
@@ -288,19 +272,11 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-#: ../../../JWLManager.py:1022
-msgid "Please be patient…"
-msgstr ""
-
 #: ../../../JWLManager.py:1093 ../../../JWLManager.py:1445
 #: ../../../JWLManager.py:1462 ../../../JWLManager.py:1502
 #: ../../../JWLManager.py:1518 ../../../JWLManager.py:1588
 #: ../../../JWLManager.py:1621 ../../../JWLManager.py:1624
 msgid "Error!"
-msgstr ""
-
-#: ../../../JWLManager.py:1095
-msgid "Oops! Something went wrong…"
 msgstr ""
 
 #: ../../../JWLManager.py:1095
@@ -448,4 +424,3 @@ msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
-
