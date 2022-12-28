@@ -466,7 +466,7 @@ class Ui_MainWindow(object):
 #endif // QT_CONFIG(shortcut)
         self.actionDetailed.setText(QCoreApplication.translate("MainWindow", u"&Detailed", None))
 #if QT_CONFIG(tooltip)
-        self.actionDetailed.setToolTip(QCoreApplication.translate("MainWindow", u"Detailed view", None))
+        self.actionDetailed.setToolTip(QCoreApplication.translate("MainWindow", u"Detailed listing", None))
 #endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(shortcut)
         self.actionDetailed.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+D", None))

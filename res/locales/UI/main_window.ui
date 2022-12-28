@@ -836,7 +836,7 @@
     <string>&amp;Detailed</string>
    </property>
    <property name="toolTip">
-    <string>Detailed view</string>
+    <string>Detailed listing</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
