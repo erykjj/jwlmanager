@@ -65,7 +65,7 @@ def get_language():
             lang = l
     return lang
 
-def read_res(lang):
+def read_res(lang): #TODO: move this into Window class
     global publications, languages, books
     publications = {}
     languages = {}
@@ -87,10 +87,11 @@ PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
 db_name = "userData.db"
 
-lang = get_language()
+# TODO: Pass lang to Window class
+lang = get_language() 
 read_res(lang)
 localedir = PROJECT_PATH / 'res/locales/'
-translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
+translate = gettext.translation('messages', localedir, fallback=True, languages=[lang]) # TODO: how to switch between multiple languages??
 _ = translate.gettext
 translate.install()
 
@@ -126,6 +127,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = ""
         self.current_archive = ""
         self.working_dir = Path.home()
+        self.lang = lang
+        for item in self.menuLanguage.actions():
+            if item.toolTip() == self.lang:
+                item.setChecked(True)
 
     def init_windows(self):
 
@@ -193,7 +198,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionFull_Title.triggered.connect(self.full_view)
         self.actionGrouped.triggered.connect(self.grouped_view)
         self.actionDetailed.triggered.connect(self.detailed_view)
-        # TODO: action for Import & Language selection
+        self.menuLanguage.triggered.connect(self.change_language)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -205,6 +210,24 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
 
+    def change_language(self):
+        for item in self.menuLanguage.actions():
+            if item.isChecked():
+                if item.toolTip() == self.lang:
+                    item.setChecked(False)
+                else:
+                    self.lang = item.toolTip()
+                    read_res(self.lang)
+            else:
+                item.setChecked(False)
+        read_res(self.lang)
+        # self.regroup(True)
+        translator = QTranslator()
+        translator.load(f'res/locales/UI/{self.lang}.qm')
+        app.installTranslator(translator)
+        self.retranslateUi(self)
+        # app.removeTranslator(translator)
+        # QQmlEngine.retranslate(win)
 
     def expand_all(self):
         self.treeWidget.expandAll()
