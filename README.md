@@ -153,5 +153,5 @@ ____
 [^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 10.14 and up). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
 [^*]: To start with: French, German, Italian and Portuguese. Chinese and Russian (and any other volunteers) also appreciated. Please contact me at the email in the *About...* box in the app.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-[^2]: For **Windows Defender "unknown publisher" alerts** see [here](https://github.com/erykjj/jwlmanager/issues/1#issuecomment-1356470805).
+[^2]: With the **Windows Defender "unknown publisher" alerts**, you can safely choose "More info" and "Run anyway". See [here](https://github.com/erykjj/jwlmanager/issues/1) for a discussion on what's going on.
 [^3]: `pip3 install filehash PySide6 regex`.
