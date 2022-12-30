@@ -48,40 +48,37 @@ from res.ui_main_window import Ui_MainWindow
 #### Initial language setting based on passed arguments
 
 def get_language():
+    languages = {
+        'de': 'German (Deutsch)',
+        'en': 'English (default)',
+        'es': 'Spanish (español)',
+        'fr': 'French (français)',
+        'it': 'Italian (italiano)',
+        'pt': 'Portuguese (português)' }
+    global tr
+    tr = {}
+    localedir = PROJECT_PATH / 'res/locales/'
+
     parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
     group = language_group.add_mutually_exclusive_group(required=False)
-    group.add_argument('-de', action='store_true', help='German (Deutsch)')
-    group.add_argument('-en', action='store_true', help='English (default)')
-    group.add_argument('-es', action='store_true', help='Spanish (español)')
-    group.add_argument('-fr', action='store_true', help='French (français)')
-    group.add_argument('-it', action='store_true', help='Italian (italiano)')
-    group.add_argument('-pt', action='store_true', help='Portuguese (português)')
+    for k in sorted(languages.keys()):
+        group.add_argument(f'-{k}', action='store_true', help=languages[k])
+        tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
     lang = 'en'
     for l in args.keys():
         if args[l]:
             lang = l
 
-    localedir = PROJECT_PATH / 'res/locales/'
-    global tr_fr, tr_es, tr_en
-    tr_fr = gettext.translation('messages', localedir, fallback=True, languages=['fr'])
-    tr_es = gettext.translation('messages', localedir, fallback=True, languages=['es'])
-    tr_en = gettext.translation('messages', localedir, fallback=False, languages=['en'])
-
     return lang
 
 def read_res(lang): #TODO: move this into Window class
-    global _
-    if lang == 'fr':
-        _ = tr_fr.gettext
-    elif lang == 'es':
-        _ = tr_es.gettext
-    else:
-        _ = tr_en.gettext
+    global _, publications, languages, books
+    _ = tr[lang].gettext
+    print(f'Switching to {lang}')
 
-    global publications, languages, books
     publications = {}
     languages = {}
     books = {}
