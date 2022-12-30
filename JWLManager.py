@@ -63,9 +63,24 @@ def get_language():
     for l in args.keys():
         if args[l]:
             lang = l
+
+    localedir = PROJECT_PATH / 'res/locales/'
+    global tr_fr, tr_es, tr_en
+    tr_fr = gettext.translation('messages', localedir, fallback=True, languages=['fr'])
+    tr_es = gettext.translation('messages', localedir, fallback=True, languages=['es'])
+    tr_en = gettext.translation('messages', localedir, fallback=False, languages=['en'])
+
     return lang
 
 def read_res(lang): #TODO: move this into Window class
+    global _
+    if lang == 'fr':
+        _ = tr_fr.gettext
+    elif lang == 'es':
+        _ = tr_es.gettext
+    else:
+        _ = tr_en.gettext
+
     global publications, languages, books
     publications = {}
     languages = {}
@@ -87,13 +102,8 @@ PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
 db_name = "userData.db"
 
-# TODO: Pass lang to Window class
 lang = get_language() 
 read_res(lang)
-localedir = PROJECT_PATH / 'res/locales/'
-translate = gettext.translation('messages', localedir, fallback=True, languages=[lang]) # TODO: how to switch between multiple languages??
-_ = translate.gettext
-translate.install()
 
 
 #### Main app classes
