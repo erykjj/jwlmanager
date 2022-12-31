@@ -74,10 +74,9 @@ def get_language():
 
     return lang
 
-def read_res(lang): #TODO: move this into Window class
+def read_res(lang):
     global _, publications, languages, books
     _ = tr[lang].gettext
-    print(f'Switching to {lang}')
 
     publications = {}
     languages = {}
@@ -218,23 +217,20 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_delete.clicked.connect(self.delete)
 
     def change_language(self):
-        for item in self.menuLanguage.actions():
-            if item.isChecked():
-                if item.toolTip() == self.lang:
-                    item.setChecked(False)
-                else:
-                    self.lang = item.toolTip()
-                    read_res(self.lang)
-            else:
-                item.setChecked(False)
+        changed = False
+        for item in self.langChoices.actions():
+            if item.isChecked() and (self.lang != item.toolTip()):
+                self.lang = item.toolTip()
+                changed = True
+        if not changed:
+            return
         read_res(self.lang)
-        # self.regroup(True)
+        # BUG: occasionally shows empty??
+        self.regroup()
         translator = QTranslator()
         translator.load(f'res/locales/UI/{self.lang}.qm')
         app.installTranslator(translator)
         self.retranslateUi(self)
-        # app.removeTranslator(translator)
-        # QQmlEngine.retranslate(win)
 
     def expand_all(self):
         self.treeWidget.expandAll()
