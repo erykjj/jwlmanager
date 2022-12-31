@@ -359,7 +359,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, changed=False):
         if not changed:
             self.current_data = []
-        tree = BuildTree(self, self.treeWidget, books, publications,languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.detailed, self.grouped, self.current_data)
+        tree = BuildTree(self, self.treeWidget, books, publications, languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.detailed, self.grouped, self.current_data)
         if tree.aborted:
             self.clean_up()
             sys.exit()
@@ -807,7 +807,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, window, tree, books, publications, languages, category='Notes', grouping='Publication', title='code', detailed=False, grouped=True, current=[]):
+    def __init__(self, window, tree, books, publications, languages, category=_('Notes'), grouping=_('Publication'), title=_('code'), detailed=False, grouped=True, current=[]):
         self.tree = tree
         self.window = window
         self.category = category
@@ -1378,7 +1378,7 @@ class ExportItems():
 
 
 class PreviewItems():
-    def __init__(self, category='Notes', items=[], books=[]):
+    def __init__(self, category=_('Notes'), items=[], books=[]):
         self.category = category
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
@@ -1900,24 +1900,24 @@ class Reindex():
         self.drop_table()
 
 
-def get_language():
-    parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
-    parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
+# def get_language():
+#     parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
+#     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
 
-    language_group = parser.add_argument_group('interface language', '-en or leave out for English')
-    group = language_group.add_mutually_exclusive_group(required=False)
-    group.add_argument('-de', action='store_true', help='German (Deutsch)')
-    group.add_argument('-en', action='store_true', help='English (default)')
-    group.add_argument('-es', action='store_true', help='Spanish (español)')
-    group.add_argument('-fr', action='store_true', help='French (français)')
-    group.add_argument('-it', action='store_true', help='Italian (italiano)')
-    group.add_argument('-pt', action='store_true', help='Portuguese (português)')
-    args = vars(parser.parse_args())
-    lang = 'en'
-    for l in args.keys():
-        if args[l]:
-            lang = l
-    return lang
+#     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
+#     group = language_group.add_mutually_exclusive_group(required=False)
+#     group.add_argument('-de', action='store_true', help='German (Deutsch)')
+#     group.add_argument('-en', action='store_true', help='English (default)')
+#     group.add_argument('-es', action='store_true', help='Spanish (español)')
+#     group.add_argument('-fr', action='store_true', help='French (français)')
+#     group.add_argument('-it', action='store_true', help='Italian (italiano)')
+#     group.add_argument('-pt', action='store_true', help='Portuguese (português)')
+#     args = vars(parser.parse_args())
+#     lang = 'en'
+#     for l in args.keys():
+#         if args[l]:
+#             lang = l
+#     return lang
 
 
 #### Main app initialization
