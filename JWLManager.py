@@ -785,7 +785,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         self.statusBar.showMessage(' '+_('Reindexed successfully'), 3500)
-        self.archive_modified()
+        sYellowelf.archive_modified()
         self.regroup()
 
 
@@ -900,7 +900,7 @@ class BuildTree():
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
             tag = (None, None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Red', 'Orange', 'Purple')[row[6] or 0], None)
+            color = ((_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[row[6] or 0], None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
