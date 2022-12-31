@@ -137,6 +137,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in self.menuLanguage.actions():
             if item.toolTip() == self.lang:
                 item.setChecked(True)
+        self.current_data = []
 
     def init_windows(self):
 
@@ -860,12 +861,12 @@ class BuildTree():
     def process_data(self, sql):
         for row in self.cur.execute(sql):
             item = row[4]
-            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or _('* MEDIA *'), row[3])
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[5], row[6], row[7])
             tag = ('', None)
-            color = ('Grey', None)
+            color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
@@ -881,13 +882,13 @@ class BuildTree():
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL order by tm.Position;"
         for row in self.cur.execute(sql):
             item = row[4]
-            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or _('* MEDIA *'), row[3])
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1 = (None, None)
             detail2 = (None, None)
-            tag = ("Favorite", None)
-            color = ('Grey', None)
+            tag = ("Favorite", None) # TODO: translate??
+            color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
@@ -895,7 +896,7 @@ class BuildTree():
         sql = "SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );"
         for row in self.cur.execute(sql):
             item = row[4]
-            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or _('* MEDIA *'), row[3])
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
@@ -917,21 +918,21 @@ class BuildTree():
             issue = (None, None)
             detail1 = (None, None)
             detail2 = (None, None)
-            year = ('* NO DATE *', '')
+            year = (_('* NO DATE *'), '')
             tag = (row[1] or '* '+_('UN-TAGGED')+' *', None)
-            color = ('Grey', None)
+            color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
         sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # Bible & publication
         for row in self.cur.execute(sql):
             item = row[4]
-            group, code, short, full, year = self.process_name(row[1] or '* MEDIA *', row[3])
+            group, code, short, full, year = self.process_name(row[1] or _('* MEDIA *'), row[3])
             language = self.process_language(row[2])
             issue, year = self.process_date(year, row[3])
             detail1, detail2 = self.process_detail(row[7], row[8], row[9])
             tag = (row[5] or '* '+_('UN-TAGGED')+' *', None)
-            color = (('Grey', 'Yellow', 'Green', 'Blue', 'Red', 'Orange', 'Purple')[row[6] or 0], None)
+            color = ((_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[row[6] or 0], None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
 
@@ -983,7 +984,7 @@ class BuildTree():
             if doc:
                 y = str(doc)[0:4]
                 m = str(doc)[4:6]
-                mo = ('Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'June', 'July', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.')[int(m)-1]
+                mo = (_('Jan.'), _('Feb.'), _('Mar.'), _('Apr.'), _('May'), _('June'), _('July'), _('Aug.'), _('Sep.'), _('Oct.'), _('Nov.'), _('Dec.'))[int(m)-1]
                 d = str(doc)[6:]
                 if d == '00':
                     name = f"{y}-{m}"
@@ -1002,7 +1003,7 @@ class BuildTree():
         if issue[0] and regex.match(r'\d{4}', issue[0]):
             year = (issue[0][:4], None)
         else:
-            year = ('* NO DATE *', None)
+            year = (_('* NO DATE *'), None)
         return issue, year
 
     def process_detail(self, BookNumber, ChapterNumber, IssueTitle):
@@ -1010,7 +1011,7 @@ class BuildTree():
             detail1 = (str(BookNumber).rjust(2, '0') + " - " + self.books[BookNumber], None)
             detail2 = (_('Ch.')+' ' + str(ChapterNumber).rjust(3, ' '), None)
         else:
-            detail1 = (IssueTitle or '* BLANK *', None)
+            detail1 = (IssueTitle or _('* BLANK *'), None)
             detail2 = (None, None)
         return detail1, detail2
 
@@ -1904,7 +1905,7 @@ class Reindex():
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
+    global translator
     translator = QTranslator()
     translator.load(f'res/locales/UI/{lang}.qm')
     app.installTranslator(translator)
