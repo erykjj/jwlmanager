@@ -9,6 +9,7 @@
 ################################################################################
 
 import os, sys
+from PySide6.QtGui import QActionGroup
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
@@ -312,6 +313,13 @@ class Ui_MainWindow(object):
         self.menuLanguage = QMenu(self.menuView)
         self.menuLanguage.setObjectName(u"menuLanguage")
         self.menuLanguage.setToolTipsVisible(True)
+        self.langChoices = QActionGroup(self.menuLanguage)
+        self.langChoices.addAction(self.actionEN)
+        self.langChoices.addAction(self.actionDE)
+        self.langChoices.addAction(self.actionES)
+        self.langChoices.addAction(self.actionFR)
+        self.langChoices.addAction(self.actionIT)
+        self.langChoices.addAction(self.actionPT)
         self.menuUtilities = QMenu(self.menubar)
         self.menuUtilities.setObjectName(u"menuUtilities")
         self.menuUtilities.setToolTipsVisible(True)
