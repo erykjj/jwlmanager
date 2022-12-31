@@ -781,7 +781,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class BuildTree():
-    def __init__(self, window, tree, books, publications, languages, category=_('Notes'), grouping=_('Publication'), title=_('code'), detailed=False, grouped=True, current=[]):
+    def __init__(self, window, tree, books, publications, languages, category=_('Notes'), grouping=_('Publication'), title='code', detailed=False, grouped=True, current=[]):
         self.tree = tree
         self.window = window
         self.category = category
@@ -1021,7 +1021,7 @@ class BuildTree():
         def progress_dialog(steps):
             self.pd = QProgressDialog(_('Please be patient…'), None, 0, steps-1, self.window)
             self.pd.setWindowModality(Qt.WindowModal)
-            self.pd.setWindowTitle('Parsing tree')
+            self.pd.setWindowTitle(_('Parsing tree'))
             self.pd.setWindowFlag(Qt.FramelessWindowHint)
             self.pd.setModal(True)
             self.pd.setMinimumDuration(0)
@@ -1098,7 +1098,7 @@ class DebugInfo():
         text.setReadOnly(True)
         text.setText(f"{APP} {VERSION}\n\n{tb_text}")
         label2 = QLabel()
-        label2.setText('The app will terminate.')
+        label2.setText(_('The app will terminate.'))
         button = QDialogButtonBox(QDialogButtonBox.Abort)
         layout = QVBoxLayout(dialog)
         layout.addWidget(label1)
@@ -1874,35 +1874,14 @@ class Reindex():
         self.drop_table()
 
 
-# def get_language():
-#     parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
-#     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
-
-#     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
-#     group = language_group.add_mutually_exclusive_group(required=False)
-#     group.add_argument('-de', action='store_true', help='German (Deutsch)')
-#     group.add_argument('-en', action='store_true', help='English (default)')
-#     group.add_argument('-es', action='store_true', help='Spanish (español)')
-#     group.add_argument('-fr', action='store_true', help='French (français)')
-#     group.add_argument('-it', action='store_true', help='Italian (italiano)')
-#     group.add_argument('-pt', action='store_true', help='Portuguese (português)')
-#     args = vars(parser.parse_args())
-#     lang = 'en'
-#     for l in args.keys():
-#         if args[l]:
-#             lang = l
-#     return lang
-
-
 #### Main app initialization
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
     translator = QTranslator()
     translator.load(f'res/locales/UI/{lang}.qm')
     app.installTranslator(translator)
-    # app.removeTranslator(translator)
-    # QQmlEngine.retranslate()
 
     font = QFont()
     font.setPixelSize(16)
