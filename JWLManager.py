@@ -763,7 +763,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         self.statusBar.showMessage(' '+_('Reindexed successfully'), 3500)
-        sYellowelf.archive_modified()
+        self.archive_modified()
         self.regroup()
 
 
