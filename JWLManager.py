@@ -226,12 +226,13 @@ class Window(QMainWindow, Ui_MainWindow):
         if not changed:
             return
         read_res(self.lang)
-        # BUG: occasionally shows empty??
-        self.regroup()
-        translator = QTranslator()
+
         translator.load(f'res/locales/UI/{self.lang}.qm')
         app.installTranslator(translator)
-        self.retranslateUi(self)
+        # self.retranslateUi(self) # BUG: this messes things up
+        if self.current_archive:
+            self.regroup() # BUG: español shows no data
+            # self.retranslateUi(self)
 
     def expand_all(self):
         self.treeWidget.expandAll()
@@ -786,7 +787,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         self.statusBar.showMessage(' '+_('Reindexed successfully'), 3500)
-        sYellowelf.archive_modified()
+        self.archive_modified()
         self.regroup()
 
 
