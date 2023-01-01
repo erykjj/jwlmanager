@@ -48,25 +48,38 @@ from res.ui_main_window import Ui_MainWindow
 #### Initial language setting based on passed arguments
 
 def get_language():
+    global available_languages
+    available_languages = { # add/enable completed languages
+        # 'de': 'German (Deutsch)',
+        'en': 'English (default)',
+        'es': 'Spanish (español)',
+        'fr': 'French (français)',
+        # 'it': 'Italian (italiano)',
+        # 'pt': 'Portuguese (português)'
+        }
+    global tr
+    tr = {}
+    localedir = PROJECT_PATH / 'res/locales/'
+
     parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
     group = language_group.add_mutually_exclusive_group(required=False)
-    group.add_argument('-de', action='store_true', help='German (Deutsch)')
-    group.add_argument('-en', action='store_true', help='English (default)')
-    group.add_argument('-es', action='store_true', help='Spanish (español)')
-    group.add_argument('-fr', action='store_true', help='French (français)')
-    group.add_argument('-it', action='store_true', help='Italian (italiano)')
-    group.add_argument('-pt', action='store_true', help='Portuguese (português)')
+    for k in sorted(available_languages.keys()):
+        group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
+        tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
     lang = 'en'
     for l in args.keys():
         if args[l]:
             lang = l
+
     return lang
 
 def read_res(lang):
-    global publications, languages, books
+    global _, publications, languages, books
+    _ = tr[lang].gettext
+
     publications = {}
     languages = {}
     books = {}
@@ -76,7 +89,7 @@ def read_res(lang):
         languages[row[0]] = row[1:]
         if row[3] == lang:
             ui_lang = row[0]
-    for row in cur.execute(f"SELECT * FROM Publications WHERE Language = {ui_lang};"):
+    for row in cur.execute(f"SELECT Language, Symbol, ShortTitle, Title, Year, t.'Group' Type, Favorite FROM Publications p JOIN Types t USING (Language, Type) WHERE p.Language = {ui_lang};"): # NOTE: Groups need to be translated in each language
         publications[row[1]] = row[2:]
     for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {ui_lang};"):
         books[row[0]] = row[1]
@@ -87,12 +100,8 @@ PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
 db_name = "userData.db"
 
-lang = get_language()
+lang = get_language() 
 read_res(lang)
-localedir = PROJECT_PATH / 'res/locales/'
-translate = gettext.translation('messages', localedir, fallback=True, languages=[lang])
-_ = translate.gettext
-translate.install()
 
 
 #### Main app classes
@@ -116,6 +125,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.center()
         self.init_windows()
         self.connect_signals()
+        self.new_file()
 
     def set_vars(self):
         self.total.setText('')
@@ -128,8 +138,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path.home()
         self.lang = lang
         for item in self.menuLanguage.actions():
+            if item.toolTip() not in available_languages.keys():
+                item.setVisible(False)
             if item.toolTip() == self.lang:
                 item.setChecked(True)
+        self.current_data = []
 
     def init_windows(self):
 
@@ -197,7 +210,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionFull_Title.triggered.connect(self.full_view)
         self.actionGrouped.triggered.connect(self.grouped_view)
         self.actionDetailed.triggered.connect(self.detailed_view)
-        # TODO: action for Import & Language selection
+        self.menuLanguage.triggered.connect(self.change_language)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
@@ -209,6 +222,26 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
 
+    def changeEvent(self, event):
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi(self)
+        super().changeEvent(event)
+
+    def change_language(self):
+        changed = False
+        for item in self.langChoices.actions():
+            if item.isChecked() and (self.lang != item.toolTip()):
+                self.lang = item.toolTip()
+                changed = True
+        if not changed:
+            return
+        read_res(self.lang)
+        app.removeTranslator(translator)
+        translator.load(f'res/locales/UI/{self.lang}.qm')
+        app.installTranslator(translator)
+        app.processEvents()
+        self.regroup()
+        self.tree_selection()
 
     def expand_all(self):
         self.treeWidget.expandAll()
@@ -297,7 +330,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionGrouped.setChecked(False)
         self.regroup(True)
 
-    def grouped_view(self):
+    def grouped_view(self): # BUG: crashes!! language/translation-related
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
@@ -864,7 +897,7 @@ class BuildTree():
             issue, year = self.process_date(year, row[3])
             detail1 = (None, None)
             detail2 = (None, None)
-            tag = ("Favorite", None) # TODO: translate??
+            tag = ("Favorite", None) # CHECK: translate??
             color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
