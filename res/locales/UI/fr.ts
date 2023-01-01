@@ -42,12 +42,12 @@
         <location filename="main_window.ui" line="211"/>
         <source>Selected:</source>
         <oldsource>Selected: </oldsource>
-        <translation>Sélectionné&#xa0;:</translation>
+        <translation>Sélectionné:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="227"/>
         <source>Category:</source>
-        <translation>Catégorie&#xa0;:</translation>
+        <translation>Catégorie:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="250"/>
@@ -78,7 +78,7 @@
         <location filename="main_window.ui" line="284"/>
         <source>Total:</source>
         <oldsource>Total: </oldsource>
-        <translation>Total&#xa0;:</translation>
+        <translation>Total:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="332"/>
