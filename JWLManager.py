@@ -217,6 +217,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
 
+    def changeEvent(self, event):
+        if event.type() == QEvent.LanguageChange:
+            self.retranslateUi(self)
+        super().changeEvent(event)
+
     def change_language(self):
         changed = False
         for item in self.langChoices.actions():
@@ -226,13 +231,14 @@ class Window(QMainWindow, Ui_MainWindow):
         if not changed:
             return
         read_res(self.lang)
-
+        app.removeTranslator(translator)
         translator.load(f'res/locales/UI/{self.lang}.qm')
         app.installTranslator(translator)
         # self.retranslateUi(self) # BUG: this messes things up
         if self.current_archive:
+            self.current_data = []
             self.regroup() # BUG: español shows no data
-            # self.retranslateUi(self)
+            # 
 
     def expand_all(self):
         self.treeWidget.expandAll()
