@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-12-31 19:17-0500\n"
-"PO-Revision-Date: 2023-01-01 00:44+0000\n"
+"PO-Revision-Date: 2023-01-01 01:35+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
@@ -107,13 +107,15 @@ msgstr "Enregistrer l'archive"
 
 #: ../../JWLManager.py:556
 msgid "NOT saved!"
-msgstr ""
+msgstr "PAS sauvé !"
 
 #: ../../JWLManager.py:559
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
+"Il est recommandé d'enregistrer sous un autre nom.\n"
+"Êtes-vous absolument sûr de vouloir remplacer l'original ?"
 
 #: ../../JWLManager.py:608
 msgid "Saved"
@@ -133,11 +135,11 @@ msgstr "Exporter"
 
 #: ../../JWLManager.py:641
 msgid "items will be EXPORTED. Proceed?"
-msgstr ""
+msgstr "éléments seront EXPORTÉS. Continuez ?"
 
 #: ../../JWLManager.py:653
 msgid "NOT exported!"
-msgstr ""
+msgstr "PAS exporté !"
 
 #: ../../JWLManager.py:661
 msgid "Items exported"
@@ -153,22 +155,26 @@ msgid ""
 "\n"
 "Importing will modify the archive. Proceed?"
 msgstr ""
+"Assurez-vous que votre fichier d'importation est encodé en UTF-8 et "
+"correctement formaté. \n"
+"\n"
+"L'importation modifiera l'archive. Continuez ?"
 
 #: ../../JWLManager.py:669
 msgid "Import file"
-msgstr ""
+msgstr "Importer un fichier"
 
 #: ../../JWLManager.py:669
 msgid "Import files"
-msgstr ""
+msgstr "Fichiers d'importation"
 
 #: ../../JWLManager.py:671
 msgid "NOT imported!"
-msgstr ""
+msgstr "PAS importé !"
 
 #: ../../JWLManager.py:676
 msgid "Importing. Please wait…"
-msgstr ""
+msgstr "Importation. Être patient…"
 
 #: ../../JWLManager.py:691
 msgid "items imported/updated"
@@ -188,7 +194,7 @@ msgstr ""
 
 #: ../../JWLManager.py:714
 msgid "Deleting. Please wait…"
-msgstr ""
+msgstr "Suppression. Être patient…"
 
 #: ../../JWLManager.py:727
 msgid "items deleted"
@@ -196,51 +202,55 @@ msgstr "éléments supprimés"
 
 #: ../../JWLManager.py:734
 msgid "Obscure"
-msgstr ""
+msgstr "Masquer"
 
 #: ../../JWLManager.py:734
 msgid ""
 "Are you sure you want to\n"
 "OBSCURE all text fields?"
 msgstr ""
+"Êtes-vous sûr de vouloir\n"
+"MASQUER tous les champs de texte ?"
 
 #: ../../JWLManager.py:737
 msgid "Obscuring. Please wait…"
-msgstr ""
+msgstr "Masquer. Être patient…"
 
 #: ../../JWLManager.py:743
 msgid "Database obscured"
-msgstr ""
+msgstr "Base de données masquée"
 
 #: ../../JWLManager.py:749
 msgid "Reindex"
-msgstr ""
+msgstr "Réindexer"
 
 #: ../../JWLManager.py:749
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
 msgstr ""
+"Ça peut prendre quelques secondes.\n"
+"Continuez ?"
 
 #: ../../JWLManager.py:753
 msgid "Please wait…"
-msgstr ""
+msgstr "Veuillez patienter…"
 
 #: ../../JWLManager.py:759
 msgid "Reindexing. Please wait…"
-msgstr ""
+msgstr "Réindexation. Être patient…"
 
 #: ../../JWLManager.py:765
 msgid "Reindexed successfully"
-msgstr ""
+msgstr "Réindexé avec succès"
 
 #: ../../JWLManager.py:772
 msgid "Exit"
-msgstr ""
+msgstr "Sortir"
 
 #: ../../JWLManager.py:772
 msgid "Save before quitting?"
-msgstr ""
+msgstr "Sauver avant de sortir ?"
 
 #: ../../JWLManager.py:788 ../../JWLManager.py:1004
 msgid "Publication"
@@ -249,40 +259,40 @@ msgstr "Publication"
 #: ../../JWLManager.py:841 ../../JWLManager.py:862 ../../JWLManager.py:876
 #: ../../JWLManager.py:907
 msgid "* MEDIA *"
-msgstr ""
+msgstr "* MÉDIAS *"
 
 #: ../../JWLManager.py:846 ../../JWLManager.py:868 ../../JWLManager.py:881
 #: ../../JWLManager.py:900 ../../JWLManager.py:912
 msgid "Grey"
-msgstr ""
+msgstr "Gris"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Yellow"
-msgstr ""
+msgstr "Jaune"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Green"
-msgstr ""
+msgstr "Vert"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Blue"
-msgstr ""
+msgstr "Bleu"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Red"
-msgstr ""
+msgstr "Rouge"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Orange"
-msgstr ""
+msgstr "Orange"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Purple"
-msgstr ""
+msgstr "Violet"
 
 #: ../../JWLManager.py:890 ../../JWLManager.py:891 ../../JWLManager.py:892
 msgid "OTHER"
-msgstr ""
+msgstr "AUTRE"
 
 #: ../../JWLManager.py:894
 msgid "NO LANGUAGE"
@@ -290,7 +300,7 @@ msgstr "AUCUNE LANGUE"
 
 #: ../../JWLManager.py:898 ../../JWLManager.py:983
 msgid "* NO DATE *"
-msgstr ""
+msgstr "* SANS DATE *"
 
 #: ../../JWLManager.py:899 ../../JWLManager.py:911
 msgid "UN-TAGGED"
@@ -306,51 +316,51 @@ msgstr "Langue"
 
 #: ../../JWLManager.py:964
 msgid "Jan."
-msgstr ""
+msgstr "Jan."
 
 #: ../../JWLManager.py:964
 msgid "Feb."
-msgstr ""
+msgstr "Fév."
 
 #: ../../JWLManager.py:964
 msgid "Mar."
-msgstr ""
+msgstr "Mars."
 
 #: ../../JWLManager.py:964
 msgid "Apr."
-msgstr ""
+msgstr "Avr."
 
 #: ../../JWLManager.py:964
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #: ../../JWLManager.py:964
 msgid "June"
-msgstr ""
+msgstr "Juin"
 
 #: ../../JWLManager.py:964
 msgid "July"
-msgstr ""
+msgstr "Juil."
 
 #: ../../JWLManager.py:964
 msgid "Aug."
-msgstr ""
+msgstr "Août."
 
 #: ../../JWLManager.py:964
 msgid "Sep."
-msgstr ""
+msgstr "Sep."
 
 #: ../../JWLManager.py:964
 msgid "Oct."
-msgstr ""
+msgstr "Oct."
 
 #: ../../JWLManager.py:964
 msgid "Nov."
-msgstr ""
+msgstr "Nov."
 
 #: ../../JWLManager.py:964
 msgid "Dec."
-msgstr ""
+msgstr "Déc."
 
 #: ../../JWLManager.py:989
 msgid "Ch."
@@ -358,7 +368,7 @@ msgstr "Ch."
 
 #: ../../JWLManager.py:991
 msgid "* BLANK *"
-msgstr ""
+msgstr "* VIDE *"
 
 #: ../../JWLManager.py:1011
 msgid "Tag"
@@ -374,11 +384,11 @@ msgstr "Année"
 
 #: ../../JWLManager.py:1026
 msgid "Please be patient…"
-msgstr ""
+msgstr "Veuillez être patient…"
 
 #: ../../JWLManager.py:1028
 msgid "Parsing tree"
-msgstr ""
+msgstr "Analyse des données"
 
 #: ../../JWLManager.py:1097 ../../JWLManager.py:1449 ../../JWLManager.py:1466
 #: ../../JWLManager.py:1506 ../../JWLManager.py:1522 ../../JWLManager.py:1592
@@ -388,7 +398,7 @@ msgstr "Erreur !"
 
 #: ../../JWLManager.py:1099
 msgid "Oops! Something went wrong…"
-msgstr ""
+msgstr "Oups ! Quelque chose s'est mal passé…"
 
 #: ../../JWLManager.py:1099
 msgid "Take note of what you were doing and"
@@ -400,7 +410,7 @@ msgstr "informez le développeur"
 
 #: ../../JWLManager.py:1105
 msgid "The app will terminate."
-msgstr ""
+msgstr "L'application se terminera."
 
 #: ../../JWLManager.py:1141
 msgid "Add Favorite"
@@ -432,47 +442,51 @@ msgstr "Ajout du favori pour « {} » dans {}."
 
 #: ../../JWLManager.py:1289
 msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
-msgstr ""
+msgstr "MODIFIER LE CHAMP CI-DESSUS AVANT DE RÉIMPORTER"
 
 #: ../../JWLManager.py:1290
 msgid ""
 "LEAVE {TITLE=} (empty) IF YOU DON'T WANT TO DELETE ANY NOTES WHILE "
 "IMPORTING\n"
 msgstr ""
+"LAISSEZ {TITLE=} (vide) SI VOUS NE SOUHAITEZ SUPPRIMER AUCUNE NOTE LORS DE L’"
+"IMPORTATION\n"
 
 #: ../../JWLManager.py:1291
 msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-msgstr ""
+msgstr "CHAQUE NOTE COMMENCE PAR UN EN-TÊTE INDIQUANT LA CATÉGORIE, ETC."
 
 #: ../../JWLManager.py:1292
 msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
-msgstr ""
+msgstr "ATTENTION LORS DE LA MODIFICATION DES ATTRIBUTS\n"
 
 #: ../../JWLManager.py:1293
 msgid "LINE AFTER HEADER IS NOTE TITLE"
-msgstr ""
+msgstr "LIGNE APRÈS L’EN-TÊTE EST LE TITRE DE LA NOTE"
 
 #: ../../JWLManager.py:1294
 msgid ""
 "REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
 "HEADER\n"
 msgstr ""
+"LE RESTE EST LE CORPS DE LA NOTE ; PEUT ÊTRE MULTILIGNE ET SE TERMINE PAR L"
+"’EN-TÊTE DE NOTE SUIVANT\n"
 
 #: ../../JWLManager.py:1295
 msgid "SEPARATE TAGS WITH \",\" (commas)"
-msgstr ""
+msgstr "SÉPAREZ LES ÉTIQUETTES AVEC \",\" (virgules)"
 
 #: ../../JWLManager.py:1296
 msgid "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
-msgstr ""
+msgstr "OU LAISSER VIDE SI PAS D'ÉTIQUETTE : {TAGS=bible,notes} OU {TAGS=}\n"
 
 #: ../../JWLManager.py:1297
 msgid "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
-msgstr ""
+msgstr "LE FICHIER DEVRAIT SE TERMINER PAR \"==={END}===\"\n"
 
 #: ../../JWLManager.py:1298
 msgid "ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)"
-msgstr ""
+msgstr "ASSUREZ-VOUS QUE VOTRE FICHIER EST ENCODÉ EN UTF-8 (UNICODE)"
 
 #: ../../JWLManager.py:1299 ../../JWLManager.py:1340 ../../JWLManager.py:1354
 msgid "Exported from"
@@ -484,7 +498,7 @@ msgstr "par"
 
 #: ../../JWLManager.py:1299 ../../JWLManager.py:1340 ../../JWLManager.py:1354
 msgid "on"
-msgstr ""
+msgstr "sur"
 
 #: ../../JWLManager.py:1385 ../../JWLManager.py:1394 ../../JWLManager.py:1403
 msgid "NO TITLE"
@@ -500,6 +514,8 @@ msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
+"Format de fichier d’importation incorrect :\n"
+"Slogan {ANNOTATIONS} manquant"
 
 #: ../../JWLManager.py:1466 ../../JWLManager.py:1522 ../../JWLManager.py:1628
 msgid ""
@@ -507,22 +523,29 @@ msgid ""
 "\n"
 "Faulting entry"
 msgstr ""
+"Erreur d'importation !\n"
+"\n"
+"Entrée défectueuse"
 
 #: ../../JWLManager.py:1506
 msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
+"Format de fichier d’importation incorrect :\n"
+"Slogan {HIGHLIGHTS} manquant"
 
 #: ../../JWLManager.py:1592
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {TITLE=} attribute line"
 msgstr ""
+"Format de fichier d’importation incorrect :\n"
+"Ligne d’attribut {TITLE=} manquante ou mal formée"
 
 #: ../../JWLManager.py:1602
 msgid "notes starting with"
-msgstr ""
+msgstr "notes commençant par"
 
 #: ../../JWLManager.py:1602
 msgid ""
@@ -530,9 +553,14 @@ msgid ""
 "\n"
 "Proceed with deletion? (NO to skip)"
 msgstr ""
+"SERONT SUPPRIMÉS avant l'importation.\n"
+"\n"
+"Procéder à la suppression ? (NON pour passer)"
 
 #: ../../JWLManager.py:1625
 msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
+"Format de fichier d’importation incorrect :\n"
+"En-tête mal formé"
