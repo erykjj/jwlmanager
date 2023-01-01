@@ -48,13 +48,15 @@ from res.ui_main_window import Ui_MainWindow
 #### Initial language setting based on passed arguments
 
 def get_language():
-    languages = {
-        'de': 'German (Deutsch)',
+    global available_languages
+    available_languages = {
+        # 'de': 'German (Deutsch)',
         'en': 'English (default)',
         'es': 'Spanish (español)',
         'fr': 'French (français)',
-        'it': 'Italian (italiano)',
-        'pt': 'Portuguese (português)' }
+        # 'it': 'Italian (italiano)',
+        # 'pt': 'Portuguese (português)'
+        }
     global tr
     tr = {}
     localedir = PROJECT_PATH / 'res/locales/'
@@ -63,8 +65,8 @@ def get_language():
     parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
     group = language_group.add_mutually_exclusive_group(required=False)
-    for k in sorted(languages.keys()):
-        group.add_argument(f'-{k}', action='store_true', help=languages[k])
+    for k in sorted(available_languages.keys()):
+        group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
     lang = 'en'
@@ -135,6 +137,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path.home()
         self.lang = lang
         for item in self.menuLanguage.actions():
+            if item.toolTip() not in available_languages.keys():
+                item.setEnabled(False)
             if item.toolTip() == self.lang:
                 item.setChecked(True)
         self.current_data = []
@@ -234,11 +238,9 @@ class Window(QMainWindow, Ui_MainWindow):
         app.removeTranslator(translator)
         translator.load(f'res/locales/UI/{self.lang}.qm')
         app.installTranslator(translator)
-        # self.retranslateUi(self) # BUG: this messes things up
-        if self.current_archive:
-            self.current_data = []
-            self.regroup() # BUG: español shows no data
-            # 
+        if self.current_archive: # BUG: not working with no archive!
+            self.current_data = [] # CHECK: Necessary??
+            self.regroup()
 
     def expand_all(self):
         self.treeWidget.expandAll()
@@ -894,7 +896,7 @@ class BuildTree():
             issue, year = self.process_date(year, row[3])
             detail1 = (None, None)
             detail2 = (None, None)
-            tag = ("Favorite", None) # TODO: translate??
+            tag = ("Favorite", None) # CHECK: translate??
             color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
