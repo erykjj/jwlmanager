@@ -125,6 +125,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.center()
         self.init_windows()
         self.connect_signals()
+        self.new_file()
 
     def set_vars(self):
         self.total.setText('')
@@ -238,9 +239,9 @@ class Window(QMainWindow, Ui_MainWindow):
         app.removeTranslator(translator)
         translator.load(f'res/locales/UI/{self.lang}.qm')
         app.installTranslator(translator)
-        if self.current_archive: # BUG: not working with no archive!
-            self.current_data = [] # CHECK: Necessary??
-            self.regroup()
+        app.processEvents()
+        self.regroup()
+        self.tree_selection()
 
     def expand_all(self):
         self.treeWidget.expandAll()
@@ -329,7 +330,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionGrouped.setChecked(False)
         self.regroup(True)
 
-    def grouped_view(self):
+    def grouped_view(self): # BUG: crashes!! language/translation-related
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
