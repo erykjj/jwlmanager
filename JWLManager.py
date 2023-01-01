@@ -139,7 +139,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.lang = lang
         for item in self.menuLanguage.actions():
             if item.toolTip() not in available_languages.keys():
-                item.setEnabled(False)
+                item.setVisible(False)
             if item.toolTip() == self.lang:
                 item.setChecked(True)
         self.current_data = []
