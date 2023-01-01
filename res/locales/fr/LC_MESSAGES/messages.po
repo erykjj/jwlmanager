@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-12-31 19:17-0500\n"
-"PO-Revision-Date: 2022-12-28 17:38+0000\n"
+"PO-Revision-Date: 2023-01-01 00:44+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../JWLManager.py:105
@@ -57,12 +58,10 @@ msgstr ""
 
 #: ../../JWLManager.py:311 ../../JWLManager.py:490 ../../JWLManager.py:828
 #: ../../JWLManager.py:1242 ../../JWLManager.py:1272
-#, fuzzy
 msgid "Highlights"
-msgstr "Points forts"
+msgstr "Surlignages"
 
 #: ../../JWLManager.py:313 ../../JWLManager.py:824 ../../JWLManager.py:1238
-#, fuzzy
 msgid "Bookmarks"
 msgstr "Marque-pages"
 
@@ -294,9 +293,8 @@ msgid "* NO DATE *"
 msgstr ""
 
 #: ../../JWLManager.py:899 ../../JWLManager.py:911
-#, fuzzy
 msgid "UN-TAGGED"
-msgstr "DÉSÉTIQUETÉ"
+msgstr "NON ÉTIQUETÉ"
 
 #: ../../JWLManager.py:947
 msgid "UNKNOWN"
@@ -405,9 +403,8 @@ msgid "The app will terminate."
 msgstr ""
 
 #: ../../JWLManager.py:1141
-#, fuzzy
 msgid "Add Favorite"
-msgstr "Ajouter aux favoris"
+msgstr "Ajouter un Favori"
 
 #: ../../JWLManager.py:1143
 msgid ""
@@ -539,4 +536,3 @@ msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
-
