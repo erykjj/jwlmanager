@@ -111,9 +111,10 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__(parent)
         self.setupUi(self)
         self.setAcceptDrops(True)
-        self.status_label = QLabel(_('No archive selected')+'  ')
-        self.status_label.setStyleSheet("font: italic;")
-        self.status_label.setStyleSheet("color: grey;")
+        self.status_label = QLabel()
+        # self.status_label = QLabel(_('No archive selected')+'  ')
+        # self.status_label.setStyleSheet("font: italic;")
+        # self.status_label.setStyleSheet("color: grey;")
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.setSortingEnabled(True)
         self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
@@ -205,9 +206,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionCollapse_All.triggered.connect(self.collapse_all)
         self.actionSelect_All.triggered.connect(self.select_all)
         self.actionUnselect_All.triggered.connect(self.unselect_all)
-        self.actionCode_Title.triggered.connect(self.code_view)
-        self.actionShort_Title.triggered.connect(self.short_view)
-        self.actionFull_Title.triggered.connect(self.full_view)
+        self.menuTitle_View.triggered.connect(self.change_title)
+        # self.actionCode_Title.triggered.connect(self.code_view)
+        # self.actionShort_Title.triggered.connect(self.short_view)
+        # self.actionFull_Title.triggered.connect(self.full_view)
         self.actionGrouped.triggered.connect(self.grouped_view)
         self.actionDetailed.triggered.connect(self.detailed_view)
         self.menuLanguage.triggered.connect(self.change_language)
@@ -298,29 +300,41 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.activateWindow()
 
 
-    def code_view(self):
-        if self.title_format == 'code':
-            return
-        self.actionShort_Title.setChecked(False)
-        self.actionFull_Title.setChecked(False)
-        self.title_format = 'code'
-        self.regroup(True)
+    def change_title(self):
+        changed = False
+        options = ['code', 'short', 'full']
+        counter = 0
+        for item in self.titleChoices.actions():
+            if item.isChecked() and (self.title_format != options[counter]):
+                self.title_format = options[counter]
+                changed = True
+            counter += 1
+        if changed:
+            self.regroup(True)
 
-    def short_view(self):
-        if self.title_format == 'short':
-            return
-        self.actionCode_Title.setChecked(False)
-        self.actionFull_Title.setChecked(False)
-        self.title_format = 'short'
-        self.regroup(True)
+    # def code_view(self):
+    #     if self.title_format == 'code':
+    #         return
+    #     self.actionShort_Title.setChecked(False)
+    #     self.actionFull_Title.setChecked(False)
+    #     self.title_format = 'code'
+    #     self.regroup(True)
 
-    def full_view(self):
-        if self.title_format == 'full':
-            return
-        self.actionShort_Title.setChecked(False)
-        self.actionCode_Title.setChecked(False)
-        self.title_format = 'full'
-        self.regroup(True)
+    # def short_view(self):
+    #     if self.title_format == 'short':
+    #         return
+    #     self.actionCode_Title.setChecked(False)
+    #     self.actionFull_Title.setChecked(False)
+    #     self.title_format = 'short'
+    #     self.regroup(True)
+
+    # def full_view(self):
+    #     if self.title_format == 'full':
+    #         return
+    #     self.actionShort_Title.setChecked(False)
+    #     self.actionCode_Title.setChecked(False)
+    #     self.title_format = 'full'
+    #     self.regroup(True)
 
 
     def detailed_view(self):
