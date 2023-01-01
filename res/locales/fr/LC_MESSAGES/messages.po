@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-12-31 19:17-0500\n"
-"PO-Revision-Date: 2023-01-01 01:35+0000\n"
+"PO-Revision-Date: 2023-01-01 11:48+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
@@ -75,7 +75,7 @@ msgstr "Enregistrer"
 
 #: ../../JWLManager.py:387 ../../JWLManager.py:423
 msgid "Save current archive?"
-msgstr "Enregistrer l'archive actuelle ?"
+msgstr "Enregistrer l'archive actuelle?"
 
 #: ../../JWLManager.py:395
 msgid "NEW ARCHIVE"
@@ -95,11 +95,11 @@ msgstr "Erreur"
 
 #: ../../JWLManager.py:483
 msgid "No archive has been opened!"
-msgstr "Aucune archive n'a été ouverte !"
+msgstr "Aucune archive n'a été ouverte!"
 
 #: ../../JWLManager.py:494 ../../JWLManager.py:496
 msgid "File \"{}\" not recognized!"
-msgstr "Fichier « {} » non reconnu !"
+msgstr "Fichier « {} » non reconnu!"
 
 #: ../../JWLManager.py:552 ../../JWLManager.py:554
 msgid "Save archive"
@@ -190,7 +190,7 @@ msgid ""
 "DELETE these {} items?"
 msgstr ""
 "Êtes-vous sûr·e de vouloir\n"
-"SUPPRIMER ces {} éléments ?"
+"SUPPRIMER ces {} éléments?"
 
 #: ../../JWLManager.py:714
 msgid "Deleting. Please wait…"
@@ -422,7 +422,7 @@ msgid ""
 "Make sure the edition exists in the selected language!\n"
 msgstr ""
 "Sélectionnez l'édition et la langue à ajouter.\n"
-"Assurez-vous que l'édition existe dans la langue sélectionnée !\n"
+"Assurez-vous que l'édition existe dans la langue sélectionnée!\n"
 
 #: ../../JWLManager.py:1167
 msgid "Edition"
@@ -430,7 +430,7 @@ msgstr "Édition"
 
 #: ../../JWLManager.py:1195
 msgid "Nothing added!"
-msgstr "Rien d'ajouté !"
+msgstr "Rien d'ajouté!"
 
 #: ../../JWLManager.py:1208
 msgid "Favorite for \"{}\" in {} already exists."
