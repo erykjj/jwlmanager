@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-12-31 19:17-0500\n"
-"PO-Revision-Date: 2022-12-28 11:30-0500\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: en\n"
+"PO-Revision-Date: 2023-01-01 00:44+0000\n"
+"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../JWLManager.py:105
@@ -171,7 +172,6 @@ msgid "NOT imported!"
 msgstr "NOT imported!"
 
 #: ../../JWLManager.py:676
-#, fuzzy
 msgid "Importing. Please wait…"
 msgstr "Importing. Please wait…"
 
@@ -192,7 +192,6 @@ msgstr ""
 "DELETE these {} items?"
 
 #: ../../JWLManager.py:714
-#, fuzzy
 msgid "Deleting. Please wait…"
 msgstr "Deleting. Please wait…"
 
@@ -213,7 +212,6 @@ msgstr ""
 "OBSCURE all text fields?"
 
 #: ../../JWLManager.py:737
-#, fuzzy
 msgid "Obscuring. Please wait…"
 msgstr "Obscuring. Please wait…"
 
@@ -234,12 +232,10 @@ msgstr ""
 "Proceed?"
 
 #: ../../JWLManager.py:753
-#, fuzzy
 msgid "Please wait…"
 msgstr "Please wait…"
 
 #: ../../JWLManager.py:759
-#, fuzzy
 msgid "Reindexing. Please wait…"
 msgstr "Reindexing. Please wait…"
 
@@ -262,36 +258,36 @@ msgstr "Publication"
 #: ../../JWLManager.py:841 ../../JWLManager.py:862 ../../JWLManager.py:876
 #: ../../JWLManager.py:907
 msgid "* MEDIA *"
-msgstr ""
+msgstr "* MEDIA *"
 
 #: ../../JWLManager.py:846 ../../JWLManager.py:868 ../../JWLManager.py:881
 #: ../../JWLManager.py:900 ../../JWLManager.py:912
 msgid "Grey"
-msgstr ""
+msgstr "Grey"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Yellow"
-msgstr ""
+msgstr "Yellow"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Green"
-msgstr ""
+msgstr "Green"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Blue"
-msgstr ""
+msgstr "Blue"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Red"
-msgstr ""
+msgstr "Red"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Orange"
-msgstr ""
+msgstr "Orange"
 
 #: ../../JWLManager.py:881 ../../JWLManager.py:912
 msgid "Purple"
-msgstr ""
+msgstr "Purple"
 
 #: ../../JWLManager.py:890 ../../JWLManager.py:891 ../../JWLManager.py:892
 msgid "OTHER"
@@ -303,7 +299,7 @@ msgstr "NO LANGUAGE"
 
 #: ../../JWLManager.py:898 ../../JWLManager.py:983
 msgid "* NO DATE *"
-msgstr ""
+msgstr "* NO DATE *"
 
 #: ../../JWLManager.py:899 ../../JWLManager.py:911
 msgid "UN-TAGGED"
@@ -319,51 +315,51 @@ msgstr "Language"
 
 #: ../../JWLManager.py:964
 msgid "Jan."
-msgstr ""
+msgstr "Jan."
 
 #: ../../JWLManager.py:964
 msgid "Feb."
-msgstr ""
+msgstr "Feb."
 
 #: ../../JWLManager.py:964
 msgid "Mar."
-msgstr ""
+msgstr "Mar."
 
 #: ../../JWLManager.py:964
 msgid "Apr."
-msgstr ""
+msgstr "Apr."
 
 #: ../../JWLManager.py:964
 msgid "May"
-msgstr ""
+msgstr "May"
 
 #: ../../JWLManager.py:964
 msgid "June"
-msgstr ""
+msgstr "June"
 
 #: ../../JWLManager.py:964
 msgid "July"
-msgstr ""
+msgstr "July"
 
 #: ../../JWLManager.py:964
 msgid "Aug."
-msgstr ""
+msgstr "Aug."
 
 #: ../../JWLManager.py:964
 msgid "Sep."
-msgstr ""
+msgstr "Sep."
 
 #: ../../JWLManager.py:964
 msgid "Oct."
-msgstr ""
+msgstr "Oct."
 
 #: ../../JWLManager.py:964
 msgid "Nov."
-msgstr ""
+msgstr "Nov."
 
 #: ../../JWLManager.py:964
 msgid "Dec."
-msgstr ""
+msgstr "Dec."
 
 #: ../../JWLManager.py:989
 msgid "Ch."
@@ -371,7 +367,7 @@ msgstr "Ch."
 
 #: ../../JWLManager.py:991
 msgid "* BLANK *"
-msgstr ""
+msgstr "* BLANK *"
 
 #: ../../JWLManager.py:1011
 msgid "Tag"
@@ -386,13 +382,12 @@ msgid "Year"
 msgstr "Year"
 
 #: ../../JWLManager.py:1026
-#, fuzzy
 msgid "Please be patient…"
 msgstr "Please be patient…"
 
 #: ../../JWLManager.py:1028
 msgid "Parsing tree"
-msgstr ""
+msgstr "Parsing tree"
 
 #: ../../JWLManager.py:1097 ../../JWLManager.py:1449 ../../JWLManager.py:1466
 #: ../../JWLManager.py:1506 ../../JWLManager.py:1522 ../../JWLManager.py:1592
@@ -401,7 +396,6 @@ msgid "Error!"
 msgstr "Error!"
 
 #: ../../JWLManager.py:1099
-#, fuzzy
 msgid "Oops! Something went wrong…"
 msgstr "Oops! Something went wrong…"
 
@@ -415,7 +409,7 @@ msgstr "inform the developer"
 
 #: ../../JWLManager.py:1105
 msgid "The app will terminate."
-msgstr ""
+msgstr "The app will terminate."
 
 #: ../../JWLManager.py:1141
 msgid "Add Favorite"
@@ -569,4 +563,3 @@ msgid ""
 msgstr ""
 "Wrong import file format:\n"
 "Malformed header"
-
