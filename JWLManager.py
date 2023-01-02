@@ -89,7 +89,9 @@ def read_res(lang):
         languages[row[0]] = row[1:]
         if row[3] == lang:
             ui_lang = row[0]
-    for row in cur.execute(f"SELECT Language, Symbol, ShortTitle, Title, Year, t.'Group' Type, Favorite FROM Publications p JOIN Types t USING (Language, Type) WHERE p.Language = {ui_lang};"): # NOTE: Groups need to be translated in each language
+    for row in cur.execute(f"SELECT Language, Symbol, ShortTitle, Title, Year, t.'Group' Type, Favorite FROM Publications p JOIN Types t USING (Language, Type) WHERE p.Language = {ui_lang};"):
+        publications[row[1]] = row[2:]
+    for row in cur.execute(f"SELECT Language, Symbol, ShortTitle, Title, Year, t.'Group' Type, Favorite FROM Extras e JOIN Types t USING (Language, Type) WHERE e.Language = {ui_lang};"):
         publications[row[1]] = row[2:]
     for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {ui_lang};"):
         books[row[0]] = row[1]
