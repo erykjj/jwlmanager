@@ -129,6 +129,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def set_vars(self):
         self.total.setText('')
+        self.int_total = 0
         self.modified = False
         self.title_format = 'short'
         self.grouped = False
@@ -313,11 +314,21 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def detailed_view(self):
+        if not self.detailed and self.int_total > 3500:
+            reply = QMessageBox.information(self, _('Datailed View'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            if reply == QMessageBox.No:
+                return
         self.detailed = not self.detailed
         if self.detailed:
             self.grouped = False
             self.actionGrouped.setChecked(False)
+            self.statusBar.showMessage(' '+_('Processing data. Please wait…'))
+            app.processEvents()
         self.regroup(True)
+        if self.detailed:
+            self.statusBar.showMessage(' '+_('Increased detail'), 3500)
+        else:
+            self.statusBar.showMessage(' '+_('Reduced detail'), 3500)
 
     def grouped_view(self):
         self.grouped = not self.grouped
@@ -365,6 +376,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.leaves = tree.leaves
         self.current_data = tree.current
+        self.int_total = tree.total
         self.total.setText(f"**{tree.total:,}**")
 
 
@@ -1047,7 +1059,7 @@ class BuildTree():
         def progress_dialog(steps):
             self.pd = QProgressDialog(_('Please be patient…'), None, 0, steps-1, self.window)
             self.pd.setWindowModality(Qt.WindowModal)
-            self.pd.setWindowTitle(_('Parsing tree'))
+            self.pd.setWindowTitle(_('Processing data'))
             self.pd.setWindowFlag(Qt.FramelessWindowHint)
             self.pd.setModal(True)
             self.pd.setMinimumDuration(0)
