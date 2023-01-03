@@ -57,8 +57,8 @@ The ***View*** menu has some additional options (also accessible directly via th
 * **Grouped (Ctrl+G)** - when grouping by publication, this further classifies the publications by type (books, brochures, periodicals, etc.); Detailed and Grouped views are mutually exclusive
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
-  * **Short Title** - abbreviated title
-  * **Full Title** - complete title
+  * **Short** - abbreviated title
+  * **Full** - complete title
 
 **Right-clicking** on a line in the Notes or Annotations categories will bring up a window with a preview of the selected items, provided there aren't too many. The ID of each note is provided for reference.
 
@@ -134,9 +134,9 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 #### UTILITIES
 
-#### Obscure
+#### Mask
 
-If you need to share your complete archive but have some personal or confidential information, you can use this option to over-write text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but replacing alphabetic characters with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm: check the detailed view or right-click on a Notes item to see the preview. Only tags are not obscured.
+If you need to share your complete archive but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm: check the detailed view or right-click on a Notes item to see the preview. Only tags are not obscured.
 
 #### Reindex
 
