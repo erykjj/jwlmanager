@@ -199,6 +199,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
+        self.actionImport.triggered.connect(self.import_file)
         self.actionObscure.triggered.connect(self.obscure)
         self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
@@ -475,6 +476,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave_As.setEnabled(True)
+        self.actionImport.setEnabled(True)
         self.actionCollapse_All.setEnabled(True)
         self.actionExpand_All.setEnabled(True)
         self.actionSelect_All.setEnabled(True)
@@ -696,11 +698,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path(file).parent
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
-        if category == 'Annotations':
+        if category == _('Annotations'):
             fn = ImportAnnotations(file)
-        elif category == 'Highlights':
+        elif category == _('Highlights'):
             fn = ImportHighlights(file)
-        elif category == 'Notes':
+        elif category == _('Notes'):
             fn = ImportNotes(file)
         if fn.aborted:
             self.clean_up()
