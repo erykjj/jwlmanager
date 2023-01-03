@@ -55,7 +55,9 @@ def get_language():
         'es': 'Spanish (español)',
         'fr': 'French (français)',
         # 'it': 'Italian (italiano)',
-        # 'pt': 'Portuguese (português)'
+        # 'pt': 'Portuguese (português)',
+        # 'ru': 'Russian (pусский)',
+        # 'zh': 'Chinese (中文)',
         }
     global tr
     tr = {}
@@ -144,7 +146,6 @@ class Window(QMainWindow, Ui_MainWindow):
             if item.toolTip() == self.lang:
                 item.setChecked(True)
         self.current_data = []
-        self.actionImport.setVisible(False)
 
     def init_windows(self):
 
@@ -765,16 +766,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def obscure(self):
-        reply = QMessageBox.warning(self, _('Obscure'), _('Are you sure you want to\nOBSCURE all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Mask'), _('Are you sure you want to\nMASK all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
-        self.statusBar.showMessage(' '+_('Obscuring. Please wait…'))
+        self.statusBar.showMessage(' '+_('Masking. Please wait…'))
         app.processEvents()
         fn = ObscureItems()
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(' '+_('Database obscured'), 3500)
+        self.statusBar.showMessage(' '+_('Data masked'), 3500)
         self.archive_modified()
         self.regroup()
 

@@ -145,7 +145,7 @@
           <property name="geometry">
            <rect>
             <x>120</x>
-            <y>0</y>
+            <y>1</y>
             <width>80</width>
             <height>28</height>
            </rect>
@@ -183,7 +183,7 @@
           <property name="geometry">
            <rect>
             <x>120</x>
-            <y>30</y>
+            <y>31</y>
             <width>80</width>
             <height>28</height>
            </rect>
@@ -482,8 +482,6 @@
     <addaction name="actionSave"/>
     <addaction name="actionSave_As"/>
     <addaction name="separator"/>
-    <addaction name="actionImport"/>
-    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -509,7 +507,7 @@
       <string>Title display format</string>
      </property>
      <property name="title">
-      <string>Title View</string>
+      <string>&amp;Title View</string>
      </property>
      <property name="icon">
       <iconset>
@@ -539,6 +537,8 @@
      <addaction name="actionFR"/>
      <addaction name="actionIT"/>
      <addaction name="actionPT"/>
+     <addaction name="actionRU"/>
+     <addaction name="actionZH"/>
     </widget>
     <addaction name="menuLanguage"/>
     <addaction name="separator"/>
@@ -773,7 +773,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Short Title</string>
+    <string>Short</string>
+   </property>
+   <property name="iconText">
+    <string>Short</string>
    </property>
    <property name="toolTip">
     <string>Use short publication title</string>
@@ -784,7 +787,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Full Title</string>
+    <string>Full</string>
+   </property>
+   <property name="iconText">
+    <string>Full</string>
    </property>
    <property name="toolTip">
     <string>Use full publication title</string>
@@ -851,28 +857,10 @@
      <normaloff>icons/icons8-invisible-64.png</normaloff>icons/icons8-invisible-64.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Obscure</string>
+    <string>&amp;Mask</string>
    </property>
    <property name="toolTip">
     <string>Mask text data</string>
-   </property>
-  </action>
-  <action name="actionImport">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset>
-     <normaloff>icons/icons8-import-csv-64.png</normaloff>icons/icons8-import-csv-64.png</iconset>
-   </property>
-   <property name="text">
-    <string>&amp;Import…</string>
-   </property>
-   <property name="toolTip">
-    <string>Import from export file</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionEN">
@@ -942,6 +930,28 @@
    </property>
    <property name="toolTip">
     <string>it</string>
+   </property>
+  </action>
+  <action name="actionRU">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Pусский</string>
+   </property>
+   <property name="toolTip">
+    <string>ru</string>
+   </property>
+  </action>
+  <action name="actionZH">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>中文</string>
+   </property>
+   <property name="toolTip">
+    <string>zh</string>
    </property>
   </action>
  </widget>
