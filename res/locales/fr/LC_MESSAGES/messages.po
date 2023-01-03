@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-03 17:19-0500\n"
-"PO-Revision-Date: 2023-01-03 01:19+0000\n"
+"PO-Revision-Date: 2023-01-03 22:25+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: JWLManager.py:155
@@ -53,7 +54,7 @@ msgstr ""
 
 #: JWLManager.py:318
 msgid "Datailed View"
-msgstr ""
+msgstr "Vue Détaillée"
 
 #: JWLManager.py:318 JWLManager.py:783
 msgid ""
@@ -64,17 +65,16 @@ msgstr ""
 "Continuez ?"
 
 #: JWLManager.py:325
-#, fuzzy
 msgid "Processing data. Please wait…"
-msgstr "Importation. Être patient…"
+msgstr "Traitement des données. Être patient…"
 
 #: JWLManager.py:329
 msgid "Increased detail"
-msgstr ""
+msgstr "Détails accrus"
 
 #: JWLManager.py:331
 msgid "Reduced detail"
-msgstr ""
+msgstr "Détails réduits"
 
 #: JWLManager.py:344 JWLManager.py:524 JWLManager.py:664 JWLManager.py:714
 #: JWLManager.py:862 JWLManager.py:1275 JWLManager.py:1305
@@ -399,7 +399,7 @@ msgstr "Veuillez être patient…"
 
 #: JWLManager.py:1062
 msgid "Processing data"
-msgstr ""
+msgstr "Traitement des données"
 
 #: JWLManager.py:1131 JWLManager.py:1482 JWLManager.py:1499 JWLManager.py:1539
 #: JWLManager.py:1555 JWLManager.py:1625 JWLManager.py:1658 JWLManager.py:1661
@@ -588,4 +588,3 @@ msgstr ""
 
 #~ msgid "Parsing tree"
 #~ msgstr "Analyse des données"
-
