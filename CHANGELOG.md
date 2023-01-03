@@ -4,12 +4,12 @@
 ### Added
 
 - Multi-language support: English, French, Spanish
-  - others in the works
+  - others in translation on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)
 
 ### Changed
 
 - Transition from Qt5 to Qt6 (PySide2 to PySide6) --> master branch
-  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there will be a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with releases for older operating systems
+  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there is a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with bug-fix/maintenance releases for older operating systems
 - Rearranged/cleaned up the folder structure
 - Cosmetic/layout changes to GUI
 
