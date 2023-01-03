@@ -5,6 +5,7 @@
 
 - Multi-language support: English, French, Spanish
   - others in translation on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)
+- Added alert box when change-over to Detailed view could take a long time (with many records to process)
 
 ### Changed
 
@@ -12,6 +13,7 @@
   - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there is a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with bug-fix/maintenance releases for older operating systems
 - Rearranged/cleaned up the folder structure
 - Cosmetic/layout changes to GUI
+- Obscure is now Mask, which is a more appropriate term for this kind of data obfuscation
 
 ### Fixed
 
