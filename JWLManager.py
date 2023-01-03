@@ -819,6 +819,9 @@ class Window(QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
         if self.modified:
             reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+            reply.button(QMessageBox.Yes).setText(_('Yes'))
+            reply.button(QMessageBox.No).setText(_('No'))
+            reply.button(QMessageBox.Cancel).setText(_('Cancel'))
             if reply == QMessageBox.Yes:
                 if self.save_file() == False:
                      event.ignore()
