@@ -143,6 +143,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if item.toolTip() == self.lang:
                 item.setChecked(True)
         self.current_data = []
+        self.actionImport.setVisible(False)
 
     def init_windows(self):
 
@@ -199,7 +200,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionQuit.triggered.connect(self.clean_up)
         self.actionSave.triggered.connect(self.save_file)
         self.actionSave_As.triggered.connect(self.save_as_file)
-        self.actionImport.triggered.connect(self.import_file)
         self.actionObscure.triggered.connect(self.obscure)
         self.actionReindex.triggered.connect(self.reindex)
         self.actionExpand_All.triggered.connect(self.expand_all)
@@ -476,7 +476,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave_As.setEnabled(True)
-        self.actionImport.setEnabled(True)
         self.actionCollapse_All.setEnabled(True)
         self.actionExpand_All.setEnabled(True)
         self.actionSelect_All.setEnabled(True)
