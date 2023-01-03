@@ -676,7 +676,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.selected_items += len(self.leaves[item])
         self.selected.setText(f"**{self.selected_items:,}**")
         self.button_delete.setEnabled(self.selected_items)
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in ('Notes', 'Highlights', 'Annotations'))
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
 
 
     def export(self):
@@ -913,7 +913,7 @@ class BuildTree():
             issue, year = self.process_date(year, row[3])
             detail1 = (None, None)
             detail2 = (None, None)
-            tag = ("Favorite", None) # CHECK: translate??
+            tag = ("Favorite", None)
             color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
