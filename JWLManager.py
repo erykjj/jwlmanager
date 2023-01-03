@@ -346,7 +346,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionGrouped.setChecked(False)
         self.regroup(True)
 
-    def grouped_view(self): # BUG: crashes!! language/translation-related
+    def grouped_view(self):
         self.grouped = not self.grouped
         if self.grouped:
             self.detailed = False
@@ -1185,7 +1185,7 @@ class AddFavorites():
         self.cur.close()
         con.close()
 
-    def add_dialog(self):
+    def add_dialog(self): # TODO: first language, then list only available Bibles
         dialog = QDialog()
         dialog.setWindowTitle(_('Add Favorite'))
         label = QLabel(dialog)
@@ -1201,8 +1201,7 @@ class AddFavorites():
         language = QComboBox(dialog)
         langs = []
         for lang in sorted(self.languages.keys()):
-            if self.languages[lang][3] == 1:
-                langs.append(self.languages[lang][0])
+            langs.append(self.languages[lang][0])
         language.addItem(' ')
         language.addItems(sorted(langs))
         language.setMaxVisibleItems(15)
