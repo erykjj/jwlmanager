@@ -111,33 +111,37 @@
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="491"/>
+        <location filename="main_window.ui" line="489"/>
         <location filename="main_window.ui" line="661"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="499"/>
+        <location filename="main_window.ui" line="497"/>
         <source>&amp;View</source>
         <translation>&amp;Voir</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="509"/>
+        <location filename="main_window.ui" line="507"/>
         <source>Title display format</source>
         <translation>Format d’affichage du titre</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="512"/>
         <source>Title View</source>
-        <translation>Vue du titre</translation>
+        <translation type="vanished">Vue du titre</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="528"/>
+        <location filename="main_window.ui" line="510"/>
+        <source>&amp;Title View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="526"/>
         <source>Switch language</source>
         <translation>Changer de langue</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="531"/>
+        <location filename="main_window.ui" line="529"/>
         <source>&amp;Language</source>
         <translation>&amp;Langue</translation>
     </message>
@@ -298,152 +302,176 @@
     </message>
     <message>
         <location filename="main_window.ui" line="776"/>
-        <source>Short Title</source>
-        <translation>Titre court</translation>
+        <location filename="main_window.ui" line="779"/>
+        <source>Short</source>
+        <oldsource>Short Title</oldsource>
+        <translation type="unfinished">Titre court</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="779"/>
+        <location filename="main_window.ui" line="782"/>
         <source>Use short publication title</source>
         <translation>Utiliser un titre de publication court</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="787"/>
-        <source>Full Title</source>
-        <translation>Titre complet</translation>
+        <location filename="main_window.ui" line="790"/>
+        <location filename="main_window.ui" line="793"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="790"/>
+        <location filename="main_window.ui" line="860"/>
+        <source>&amp;Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="940"/>
+        <source>Pусский</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="943"/>
+        <source>ru</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="951"/>
+        <source>中文</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="954"/>
+        <source>zh</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Full Title</source>
+        <translation type="vanished">Titre complet</translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="796"/>
         <source>Use full publication title</source>
         <translation>Utiliser le titre complet de la publication</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="804"/>
+        <location filename="main_window.ui" line="810"/>
         <source>&amp;Grouped</source>
         <translation>&amp;Groupés</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="807"/>
+        <location filename="main_window.ui" line="813"/>
         <source>Group publications by category</source>
         <translation>Regrouper les publications par catégorie</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="810"/>
+        <location filename="main_window.ui" line="816"/>
         <source>Ctrl+G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="819"/>
+        <location filename="main_window.ui" line="825"/>
         <source>&amp;New</source>
         <translation>&amp;Nouveau</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="822"/>
+        <location filename="main_window.ui" line="828"/>
         <source>Create an empty archive</source>
         <translation>Créer une archive vide</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="825"/>
+        <location filename="main_window.ui" line="831"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="836"/>
+        <location filename="main_window.ui" line="842"/>
         <source>&amp;Detailed</source>
         <translation>&amp;Détaillé</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="839"/>
+        <location filename="main_window.ui" line="845"/>
         <source>Detailed listing</source>
         <oldsource>Detailed view</oldsource>
         <translation>Liste détaillée</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="842"/>
+        <location filename="main_window.ui" line="848"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="854"/>
         <source>&amp;Obscure</source>
-        <translation>Masquer</translation>
+        <translation type="vanished">Masquer</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="857"/>
+        <location filename="main_window.ui" line="863"/>
         <source>Mask text data</source>
         <translation>Masquer les données de texte</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="869"/>
         <source>&amp;Import…</source>
-        <translation>&amp;Importer…</translation>
+        <translation type="vanished">&amp;Importer…</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="872"/>
         <source>Import from export file</source>
-        <translation>Importer d’un fichier d’exportation</translation>
+        <translation type="vanished">Importer d’un fichier d’exportation</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="933"/>
+        <location filename="main_window.ui" line="921"/>
         <source>pt</source>
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="875"/>
-        <source>Ctrl+I</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="886"/>
+        <location filename="main_window.ui" line="874"/>
         <source>English</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="889"/>
+        <location filename="main_window.ui" line="877"/>
         <source>en</source>
         <translation>en</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="897"/>
+        <location filename="main_window.ui" line="885"/>
         <source>Español</source>
         <translation>Español</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="900"/>
+        <location filename="main_window.ui" line="888"/>
         <source>es</source>
         <translation>es</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="911"/>
+        <location filename="main_window.ui" line="899"/>
         <source>de</source>
         <translation>de</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="919"/>
+        <location filename="main_window.ui" line="907"/>
         <source>Français</source>
         <translation>Français</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="922"/>
+        <location filename="main_window.ui" line="910"/>
         <source>fr</source>
         <translation>fr</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="930"/>
+        <location filename="main_window.ui" line="918"/>
         <source>Português</source>
         <translation>Português</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="941"/>
+        <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
         <translation>Italiano</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="944"/>
+        <location filename="main_window.ui" line="932"/>
         <source>it</source>
         <translation>it</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="908"/>
+        <location filename="main_window.ui" line="896"/>
         <source>Deutsch</source>
         <translation></translation>
     </message>
