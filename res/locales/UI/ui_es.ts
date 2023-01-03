@@ -133,7 +133,7 @@
     <message>
         <location filename="main_window.ui" line="510"/>
         <source>&amp;Title View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Títulos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="526"/>
@@ -248,7 +248,7 @@
     <message>
         <location filename="main_window.ui" line="709"/>
         <source>&amp;Collapse All</source>
-        <translation>&amp;Encoger todo</translation>
+        <translation>En&amp;coger todo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="712"/>
@@ -305,7 +305,7 @@
         <location filename="main_window.ui" line="779"/>
         <source>Short</source>
         <oldsource>Short Title</oldsource>
-        <translation type="unfinished">Título corto</translation>
+        <translation>Cortos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="782"/>
@@ -316,32 +316,32 @@
         <location filename="main_window.ui" line="790"/>
         <location filename="main_window.ui" line="793"/>
         <source>Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Completos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="860"/>
         <source>&amp;Mask</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Encubrir</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="940"/>
         <source>Pусский</source>
-        <translation type="unfinished"></translation>
+        <translation>Pусский</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="943"/>
         <source>ru</source>
-        <translation type="unfinished"></translation>
+        <translation>ru</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="951"/>
         <source>中文</source>
-        <translation type="unfinished"></translation>
+        <translation>中文</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="954"/>
         <source>zh</source>
-        <translation type="unfinished"></translation>
+        <translation>zh</translation>
     </message>
     <message>
         <source>Full Title</source>
@@ -385,7 +385,7 @@
     <message>
         <location filename="main_window.ui" line="842"/>
         <source>&amp;Detailed</source>
-        <translation>De&amp;tallado</translation>
+        <translation>&amp;Detallado</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="845"/>
