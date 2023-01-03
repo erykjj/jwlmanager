@@ -235,14 +235,16 @@ class Window(QMainWindow, Ui_MainWindow):
         changed = False
         for item in self.langChoices.actions():
             if item.isChecked() and (self.lang != item.toolTip()):
+                app.removeTranslator(translator[self.lang])
                 self.lang = item.toolTip()
                 changed = True
         if not changed:
             return
         read_res(self.lang)
-        app.removeTranslator(translator)
-        translator.load(f'res/locales/UI/{self.lang}.qm')
-        app.installTranslator(translator)
+        if self.lang not in translator.keys():
+            translator[self.lang] = QTranslator()
+            translator[self.lang].load(f'res/locales/UI/qt_{self.lang}.qm')
+        app.installTranslator(translator[self.lang])
         app.processEvents()
         self.regroup()
         self.tree_selection()
@@ -819,9 +821,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def closeEvent(self, event):
         if self.modified:
             reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
-            reply.button(QMessageBox.Yes).setText(_('Yes'))
-            reply.button(QMessageBox.No).setText(_('No'))
-            reply.button(QMessageBox.Cancel).setText(_('Cancel'))
             if reply == QMessageBox.Yes:
                 if self.save_file() == False:
                      event.ignore()
@@ -1934,9 +1933,10 @@ class Reindex():
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     global translator
-    translator = QTranslator()
-    translator.load(f'res/locales/UI/{lang}.qm')
-    app.installTranslator(translator)
+    translator = {}
+    translator[lang] = QTranslator()
+    translator[lang].load(f'res/locales/UI/qt_{lang}.qm')
+    app.installTranslator(translator[lang])
 
     font = QFont()
     font.setPixelSize(16)
