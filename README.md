@@ -147,7 +147,7 @@ ____
 
 Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and suggestions.
 
-[![](icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
+[![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 ____
 [^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 10.14 and up). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
