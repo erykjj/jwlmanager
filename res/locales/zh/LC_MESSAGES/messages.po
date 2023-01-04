@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-01-03 19:02-0500\n"
+"POT-Creation-Date: 2023-01-04 08:33-0500\n"
 "PO-Revision-Date: 2022-12-28 11:30-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
 
-#: ../../../JWLManager.py:156
+#: ../../../JWLManager.py:162
 msgid "Help"
 msgstr ""
 
-#: ../../../JWLManager.py:171 ../../../JWLManager.py:296
+#: ../../../JWLManager.py:177 ../../../JWLManager.py:296
 msgid "Data Viewer"
 msgstr ""
 
