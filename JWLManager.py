@@ -165,7 +165,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.help_window.setMinimumSize(300, 300)
             text = QTextEdit(self.help_window)
             text.setReadOnly(True)
-            text.setMarkdown(open(self.resource_path('./HELP.md'), encoding='utf-8').read())
+            text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
             layout = QHBoxLayout(self.help_window)
             layout.addWidget(text)
             self.help_window.setLayout(layout)
