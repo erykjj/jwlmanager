@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Italian translations
+
 ### Changed
 
 ### Fixed
