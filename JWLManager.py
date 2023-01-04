@@ -35,7 +35,6 @@ import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfil
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-from PySide6.QtQml import *
 
 from datetime import datetime, timezone
 from filehash import FileHash
@@ -77,6 +76,13 @@ def get_language():
             lang = l
 
     return lang
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = PROJECT_PATH 
+    return os.path.join(base_path, relative_path)
 
 def read_res(lang):
     global _, publications, languages, books
@@ -180,12 +186,6 @@ class Window(QMainWindow, Ui_MainWindow):
         init_help()
         init_viewer()
 
-    def resource_path(self, relative_path):
-        try:
-            base_path = sys._MEIPASS
-        except Exception:
-            base_path = PROJECT_PATH 
-        return os.path.join(base_path, relative_path)
 
     def center(self):
         qr = self.frameGeometry()
@@ -240,7 +240,7 @@ class Window(QMainWindow, Ui_MainWindow):
         read_res(self.lang)
         if self.lang not in translator.keys():
             translator[self.lang] = QTranslator()
-            translator[self.lang].load(f'res/locales/UI/qt_{self.lang}.qm')
+            translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
         app.installTranslator(translator[self.lang])
         app.processEvents()
         self.regroup()
@@ -1919,7 +1919,7 @@ if __name__ == "__main__":
     global translator
     translator = {}
     translator[lang] = QTranslator()
-    translator[lang].load(f'res/locales/UI/qt_{lang}.qm')
+    translator[lang].load(resource_path(f'res/locales/UI/qt_{lang}.qm'))
     app.installTranslator(translator[lang])
 
     font = QFont()
