@@ -1,10 +1,10 @@
-JWLManager
+JWLManager - v2*
 
 Purpose
 
 This is a multi-platform application for viewing and performing various
 operations on the user data stored in a .jwlibrary backup archive (created from
-within the JW Library app*: Personal Study > Backup and Restore > Create a
+within the JW Library app#: Personal Study > Backup and Restore > Create a
 backup). A modified .jwlibrary archive can then be restored within the app.
 
 In addition to the main functions of viewing, exporting, importing, and
@@ -19,7 +19,9 @@ Usage
 
 Windows and Mac OS
 
-Simply launch the Windows executable or Mac OS app as usual.
+Simply launch the Windows executable or macOS app as usual. If you receive
+Windows Defender “unknown publisher” alerts, you can safely choose “More info”
+and “Run anyway”. See here for a discussion on what’s going on.
 
 Linux
 
@@ -32,9 +34,8 @@ Or, make it executable first and run directly:
     $ chmod +x JWLManager.py
     $ ./JWLManager.py
 
-You may have to pip install some of the required libraries (PySide2, regex).
-
-Do let me know if you have any difficulties ;-)
+You may have to install some of the required libraries^. Do let me know if you
+have any difficulties ;-)
 
 --------------------------------------------------------------------------------
 
@@ -79,8 +80,8 @@ combination shortcut):
     Grouped views are mutually exclusive
 -   Title View - change how publication titles are displayed
     -   Code - publication code
-    -   Short Title - abbreviated title
-    -   Full Title - complete title
+    -   Short - abbreviated title
+    -   Full - complete title
 
 Right-clicking on a line in the Notes or Annotations categories will bring up a
 window with a preview of the selected items, provided there aren’t too many. The
@@ -175,8 +176,6 @@ in the app itself. For now, to have colored note icons (without any
 highlighting), I import my notes as for the Reference Bible (Rbi8); this way I
 can see the stickies in the Study Bible (nwtsty).
 
-[notes]
-
 For Bible notes, {BK=}{CH=}{VER=} are all numeric and refer to the number of the
 book (1-66), the chapter and the verse, respectively. For books with just one
 chapter, use “1” for the chapter number. {ISSUE=}{DOC=}{BLOCK=} are the
@@ -218,15 +217,15 @@ change in the future and it should then be realtively easy to convert.
 
 UTILITIES
 
-Obscure
+Mask
 
 If you need to share your complete archive but have some personal or
-confidential information, you can use this option to over-write text fields in
-your archive. The length of the text remains the same, leaving all numbers and
-punctuation in place, but replacing alphabetic characters with meaningless
-expressions such as ‘obscured’, ‘yada’, ‘bla’, ‘gibberish’ or ‘børk’. To
-confirm: check the detailed view or right-click on a Notes item to see the
-preview. Only tags are not obscured.
+confidential information, you can use this option to obfuscate the text fields
+in your archive. The length of the text remains the same, leaving all numbers
+and punctuation in place, but alphabetic characters are over-written with
+meaningless expressions such as ‘obscured’, ‘yada’, ‘bla’, ‘gibberish’ or
+‘børk’. To confirm: check the detailed view or right-click on a Notes item to
+see the preview. Only tags are not obscured.
 
 Reindex
 
@@ -237,9 +236,11 @@ database contains. It does not need to be run more than once in a while.
 
 --------------------------------------------------------------------------------
 
-Feedback
+* This is the current (Qt6/PySide6-based) branch for newer operating systems
+(Linux, MS Windows 10/11, macOS 10.14 and up). For older systems, see the v1
+branch (based on Qt5/PySide2).
 
-Feel free to get in touch and post any issues and suggestions.
-
-* JW Library is a registered trademark of Watch Tower Bible and Tract Society
+# JW Library is a registered trademark of Watch Tower Bible and Tract Society
 of Pennsylvania.
+
+^ pip3 install filehash PySide6 regex.
