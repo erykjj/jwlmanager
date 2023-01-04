@@ -53,9 +53,9 @@ interface language:
 ```
 
 Which means that (on all platforms) you can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
-Linux terminal: `python3 JWLManager.py -es`
-Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
-macOS Terminal: `open -a JWLManager.app --args -es`
+* Linux terminal: `python3 JWLManager.py -es`
+* Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
+* macOS Terminal: `open -a JWLManager.app --args -es`
 
 ____
 ## Operation
