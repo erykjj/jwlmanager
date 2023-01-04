@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-04 08:33-0500\n"
-"PO-Revision-Date: 2023-01-04 08:50+0000\n"
+"PO-Revision-Date: 2023-01-04 13:45+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:162
@@ -146,7 +147,7 @@ msgid ""
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
 "Il est recommandé d'enregistrer sous un autre nom.\n"
-"Êtes-vous absolument sûr de vouloir remplacer l'original ?"
+"Êtes-vous absolument sûr de vouloir remplacer l'original?"
 
 #: ../../../JWLManager.py:643
 msgid "Saved"
@@ -273,7 +274,7 @@ msgstr "Sortir"
 
 #: ../../../JWLManager.py:807
 msgid "Save before quitting?"
-msgstr "Sauver avant de sortir ?"
+msgstr "Sauver avant de sortir?"
 
 #: ../../../JWLManager.py:823 ../../../JWLManager.py:1039
 msgid "Publication"
@@ -587,7 +588,7 @@ msgid ""
 msgstr ""
 "SERONT SUPPRIMÉS avant l'importation.\n"
 "\n"
-"Procéder à la suppression ? (NON pour passer)"
+"Procéder à la suppression? (NON pour passer)"
 
 #: ../../../JWLManager.py:1659
 msgid ""
@@ -617,4 +618,3 @@ msgstr ""
 
 #~ msgid "Database obscured"
 #~ msgstr "Base de données masquée"
-
