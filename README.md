@@ -14,7 +14,11 @@ ____
 
 ### Windows and Mac OS
 
-Simply [download](https://github.com/erykjj/jwlmanager/releases/latest) and launch the latest **Windows executable** or **macOS app**. If you receive **Windows Defender "unknown publisher" alerts**, you can safely choose "More info" and "Run anyway". See [here](https://github.com/erykjj/jwlmanager/issues/1) for a discussion on what's going on.
+Simply [download](https://github.com/erykjj/jwlmanager/releases/latest) and launch the latest **Windows executable** or **macOS app**.
+
+**Notes**
+- If you receive **Windows Defender "unknown publisher" alerts**, you can safely choose "More info" and "Run anyway". See [here](https://github.com/erykjj/jwlmanager/issues/1) for a discussion on what's going on.
+- The macOS app is slow to start up. I'm looking into it.
 
 ### Linux
 
@@ -53,9 +57,9 @@ interface language:
 ```
 
 Which means that (on all platforms) you can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
-* Linux terminal: `python3 JWLManager.py -es`
-* Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
-* macOS Terminal: `open -a JWLManager.app --args -es`
+- Linux terminal: `python3 JWLManager.py -es`
+- Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
+- macOS Terminal: `open -a JWLManager.app --args -es`
 
 ____
 ## Operation
