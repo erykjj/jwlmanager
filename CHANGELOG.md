@@ -14,6 +14,7 @@
 - Rearranged/cleaned up the folder structure
 - Cosmetic/layout changes to GUI
 - Obscure is now Mask, which is a more appropriate term for this kind of data obfuscation
+- Split off usage instructions from README to a separate HELP document
 
 ### Fixed
 
