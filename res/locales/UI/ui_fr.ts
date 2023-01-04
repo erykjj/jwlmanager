@@ -385,7 +385,7 @@
     <message>
         <location filename="main_window.ui" line="842"/>
         <source>&amp;Detailed</source>
-        <translation>&amp;Détaillé</translation>
+        <translation>&amp;Détaillés</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="845"/>
