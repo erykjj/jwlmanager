@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-03 19:02-0500\n"
-"PO-Revision-Date: 2023-01-04 00:00+0000\n"
+"PO-Revision-Date: 2023-01-04 08:50+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:156
@@ -66,7 +67,7 @@ msgid ""
 "Proceed?"
 msgstr ""
 "Ça peut prendre quelques secondes.\n"
-"Continuez ?"
+"Procéder?"
 
 #: ../../../JWLManager.py:326
 msgid "Processing data. Please wait…"
@@ -166,7 +167,7 @@ msgstr "Exporter"
 
 #: ../../../JWLManager.py:676
 msgid "items will be EXPORTED. Proceed?"
-msgstr "éléments seront EXPORTÉS. Continuez ?"
+msgstr "éléments seront EXPORTÉS. Procéder?"
 
 #: ../../../JWLManager.py:688
 msgid "NOT exported!"
@@ -189,7 +190,7 @@ msgstr ""
 "Assurez-vous que votre fichier d'importation est encodé en UTF-8 et "
 "correctement formaté. \n"
 "\n"
-"L'importation modifiera l'archive. Continuez ?"
+"L'importation modifiera l'archive. Procéder?"
 
 #: ../../../JWLManager.py:704
 msgid "Import file"
@@ -617,4 +618,3 @@ msgstr ""
 
 #~ msgid "Database obscured"
 #~ msgstr "Base de données masquée"
-
