@@ -33,6 +33,27 @@ $ ./JWLManager.py
 
 You *may* have to install some of the required libraries[^2]. Do [let me know](https://github.com/erykjj/jwlmanager/issues) if you have any difficulties ;-)
 
+If you use the -h flag, you'll see the following options:
+
+```
+usage: JWLManager.py [-h] [-v] [-en | -es | -fr]
+
+Manage .jwlibrary backup archives
+
+options:
+  -h, --help     show this help message and exit
+  -v, --version  show version and exit
+
+interface language:
+  -en or leave out for English
+
+  -en            English (default)
+  -es            Spanish (español)
+  -fr            French (français)
+```
+
+Which means that (on all platforms) you can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as ```python3 JWLManager.py -es``` or ```JWLManager.exe -es``` in Windows (from the Comand Prompt, or by creating a shortcut).
+
 ____
 ## Operation
 
