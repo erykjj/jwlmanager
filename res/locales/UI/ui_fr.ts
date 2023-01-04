@@ -133,7 +133,7 @@
     <message>
         <location filename="main_window.ui" line="510"/>
         <source>&amp;Title View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Titres</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="526"/>
@@ -208,7 +208,7 @@
     <message>
         <location filename="main_window.ui" line="646"/>
         <source>&amp;About…</source>
-        <translation>&amp;À propos…</translation>
+        <translation>À &amp;propos…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="649"/>
@@ -218,7 +218,7 @@
     <message>
         <location filename="main_window.ui" line="673"/>
         <source>Save &amp;As…</source>
-        <translation>Enregistrer comme…</translation>
+        <translation>Enregistrer &amp;comme…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="676"/>
@@ -233,7 +233,7 @@
     <message>
         <location filename="main_window.ui" line="691"/>
         <source>E&amp;xpand All</source>
-        <translation>Étendre tous</translation>
+        <translation>&amp;Étendre tout</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="694"/>
@@ -278,7 +278,7 @@
     <message>
         <location filename="main_window.ui" line="745"/>
         <source>&amp;Unselect All</source>
-        <translation>&amp;Désélectionnez tout</translation>
+        <translation>&amp;Désélectionner tout</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="748"/>
@@ -305,7 +305,7 @@
         <location filename="main_window.ui" line="779"/>
         <source>Short</source>
         <oldsource>Short Title</oldsource>
-        <translation type="unfinished">Titre court</translation>
+        <translation>Courts</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="782"/>
@@ -316,32 +316,32 @@
         <location filename="main_window.ui" line="790"/>
         <location filename="main_window.ui" line="793"/>
         <source>Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Complets</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="860"/>
         <source>&amp;Mask</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Masquer</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="940"/>
         <source>Pусский</source>
-        <translation type="unfinished"></translation>
+        <translation>Pусский</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="943"/>
         <source>ru</source>
-        <translation type="unfinished"></translation>
+        <translation>ru</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="951"/>
         <source>中文</source>
-        <translation type="unfinished"></translation>
+        <translation>中文</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="954"/>
         <source>zh</source>
-        <translation type="unfinished"></translation>
+        <translation>zh</translation>
     </message>
     <message>
         <source>Full Title</source>
