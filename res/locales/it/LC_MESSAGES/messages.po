@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-04 08:45-0500\n"
-"PO-Revision-Date: 2022-12-28 11:30-0500\n"
-"Last-Translator: Alessandro Lucchet <hyperion90@gmail.com>\n"
-"Language: it\n"
+"PO-Revision-Date: 2023-01-04 21:20+0000\n"
+"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:162
@@ -424,7 +425,7 @@ msgstr "Errore!"
 
 #: ../../../JWLManager.py:1134
 msgid "Oops! Something went wrong…"
-msgstr ""
+msgstr "Oops! Qualcosa è andato storto…"
 
 #: ../../../JWLManager.py:1134
 msgid "Take note of what you were doing and"
@@ -480,7 +481,7 @@ msgstr ""
 
 #: ../../../JWLManager.py:1325
 msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-msgstr "TUTTE LE NOTE INIZIANO CON UN'INTESTAZIONE INDICANTE LA CATEGORIA, ETC"
+msgstr "TUTTE LE NOTE INIZIANO CON UN'INTESTAZIONE INDICANTE LA CATEGORIA, ETC."
 
 #: ../../../JWLManager.py:1326
 msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
@@ -626,4 +627,3 @@ msgstr ""
 
 #~ msgid "Database obscured"
 #~ msgstr "Il database è stato offuscato"
-
