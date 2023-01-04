@@ -3,24 +3,30 @@
 ## [Unreleased]
 ### Added
 
-- Multi-language support: English, French, Spanish
-  - others in translation on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)
-- Added alert box when change-over to Detailed view could take a long time (with many records to process)
-
 ### Changed
-
-- Transition from Qt5 to Qt6 (PySide2 to PySide6) --> master branch
-  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there is a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with bug-fix/maintenance releases for older operating systems
-- Rearranged/cleaned up the folder structure
-- Cosmetic/layout changes to GUI
-- Obscure is now Mask, which is a more appropriate term for this kind of data obfuscation
-- Split off usage instructions from README to a separate HELP document
 
 ### Fixed
 
 ### Removed
 
 ____
+## [2.0.1] - 2023-01-04
+### Added
+
+- **Multi-language support** (internationalization/i18n)
+  - Localization/L10n in English, French, Spanish
+    - others in process of being translated on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)
+- Added alert box when change-over to Detailed view could take a long time (with many records to process)
+
+### Changed
+
+- **UI framework** transitioned from Qt5 to Qt6 (PySide2 to PySide6)
+  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there is a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with bug-fix/maintenance releases for older operating systems
+- Rearranged/cleaned up the folder structure
+- Cosmetic/layout changes to GUI
+- "Obscure" is now "Mask", which is a more appropriate term for this kind of data obfuscation
+- Split off usage instructions from README to a separate HELP document
+
 ## [1.2.2] - 2022-12-20
 ### Added
 
@@ -263,6 +269,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.1
 [1.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.2
 [1.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.1
 [1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
