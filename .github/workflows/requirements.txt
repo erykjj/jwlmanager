@@ -1,0 +1,7 @@
+pyinstaller
+pyinstaller-hooks-contrib
+PySide6
+shiboken6
+regex
+argparse
+filehash
