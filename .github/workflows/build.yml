@@ -24,9 +24,9 @@ jobs:
         draft: true
         prerelease: false
         body: |
-          Windows (zipped folder): JWLManager_${{ name }}.zip
-          Windows (stand-alone): JWLManager_${{ name }}.exe
-          macOS (zipped app): JWLManager_${{ name }}.app.zip
+          Windows (zipped folder): JWLManager_${GITHUB_REF#refs/*/}.zip
+          Windows (stand-alone): JWLManager_${GITHUB_REF#refs/*/}.exe
+          macOS (zipped app): JWLManager_${GITHUB_REF#refs/*/}.app.zip
         # generate_release_notes: true
     outputs:
       release_url: ${{ steps.gh_release.outputs.upload_url }}
