@@ -27,9 +27,9 @@ jobs:
           Windows (zipped folder): JWLManager_${{ github.ref }}.zip
           Windows (stand-alone): JWLManager_${{ github.ref }}.exe
           macOS (zipped app): JWLManager_${{ github.ref }}.app.zip
-        generate_release_notes: true
+        # generate_release_notes: true
     outputs:
-      release_url: ${{ steps.upload_url.outputs }}
+      release_url: ${{ steps.gh_release.outputs.upload_url }}
 
   build:
     name: Build EXE
