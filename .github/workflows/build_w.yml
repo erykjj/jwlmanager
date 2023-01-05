@@ -16,4 +16,4 @@ jobs:
         - name: Install pip
           run: python -m pip install --upgrade pip
         - name: Install dependencies
-          run: pip install -r .github/workflows/requirements.txt; fi
+          run: pip install -r .github/workflows/requirements.txt
