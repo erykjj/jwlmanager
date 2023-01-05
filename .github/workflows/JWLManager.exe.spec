@@ -5,10 +5,10 @@ block_cipher = None
 
 
 a = Analysis(
-    ['JWLManager.py'],
+    ['../../JWLManager.py'],
     pathex=[],
     binaries=[],
-    datas=[('res', 'res/')],
+    datas=[('../../res', 'res/')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['res/icons/JWLManager.ico'],
+    icon=['../../res/icons/JWLManager.ico'],
 )
