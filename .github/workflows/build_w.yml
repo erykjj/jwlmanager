@@ -48,10 +48,10 @@ jobs:
       run: pip install -r .github/workflows/requirements.txt
     - name: Build with pyinstaller
       run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
-    - name: Load release file
-      uses: actions/download-artifact@v3
-      with:
-        name: release_url
+    # - name: Load release file
+    #   uses: actions/download-artifact@v3
+    #   with:
+    #     name: release_url
     # - name: Get release URL
     #   id: get_release_info
     #   shell: bash
