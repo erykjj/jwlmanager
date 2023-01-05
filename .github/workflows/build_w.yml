@@ -1,9 +1,4 @@
 name: 'Build Windows executable'
-description: 'Build Windows executable with pyinstaller'
-author: 'Eryk J.'
-branding:
-    icon: 'package'
-    color: 'gray-dark'
 
 on:
   workflow_dispatch:
