@@ -1,10 +1,9 @@
-name: 'Build Windows'
+name: 'Build Packages'
+
 on:
-  workflow_dispatch:
-# on:
-#   push:
-#     tags:
-#       - '*_testing'
+  push:
+    tags:
+      - '*_testing'
 
 jobs:
 
@@ -12,18 +11,25 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+    - name: Generate body
+      run: echo 
     - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: gh_release
+      uses: softprops/action-gh-release@v1
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        name: ${{ github.ref }}
         draft: true
         prerelease: false
-    outputs:
-      release_url: ${{ steps.create_release.outputs.upload_url }}
+        body: |
+          Windows (zipped folder): JWLManager_${{ github.ref }}.zip
+          Windows (stand-alone): JWLManager_${{ github.ref }}.exe
+          macOS (zipped app): JWLManager_${{ github.ref }}.app.zip
+        generate_release_notes: true
+      outputs:
+        release_url: ${{ steps.upload_url.outputs }}
 
   build:
     name: Build EXE
@@ -45,8 +51,8 @@ jobs:
     - name: Upload to release
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # env:
+      #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.createrelease.outputs.release_url }}
         asset_path: ./dist/JWLManager.exe
