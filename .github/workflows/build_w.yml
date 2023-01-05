@@ -47,8 +47,8 @@ jobs:
       run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
     - name: Load release file
       uses: actions/download-artifact@v3
-        with:
-          name: release_url
+      with:
+        name: release_url
     - name: Get release URL
       id: get_release_info
       shell: bash
