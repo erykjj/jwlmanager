@@ -65,7 +65,7 @@ jobs:
           - Windows (zipped folder): JWLManager_${{ github.ref_name }}.zip
           - Windows (stand-alone): JWLManager_${{ github.ref_name }}.exe
           - macOS (zipped app): JWLManager_${{ github.ref_name }}.app.zip
-        files:
+        files: |
           ./dist/${{ matrix.OUT_EXE}}
           ./dist/${{ matrix.OUT_ZIP}}
         #   ./dist/${{ matrix.OUT_APP}}
