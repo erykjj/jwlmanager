@@ -33,9 +33,9 @@ jobs:
         prerelease: false
         body: |
           ____
-          - Windows (zipped folder): JWLManager_${ tag_name }.zip
-          - Windows (stand-alone): JWLManager_${ tag_name }.exe
-          - macOS (zipped app): JWLManager_${{ tag_name }}.app.zip
+          - Windows (zipped folder): JWLManager_${{ github.ref_name }}.zip
+          - Windows (stand-alone): JWLManager_${{ github.ref_name }}.exe
+          - macOS (zipped app): JWLManager_${{ github.ref_name }}.app.zip
     # - name: Upload to release
     #   id: upload-release-asset
     #   uses: actions/upload-release-asset@v1
