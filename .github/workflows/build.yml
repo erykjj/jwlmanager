@@ -1,4 +1,4 @@
-name: 'Build Packages v0.0.3'
+name: 'Build Packages v0.0.4'
 
 on:
   push:
@@ -40,29 +40,20 @@ jobs:
         prerelease: false
         body: |
           ____
-          - Windows (zipped folder): JWLManager_${{ github.ref_name }}.zip
-          - Windows (stand-alone): JWLManager_${{ github.ref_name }}.exe
-          - macOS (zipped app): JWLManager_${{ github.ref_name }}.app.zip
+          - Windows (stand-alone): [JWLManager_${{ github.ref_name }}.exe](${{ github.ref_name }}//releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
+          - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](${{ github.ref_name }}//releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+          - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](${{ github.ref_name }}//releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
-          dist/JWLManager_${{ github.ref_name }}.zip
           dist/JWLManager_${{ github.ref_name }}.exe
-    # - name: Upload to release
-    #   id: upload-release-asset
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.gh_release.outputs.upload_url }}
-    #     asset_path: ./dist/JWLManager_${{ github.ref_name }}.zip
-    #     asset_name: JWLManager_${{ github.ref_name }}.zip
-    #     asset_content_type: application/vnd.microsoft.portable-executable
+          dist/JWLManager_${{ github.ref_name }}.zip
 
 
 
-          # - os: macos-11
-          #   TARGET: macos
-          #   CMD_BUILD: >
-          #     pyinstaller -- clean --noconfirm JWLManager.app.spec &&
-          #     cd dist/ &&
-          #     zip -r9 JWLManager_${{ github.ref_name }} JWLManager.app/
-          #   OUT_APP: JWLManager_${{ github.ref_name }}.app.zip
+
+# - os: macos-11
+#   TARGET: macos
+#   CMD_BUILD: >
+#     pyinstaller -- clean --noconfirm JWLManager.app.spec &&
+#     cd dist/ &&
+#     zip -r9 JWLManager_${{ github.ref_name }} JWLManager.app/
+#   OUT_APP: JWLManager_${{ github.ref_name }}.app.zip
