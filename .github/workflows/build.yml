@@ -33,7 +33,7 @@ jobs:
         prerelease: false
         body: |
           ____
-          - Windows (zipped folder): JWLManager_$tag_name.zip
+          - Windows (zipped folder): JWLManager_${ tag_name }.zip
           - Windows (stand-alone): JWLManager_${ tag_name }.exe
           - macOS (zipped app): JWLManager_${{ tag_name }}.app.zip
     # - name: Upload to release
