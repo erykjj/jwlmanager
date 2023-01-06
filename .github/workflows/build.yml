@@ -8,30 +8,8 @@ on:
 jobs:
 
   build:
-    name: Build EXE
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            TARGET: windows
-            CMD_BUILD: >
-#              pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec &&
-              pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec &&
-              cd dist &&
-              ren JWLManager.exe JWLManager_${{ github.ref_name }}.exe &&
-              tar.exe -a -c -f JWLManager_${{ github.ref_name }}.zip JWLManager &&
-#            OUT_EXE: JWLManager_${{ github.ref_name }}.exe
-            OUT_ZIP: JWLManager_${{ github.ref_name }}.zip
-          # - os: macos-11
-          #   TARGET: macos
-          #   CMD_BUILD: >
-          #     pyinstaller -- clean --noconfirm JWLManager.app.spec &&
-          #     cd dist/ &&
-          #     zip -r9 JWLManager_${{ github.ref_name }} JWLManager.app/
-          #   OUT_APP: JWLManager_${{ github.ref_name }}.app.zip
-    
-    # runs-on: windows-latest
+    name: Build EXE & ZIP
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -43,15 +21,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r .github/workflows/requirements.txt
-    # - name: Build with Pyinstaller
-    #   run: | 
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
-    #     cd dist
-    #     ren JWLManager.exe JWLManager_${{ github.ref_name }}.exe
-    #     tar.exe -a -c -f JWLManager_${{ github.ref_name }}.zip JWLManager
-    - name: Build with Pyinstaller for ${{matrix.TARGET}}
-      run: ${{matrix.CMD_BUILD}}
+    - name: Build with Pyinstaller
+      run: | 
+        pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
+        pyinstaller --noconfirm .github/workflows/JWLManager.zip.spec
+    - name: Rename & zip folder
+      run: |
+        cd dist
+        ren JWLManager.exe JWLManager_${{ github.ref_name }}.exe
+        tar.exe -a -c -f JWLManager_${{ github.ref_name }}.zip JWLManager
     - name: Create release
       id: gh_release
       uses: softprops/action-gh-release@v1
@@ -66,9 +44,8 @@ jobs:
           - Windows (stand-alone): JWLManager_${{ github.ref_name }}.exe
           - macOS (zipped app): JWLManager_${{ github.ref_name }}.app.zip
         files: |
-#          ./dist/${{ matrix.OUT_EXE}}
-          ./dist/${{ matrix.OUT_ZIP}}
-        #   ./dist/${{ matrix.OUT_APP}}
+          dist/JWLManager_${{ github.ref_name }}.zip
+          dist/JWLManager_${{ github.ref_name }}.exe
     # - name: Upload to release
     #   id: upload-release-asset
     #   uses: actions/upload-release-asset@v1
@@ -78,5 +55,14 @@ jobs:
     #     upload_url: ${{ steps.gh_release.outputs.upload_url }}
     #     asset_path: ./dist/JWLManager_${{ github.ref_name }}.zip
     #     asset_name: JWLManager_${{ github.ref_name }}.zip
-        # asset_content_type: application/vnd.microsoft.portable-executable
+    #     asset_content_type: application/vnd.microsoft.portable-executable
 
+
+
+          # - os: macos-11
+          #   TARGET: macos
+          #   CMD_BUILD: >
+          #     pyinstaller -- clean --noconfirm JWLManager.app.spec &&
+          #     cd dist/ &&
+          #     zip -r9 JWLManager_${{ github.ref_name }} JWLManager.app/
+          #   OUT_APP: JWLManager_${{ github.ref_name }}.app.zip
