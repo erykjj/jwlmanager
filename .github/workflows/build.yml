@@ -33,8 +33,6 @@ jobs:
     - name: Create release
       id: gh_release
       uses: softprops/action-gh-release@v1
-      env:
-        GITHUB_REPOSITORY: https://github.com/erykjj/jwlmanager
       with:
         tag_name: ${{ github.ref_name }}
         name: ${{ github.ref_name }}
@@ -42,9 +40,9 @@ jobs:
         prerelease: false
         body: |
           ____
-          - Windows (stand-alone): [JWLManager_${{ github.ref_name }}.exe](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
-          - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+          - Windows (stand-alone): [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
+          - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+          - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
           dist/JWLManager_${{ github.ref_name }}.exe
           dist/JWLManager_${{ github.ref_name }}.zip
