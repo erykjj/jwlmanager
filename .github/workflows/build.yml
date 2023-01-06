@@ -40,13 +40,15 @@ jobs:
         prerelease: false
         body: |
           ____
-          - Windows (stand-alone): [JWLManager_${{ github.ref_name }}.exe](${{ github.ref_name }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
-          - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](${{ github.ref_name }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](${{ github.ref_name }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+          - Windows (stand-alone): [JWLManager_${{ github.ref_name }}.exe](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
+          - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+          - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](${{ GITHUB_REPOSITORY }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
           dist/JWLManager_${{ github.ref_name }}.exe
           dist/JWLManager_${{ github.ref_name }}.zip
 
+# https://github.com/erykjj/jwlmanager/blob/v2.0.1_testing/v2.0.1_testing/releases/download/v2.0.1_testing/JWLManager_v2.0.1_testing.exe
+# https://github.com/erykjj/jwlmanager/releases/download/v2.0.1_testing/JWLManager_v2.0.1_testing.exe
 
 # - os: macos-11
 #   TARGET: macos
