@@ -1,4 +1,4 @@
-name: 'Build Packages v0.0.1'
+name: 'Build Packages v0.0.2'
 
 on:
   push:
@@ -13,16 +13,22 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    # - name: Set up Python
-    #   uses: actions/setup-python@v4
-    #   with:
-    #     python-version: '3.10'
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r .github/workflows/requirements.txt
-    # - name: Build with Pyinstaller
-    #   run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/requirements.txt
+    - name: Build with Pyinstaller
+      run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.exe.spec
+      run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
+    - name: Zip folder
+      run: |
+        cd dist
+        ren JWLManager.exe JWLManager_${{ github.ref_name }}.exe
+        tar.exe -a -c -f JWLManager_${{ github.ref_name }}.zip JWLManager
     - name: Create release
       id: gh_release
       uses: softprops/action-gh-release@v1
@@ -36,14 +42,14 @@ jobs:
           - Windows (zipped folder): JWLManager_${{ github.ref_name }}.zip
           - Windows (stand-alone): JWLManager_${{ github.ref_name }}.exe
           - macOS (zipped app): JWLManager_${{ github.ref_name }}.app.zip
-    # - name: Upload to release
-    #   id: upload-release-asset
-    #   uses: actions/upload-release-asset@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.gh_release.outputs.upload_url }}
-    #     asset_path: ./dist/JWLManager.exe
-    #     asset_name: JWLManager.exe
-    #     asset_content_type: application/vnd.microsoft.portable-executable
+    - name: Upload to release
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.gh_release.outputs.upload_url }}
+        asset_path: ./dist/JWLManager_${{ github.ref_name }}.zip
+        asset_name: JWLManager_${{ github.ref_name }}.zip
+        asset_content_type: application/vnd.microsoft.portable-executable
 
