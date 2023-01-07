@@ -12,7 +12,7 @@ In addition to the main functions of **viewing, exporting, importing, and deleti
 ____
 ## Usage
 
-### Windows and Mac OS
+### Windows 10/11 and macOS 11+
 
 Simply [download](https://github.com/erykjj/jwlmanager/releases/latest) and launch the latest **Windows executable** or **macOS app**.
 
@@ -74,7 +74,7 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 [![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 ____
-[^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 10.14 and up). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
+[^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
 [^*]: To start with: Chinese, French, German, Italian, Portuguese, Russian and Spanish; other volunteers also appreciated. Please contact me at the email in the *About...* box in the app.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: `pip3 install argparse filehash PySide6 regex`.
