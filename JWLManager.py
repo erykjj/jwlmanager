@@ -918,7 +918,7 @@ class BuildTree():
             self.current.append(record)
 
     def get_notes(self):
-        sql = "SELECT NoteId, GROUP_CONCAT(t.Name) FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
+        sql = "SELECT NoteId, GROUP_CONCAT(Name, ' | ') FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) ORDER BY t.Name) n WHERE n.BlockType = 0 GROUP BY n.NoteId;" # independent
         for row in self.cur.execute(sql):
             item = row[0]
             group = (None, None)
@@ -935,8 +935,8 @@ class BuildTree():
             color = (_('Grey'), None)
             record = {'item': item, 'group': group, 'code': code, 'short': short, 'full':full, 'language': language, 'year': year, 'issue': issue, 'tag': tag, 'color': color, 'detail1': detail1, 'detail2': detail2}
             self.current.append(record)
-
-        sql = "SELECT l.LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, NoteId, GROUP_CONCAT(t.Name), u.ColorIndex, l.BookNumber, l.ChapterNumber, l.Title FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) GROUP BY n.NoteId;" # Bible & publication
+        # CHECK: test this!!
+        sql = "SELECT LocationId, KeySymbol, MepsLanguage, IssueTagNumber, NoteId, GROUP_CONCAT(Name, ' | '), ColorIndex, BookNumber, ChapterNumber, Title FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;" # Bible & publication
         for row in self.cur.execute(sql):
             item = row[4]
             group, code, short, full, year = self.process_name(row[1] or _('* MEDIA *'), row[3])

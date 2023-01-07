@@ -7,9 +7,12 @@
 
 ### Changed
 
+- Multiple note tags are now separated by " | " instead of ","
 - Updated README
 
 ### Fixed
+
+- Multiple tags are now alphabetically sorted
 
 ### Removed
 
