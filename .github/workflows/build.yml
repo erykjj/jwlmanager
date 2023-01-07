@@ -8,7 +8,7 @@ on:
 jobs:
 
   windows:
-    name: Build EXE & ZIP
+    name: Build Windows EXE & ZIP
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -38,7 +38,7 @@ jobs:
           dist/JWLManager_${{ github.ref_name }}.zip
 
   macos:
-    name: Build APP
+    name: Build macOS APP
     runs-on: macos-11
     steps:
     - name: Checkout
@@ -63,7 +63,9 @@ jobs:
         path: dist/JWLManager_${{ github.ref_name }}.app.zip
 
   release:
+    name: Create Release
     needs: [windows, macos]
+    runs-on: ubuntu-latest
     steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v3
