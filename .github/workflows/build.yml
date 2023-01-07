@@ -57,8 +57,7 @@ jobs:
     - name: Zip app
       run: |
         cd dist/
-        zip -r9 JWLManager.app.zip JWLManager.app/
-        mv JWLManager.app.zip JWLManager_${{ github.ref_name }}
+        zip -r9 JWLManager_${{ github.ref_name }}.app.zip JWLManager.app/
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
