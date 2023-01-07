@@ -33,6 +33,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
+        name: win
         path: |
           dist/JWLManager_${{ github.ref_name }}.exe
           dist/JWLManager_${{ github.ref_name }}.zip
@@ -56,10 +57,12 @@ jobs:
     - name: Zip app
       run: |
         cd dist/
-        zip -r9 JWLManager_${{ github.ref_name }} JWLManager.app/
+        zip -r9 JWLManager.app/
+        mv JWLManager.app.zip JWLManager_${{ github.ref_name }}
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
+        name: mac
         path: dist/JWLManager_${{ github.ref_name }}.app.zip
 
   release:
@@ -82,6 +85,6 @@ jobs:
           - Windows (zipped folder): [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
           - macOS (zipped app): [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
-          JWLManager_${{ github.ref_name }}.exe/JWLManager_${{ github.ref_name }}.exe
-          JWLManager_${{ github.ref_name }}.zip/JWLManager_${{ github.ref_name }}.zip
-          JWLManager_${{ github.ref_name }}.app.zip/JWLManager_${{ github.ref_name }}.app.zip
+          win/JWLManager_${{ github.ref_name }}.exe
+          win/JWLManager_${{ github.ref_name }}.zip
+          mac/JWLManager_${{ github.ref_name }}.app.zip
