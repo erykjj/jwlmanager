@@ -7,6 +7,8 @@
 
 ### Changed
 
+- Updated README
+
 ### Fixed
 
 ### Removed
