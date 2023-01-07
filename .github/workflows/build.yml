@@ -1,9 +1,9 @@
-name: 'Build Packages v0.0.5'
+name: 'Build for Release v0.1.0'
 
 on:
   push:
     tags:
-      - '*_testing'
+      - 'v*'
 
 jobs:
 
