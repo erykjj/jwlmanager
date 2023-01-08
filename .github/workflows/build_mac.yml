@@ -1,0 +1,42 @@
+name: 'Build Mac packages v0.1.0'
+
+on:
+  workflow_call:
+    inputs:
+      TAG:
+        default: '_testing'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      TAG:
+        default: '_testing'
+        required: true
+        type: string
+
+jobs:
+  macos:
+    name: Build macOS APP
+    runs-on: macos-11
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r .github/workflows/requirements.txt
+    - name: Build with Pyinstaller
+      run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
+    - name: Zip app
+      run: |
+        cd dist/
+        zip -r9 JWLManager_${{ inputs.TAG }}.app.zip JWLManager.app/
+    - name: Upload APP
+      uses: actions/upload-artifact@v3
+      with:
+        name: MacAPP
+        path: dist/JWLManager_${{ inputs.TAG }}.app.zip
