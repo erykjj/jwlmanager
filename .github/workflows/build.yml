@@ -2,11 +2,13 @@ name: 'Build for Release v0.1.1'
 
 on:
   workflow_dispatch:
-    env:
-      github.ref_name: v2.0.1_TESTING
+    inputs:
+      tag: 'v2.0.1_TESTING'
   push:
     tags:
       - 'v*_testing'
+    inputs:
+      tag: ${{ github.ref_name }}
 
 jobs:
 
@@ -31,15 +33,15 @@ jobs:
     - name: Rename & zip folder
       run: |
         cd dist
-        ren JWLManager.exe JWLManager_${{ github.ref_name }}.exe
-        tar.exe -a -c -f JWLManager_${{ github.ref_name }}.zip JWLManager
+        ren JWLManager.exe JWLManager_${{ github.event.inputs.tag }}.exe
+        tar.exe -a -c -f JWLManager_${{ github.event.inputs.tag }}.zip JWLManager
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
         name: win
         path: |
-          dist/JWLManager_${{ github.ref_name }}.exe
-          dist/JWLManager_${{ github.ref_name }}.zip
+          dist/JWLManager_${{ github.event.inputs.tag }}.exe
+          dist/JWLManager_${{ github.event.inputs.tag }}.zip
 
   macos:
     name: Build macOS APP
@@ -60,17 +62,17 @@ jobs:
     - name: Zip app
       run: |
         cd dist/
-        zip -r9 JWLManager_${{ github.ref_name }}.app.zip JWLManager.app/
+        zip -r9 JWLManager_${{ github.event.inputs.tag }}.app.zip JWLManager.app/
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: mac
-        path: dist/JWLManager_${{ github.ref_name }}.app.zip
+        path: dist/JWLManager_${{ github.event.inputs.tag }}.app.zip
 
   linux:
     name: Build Linux BIN & Release
     needs: [windows, macos]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -85,27 +87,27 @@ jobs:
     - name: Build with Pyinstaller
       run: |
         pyinstaller --clean --noconfirm .github/workflows/JWLManager.bin.spec
-        mv dist/JWLManager dist/JWLManager_${{ github.ref_name }}
+        mv dist/JWLManager dist/JWLManager_${{ github.event.inputs.tag }}
     - name: Download all artifacts
       uses: actions/download-artifact@v3
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        name: ${{ github.ref_name }}
+        tag_name: ${{ github.event.inputs.tag }}
+        name: ${{ github.event.inputs.tag }}
         draft: true
         prerelease: false
         body: |
           ____
           - Linux:
-            - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
+            - Stand-alone: [JWLManager_${{ github.event.inputs.tag }}](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/JWLManager_${{ github.event.inputs.tag }})
           - Windows 10/11:
-            - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
-            - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+            - Stand-alone: [JWLManager_${{ github.event.inputs.tag }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/JWLManager_${{ github.event.inputs.tag }}.exe)
+            - Zipped folder: [JWLManager_${{ github.event.inputs.tag }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/JWLManager_${{ github.event.inputs.tag }}.zip)
           - macOS 11/12/13:
-            - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+            - Zipped app: [JWLManager_${{ github.event.inputs.tag }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/JWLManager_${{ github.event.inputs.tag }}.app.zip)
         files: |
-          dist/JWLManager_${{ github.ref_name }}
-          win/JWLManager_${{ github.ref_name }}.exe
-          win/JWLManager_${{ github.ref_name }}.zip
-          mac/JWLManager_${{ github.ref_name }}.app.zip
+          dist/JWLManager_${{ github.event.inputs.tag }}
+          win/JWLManager_${{ github.event.inputs.tag }}.exe
+          win/JWLManager_${{ github.event.inputs.tag }}.zip
+          mac/JWLManager_${{ github.event.inputs.tag }}.app.zip
