@@ -51,9 +51,7 @@ jobs:
   # macos:
   #   name: Build macOS APP
   #   runs-on: macos-11
-  #   steps:
-  #   - name: Update system
-  #     run: apt install libopengl0 libegl1
+    # steps:
   #   - name: Checkout
   #     uses: actions/checkout@v3
   #   - name: Set up Python
@@ -81,6 +79,8 @@ jobs:
     # needs: [windows, macos]
     runs-on: ubuntu-20.04
     steps:
+    - name: Update system
+      run: apt install libopengl0 libegl1
     - name: Checkout
       uses: actions/checkout@v3
     - name: Set up Python
