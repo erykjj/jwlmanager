@@ -31,8 +31,22 @@ jobs:
     env:
       TAG: ${{ inputs.TAG }}
     steps:
-    - name: Download all artifacts
+    - name: Download LinuxBIN
       uses: actions/download-artifact@v3
+      with:
+        name: LinuxBIN
+    - name: Download WindowsEXE
+      uses: actions/download-artifact@v3
+      with:
+        name: WindowsEXE
+    - name: Download WindowsZIP
+      uses: actions/download-artifact@v3
+      with:
+        name: WindowsZIP
+    - name: Download MacAPP
+      uses: actions/download-artifact@v3
+      with:
+        name: MacAPP
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
