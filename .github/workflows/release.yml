@@ -1,4 +1,4 @@
-name: 'Draft Release v0.1.1'
+name: 'Draft Release v0.1.2'
 
 on:
   push:
@@ -54,8 +54,9 @@ jobs:
         name: ${{ inputs.TAG }}
         draft: true
         prerelease: false
+        body_path: ./.github/workflows/release_body.md
+        append_body: true
         body: |
-          ____
           - Linux:
             - Stand-alone: [JWLManager_${{ inputs.TAG }}](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }})
           - Windows 10/11:
