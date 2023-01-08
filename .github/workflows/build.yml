@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Update system
-      run: apt install libopengl0 libegl1
+      run: sudo apt-get install -y libopengl0 libegl1
     - name: Checkout
       uses: actions/checkout@v3
     - name: Set up Python
