@@ -1,11 +1,11 @@
 name: 'Build for Release v0.1.1'
 
 on:
-  push:
-    tags:
-      - 'v*_testing'
-    inputs:
-      tag: ${{ github.ref_name }}
+  # push:
+  #   tags:
+  #     - 'v*_testing'
+  #   inputs:
+  #     tag: ${{ github.ref_name }}
   workflow_dispatch:
     inputs:
       tag:
