@@ -1,10 +1,16 @@
-name: 'Build Windows packages'
+# name: 'Build Windows packages'
 
-on: [ workflow_call, workflow_dispatch ]
-  inputs:
-    TAG: '_testing'
-      required: true
-      type: string
+on:
+  workflow_call:
+    inputs:
+      TAG: '_testing'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      TAG: '_testing'
+        required: true
+        type: string
 
 jobs:
   windows:
