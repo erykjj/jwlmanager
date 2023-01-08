@@ -20,16 +20,16 @@ on:
 jobs:
   linux:
     uses: ./.github/workflows/build_lin.yml
-      with:
-        TAG:  ${{ inputs.TAG }}
+    with:
+      TAG:  ${{ inputs.TAG }}
   windows:
     uses: ./.github/workflows/build_win.yml
-      with:
-        TAG:  ${{ inputs.TAG }}
+    with:
+      TAG:  ${{ inputs.TAG }}
   macOS:
     uses: ./.github/workflows/build_mac.yml
-      with:
-        TAG:  ${{ inputs.TAG }}
+    with:
+      TAG:  ${{ inputs.TAG }}
   release:
     name: Create Release Draft
     needs: [linux, windows, macos]
