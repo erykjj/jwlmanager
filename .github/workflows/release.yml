@@ -1,14 +1,9 @@
-name: 'Draft Release v0.1.0'
+name: 'Draft Release v0.1.1'
 
 on:
   push:
     tags:
       - 'v*_testing'
-    inputs:
-      TAG:
-        default: '${{ github.ref_name }}'
-        required: true
-        type: string
   workflow_dispatch:
     inputs:
       TAG:
@@ -16,20 +11,30 @@ on:
         required: true
         type: string
 
-
 jobs:
+  setenv:
+  - name: Set Tag
+    run: |
+      if [[ ${{ inputs.TAG }} == '' ]]; then
+        echo "TAG=${{ github.ref_name }}" >> "$GITHUB_ENV"
+      else
+        echo "TAG=${{ inputs.TAG }}" >> "$GITHUB_ENV"
+      fi
   linux:
+    needs: setenv
     uses: ./.github/workflows/build_lin.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.env.TAG }}
   windows:
+    needs: setenv
     uses: ./.github/workflows/build_win.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.env.TAG }}
   macOS:
+    needs: setenv
     uses: ./.github/workflows/build_mac.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.env.TAG }}
   release:
     name: Create Release Draft
     needs: [linux, windows, macos]
