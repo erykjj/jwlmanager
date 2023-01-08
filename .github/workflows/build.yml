@@ -1,11 +1,11 @@
 name: 'Build for Release v0.1.1'
 
 on:
-  # push:
-  #   tags:
-  #     - 'v*_testing'
-  #   inputs:
-  #     tag: ${{ github.ref_name }}
+  push:
+    tags:
+      - 'v*_testing'
+    inputs:
+      tag: ${{ github.ref_name }}
   workflow_dispatch:
     # inputs:
     #   tag:
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Update system
-      run: sudo apt-get install -y libopengl0 libegl1 libxkbcommon-x11 libxcb-icccm libxcb-image libxcb-keysyms libxcb-randr libxcb-render-util libxcb-shape libxcb-xkb
+      run: sudo apt-get install -y libopengl0 libegl1 libxkbcommon-x11* libxcb-icccm* libxcb-image* libxcb-keysyms* libxcb-randr* libxcb-render-util* libxcb-shape* libxcb-xkb*
     - name: Checkout
       uses: actions/checkout@v3
     - name: Set up Python
