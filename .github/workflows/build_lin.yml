@@ -4,13 +4,13 @@ on:
   workflow_call:
     inputs:
       TAG:
-        default: '_testing'
+        default: 'testing'
         required: true
         type: string
   workflow_dispatch:
     inputs:
       TAG:
-        default: '_testing'
+        default: 'testing'
         required: true
         type: string
 

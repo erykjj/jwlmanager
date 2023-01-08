@@ -1,16 +1,16 @@
-name: 'Build Mac packages v0.1.0'
+name: 'Build Mac package v0.1.0'
 
 on:
   workflow_call:
     inputs:
       TAG:
-        default: '_testing'
+        default: 'testing'
         required: true
         type: string
   workflow_dispatch:
     inputs:
       TAG:
-        default: '_testing'
+        default: 'testing'
         required: true
         type: string
 
