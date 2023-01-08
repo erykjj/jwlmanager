@@ -37,30 +37,32 @@ jobs:
     env:
       TAG: ${{ inputs.TAG }}
     steps:
-    - name: Download LinuxBIN
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: build_lin.yml
-        workflow_conclusion: success
-        name: LinuxBIN
-    - name: Download MacAPP
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: build_mac.yml
-        workflow_conclusion: success
-        name: MacAPP
-    - name: Download WindowsEXE
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: build_win.yml
-        workflow_conclusion: success
-        name: WindowsEXE
-    - name: Download WindowsZIP
-      uses: dawidd6/action-download-artifact@v2
-      with:
-        workflow: build_win.yml
-        workflow_conclusion: success
-        name: WindowsZIP
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+    # - name: Download LinuxBIN
+    #   uses: dawidd6/action-download-artifact@v2
+    #   with:
+    #     workflow: build_lin.yml
+    #     workflow_conclusion: success
+    #     name: LinuxBIN
+    # - name: Download MacAPP
+    #   uses: dawidd6/action-download-artifact@v2
+    #   with:
+    #     workflow: build_mac.yml
+    #     workflow_conclusion: success
+    #     name: MacAPP
+    # - name: Download WindowsEXE
+    #   uses: dawidd6/action-download-artifact@v2
+    #   with:
+    #     workflow: build_win.yml
+    #     workflow_conclusion: success
+    #     name: WindowsEXE
+    # - name: Download WindowsZIP
+    #   uses: dawidd6/action-download-artifact@v2
+    #   with:
+    #     workflow: build_win.yml
+    #     workflow_conclusion: success
+    #     name: WindowsZIP
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
