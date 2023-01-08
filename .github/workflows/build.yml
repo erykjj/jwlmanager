@@ -3,7 +3,11 @@ name: 'Build for Release v0.1.1'
 on:
   workflow_dispatch:
     inputs:
-      tag: 'v2.0.1_TESTING'
+      tag:
+        description: 'Test tag'
+        required: true
+        default: 'v2.0.1_TESTING'
+        type: string
   push:
     tags:
       - 'v*_testing'
