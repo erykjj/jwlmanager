@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       TAG:
-        default: '${{ github.ref_name }}'
+        default: github.ref_name
         required: true
         type: string
 
