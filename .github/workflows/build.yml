@@ -4,8 +4,8 @@ on:
   push:
     tags:
       - 'v*_testing'
-    inputs:
-      tag: ${{ github.ref_name }}
+    # inputs:
+    #   tag: ${{ github.ref_name }}
   workflow_dispatch:
     # inputs:
     #   tag:
