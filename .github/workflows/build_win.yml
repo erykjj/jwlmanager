@@ -1,4 +1,4 @@
-name: 'Build Windows packages'
+name: 'Build Windows packages v0.1.0'
 
 on:
   workflow_call:
@@ -36,15 +36,15 @@ jobs:
     - name: Rename & zip folder
       run: |
         cd dist
-        ren JWLManager.exe JWLManager_${{ env.TAG }}.exe
-        tar.exe -a -c -f JWLManager_${{ env.TAG }}.zip JWLManager
+        ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
+        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v3
       with:
         name: exe
-        path: dist/JWLManager_${{ env.TAG }}.exe
+        path: dist/JWLManager_${{ inputs.TAG }}.exe
     - name: Upload ZIP
       uses: actions/upload-artifact@v3
       with:
         name: zip
-        path: dist/JWLManager_${{ env.TAG }}.zip
+        path: dist/JWLManager_${{ inputs.TAG }}.zip
