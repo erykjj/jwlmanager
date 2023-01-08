@@ -1,6 +1,11 @@
 name: 'Build for Release v0.1.1'
 
 on:
+  push:
+    tags:
+      - 'v*_testing'
+    inputs:
+      tag: ${{ github.ref_name }}
   workflow_dispatch:
     inputs:
       tag:
@@ -8,11 +13,7 @@ on:
         required: true
         default: 'v2.0.1_TESTING'
         type: string
-  # push:
-  #   tags:
-  #     - 'v*_testing'
-  #   inputs:
-  #     tag: ${{ github.ref_name }}
+
 
 jobs:
 
@@ -60,6 +61,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip uninstall opencv-python -y
+        pip install opencv-python-headless
         pip install -r .github/workflows/requirements.txt
     - name: Build with Pyinstaller
       run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
