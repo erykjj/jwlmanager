@@ -34,6 +34,8 @@ jobs:
     name: Create Release Draft
     needs: [linux, windows, macos]
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.TAG }}
     steps:
     - name: Download LinuxBIN
       uses: dawidd6/action-download-artifact@v2
@@ -59,26 +61,24 @@ jobs:
         workflow: build_win.yml
         workflow_conclusion: success
         name: WindowsZIP
-    # - name: Download all artifacts
-    #   uses: actions/download-artifact@v3
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ inputs.TAG }}
-        name: ${{ inputs.TAG }}
+        tag_name: $TAG
+        name: $TAG
         draft: true
         prerelease: false
         body: |
           ____
           - Linux:
-            - Stand-alone: [JWLManager_${{ inputs.TAG }}](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }})
+            - Stand-alone: [JWLManager_$TAG](https://github.com/${{ github.repository }}/releases/download/$TAG/JWLManager_$TAG)
           - Windows 10/11:
-            - Stand-alone: [JWLManager_${{ inputs.TAG }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.exe)
-            - Zipped folder: [JWLManager_${{ inputs.TAG }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.zip)
+            - Stand-alone: [JWLManager_$TAG.exe](https://github.com/${{ github.repository }}/releases/download/$TAG/JWLManager_$TAG.exe)
+            - Zipped folder: [JWLManager_$TAG.zip](https://github.com/${{ github.repository }}/releases/download/$TAG/JWLManager_$TAG.zip)
           - macOS 11/12/13:
-            - Zipped app: [JWLManager_${{ inputs.TAG }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.app.zip)
+            - Zipped app: [JWLManager_$TAG.app.zip](https://github.com/${{ github.repository }}/releases/download/$TAG/JWLManager_$TAG.app.zip)
         files: |
-          JWLManager_${{ inputs.TAG }}
-          JWLManager_${{ inputs.TAG }}.exe
-          JWLManager_${{ inputs.TAG }}.zip
-          JWLManager_${{ inputs.TAG }}.app.zip
+          JWLManager_$TAG
+          JWLManager_$TAG.exe
+          JWLManager_$TAG.zip
+          JWLManager_$TAG.app.zip
