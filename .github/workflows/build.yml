@@ -94,12 +94,12 @@ jobs:
     - name: Build with Pyinstaller
       run: |
         pyinstaller --clean --noconfirm .github/workflows/JWLManager.bin.spec
-        mv dist/JWLManager dist/JWLManager_${{ github.event.inputs.tag }}
+#        mv dist/JWLManager dist/JWLManager_${{ github.event.inputs.tag }}
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
         name: bin
-        path: JWLManager_${{ github.event.inputs.tag }}
+        path: JWLManager
     # - name: Download all artifacts
     #   uses: actions/download-artifact@v3
     # - name: Create release
