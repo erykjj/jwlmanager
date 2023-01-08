@@ -54,9 +54,9 @@ jobs:
         name: ${{ inputs.TAG }}
         draft: true
         prerelease: false
-        body_path: ./.github/workflows/release_body.md
-        append_body: true
         body: |
+          ____
+          If unable to download the latest source script and execute it from the commandline, you can (alternatively) try these self-contained packages, which don't require the installation of Python or dependencies:
           - Linux:
             - Stand-alone: [JWLManager_${{ inputs.TAG }}](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }})
           - Windows 10/11:
