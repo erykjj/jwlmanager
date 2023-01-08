@@ -12,32 +12,20 @@ In addition to the main functions of **viewing, exporting, importing, and deleti
 ____
 ## Usage
 
-### Windows 10/11 and macOS 11+
-
-Simply [download](https://github.com/erykjj/jwlmanager/releases/latest) and launch the latest **Windows executable** or **macOS app**.
-
-**Notes**
-- If you receive **Windows Defender "unknown publisher" alerts**, you can safely choose "More info" and "Run anyway". See [here](https://github.com/erykjj/jwlmanager/issues/1) for a discussion on what's going on.
-- The macOS app is slow to start up. I'm looking into it.
-
-### Linux
-
-[Download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
+Preferably, if you have Python 3 installed and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
 
 ```
-$ python3 JWLManager.py
+python3 JWLManager.py
 ```
 
 Or, make it executable first and run directly:
 
 ```
-$ chmod +x JWLManager.py
-$ ./JWLManager.py
+chmod +x JWLManager.py
+./JWLManager.py
 ```
 
-You *may* have to install some of the required libraries[^2]. Do [let me know](https://github.com/erykjj/jwlmanager/issues) if you have any difficulties ;-)
-
-If you use the -h flag, you'll see the following options:
+If you use the `-h` flag, you'll see the following options:
 
 ```
 usage: JWLManager.py [-h] [-v] [-en | -es | -fr]
@@ -56,7 +44,14 @@ interface language:
   -fr            French (français)
 ```
 
-Which means that (on all platforms) you can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
+Alternatively, you can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included).
+
+**Notes**
+- If you receive **Windows Defender "unknown publisher" alerts**, you can safely choose "More info" and "Run anyway". See [here](https://github.com/erykjj/jwlmanager/issues/1) for a discussion on what's going on.
+- The macOS app is slow to start up. I'm looking into it.
+- The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*`
+
+You can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
 - Linux terminal: `python3 JWLManager.py -es`
 - Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
 - macOS Terminal: `open -a JWLManager.app --args -es`
