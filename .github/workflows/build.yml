@@ -99,7 +99,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: bin
-        path: JWLManager
+        path: dist/JWLManager
     # - name: Download all artifacts
     #   uses: actions/download-artifact@v3
     # - name: Create release
