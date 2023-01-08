@@ -5,31 +5,31 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      TAG:
-        default: github.ref_name
-        required: true
-        type: string
+    # inputs:
+    #   TAG:
+    #     default: ${{ github.ref_name }}
+    #     required: true
+    #     type: string
 
 jobs:
   linux:
     uses: ./.github/workflows/build_lin.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.ref_name }}
   windows:
     uses: ./.github/workflows/build_win.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.ref_name }}
   macOS:
     uses: ./.github/workflows/build_mac.yml
     with:
-      TAG:  ${{ inputs.TAG }}
+      TAG:  ${{ github.ref_name }}
   release:
     name: Create Release Draft
     needs: [linux, windows, macos]
     runs-on: ubuntu-latest
     env:
-      TAG: ${{ inputs.TAG }}
+      TAG: ${{ github.ref_name }}
     steps:
     - name: Download LinuxBIN
       uses: actions/download-artifact@v3
@@ -50,22 +50,22 @@ jobs:
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ inputs.TAG }}
-        name: ${{ inputs.TAG }}
+        tag_name: ${{ github.ref_name }}
+        name: ${{ github.ref_name }}
         draft: true
         prerelease: false
         body: |
           ____
           If unable to download the latest source script and execute it from the commandline, you can (alternatively) try these self-contained packages, which don't require the installation of Python or dependencies:
           - Linux:
-            - Stand-alone: [JWLManager_${{ inputs.TAG }}](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }})
+            - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
-            - Stand-alone: [JWLManager_${{ inputs.TAG }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.exe)
-            - Zipped folder: [JWLManager_${{ inputs.TAG }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.zip)
+            - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
+            - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
           - macOS 11/12/13:
-            - Zipped app: [JWLManager_${{ inputs.TAG }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ inputs.TAG }}/JWLManager_${{ inputs.TAG }}.app.zip)
+            - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
-          JWLManager_${{ inputs.TAG }}
-          JWLManager_${{ inputs.TAG }}.exe
-          JWLManager_${{ inputs.TAG }}.zip
-          JWLManager_${{ inputs.TAG }}.app.zip
+          JWLManager_${{ github.ref_name }}
+          JWLManager_${{ github.ref_name }}.exe
+          JWLManager_${{ github.ref_name }}.zip
+          JWLManager_${{ github.ref_name }}.app.zip
