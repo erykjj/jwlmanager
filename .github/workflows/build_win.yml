@@ -41,10 +41,10 @@ jobs:
     - name: Upload EXE
       uses: actions/upload-artifact@v3
       with:
-        name: exe
+        name: win.exe
         path: dist/JWLManager_${{ inputs.TAG }}.exe
     - name: Upload ZIP
       uses: actions/upload-artifact@v3
       with:
-        name: zip
+        name: win.zip
         path: dist/JWLManager_${{ inputs.TAG }}.zip
