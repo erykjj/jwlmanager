@@ -1,14 +1,14 @@
 name: 'Draft Release v0.1.0'
 
 on:
-  push:
-    tags:
-      - 'v*_testing'
-    inputs:
-      TAG:
-      default: ${{ github.ref_name }}
-      required: true
-      type: string
+  # push:
+  #   tags:
+  #     - 'v*_testing'
+  #   inputs:
+  #     TAG:
+  #     default: ${{ github.ref_name }}
+  #     required: true
+  #     type: string
   workflow_dispatch:
     inputs:
       TAG:
