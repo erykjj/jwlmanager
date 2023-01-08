@@ -8,11 +8,11 @@ on:
         required: true
         default: 'v2.0.1_TESTING'
         type: string
-  push:
-    tags:
-      - 'v*_testing'
-    inputs:
-      tag: ${{ github.ref_name }}
+  # push:
+  #   tags:
+  #     - 'v*_testing'
+  #   inputs:
+  #     tag: ${{ github.ref_name }}
 
 jobs:
 
