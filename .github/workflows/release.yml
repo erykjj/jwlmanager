@@ -3,7 +3,7 @@ name: 'Draft Release v0.1.2'
 on:
   push:
     tags:
-      - 'v*_testing'
+      - 'v*'
   workflow_dispatch:
     inputs:
       TAG:
