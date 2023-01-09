@@ -9,6 +9,7 @@
 
 - Multiple note tags are now separated by " | " instead of ","
 - Updated README
+- Updated French translations
 
 ### Fixed
 
