@@ -11,7 +11,7 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Publication</source>
-        <translation type="unfinished"></translation>
+        <translation>Pubblicazione</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
