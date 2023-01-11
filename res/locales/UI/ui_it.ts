@@ -154,7 +154,7 @@
     <message>
         <location filename="main_window.ui" line="585"/>
         <source>Open an archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Apri un archivio</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="588"/>
@@ -164,12 +164,12 @@
     <message>
         <location filename="main_window.ui" line="601"/>
         <source>&amp;Save</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Salva</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="604"/>
         <source>Save archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva archivio</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="607"/>
@@ -214,7 +214,7 @@
     <message>
         <location filename="main_window.ui" line="673"/>
         <source>Save &amp;As…</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva &amp;con nome…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="676"/>
@@ -234,7 +234,7 @@
     <message>
         <location filename="main_window.ui" line="694"/>
         <source>Expand all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Espandi tutte le voci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="697"/>
@@ -244,12 +244,12 @@
     <message>
         <location filename="main_window.ui" line="709"/>
         <source>&amp;Collapse All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Riduci Tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="712"/>
         <source>Collapse all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Riduci tutte le voci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="715"/>
@@ -259,7 +259,7 @@
     <message>
         <location filename="main_window.ui" line="727"/>
         <source>&amp;Select All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Seleziona tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="730"/>
