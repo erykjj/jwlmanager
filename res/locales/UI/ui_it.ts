@@ -274,7 +274,7 @@
     <message>
         <location filename="main_window.ui" line="745"/>
         <source>&amp;Unselect All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Deseleziona tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="748"/>
