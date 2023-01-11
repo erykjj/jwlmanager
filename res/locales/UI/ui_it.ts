@@ -259,7 +259,7 @@
     <message>
         <location filename="main_window.ui" line="727"/>
         <source>&amp;Select All</source>
-        <translation>&amp;Seleziona tutto</translation>
+        <translation>&amp;Seleziona Tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="730"/>
