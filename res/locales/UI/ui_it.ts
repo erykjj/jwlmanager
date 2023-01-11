@@ -398,7 +398,7 @@
     <message>
         <location filename="main_window.ui" line="921"/>
         <source>pt</source>
-        <translation type="unfinished"></translation>
+        <translation>pt</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="874"/>
@@ -408,42 +408,42 @@
     <message>
         <location filename="main_window.ui" line="877"/>
         <source>en</source>
-        <translation type="unfinished"></translation>
+        <translation>en</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="885"/>
         <source>Español</source>
-        <translation>Spagnolo</translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
         <source>es</source>
-        <translation type="unfinished"></translation>
+        <translation>es</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="899"/>
         <source>de</source>
-        <translation type="unfinished"></translation>
+        <translation>de</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="907"/>
         <source>Français</source>
-        <translation>Francese</translation>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
         <source>fr</source>
-        <translation type="unfinished"></translation>
+        <translation>fr</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="918"/>
         <source>Português</source>
-        <translation>Portoghese</translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
-        <translation type="unfinished">Italiano</translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
