@@ -306,7 +306,7 @@
     <message>
         <location filename="main_window.ui" line="782"/>
         <source>Use short publication title</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa titolo abbreviato pubblicazione</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="790"/>
