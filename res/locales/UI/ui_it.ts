@@ -16,43 +16,43 @@
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Lingua</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Anno</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Etichetta</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Colore</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="176"/>
         <source>Grouping:</source>
-        <translation type="unfinished"></translation>
+        <translation>Raggruppa per:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="211"/>
         <source>Selected:</source>
         <oldsource>Selected: </oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Selezionati:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="227"/>
         <source>Category:</source>
-        <translation type="unfinished"></translation>
+        <translation>Categoria:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="250"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Note</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -62,12 +62,12 @@
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Preferiti</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Segnalibri</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="270"/>
@@ -78,32 +78,32 @@
         <location filename="main_window.ui" line="284"/>
         <source>Total:</source>
         <oldsource>Total: </oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Totale:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="332"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="348"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Esporta</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="364"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="380"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="446"/>
         <source>Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Conteggio</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="474"/>
@@ -134,7 +134,7 @@
     <message>
         <location filename="main_window.ui" line="526"/>
         <source>Switch language</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia lingua</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="529"/>
@@ -149,7 +149,7 @@
     <message>
         <location filename="main_window.ui" line="582"/>
         <source>&amp;Open…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Apri…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="585"/>
@@ -184,7 +184,7 @@
     <message>
         <location filename="main_window.ui" line="622"/>
         <source>Optimize database</source>
-        <translation type="unfinished"></translation>
+        <translation>Ottimizza database</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="631"/>
@@ -194,7 +194,7 @@
     <message>
         <location filename="main_window.ui" line="634"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Esci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="637"/>
@@ -264,7 +264,7 @@
     <message>
         <location filename="main_window.ui" line="730"/>
         <source>Select all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona tutte le voci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="733"/>
@@ -279,7 +279,7 @@
     <message>
         <location filename="main_window.ui" line="748"/>
         <source>Unselect all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Deseleziona tutte le voci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="751"/>
@@ -294,7 +294,7 @@
     <message>
         <location filename="main_window.ui" line="765"/>
         <source>Use publication code as title</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilizza il codice della pubblicazione come titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="776"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="main_window.ui" line="813"/>
         <source>Group publications by category</source>
-        <translation type="unfinished"></translation>
+        <translation>Raggruppa pubblicazioni per categoria</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="816"/>
@@ -362,12 +362,12 @@
     <message>
         <location filename="main_window.ui" line="825"/>
         <source>&amp;New</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Nuovo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="828"/>
         <source>Create an empty archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Crea un archivio vuoto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="831"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="main_window.ui" line="885"/>
         <source>Español</source>
-        <translation type="unfinished"></translation>
+        <translation>Spagnolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
@@ -428,7 +428,7 @@
     <message>
         <location filename="main_window.ui" line="907"/>
         <source>Français</source>
-        <translation type="unfinished"></translation>
+        <translation>Francese</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
@@ -438,17 +438,17 @@
     <message>
         <location filename="main_window.ui" line="918"/>
         <source>Português</source>
-        <translation type="unfinished"></translation>
+        <translation>Portoghese</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
         <source>it</source>
-        <translation type="unfinished"></translation>
+        <translation>it</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="896"/>
