@@ -36,7 +36,7 @@
     <message>
         <location filename="main_window.ui" line="176"/>
         <source>Grouping:</source>
-        <translation>Raggruppa per:</translation>
+        <translation>Raggruppamento:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="211"/>
@@ -57,7 +57,7 @@
     <message>
         <location filename="main_window.ui" line="255"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Evidenziazioni</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="260"/>
@@ -72,7 +72,7 @@
     <message>
         <location filename="main_window.ui" line="270"/>
         <source>Annotations</source>
-        <translation type="unfinished"></translation>
+        <translation>Annotazioni</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="284"/>
@@ -139,7 +139,7 @@
     <message>
         <location filename="main_window.ui" line="529"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Lingua</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="558"/>
@@ -229,7 +229,7 @@
     <message>
         <location filename="main_window.ui" line="691"/>
         <source>E&amp;xpand All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Expandi Tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="694"/>
@@ -289,7 +289,7 @@
     <message>
         <location filename="main_window.ui" line="762"/>
         <source>Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Codice</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="765"/>
@@ -301,7 +301,7 @@
         <location filename="main_window.ui" line="779"/>
         <source>Short</source>
         <oldsource>Short Title</oldsource>
-        <translation>Corto</translation>
+        <translation>Abbreviato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="782"/>
@@ -312,7 +312,7 @@
         <location filename="main_window.ui" line="790"/>
         <location filename="main_window.ui" line="793"/>
         <source>Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="860"/>
@@ -327,22 +327,22 @@
     <message>
         <location filename="main_window.ui" line="943"/>
         <source>ru</source>
-        <translation type="unfinished"></translation>
+        <translation>ru</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="951"/>
         <source>中文</source>
-        <translation type="unfinished"></translation>
+        <translation>中文</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="954"/>
         <source>zh</source>
-        <translation type="unfinished"></translation>
+        <translation>zh</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="796"/>
         <source>Use full publication title</source>
-        <translation>Usa titolo completo della pubblicazione</translation>
+        <translation>Usa titolo completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="810"/>
