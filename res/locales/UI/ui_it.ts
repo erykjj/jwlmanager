@@ -108,13 +108,13 @@
     <message>
         <location filename="main_window.ui" line="474"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;File</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="489"/>
         <location filename="main_window.ui" line="661"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aiuto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="497"/>
@@ -129,7 +129,7 @@
     <message>
         <location filename="main_window.ui" line="510"/>
         <source>&amp;Title View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vista [del] titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="526"/>
@@ -144,7 +144,7 @@
     <message>
         <location filename="main_window.ui" line="558"/>
         <source>&amp;Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Utilità</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="582"/>
@@ -189,7 +189,7 @@
     <message>
         <location filename="main_window.ui" line="631"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Esci</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="634"/>
@@ -204,12 +204,12 @@
     <message>
         <location filename="main_window.ui" line="646"/>
         <source>&amp;About…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Info…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="649"/>
         <source>About…</source>
-        <translation type="unfinished"></translation>
+        <translation>Info…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="673"/>
@@ -219,7 +219,7 @@
     <message>
         <location filename="main_window.ui" line="676"/>
         <source>Save archive as…</source>
-        <translation type="unfinished"></translation>
+        <translation>Salva archivio con nome…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="679"/>
@@ -289,12 +289,12 @@
     <message>
         <location filename="main_window.ui" line="762"/>
         <source>Code</source>
-        <translation>Codice</translation>
+        <translation>Sigla</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="765"/>
         <source>Use publication code as title</source>
-        <translation>Utilizza il codice della pubblicazione come titolo</translation>
+        <translation>Utilizza codice pubblicazione come titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="776"/>
@@ -347,7 +347,7 @@
     <message>
         <location filename="main_window.ui" line="810"/>
         <source>&amp;Grouped</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Raggruppato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
@@ -377,7 +377,7 @@
     <message>
         <location filename="main_window.ui" line="842"/>
         <source>&amp;Detailed</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Dettagliato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="845"/>
