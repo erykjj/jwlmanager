@@ -53,7 +53,7 @@ def get_language():
         'en': 'English (default)',
         'es': 'Spanish (español)',
         'fr': 'French (français)',
-        # 'it': 'Italian (italiano)',
+        'it': 'Italian (italiano)',
         # 'pt': 'Portuguese (português)',
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
