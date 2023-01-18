@@ -1,4 +1,4 @@
-name: 'Draft Release v0.1.2'
+name: 'Draft Release v0.1.3'
 
 on:
   push:
@@ -42,6 +42,9 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: MacAPP
+    - name: Extract release notes
+      id: extract-release-notes
+      uses: ffurrer2/extract-release-notes@v1
     - name: Create release
       uses: softprops/action-gh-release@v1
       with:
@@ -50,6 +53,7 @@ jobs:
         draft: true
         prerelease: false
         body: |
+          ${{ steps.extract-release-notes.outputs.release_notes }}
           ____
           If unable to download the latest source script and execute it from the commandline, you can (alternatively) try these self-contained packages, which don't require the installation of Python or dependencies:
           - Linux:
