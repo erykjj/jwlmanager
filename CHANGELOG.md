@@ -3,13 +3,28 @@
 ## [Unreleased]
 ### Added
 
-- Italian translations
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [2.0.2] - 2023-01-18
+### Added
+
+- Italian translation (mostly done)
+  - Thank you to a couple of friends!
+- **Automatic builds** (Windows and macOS packages)
+  - Please report any issues ;-)
 
 ### Changed
 
 - Multiple note tags are now separated by " | " instead of ","
 - Updated README
 - Updated French translations
+- **Disabled Detailed View** option
+  - It was very slow and causing problems with large data sets
 
 ### Fixed
 
@@ -17,7 +32,8 @@
 
 ### Removed
 
-____
+- Removed README.txt (text version of the README, which is in markdown format)
+
 ## [2.0.1] - 2023-01-04
 ### Added
 
@@ -278,6 +294,7 @@ ____
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
 [2.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.1
+[2.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.2
 [1.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.2
 [1.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.1
 [1.2.0]:https://gitlab.com/erykj/jwlmanager/-/releases/v1.2.0
