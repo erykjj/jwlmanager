@@ -8,7 +8,7 @@ a = Analysis(
     ['../../JWLManager.py'],
     pathex=[],
     binaries=[],
-    datas=[('../../res', 'res/'), ('../../CHANGELOG.md', '.'), ('../../LICENSE', '.'), ('../../README.md', '.'), ('../../README.txt', '.')],
+    datas=[('../../res', 'res/'), ('../../CHANGELOG.md', '.'), ('../../LICENSE', '.'), ('../../README.md', '.'],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
