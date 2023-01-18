@@ -35,7 +35,8 @@ jobs:
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
     - name: Rename & zip folder
       run: |
-        cd dist
+        cd dist\
+        ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
         tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v3
