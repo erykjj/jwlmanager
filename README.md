@@ -42,6 +42,7 @@ interface language:
   -en            English (default)
   -es            Spanish (español)
   -fr            French (français)
+  -it            Italian (italiano)
 ```
 
 Alternatively, you can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included).
@@ -72,4 +73,4 @@ ____
 [^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
 [^*]: To start with: Chinese, French, German, Italian, Portuguese, Russian and Spanish; other volunteers also appreciated. Please contact me at the email in the *About...* box in the app.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-[^2]: `pip3 install argparse filehash PySide6 regex`.
+[^2]: `pip3 install argparse filehash pandas PySide6 regex`.
