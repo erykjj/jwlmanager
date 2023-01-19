@@ -118,12 +118,12 @@
     <message>
         <location filename="main_window.ui" line="502"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Visualizza</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="512"/>
         <source>Title display format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato di visualizzazione del titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="515"/>
@@ -178,7 +178,7 @@
     <message>
         <location filename="main_window.ui" line="621"/>
         <source>&amp;Reindex</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reindicizza</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="624"/>
@@ -316,7 +316,7 @@
     <message>
         <location filename="main_window.ui" line="825"/>
         <source>&amp;Mask</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Offusca</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="905"/>
@@ -373,7 +373,7 @@
     <message>
         <location filename="main_window.ui" line="828"/>
         <source>Mask text data</source>
-        <translation type="unfinished"></translation>
+        <translation>Mascherare i dati di testo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="886"/>
@@ -388,12 +388,12 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="842"/>
