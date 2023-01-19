@@ -178,7 +178,7 @@
     <message>
         <location filename="main_window.ui" line="621"/>
         <source>&amp;Reindex</source>
-        <translation>&amp;Reindicizzazione</translation>
+        <translation>&amp;Reindicizza</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="624"/>
