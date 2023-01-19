@@ -5,9 +5,14 @@
 
 ### Changed
 
+- Significant **code rewrite to utilize Pandas** module for internal data handling
+
 ### Fixed
 
 ### Removed
+
+- Removed options for Grouped and Detailed views
+  - Replaced with additional Type grouping
 
 ____
 ## [2.0.2] - 2023-01-18
