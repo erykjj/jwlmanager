@@ -5,3 +5,4 @@ shiboken6
 regex
 argparse
 filehash
+pandas
