@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-19 15:37-0500\n"
-"PO-Revision-Date: 2023-01-12 01:09+0000\n"
+"PO-Revision-Date: 2023-01-19 21:24+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language: zh\n"
 "Language-Team: zh <LL@li.org>\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.15.1\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:206
@@ -84,8 +85,9 @@ msgstr "Favorites"
 
 #: ../../../JWLManager.py:372 ../../../JWLManager.py:374
 #: ../../../JWLManager.py:1624 ../../../JWLManager.py:1956
+#, fuzzy
 msgid "Title"
-msgstr ""
+msgstr "Title"
 
 #: ../../../JWLManager.py:462 ../../../JWLManager.py:498
 #: ../../../JWLManager.py:586
@@ -567,8 +569,9 @@ msgid "Purple"
 msgstr "Purple"
 
 #: ../../../JWLManager.py:1710
+#, fuzzy
 msgid "* YEAR UNCERTAIN *"
-msgstr ""
+msgstr "* YEAR UNCERTAIN *"
 
 #: ../../../JWLManager.py:1718
 #, fuzzy
@@ -576,8 +579,9 @@ msgid "Other"
 msgstr "Notes"
 
 #: ../../../JWLManager.py:1955
+#, fuzzy
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../../JWLManager.py:1958
 #, fuzzy
@@ -703,4 +707,3 @@ msgstr "Color"
 
 #~ msgid "Processing data"
 #~ msgstr "Processing data"
-
