@@ -28,9 +28,11 @@ ____
 
 ### Fixed
 
-- Multiple tags are now alphabetically sorted
 
 ### Removed
+
+- Removed Detailed and Grouped options
+  - Added a grouping option by Type instead
 
 - Removed README.txt (text version of the README, which is in markdown format)
 

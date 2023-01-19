@@ -117,7 +117,12 @@
           </property>
           <item>
            <property name="text">
-            <string>Publication</string>
+            <string>Title</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Type</string>
            </property>
           </item>
           <item>
@@ -548,9 +553,6 @@
     <addaction name="actionSelect_All"/>
     <addaction name="actionUnselect_All"/>
     <addaction name="separator"/>
-    <addaction name="actionDetailed"/>
-    <addaction name="actionGrouped"/>
-    <addaction name="separator"/>
     <addaction name="menuTitle_View"/>
    </widget>
    <widget class="QMenu" name="menuUtilities">
@@ -796,26 +798,6 @@
     <string>Use full publication title</string>
    </property>
   </action>
-  <action name="actionGrouped">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Grouped</string>
-   </property>
-   <property name="toolTip">
-    <string>Group publications by category</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+G</string>
-   </property>
-  </action>
   <action name="actionNew">
    <property name="icon">
     <iconset>
@@ -829,23 +811,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="actionDetailed">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>&amp;Detailed</string>
-   </property>
-   <property name="toolTip">
-    <string>Detailed listing</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionObscure">
