@@ -132,12 +132,12 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="515"/>
