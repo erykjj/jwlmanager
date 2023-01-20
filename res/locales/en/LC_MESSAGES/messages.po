@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-20 18:11-0500\n"
-"PO-Revision-Date: 2023-01-19 21:24+0000\n"
+"PO-Revision-Date: 2023-01-20 23:32+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.15.1\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:206
@@ -301,25 +302,24 @@ msgstr "Other"
 
 #: ../../../JWLManager.py:928
 msgid "* NO YEAR *"
-msgstr ""
+msgstr "* NO YEAR *"
 
 #: ../../../JWLManager.py:983 ../../../JWLManager.py:1079
 #: ../../../JWLManager.py:1123
 msgid "* OTHER *"
-msgstr ""
+msgstr "* OTHER *"
 
 #: ../../../JWLManager.py:1079
-#, fuzzy
 msgid "* NO LANGUAGE *"
-msgstr "Language"
+msgstr "* NO LANGUAGE *"
 
 #: ../../../JWLManager.py:1079 ../../../JWLManager.py:1123
 msgid "* NO TAG *"
-msgstr ""
+msgstr "* NO TAG *"
 
 #: ../../../JWLManager.py:1079
 msgid "* INDEPENDENT *"
-msgstr ""
+msgstr "* INDEPENDENT *"
 
 #: ../../../JWLManager.py:1164
 msgid "Type"
@@ -623,4 +623,3 @@ msgstr "The app will terminate."
 
 #~ msgid "Processing data"
 #~ msgstr "Processing data"
-
