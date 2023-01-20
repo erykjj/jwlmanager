@@ -173,7 +173,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
-        self.actionDetailed.setVisible(False)
         self.set_vars()
         self.center()
         self.init_windows()
@@ -699,6 +698,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def add_favorite(self):
+        print(favorites)
         fn = AddFavorites(publications, languages)
         if fn.aborted:
             self.clean_up()
@@ -1716,7 +1716,7 @@ class ConstructTree():
         df['Full'] = df['Full'].fillna(df['Symbol'])
         df['Short'] = df['Short'].fillna(df['Symbol'])
         df['Type'] = df[['Type']].fillna(_('Other'))
-        df['Year'] = df['Year_y'].fillna(df['Year_x']).fillna('* NO YEAR *')
+        df['Year'] = df['Year_y'].fillna(df['Year_x']).fillna(_('* NO YEAR *'))
         df = df.drop(['Year_x', 'Year_y'], axis=1)
         df['Year'] = df['Year'].astype(str).str.replace('.0', '',regex=False)
         return df
@@ -1771,7 +1771,7 @@ class ConstructTree():
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[5], row[6], row[3], year)
             item = row[4]
-            rec = [ item, lang, code or '* OTHER *', year, detail ]
+            rec = [ item, lang, code or _('* OTHER *'), year, detail ]
             lst.append(rec)
         bookmarks = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
         self.current = self.merge_df(bookmarks)
@@ -1867,7 +1867,7 @@ class ConstructTree():
             for row in self.cur.execute(sql):
                 col = row[1] or 0
                 yr = row[3][0:4]
-                note = [ row[0], '* NO LANGUAGE *', '* OTHER *', self.process_color(col), row[2] or '* NO TAG *', row[3] or '', yr, None, '* OTHER *', '* OTHER *', '* INDEPENDTENT *' ]
+                note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), self.process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
                 lst.append(note)
             return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail',  'Short', 'Full', 'Type'])
 
@@ -1911,7 +1911,7 @@ class ConstructTree():
             code, year = self.process_code(row[2], row[3])
             detail, year = self.process_detail(row[4], row[5], row[3], year)
             col = self.process_color(row[6] or 0)
-            note = [ row[0], lang, code or '* OTHER *', col, row[7] or '* NO TAG *', row[8] or '', year, detail ]
+            note = [ row[0], lang, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
             lst.append(note)
         notes = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail' ])
         notes = self.merge_df(notes)
