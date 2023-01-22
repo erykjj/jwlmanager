@@ -516,6 +516,8 @@ class Window(QMainWindow, Ui_MainWindow):
             os.remove(f"{tmp_path}/{db_name}")
         except:
             pass
+        self.statusBar.showMessage(' '+_('Loading file'), 3500)
+        app.processEvents()
         with ZipFile(archive,"r") as zipped:
             zipped.extractall(tmp_path)
         if os.path.exists(f"{tmp_path}/user_data.db"):
@@ -664,7 +666,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(_('Items exported'), 3500)
+        self.statusBar.showMessage(' '+_('Items exported'), 3500)
 
     def import_file(self, file='', category = ''):
         reply = QMessageBox.warning(self, _('Import'), _('Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -690,7 +692,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         if not fn.count:
-            self.statusBar.showMessage(" NOT imported!", 3500)
+            self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
             return
         self.trim_db()
         self.statusBar.showMessage(f" {fn.count} "+_('items imported/updated'), 3500)
@@ -1257,18 +1259,18 @@ class AddFavorites(): # TODO: needs updating
         if result:
             pub = result.group(1)
         else:
-            self.message = (0, " Nothing added!")
+            self.message = (0, ' '+_('Nothing added!'))
             return
         publication = [k for k, v in self.publications.items() if v[0] == pub][0]
         language = [k for k, v in self.languages.items() if v[0] == lang][0]
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
         if result:
-            self.message = (0, _('Favorite for "{}" in {} already exists.').format(pub, lang))
+            self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lang))
             return
         tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
-        self.message = (1, _('Added favorite for "{}" in {}.').format(pub, lang))
+        self.message = (1, ' '+_('Added favorite for "{}" in {}.').format(pub, lang))
         return 1
 
 
