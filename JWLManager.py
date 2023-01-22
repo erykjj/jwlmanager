@@ -134,6 +134,8 @@ def read_res(lang):
             lst.append(note)
         pubs = pd.DataFrame(lst, columns=['Language', 'Symbol', 'Short', 'Full', 'Year', 'Type', 'Favorite'])
         favs = pubs[pubs['Favorite'] == 1]
+        favs = favs.drop(['Full', 'Year', 'Type', 'Favorite'], axis=1)
+        favs['Lang'] = favs['Language'].map(languages)
         pubs = pubs[pubs['Language'] == lang]
         pubs = pubs.drop(['Language', 'Favorite'], axis=1) # Delete columns
         return favs, pubs
@@ -150,12 +152,11 @@ def read_res(lang):
     cur.close()
     con.close()
 
-
 PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
 db_name = "userData.db"
 
-lang = get_language() 
+lang = get_language()
 read_res(lang)
 
 
@@ -699,7 +700,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def add_favorite(self):
-        fn = AddFavorites(publications, languages)
+        fn = AddFavorites(favorites)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -1174,9 +1175,8 @@ class ConstructTree():
 
 
 class AddFavorites(): # TODO: needs updating
-    def __init__(self, publications = [], languages = []):
-        self.publications = publications
-        self.languages = languages
+    def __init__(self, favorites):
+        self.favorites = favorites
         self.message = (0, "")
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
         self.cur = con.cursor()
@@ -1196,34 +1196,35 @@ class AddFavorites(): # TODO: needs updating
         con.close()
 
     def add_dialog(self):
+
+        def set_edition():
+            lang = language.currentText()
+            publication.clear()
+            publication.addItems(sorted(self.favorites.loc[self.favorites['Lang'] == lang]['Short']))
+
         dialog = QDialog()
         dialog.setWindowTitle(_('Add Favorite'))
         label = QLabel(dialog)
-        label.setText(_('Select the edition and language to add.\nMake sure the edition exists in the selected language!\n'))
-        publication = QComboBox(dialog)
-        pubs = []
-        for pub in self.publications.keys():
-            if self.publications[pub][4] == 1:
-                pubs.append(f"{self.publications[pub][0]} ({pub})")
-        publication.addItem(' ')
-        publication.addItems(sorted(pubs))
-        publication.setStyleSheet("QComboBox { combobox-popup: 0; }");
+        label.setText(_('Select the language and Bible edition to add.\n'))
+
         language = QComboBox(dialog)
-        langs = []
-        for lang in sorted(self.languages.keys()):
-            langs.append(self.languages[lang][0])
         language.addItem(' ')
-        language.addItems(sorted(langs))
-        language.setMaxVisibleItems(15)
-        language.setStyleSheet("QComboBox { combobox-popup: 0; }");
+        language.addItems(sorted(self.favorites['Lang'].unique()))
+        language.setMaxVisibleItems(20)
+        language.setStyleSheet("QComboBox { combobox-popup: 0; }")
+        language.activated.connect(set_edition)
+        publication = QComboBox(dialog)
+        publication.setStyleSheet("QComboBox { combobox-popup: 0; }")
+
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(dialog.accept)
         buttons.rejected.connect(dialog.reject)
+
         layout = QVBoxLayout()
         layout.addWidget(label)
         form = QFormLayout()
-        form.addRow(_('Edition')+':', publication)
         form.addRow(_('Language')+':', language)
+        form.addRow(_('Edition')+':', publication)
         layout.addLayout(form)
         layout.addWidget(buttons)
         dialog.setLayout(layout)
