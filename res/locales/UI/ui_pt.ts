@@ -11,145 +11,145 @@
     <message>
         <location filename="main_window.ui" line="130"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Linguagem</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Ano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Tag</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="145"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Cor</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
         <source>Grouping:</source>
-        <translation type="unfinished"></translation>
+        <translation>Agrupamento:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
         <source>Selected:</source>
         <oldsource>Selected: </oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Selecionados:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
         <source>Category:</source>
-        <translation type="unfinished"></translation>
+        <translation>Categoria:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Anotações</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Marcações</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
         <source>Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Favoritos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="270"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Marcadores</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="275"/>
         <source>Annotations</source>
-        <translation type="unfinished"></translation>
+        <translation>Comentários</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="289"/>
         <source>Total:</source>
         <oldsource>Total: </oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Total:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="337"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importação</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="353"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportação</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="369"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Eliminar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="385"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Adicionar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="451"/>
         <source>Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Contagem</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="479"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Arquivo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="494"/>
         <location filename="main_window.ui" line="663"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>A&amp;juda</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="502"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Vista</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="512"/>
         <source>Title display format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato de exibição do título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="515"/>
         <source>&amp;Title View</source>
-        <translation type="unfinished"></translation>
+        <translation>Exibição do &amp;título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
         <source>Switch language</source>
-        <translation type="unfinished"></translation>
+        <translation>Mudar linguagem</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="534"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Linguagem</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="560"/>
         <source>&amp;Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Utilitários</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="584"/>
         <source>&amp;Open…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Abrir…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="587"/>
         <source>Open an archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir um arquivo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="590"/>
@@ -159,12 +159,12 @@
     <message>
         <location filename="main_window.ui" line="603"/>
         <source>&amp;Save</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Salvar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="606"/>
         <source>Save archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar arquivo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="609"/>
@@ -174,22 +174,22 @@
     <message>
         <location filename="main_window.ui" line="621"/>
         <source>&amp;Reindex</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Reindexar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="624"/>
         <source>Optimize database</source>
-        <translation type="unfinished"></translation>
+        <translation>Otimizar banco de dados</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="633"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sair</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="636"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Sair</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="639"/>
