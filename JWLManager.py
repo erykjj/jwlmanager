@@ -391,7 +391,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, changed=False):
         if not changed:
             self.current_data = []
-        self.statusBar.showMessage(' '+_('Processing...'))
+        self.statusBar.showMessage(' '+_('Processing…'))
         app.processEvents()
         tree = ConstructTree(self, self.treeWidget, books, publications, languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
         self.statusBar.showMessage('')
@@ -1178,7 +1178,7 @@ class ConstructTree():
         traverse(self.current, filters, self.tree)
 
 
-class AddFavorites(): # TODO: needs updating
+class AddFavorites():
     def __init__(self, favorites):
         self.favorites = favorites
         self.message = (0, "")
@@ -1209,7 +1209,7 @@ class AddFavorites(): # TODO: needs updating
         dialog = QDialog()
         dialog.setWindowTitle(_('Add Favorite'))
         label = QLabel(dialog)
-        label.setText(_('Select the language and Bible edition to add.\n'))
+        label.setText(_('Select the language and Bible edition to add:'))
 
         language = QComboBox(dialog)
         language.addItem(' ')
@@ -1259,14 +1259,8 @@ class AddFavorites(): # TODO: needs updating
         if pub == " " or lang == " ":
             self.message = (0, ' '+_('Nothing added!'))
             return
-        result = regex.match(r'(.*?) \(.*?\)$', pub)
-        if result:
-            pub = result.group(1)
-        else:
-            self.message = (0, ' '+_('Nothing added!'))
-            return
-        publication = [k for k, v in self.publications.items() if v[0] == pub][0]
-        language = [k for k, v in self.languages.items() if v[0] == lang][0]
+        language = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lang), 'Language'].values[0]
+        publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lang), 'Symbol'].values[0]
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
         if result:
