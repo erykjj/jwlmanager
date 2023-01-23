@@ -28,7 +28,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 
 #### Add
 
-For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. **Make sure the Bible translation you add exists in the selected language** (as strange things can happen if it does not). Let me know if a required language is missing from the drop-down selection.
+For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. Let me know if a required language is missing from the drop-down selection.
 
 #### Delete
 
