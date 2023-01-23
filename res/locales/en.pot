@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-01-23 07:57-0500\n"
+"POT-Creation-Date: 2023-01-23 07:59-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgid "Title"
 msgstr ""
 
 #: ../../../JWLManager.py:394
-msgid "Processing..."
+msgid "Processing…"
 msgstr ""
 
 #: ../../../JWLManager.py:467 ../../../JWLManager.py:503
