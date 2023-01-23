@@ -1216,6 +1216,8 @@ class AddFavorites(): # TODO: needs updating
         language.setStyleSheet("QComboBox { combobox-popup: 0; }")
         language.activated.connect(set_edition)
         publication = QComboBox(dialog)
+        publication.setMinimumContentsLength(23)
+        publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
         publication.setStyleSheet("QComboBox { combobox-popup: 0; }")
 
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
