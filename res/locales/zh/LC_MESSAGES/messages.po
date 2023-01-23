@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-01-23 07:59-0500\n"
+"POT-Creation-Date: 2023-01-23 08:03-0500\n"
 "PO-Revision-Date: 2023-01-20 23:32+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language: zh\n"
@@ -419,7 +419,7 @@ msgid "Add Favorite"
 msgstr "Add Favorite"
 
 #: ../../../JWLManager.py:1212
-msgid "Select the language and Bible edition to add.\n"
+msgid "Select the language and Bible edition to add:"
 msgstr ""
 
 #: ../../../JWLManager.py:1233
@@ -740,5 +740,8 @@ msgstr "The app will terminate."
 #~ "Make sure the edition exists in the selected language!\n"
 
 #~ msgid "Processing..."
+#~ msgstr ""
+
+#~ msgid "Select the language and Bible edition to add.\n"
 #~ msgstr ""
 
