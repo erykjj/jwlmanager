@@ -3,9 +3,12 @@
 ## [Unreleased]
 ### Added
 
+- Status bar message when the data is being processed (tree structure is being constructed)
+
 ### Changed
 
 - Significant **code rewrite to utilize Pandas** module for internal data handling
+- Add Favorite only limits Bible editions available by the selected language (preventing adding a favorite for a publication that doesn't exist)
 
 ### Fixed
 
