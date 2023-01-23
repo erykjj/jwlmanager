@@ -391,7 +391,11 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, changed=False):
         if not changed:
             self.current_data = []
+        self.statusBar.showMessage(' '+_('Processing...'))
+        app.processEvents()
         tree = ConstructTree(self, self.treeWidget, books, publications, languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
+        self.statusBar.showMessage('')
+        app.processEvents()
         if tree.aborted:
             self.clean_up()
             sys.exit()
@@ -516,8 +520,6 @@ class Window(QMainWindow, Ui_MainWindow):
             os.remove(f"{tmp_path}/{db_name}")
         except:
             pass
-        self.statusBar.showMessage(' '+_('Loading file'), 3500)
-        app.processEvents()
         with ZipFile(archive,"r") as zipped:
             zipped.extractall(tmp_path)
         if os.path.exists(f"{tmp_path}/user_data.db"):
