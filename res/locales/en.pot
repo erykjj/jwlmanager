@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-01-20 18:11-0500\n"
+"POT-Creation-Date: 2023-01-23 07:57-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,473 +17,475 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.11.0\n"
 
-#: ../../../JWLManager.py:206
+#: ../../../JWLManager.py:207
 msgid "Help"
 msgstr ""
 
-#: ../../../JWLManager.py:221 ../../../JWLManager.py:353
+#: ../../../JWLManager.py:222 ../../../JWLManager.py:354
 msgid "Data Viewer"
 msgstr ""
 
-#: ../../../JWLManager.py:335 ../../../JWLManager.py:362
-#: ../../../JWLManager.py:421 ../../../JWLManager.py:562
-#: ../../../JWLManager.py:686 ../../../JWLManager.py:833
-#: ../../../JWLManager.py:873 ../../../JWLManager.py:1275
-#: ../../../JWLManager.py:1302 ../../../JWLManager.py:1312
-#: ../../../JWLManager.py:1332 ../../../JWLManager.py:1417
-#: ../../../JWLManager.py:1434
+#: ../../../JWLManager.py:336 ../../../JWLManager.py:363
+#: ../../../JWLManager.py:426 ../../../JWLManager.py:567
+#: ../../../JWLManager.py:691 ../../../JWLManager.py:838
+#: ../../../JWLManager.py:878 ../../../JWLManager.py:1282
+#: ../../../JWLManager.py:1309 ../../../JWLManager.py:1319
+#: ../../../JWLManager.py:1339 ../../../JWLManager.py:1424
+#: ../../../JWLManager.py:1441
 msgid "Notes"
 msgstr ""
 
-#: ../../../JWLManager.py:335 ../../../JWLManager.py:368
-#: ../../../JWLManager.py:421 ../../../JWLManager.py:558
-#: ../../../JWLManager.py:682 ../../../JWLManager.py:875
-#: ../../../JWLManager.py:1304 ../../../JWLManager.py:1334
-#: ../../../JWLManager.py:1438
+#: ../../../JWLManager.py:336 ../../../JWLManager.py:369
+#: ../../../JWLManager.py:426 ../../../JWLManager.py:563
+#: ../../../JWLManager.py:687 ../../../JWLManager.py:880
+#: ../../../JWLManager.py:1311 ../../../JWLManager.py:1341
+#: ../../../JWLManager.py:1445
 msgid "Annotations"
 msgstr ""
 
-#: ../../../JWLManager.py:346 ../../../JWLManager.py:1658
+#: ../../../JWLManager.py:347 ../../../JWLManager.py:1665
 msgid "Warning"
 msgstr ""
 
-#: ../../../JWLManager.py:346
+#: ../../../JWLManager.py:347
 msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
 msgstr ""
 
-#: ../../../JWLManager.py:364 ../../../JWLManager.py:421
-#: ../../../JWLManager.py:560 ../../../JWLManager.py:684
-#: ../../../JWLManager.py:871 ../../../JWLManager.py:1300
-#: ../../../JWLManager.py:1330
+#: ../../../JWLManager.py:365 ../../../JWLManager.py:426
+#: ../../../JWLManager.py:565 ../../../JWLManager.py:689
+#: ../../../JWLManager.py:876 ../../../JWLManager.py:1307
+#: ../../../JWLManager.py:1337
 msgid "Highlights"
 msgstr ""
 
-#: ../../../JWLManager.py:366 ../../../JWLManager.py:867
-#: ../../../JWLManager.py:1296
+#: ../../../JWLManager.py:367 ../../../JWLManager.py:872
+#: ../../../JWLManager.py:1303
 msgid "Bookmarks"
 msgstr ""
 
-#: ../../../JWLManager.py:370 ../../../JWLManager.py:869
-#: ../../../JWLManager.py:1298
+#: ../../../JWLManager.py:371 ../../../JWLManager.py:874
+#: ../../../JWLManager.py:1305
 msgid "Favorites"
 msgstr ""
 
-#: ../../../JWLManager.py:372 ../../../JWLManager.py:374
-#: ../../../JWLManager.py:833 ../../../JWLManager.py:1165
+#: ../../../JWLManager.py:373 ../../../JWLManager.py:375
+#: ../../../JWLManager.py:838 ../../../JWLManager.py:1170
 msgid "Title"
 msgstr ""
 
-#: ../../../JWLManager.py:462 ../../../JWLManager.py:498
-#: ../../../JWLManager.py:586
+#: ../../../JWLManager.py:394
+msgid "Processing..."
+msgstr ""
+
+#: ../../../JWLManager.py:467 ../../../JWLManager.py:503
+#: ../../../JWLManager.py:591
 msgid "Save"
 msgstr ""
 
-#: ../../../JWLManager.py:462 ../../../JWLManager.py:498
+#: ../../../JWLManager.py:467 ../../../JWLManager.py:503
 msgid "Save current archive?"
 msgstr ""
 
-#: ../../../JWLManager.py:470
+#: ../../../JWLManager.py:475
 msgid "NEW ARCHIVE"
 msgstr ""
 
-#: ../../../JWLManager.py:504
+#: ../../../JWLManager.py:509
 msgid "Open archive"
 msgstr ""
 
-#: ../../../JWLManager.py:504 ../../../JWLManager.py:579
-#: ../../../JWLManager.py:581
+#: ../../../JWLManager.py:509 ../../../JWLManager.py:584
+#: ../../../JWLManager.py:586
 msgid "JW Library archives"
 msgstr ""
 
-#: ../../../JWLManager.py:553 ../../../JWLManager.py:564
-#: ../../../JWLManager.py:566
+#: ../../../JWLManager.py:558 ../../../JWLManager.py:569
+#: ../../../JWLManager.py:571
 msgid "Error"
 msgstr ""
 
-#: ../../../JWLManager.py:553
+#: ../../../JWLManager.py:558
 msgid "No archive has been opened!"
 msgstr ""
 
-#: ../../../JWLManager.py:564 ../../../JWLManager.py:566
+#: ../../../JWLManager.py:569 ../../../JWLManager.py:571
 msgid "File \"{}\" not recognized!"
 msgstr ""
 
-#: ../../../JWLManager.py:579 ../../../JWLManager.py:581
+#: ../../../JWLManager.py:584 ../../../JWLManager.py:586
 msgid "Save archive"
 msgstr ""
 
-#: ../../../JWLManager.py:583
+#: ../../../JWLManager.py:588
 msgid "NOT saved!"
 msgstr ""
 
-#: ../../../JWLManager.py:586
+#: ../../../JWLManager.py:591
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
 
-#: ../../../JWLManager.py:635
+#: ../../../JWLManager.py:640
 msgid "Saved"
 msgstr ""
 
-#: ../../../JWLManager.py:643
+#: ../../../JWLManager.py:648
 msgid "Export file"
 msgstr ""
 
-#: ../../../JWLManager.py:643
+#: ../../../JWLManager.py:648
 msgid "Text files"
 msgstr ""
 
-#: ../../../JWLManager.py:646
+#: ../../../JWLManager.py:651
 msgid "Export"
 msgstr ""
 
-#: ../../../JWLManager.py:646
+#: ../../../JWLManager.py:651
 msgid "items will be EXPORTED. Proceed?"
 msgstr ""
 
-#: ../../../JWLManager.py:658
+#: ../../../JWLManager.py:663
 msgid "NOT exported!"
 msgstr ""
 
-#: ../../../JWLManager.py:666
+#: ../../../JWLManager.py:671
 msgid "Items exported"
 msgstr ""
 
-#: ../../../JWLManager.py:669
+#: ../../../JWLManager.py:674
 msgid "Import"
 msgstr ""
 
-#: ../../../JWLManager.py:669
+#: ../../../JWLManager.py:674
 msgid ""
 "Make sure your import file is UTF-8 encoded and properly formatted.\n"
 "\n"
 "Importing will modify the archive. Proceed?"
 msgstr ""
 
-#: ../../../JWLManager.py:673
+#: ../../../JWLManager.py:678
 msgid "Import file"
 msgstr ""
 
-#: ../../../JWLManager.py:673
+#: ../../../JWLManager.py:678
 msgid "Import files"
 msgstr ""
 
-#: ../../../JWLManager.py:675
+#: ../../../JWLManager.py:680 ../../../JWLManager.py:697
 msgid "NOT imported!"
 msgstr ""
 
-#: ../../../JWLManager.py:680
+#: ../../../JWLManager.py:685
 msgid "Importing. Please wait…"
 msgstr ""
 
-#: ../../../JWLManager.py:695
+#: ../../../JWLManager.py:700
 msgid "items imported/updated"
 msgstr ""
 
-#: ../../../JWLManager.py:714
+#: ../../../JWLManager.py:719
 msgid "Delete"
 msgstr ""
 
-#: ../../../JWLManager.py:714
+#: ../../../JWLManager.py:719
 msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
 msgstr ""
 
-#: ../../../JWLManager.py:717
+#: ../../../JWLManager.py:722
 msgid "Deleting. Please wait…"
 msgstr ""
 
-#: ../../../JWLManager.py:730
+#: ../../../JWLManager.py:735
 msgid "items deleted"
 msgstr ""
 
-#: ../../../JWLManager.py:737
+#: ../../../JWLManager.py:742
 msgid "Mask"
 msgstr ""
 
-#: ../../../JWLManager.py:737
+#: ../../../JWLManager.py:742
 msgid ""
 "Are you sure you want to\n"
 "MASK all text fields?"
 msgstr ""
 
-#: ../../../JWLManager.py:740
+#: ../../../JWLManager.py:745
 msgid "Masking. Please wait…"
 msgstr ""
 
-#: ../../../JWLManager.py:746
+#: ../../../JWLManager.py:751
 msgid "Data masked"
 msgstr ""
 
-#: ../../../JWLManager.py:752
+#: ../../../JWLManager.py:757
 msgid "Reindex"
 msgstr ""
 
-#: ../../../JWLManager.py:752
+#: ../../../JWLManager.py:757
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
 msgstr ""
 
-#: ../../../JWLManager.py:756
+#: ../../../JWLManager.py:761
 msgid "Please wait…"
 msgstr ""
 
-#: ../../../JWLManager.py:762
+#: ../../../JWLManager.py:767
 msgid "Reindexing. Please wait…"
 msgstr ""
 
-#: ../../../JWLManager.py:768
+#: ../../../JWLManager.py:773
 msgid "Reindexed successfully"
 msgstr ""
 
-#: ../../../JWLManager.py:817
+#: ../../../JWLManager.py:822
 msgid "Exit"
 msgstr ""
 
-#: ../../../JWLManager.py:817
+#: ../../../JWLManager.py:822
 msgid "Save before quitting?"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Grey"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Yellow"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Green"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Blue"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Red"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Orange"
 msgstr ""
 
-#: ../../../JWLManager.py:899
+#: ../../../JWLManager.py:904
 msgid "Purple"
 msgstr ""
 
-#: ../../../JWLManager.py:919
+#: ../../../JWLManager.py:924
 msgid "* YEAR UNCERTAIN *"
 msgstr ""
 
-#: ../../../JWLManager.py:927
+#: ../../../JWLManager.py:932
 msgid "Other"
 msgstr ""
 
-#: ../../../JWLManager.py:928
+#: ../../../JWLManager.py:933
 msgid "* NO YEAR *"
 msgstr ""
 
-#: ../../../JWLManager.py:983 ../../../JWLManager.py:1079
-#: ../../../JWLManager.py:1123
+#: ../../../JWLManager.py:988 ../../../JWLManager.py:1084
+#: ../../../JWLManager.py:1128
 msgid "* OTHER *"
 msgstr ""
 
-#: ../../../JWLManager.py:1079
+#: ../../../JWLManager.py:1084
 msgid "* NO LANGUAGE *"
 msgstr ""
 
-#: ../../../JWLManager.py:1079 ../../../JWLManager.py:1123
+#: ../../../JWLManager.py:1084 ../../../JWLManager.py:1128
 msgid "* NO TAG *"
 msgstr ""
 
-#: ../../../JWLManager.py:1079
+#: ../../../JWLManager.py:1084
 msgid "* INDEPENDENT *"
 msgstr ""
 
-#: ../../../JWLManager.py:1164
+#: ../../../JWLManager.py:1169
 msgid "Type"
 msgstr ""
 
-#: ../../../JWLManager.py:1166 ../../../JWLManager.py:1226
+#: ../../../JWLManager.py:1171 ../../../JWLManager.py:1232
 msgid "Language"
 msgstr ""
 
-#: ../../../JWLManager.py:1167
+#: ../../../JWLManager.py:1172
 msgid "Year"
 msgstr ""
 
-#: ../../../JWLManager.py:1168
+#: ../../../JWLManager.py:1173
 msgid "Tag"
 msgstr ""
 
-#: ../../../JWLManager.py:1169
+#: ../../../JWLManager.py:1174
 msgid "Color"
 msgstr ""
 
-#: ../../../JWLManager.py:1200
+#: ../../../JWLManager.py:1210
 msgid "Add Favorite"
 msgstr ""
 
-#: ../../../JWLManager.py:1202
-msgid ""
-"Select the edition and language to add.\n"
-"Make sure the edition exists in the selected language!\n"
+#: ../../../JWLManager.py:1212
+msgid "Select the language and Bible edition to add.\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1225
+#: ../../../JWLManager.py:1233
 msgid "Edition"
 msgstr ""
 
-#: ../../../JWLManager.py:1253
+#: ../../../JWLManager.py:1260 ../../../JWLManager.py:1266
 msgid "Nothing added!"
 msgstr ""
 
-#: ../../../JWLManager.py:1266
+#: ../../../JWLManager.py:1273
 msgid "Favorite for \"{}\" in {} already exists."
 msgstr ""
 
-#: ../../../JWLManager.py:1270
+#: ../../../JWLManager.py:1277
 msgid "Added favorite for \"{}\" in {}."
 msgstr ""
 
-#: ../../../JWLManager.py:1347
+#: ../../../JWLManager.py:1354
 msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
 msgstr ""
 
-#: ../../../JWLManager.py:1348
+#: ../../../JWLManager.py:1355
 msgid ""
 "LEAVE {TITLE=} (empty) IF YOU DON'T WANT TO DELETE ANY NOTES WHILE "
 "IMPORTING\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1349
+#: ../../../JWLManager.py:1356
 msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
 msgstr ""
 
-#: ../../../JWLManager.py:1350
+#: ../../../JWLManager.py:1357
 msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1351
+#: ../../../JWLManager.py:1358
 msgid "LINE AFTER HEADER IS NOTE TITLE"
 msgstr ""
 
-#: ../../../JWLManager.py:1352
+#: ../../../JWLManager.py:1359
 msgid ""
 "REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
 "HEADER\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1353
+#: ../../../JWLManager.py:1360
 msgid "SEPARATE TAGS WITH \",\" (commas)"
 msgstr ""
 
-#: ../../../JWLManager.py:1354
+#: ../../../JWLManager.py:1361
 msgid "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1355
+#: ../../../JWLManager.py:1362
 msgid "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
 msgstr ""
 
-#: ../../../JWLManager.py:1356
+#: ../../../JWLManager.py:1363
 msgid "ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)"
 msgstr ""
 
-#: ../../../JWLManager.py:1357 ../../../JWLManager.py:1398
-#: ../../../JWLManager.py:1412
+#: ../../../JWLManager.py:1364 ../../../JWLManager.py:1405
+#: ../../../JWLManager.py:1419
 msgid "Exported from"
 msgstr ""
 
-#: ../../../JWLManager.py:1357 ../../../JWLManager.py:1398
-#: ../../../JWLManager.py:1412
+#: ../../../JWLManager.py:1364 ../../../JWLManager.py:1405
+#: ../../../JWLManager.py:1419
 msgid "by"
 msgstr ""
 
-#: ../../../JWLManager.py:1357 ../../../JWLManager.py:1398
-#: ../../../JWLManager.py:1412
+#: ../../../JWLManager.py:1364 ../../../JWLManager.py:1405
+#: ../../../JWLManager.py:1419
 msgid "on"
 msgstr ""
 
-#: ../../../JWLManager.py:1443 ../../../JWLManager.py:1452
-#: ../../../JWLManager.py:1461
+#: ../../../JWLManager.py:1450 ../../../JWLManager.py:1459
+#: ../../../JWLManager.py:1468
 msgid "NO TITLE"
 msgstr ""
 
-#: ../../../JWLManager.py:1447 ../../../JWLManager.py:1456
-#: ../../../JWLManager.py:1465 ../../../JWLManager.py:1474
+#: ../../../JWLManager.py:1454 ../../../JWLManager.py:1463
+#: ../../../JWLManager.py:1472 ../../../JWLManager.py:1481
 msgid "NO TEXT"
 msgstr ""
 
-#: ../../../JWLManager.py:1507 ../../../JWLManager.py:1524
-#: ../../../JWLManager.py:1563 ../../../JWLManager.py:1579
-#: ../../../JWLManager.py:1648 ../../../JWLManager.py:1681
-#: ../../../JWLManager.py:1684 ../../../JWLManager.py:1943
+#: ../../../JWLManager.py:1514 ../../../JWLManager.py:1531
+#: ../../../JWLManager.py:1570 ../../../JWLManager.py:1586
+#: ../../../JWLManager.py:1655 ../../../JWLManager.py:1688
+#: ../../../JWLManager.py:1691 ../../../JWLManager.py:1950
 msgid "Error!"
 msgstr ""
 
-#: ../../../JWLManager.py:1507
+#: ../../../JWLManager.py:1514
 msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
 
-#: ../../../JWLManager.py:1524 ../../../JWLManager.py:1579
-#: ../../../JWLManager.py:1684
+#: ../../../JWLManager.py:1531 ../../../JWLManager.py:1586
+#: ../../../JWLManager.py:1691
 msgid ""
 "Error on import!\n"
 "\n"
 "Faulting entry"
 msgstr ""
 
-#: ../../../JWLManager.py:1563
+#: ../../../JWLManager.py:1570
 msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
 
-#: ../../../JWLManager.py:1648
+#: ../../../JWLManager.py:1655
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {TITLE=} attribute line"
 msgstr ""
 
-#: ../../../JWLManager.py:1658
+#: ../../../JWLManager.py:1665
 msgid "notes starting with"
 msgstr ""
 
-#: ../../../JWLManager.py:1658
+#: ../../../JWLManager.py:1665
 msgid ""
 "WILL BE DELETED before importing.\n"
 "\n"
 "Proceed with deletion? (NO to skip)"
 msgstr ""
 
-#: ../../../JWLManager.py:1681
+#: ../../../JWLManager.py:1688
 msgid ""
 "Wrong import file format:\n"
 "Malformed header"
 msgstr ""
 
-#: ../../../JWLManager.py:1945
+#: ../../../JWLManager.py:1952
 msgid "Oops! Something went wrong…"
 msgstr ""
 
-#: ../../../JWLManager.py:1945
+#: ../../../JWLManager.py:1952
 msgid "Take note of what you were doing and"
 msgstr ""
 
-#: ../../../JWLManager.py:1945
+#: ../../../JWLManager.py:1952
 msgid "inform the developer"
 msgstr ""
 
-#: ../../../JWLManager.py:1951
+#: ../../../JWLManager.py:1958
 msgid "The app will terminate."
 msgstr ""
 
