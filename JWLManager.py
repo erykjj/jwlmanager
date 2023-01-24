@@ -915,7 +915,11 @@ class ConstructTree():
     def process_color(self, col):
         return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
-    def process_detail(self, book, chapter, issue, year, detail):
+    def process_detail(self, symbol, book, chapter, issue, year):
+        if symbol in ('Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'): # Bible appendix notes, etc.
+            detail = _('* OTHER *')
+        else:
+            detail = None
         if issue:
             y = str(issue)[0:4]
             m = str(issue)[4:6]
@@ -967,7 +971,7 @@ class ConstructTree():
         for row in self.cur.execute(sql):
             lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[5], row[6], row[3], year)
+            detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[4]
             rec = [ item, lng, code, year, detail ]
             lst.append(rec)
@@ -994,7 +998,7 @@ class ConstructTree():
         for row in self.cur.execute(sql):
             lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[5], row[6], row[3], year)
+            detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[4]
             rec = [ item, lng, code or _('* OTHER *'), year, detail ]
             lst.append(rec)
@@ -1020,7 +1024,7 @@ class ConstructTree():
         for row in self.cur.execute(sql):
             lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(None, None, row[3], year)
+            detail, year = self.process_detail(row[1], None, None, row[3], year)
             item = row[4]
             rec = [ item, lng, code, year, detail ]
             lst.append(rec)
@@ -1051,7 +1055,7 @@ class ConstructTree():
         for row in self.cur.execute(sql):
             lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[7], row[8], row[3], year)
+            detail, year = self.process_detail(row[1], row[7], row[8], row[3], year)
             col = self.process_color(row[6] or 0)
             item = row[4]
             rec = [ item, lng, code, col, year, detail ]
@@ -1133,12 +1137,9 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute(sql):
             lng = self.languages[row[1]] or f'#{row[1]}'
-            if row[2] in ('Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'): # Bible appendix notes, etc.
-                title = _('* OTHER *')
-            else:
-                title = None
+
             code, year = self.process_code(row[2], row[3])
-            detail, year = self.process_detail(row[4], row[5], row[3], year, title)
+            detail, year = self.process_detail(row[2], row[4], row[5], row[3], year)
             col = self.process_color(row[6] or 0)
             note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
             lst.append(note)
