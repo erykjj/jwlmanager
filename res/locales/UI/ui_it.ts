@@ -128,7 +128,7 @@
     <message>
         <location filename="main_window.ui" line="515"/>
         <source>&amp;Title View</source>
-        <translation>&amp;Vista [del] titolo</translation>
+        <translation>Formato &amp;Titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
@@ -293,7 +293,7 @@
     <message>
         <location filename="main_window.ui" line="767"/>
         <source>Use publication code as title</source>
-        <translation>Utilizza codice pubblicazione come titolo</translation>
+        <translation>Usa sigla come titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="778"/>
