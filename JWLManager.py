@@ -369,10 +369,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.disable_options([4,5], False, True, True)
         elif selection == _('Favorites'):
             self.disable_options([4,5], True, False, False)
-        if self.combo_grouping.currentText() != _('Title'):
-            self.combo_grouping.currentTextChanged.disconnect()
-            self.combo_grouping.setCurrentText(_('Title'))
-            self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.regroup()
 
     def disable_options(self, list=[], add=False, exp=False, imp=False):
@@ -385,6 +381,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(True)
         for item in list:
             self.combo_grouping.model().item(item).setEnabled(False)
+            if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
+                self.combo_grouping.setCurrentText(_('Title'))
         self.combo_grouping.blockSignals(False)
 
     def regroup(self, changed=False, message=''):
