@@ -149,7 +149,7 @@
          <widget class="QLabel" name="total">
           <property name="geometry">
            <rect>
-            <x>100</x>
+            <x>110</x>
             <y>1</y>
             <width>60</width>
             <height>28</height>
@@ -187,7 +187,7 @@
          <widget class="QLabel" name="selected">
           <property name="geometry">
            <rect>
-            <x>100</x>
+            <x>110</x>
             <y>31</y>
             <width>60</width>
             <height>28</height>
@@ -208,7 +208,7 @@
            <rect>
             <x>0</x>
             <y>30</y>
-            <width>100</width>
+            <width>110</width>
             <height>28</height>
            </rect>
           </property>
@@ -281,7 +281,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>100</width>
+            <width>110</width>
             <height>28</height>
            </rect>
           </property>
