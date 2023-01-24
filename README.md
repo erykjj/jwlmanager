@@ -7,6 +7,8 @@ This is a **multi-platform application** for viewing and performing various oper
 
 In addition to the main functions of **viewing, exporting, importing, and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** by exporting the desired items and importing them into an existent archive or into a new one.
 
+Keep in mind that the more items there are to be sorted into a tree structure, the longer it will take.
+
 ![preview](res/images/JWLManager.gif)
 
 ____
