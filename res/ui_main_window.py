@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowUqmCpk.ui'
+## Form generated from reading UI file 'main_windowKBGLfB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.4.1
 ##
@@ -187,23 +187,23 @@ class Ui_MainWindow(object):
         self.combo_grouping.setGeometry(QRect(320, 30, 140, 28))
         self.total = QLabel(self.info)
         self.total.setObjectName(u"total")
-        self.total.setGeometry(QRect(120, 1, 80, 28))
+        self.total.setGeometry(QRect(110, 1, 70, 28))
         self.total.setTextFormat(Qt.MarkdownText)
         self.total.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.label_grouping = QLabel(self.info)
         self.label_grouping.setObjectName(u"label_grouping")
-        self.label_grouping.setGeometry(QRect(220, 30, 100, 28))
+        self.label_grouping.setGeometry(QRect(190, 30, 130, 28))
         self.selected = QLabel(self.info)
         self.selected.setObjectName(u"selected")
-        self.selected.setGeometry(QRect(120, 31, 80, 28))
+        self.selected.setGeometry(QRect(110, 31, 70, 28))
         self.selected.setTextFormat(Qt.MarkdownText)
         self.selected.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.label_selected = QLabel(self.info)
         self.label_selected.setObjectName(u"label_selected")
-        self.label_selected.setGeometry(QRect(5, 30, 110, 28))
+        self.label_selected.setGeometry(QRect(5, 30, 100, 28))
         self.label_category = QLabel(self.info)
         self.label_category.setObjectName(u"label_category")
-        self.label_category.setGeometry(QRect(220, 0, 100, 28))
+        self.label_category.setGeometry(QRect(190, 0, 130, 28))
         self.combo_category = QComboBox(self.info)
         self.combo_category.addItem("")
         self.combo_category.addItem("")
@@ -215,11 +215,19 @@ class Ui_MainWindow(object):
         self.combo_category.setGeometry(QRect(320, 0, 140, 28))
         self.label_total = QLabel(self.info)
         self.label_total.setObjectName(u"label_total")
-        self.label_total.setGeometry(QRect(5, 0, 110, 28))
+        self.label_total.setGeometry(QRect(5, 0, 100, 28))
+        self.total.raise_()
+        self.label_grouping.raise_()
+        self.selected.raise_()
+        self.label_selected.raise_()
+        self.label_category.raise_()
+        self.label_total.raise_()
+        self.combo_category.raise_()
+        self.combo_grouping.raise_()
 
         self.horizontalLayout.addWidget(self.info)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.MinimumExpanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(10, 20, QSizePolicy.MinimumExpanding, QSizePolicy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 

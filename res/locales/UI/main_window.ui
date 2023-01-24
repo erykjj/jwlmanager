@@ -149,9 +149,9 @@
          <widget class="QLabel" name="total">
           <property name="geometry">
            <rect>
-            <x>120</x>
+            <x>110</x>
             <y>1</y>
-            <width>80</width>
+            <width>70</width>
             <height>28</height>
            </rect>
           </property>
@@ -168,9 +168,9 @@
          <widget class="QLabel" name="label_grouping">
           <property name="geometry">
            <rect>
-            <x>220</x>
+            <x>190</x>
             <y>30</y>
-            <width>100</width>
+            <width>130</width>
             <height>28</height>
            </rect>
           </property>
@@ -187,9 +187,9 @@
          <widget class="QLabel" name="selected">
           <property name="geometry">
            <rect>
-            <x>120</x>
+            <x>110</x>
             <y>31</y>
-            <width>80</width>
+            <width>70</width>
             <height>28</height>
            </rect>
           </property>
@@ -208,7 +208,7 @@
            <rect>
             <x>5</x>
             <y>30</y>
-            <width>110</width>
+            <width>100</width>
             <height>28</height>
            </rect>
           </property>
@@ -219,9 +219,9 @@
          <widget class="QLabel" name="label_category">
           <property name="geometry">
            <rect>
-            <x>220</x>
+            <x>190</x>
             <y>0</y>
-            <width>100</width>
+            <width>130</width>
             <height>28</height>
            </rect>
           </property>
@@ -281,7 +281,7 @@
            <rect>
             <x>5</x>
             <y>0</y>
-            <width>110</width>
+            <width>100</width>
             <height>28</height>
            </rect>
           </property>
@@ -289,6 +289,14 @@
            <string>Total:</string>
           </property>
          </widget>
+         <zorder>total</zorder>
+         <zorder>label_grouping</zorder>
+         <zorder>selected</zorder>
+         <zorder>label_selected</zorder>
+         <zorder>label_category</zorder>
+         <zorder>label_total</zorder>
+         <zorder>combo_category</zorder>
+         <zorder>combo_grouping</zorder>
         </widget>
        </item>
        <item>
@@ -301,7 +309,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>10</width>
            <height>20</height>
           </size>
          </property>
