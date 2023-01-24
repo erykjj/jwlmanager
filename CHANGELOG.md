@@ -10,6 +10,7 @@
 - Significant **code rewrite to utilize Pandas** module for internal data handling
 - Add Favorite only limits Bible editions available by the selected language (preventing adding a favorite for a publication that doesn't exist)
 - Improved status bar messages
+- More complete year breakdown for many publications
 - Updated translations
 - Slight layout adjustments
 
