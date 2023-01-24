@@ -39,6 +39,7 @@ from PySide6.QtWidgets import *
 from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
+from time import time
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
@@ -388,13 +389,22 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.model().item(item).setEnabled(False)
         self.combo_grouping.blockSignals(False)
 
-    def regroup(self, changed=False):
+    def regroup(self, changed=False, message=''):
         if not changed:
             self.current_data = []
-        self.statusBar.showMessage(' '+_('Processing…'))
+        if message:
+            msg = message + '… '
+        else:
+            msg = ' '
+        self.statusBar.showMessage(msg+_('Processing…'))
         app.processEvents()
+        start = time()
         tree = ConstructTree(self, self.treeWidget, books, publications, languages, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
-        self.statusBar.showMessage('')
+        delta = 3500 - (time()-start) * 1000
+        if message:
+            self.statusBar.showMessage(msg, delta)
+        else:
+            self.statusBar.showMessage('')
         app.processEvents()
         if tree.aborted:
             self.clean_up()
@@ -697,9 +707,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
             return
         self.trim_db()
-        self.statusBar.showMessage(f" {fn.count} "+_('items imported/updated'), 3500)
+        message = f" {fn.count} "+_('items imported/updated')
+        self.statusBar.showMessage(message, 3500)
         self.archive_modified()
-        self.regroup()
+        self.regroup(False, message)
         self.tree_selection()
 
 
@@ -712,7 +723,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(text[1], 3500)
         if text[0]:
             self.archive_modified()
-            self.regroup()
+            self.regroup(False, text[1])
             self.tree_selection()
 
     def delete(self):
@@ -732,9 +743,10 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f" {fn.result} "+_('items deleted'), 3500)
+        message = f" {fn.result} "+_('items deleted')
+        self.statusBar.showMessage(message, 3500)
         self.trim_db()
-        self.regroup()
+        self.regroup(False, message)
         self.tree_selection()
 
 
@@ -748,9 +760,10 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(' '+_('Data masked'), 3500)
+        message = ' '+_('Data masked')
+        self.statusBar.showMessage(message, 3500)
         self.archive_modified()
-        self.regroup()
+        self.regroup(False, message)
 
 
     def reindex(self):
@@ -770,9 +783,10 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(' '+_('Reindexed successfully'), 3500)
+        message = ' '+_('Reindexed successfully')
+        self.statusBar.showMessage(message, 3500)
         self.archive_modified()
-        self.regroup()
+        self.regroup(False, message)
 
     def trim_db(self):
         con = sqlite3.connect(f"{tmp_path}/{db_name}")
@@ -1268,7 +1282,7 @@ class AddFavorites():
             return
         tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
-        self.message = (1, ' '+_('Added favorite for "{}" in {}.').format(pub, lang))
+        self.message = (1, ' '+_('Added "{}" in {}').format(pub, lang))
         return 1
 
 
