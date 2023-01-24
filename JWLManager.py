@@ -71,12 +71,12 @@ def get_language():
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
-    lang = 'en'
+    lng = 'en'
     for l in args.keys():
         if args[l]:
-            lang = l
+            lng = l
 
-    return lang
+    return lng
 
 def resource_path(relative_path):
     try:
@@ -85,10 +85,10 @@ def resource_path(relative_path):
         base_path = PROJECT_PATH 
     return os.path.join(base_path, relative_path)
 
-def read_res(lang):
+def read_res(lng):
 
-    def load_books(lang):
-        sql = f"SELECT Number, Name FROM BibleBooks WHERE Language = {lang};"
+    def load_books(lng):
+        sql = f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};"
         for row in cur.execute(sql).fetchall():
             books[row[0]] = row[1]
 
@@ -96,13 +96,13 @@ def read_res(lang):
         sql =  "SELECT Language, Name, Code FROM Languages;"
         for row in cur.execute(sql).fetchall():
             languages[row[0]] = row[1]
-            if row[2] == lang:
+            if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
 
-    def load_pubs(lang):
+    def load_pubs(lng):
         types = {}
-        sql =  f"SELECT Type, [Group] FROM Types WHERE Language = {lang};"
+        sql =  f"SELECT Type, [Group] FROM Types WHERE Language = {lng};"
         for row in cur.execute(sql).fetchall():
             types[row[0]] = row[1]
         sql = """
@@ -128,7 +128,7 @@ def read_res(lang):
                 Type,
                 Favorite
             FROM Extras
-            WHERE Language = {lang};
+            WHERE Language = {lng};
         """
         for row in cur.execute(sql).fetchall():
             note = [ int(row[0]), row[1], row[2], row[3], row[4], types[row[5]], row[6] ]
@@ -137,12 +137,12 @@ def read_res(lang):
         favs = pubs[pubs['Favorite'] == 1]
         favs = favs.drop(['Full', 'Year', 'Type', 'Favorite'], axis=1)
         favs['Lang'] = favs['Language'].map(languages)
-        pubs = pubs[pubs['Language'] == lang]
+        pubs = pubs[pubs['Language'] == lng]
         pubs = pubs.drop(['Language', 'Favorite'], axis=1) # Delete columns
         return favs, pubs
 
     global _, books, favorites, languages, publications
-    _ = tr[lang].gettext
+    _ = tr[lng].gettext
     languages = {}
     books = {}
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
@@ -258,7 +258,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.menuLanguage.triggered.connect(self.change_language)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.combo_category.currentTextChanged.connect(self.switchboard)
-        self.treeWidget.itemChanged.connect(self.tree_selection)
+        # self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
@@ -288,8 +288,6 @@ class Window(QMainWindow, Ui_MainWindow):
             translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
         app.installTranslator(translator[self.lang])
         app.processEvents()
-        self.regroup()
-        self.tree_selection()
 
     def change_title(self):
         changed = False
@@ -968,11 +966,11 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lang = self.languages[row[2]]  or f'#{row[2]}'
+            lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[5], row[6], row[3], year)
             item = row[4]
-            rec = [ item, lang, code, year, detail ]
+            rec = [ item, lng, code, year, detail ]
             lst.append(rec)
         annotations = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
         self.current = self.merge_df(annotations)
@@ -995,11 +993,11 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lang = self.languages[row[2]]  or f'#{row[2]}'
+            lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[5], row[6], row[3], year)
             item = row[4]
-            rec = [ item, lang, code or _('* OTHER *'), year, detail ]
+            rec = [ item, lng, code or _('* OTHER *'), year, detail ]
             lst.append(rec)
         bookmarks = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
         self.current = self.merge_df(bookmarks)
@@ -1021,11 +1019,11 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lang = self.languages[row[2]]  or f'#{row[2]}'
+            lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(None, None, row[3], year)
             item = row[4]
-            rec = [ item, lang, code, year, detail ]
+            rec = [ item, lng, code, year, detail ]
             lst.append(rec)
         favorites = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol','Year', 'Detail' ])
         self.current = self.merge_df(favorites)
@@ -1052,12 +1050,12 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lang = self.languages[row[2]]  or f'#{row[2]}'
+            lng = self.languages[row[2]]  or f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[7], row[8], row[3], year)
             col = self.process_color(row[6] or 0)
             item = row[4]
-            rec = [ item, lang, code, col, year, detail ]
+            rec = [ item, lng, code, col, year, detail ]
             lst.append(rec)
         highlights = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail' ])
         self.current = self.merge_df(highlights)
@@ -1135,11 +1133,11 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lang = self.languages[row[1]] or f'#{row[1]}'
+            lng = self.languages[row[1]] or f'#{row[1]}'
             code, year = self.process_code(row[2], row[3])
             detail, year = self.process_detail(row[4], row[5], row[3], year)
             col = self.process_color(row[6] or 0)
-            note = [ row[0], lang, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
+            note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
             lst.append(note)
         notes = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail' ])
         notes = self.merge_df(notes)
@@ -1168,8 +1166,6 @@ class ConstructTree():
                     child = add_node(parent, i, df.shape[0])
                     self.leaves[child] = df['Id'].to_list()
                     traverse(df, idx[1:], child)
-            # else:
-            #     self.leaves[parent] = df['Id'].to_list()
 
         if self.title_format == 'code':
             title = 'Symbol'
@@ -1177,6 +1173,8 @@ class ConstructTree():
             title = 'Short'
         else:
             title = 'Full'
+        if self.current.shape[0] == 0:
+            return
         self.current['Title'] = self.current[title]
 
         views = {
@@ -1216,9 +1214,9 @@ class AddFavorites():
     def add_dialog(self):
 
         def set_edition():
-            lang = language.currentText()
+            lng = language.currentText()
             publication.clear()
-            publication.addItems(sorted(self.favorites.loc[self.favorites['Lang'] == lang]['Short']))
+            publication.addItems(sorted(self.favorites.loc[self.favorites['Lang'] == lng]['Short']))
 
         dialog = QDialog()
         dialog.setWindowTitle(_('Add Favorite'))
@@ -1269,20 +1267,20 @@ class AddFavorites():
       return result[0]
 
     def add_favorite(self):
-        pub, lang = self.add_dialog()
-        if pub == " " or lang == " ":
+        pub, lng = self.add_dialog()
+        if pub == " " or lng == " ":
             self.message = (0, ' '+_('Nothing added!'))
             return
-        language = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lang), 'Language'].values[0]
-        publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lang), 'Symbol'].values[0]
+        language = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0]
+        publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Symbol'].values[0]
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
         if result:
-            self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lang))
+            self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng))
             return
         tag_id, position = self.tag_positions()
         self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
-        self.message = (1, ' '+_('Added "{}" in {}').format(pub, lang))
+        self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
 
 
