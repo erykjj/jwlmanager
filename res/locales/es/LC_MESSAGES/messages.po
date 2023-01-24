@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-23 19:21-0500\n"
-"PO-Revision-Date: 2023-01-23 13:32+0000\n"
+"PO-Revision-Date: 2023-01-24 00:35+0000\n"
 "Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: es\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.16-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:208
@@ -365,9 +366,8 @@ msgid "Favorite for \"{}\" in {} already exists."
 msgstr "Favorito para \"{}\" en {} ya existe."
 
 #: ../../../JWLManager.py:1285
-#, fuzzy
 msgid "Added \"{}\" in {}"
-msgstr "Se añadió favorito para \"{}\" en {}."
+msgstr "Añadido \"{}\" en {}"
 
 #: ../../../JWLManager.py:1362
 msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
@@ -396,8 +396,8 @@ msgid ""
 "REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
 "HEADER\n"
 msgstr ""
-"EL RESTO ES EL CUERPO; PUEDE SER DE VARIAS LÍNEAS Y ES TERMINADO POR OTRO"
-" ENCABEZAMIENTO\n"
+"EL RESTO ES EL CUERPO; PUEDE SER DE VARIAS LÍNEAS Y ES TERMINADO POR OTRO "
+"ENCABEZAMIENTO\n"
 
 #: ../../../JWLManager.py:1368
 msgid "SEPARATE TAGS WITH \",\" (commas)"
@@ -634,4 +634,3 @@ msgstr "La aplicación se cerrará."
 
 #~ msgid "Select the language and Bible edition to add.\n"
 #~ msgstr ""
-
