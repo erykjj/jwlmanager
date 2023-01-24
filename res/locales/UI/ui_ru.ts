@@ -6,7 +6,7 @@
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation></translation>
+        <translation>JWLManager</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
@@ -365,7 +365,7 @@
     <message>
         <location filename="main_window.ui" line="847"/>
         <source>English</source>
-        <translation></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -425,7 +425,7 @@
     <message>
         <location filename="main_window.ui" line="869"/>
         <source>Deutsch</source>
-        <translation></translation>
+        <translation>Deutsch</translation>
     </message>
 </context>
 </TS>

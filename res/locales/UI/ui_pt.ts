@@ -6,7 +6,7 @@
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation></translation>
+        <translation>JWLManager</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
@@ -154,7 +154,7 @@
     <message>
         <location filename="main_window.ui" line="598"/>
         <source>Ctrl+O</source>
-        <translation></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="611"/>
@@ -169,7 +169,7 @@
     <message>
         <location filename="main_window.ui" line="617"/>
         <source>Ctrl+S</source>
-        <translation></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="629"/>
@@ -194,7 +194,7 @@
     <message>
         <location filename="main_window.ui" line="647"/>
         <source>Ctrl+Q</source>
-        <translation></translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="656"/>
@@ -219,7 +219,7 @@
     <message>
         <location filename="main_window.ui" line="689"/>
         <source>Ctrl+Alt+S</source>
-        <translation></translation>
+        <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="701"/>
@@ -234,7 +234,7 @@
     <message>
         <location filename="main_window.ui" line="707"/>
         <source>Ctrl+E</source>
-        <translation></translation>
+        <translation>Ctrl+E</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="719"/>
@@ -249,7 +249,7 @@
     <message>
         <location filename="main_window.ui" line="725"/>
         <source>Ctrl+C</source>
-        <translation></translation>
+        <translation>Ctrl+C</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="737"/>
@@ -264,7 +264,7 @@
     <message>
         <location filename="main_window.ui" line="743"/>
         <source>Ctrl+A</source>
-        <translation></translation>
+        <translation>Ctrl+A</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="755"/>
@@ -279,7 +279,7 @@
     <message>
         <location filename="main_window.ui" line="761"/>
         <source>Ctrl+Z</source>
-        <translation></translation>
+        <translation>Ctrl+Z</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="772"/>
@@ -352,7 +352,7 @@
     <message>
         <location filename="main_window.ui" line="821"/>
         <source>Ctrl+N</source>
-        <translation></translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="836"/>
@@ -367,7 +367,7 @@
     <message>
         <location filename="main_window.ui" line="847"/>
         <source>English</source>
-        <translation></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -427,7 +427,7 @@
     <message>
         <location filename="main_window.ui" line="869"/>
         <source>Deutsch</source>
-        <translation></translation>
+        <translation>Deutsch</translation>
     </message>
 </context>
 </TS>
