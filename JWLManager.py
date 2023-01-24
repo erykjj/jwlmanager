@@ -258,7 +258,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.menuLanguage.triggered.connect(self.change_language)
         self.combo_grouping.currentTextChanged.connect(self.regroup)
         self.combo_category.currentTextChanged.connect(self.switchboard)
-        # self.treeWidget.itemChanged.connect(self.tree_selection)
+        self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
         self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
@@ -915,8 +915,7 @@ class ConstructTree():
     def process_color(self, col):
         return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
-    def process_detail(self, book, chapter, issue, year):
-        detail = None
+    def process_detail(self, book, chapter, issue, year, detail):
         if issue:
             y = str(issue)[0:4]
             m = str(issue)[4:6]
@@ -1134,8 +1133,12 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute(sql):
             lng = self.languages[row[1]] or f'#{row[1]}'
+            if row[2] in ('Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'): # Bible appendix notes, etc.
+                title = _('* OTHER *')
+            else:
+                title = None
             code, year = self.process_code(row[2], row[3])
-            detail, year = self.process_detail(row[4], row[5], row[3], year)
+            detail, year = self.process_detail(row[4], row[5], row[3], year, title)
             col = self.process_color(row[6] or 0)
             note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
             lst.append(note)
