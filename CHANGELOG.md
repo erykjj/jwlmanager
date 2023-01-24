@@ -4,13 +4,14 @@
 ### Added
 
 - Status bar message when the data is being processed (tree structure is being constructed)
+  - The speed of this process depends on the hardware used and the amount of data to sort into the different tree levels
 
 ### Changed
 
 - Significant **code rewrite to utilize Pandas** module for internal data handling
 - Add Favorite only limits Bible editions available by the selected language (preventing adding a favorite for a publication that doesn't exist)
 - Improved status bar messages
-- More complete year breakdown for many publications
+- More complete year classification for many publications
 - Updated translations
 - Slight layout adjustments
 
