@@ -5,7 +5,7 @@ File:           JWLManager
 
 Description:    Manage .jwlibrary backup archives
 
-MIT License     Copyright (c) 2022 Eryk J.
+MIT License     Copyright (c) 2023 Eryk J.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
