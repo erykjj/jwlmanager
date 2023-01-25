@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-23 19:21-0500\n"
-"PO-Revision-Date: 2023-01-24 19:38+0000\n"
-"Last-Translator: Eryk J. <infiniti@inventati.org>\n"
-"Language: it\n"
+"PO-Revision-Date: 2023-01-25 18:51+0000\n"
+"Last-Translator: Nick <nico.s.cell@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.16-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:208
@@ -126,11 +127,12 @@ msgid "NOT saved!"
 msgstr "NON salvato!"
 
 #: ../../../JWLManager.py:601
+#, fuzzy
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
-"È raccomandabile slavare il file con un altro nome.\n"
+"È raccomandabile salvare il file con un altro nome.\n"
 "Sei assolutamente sicuro che vuoi sovrascrivere l'originale?"
 
 #: ../../../JWLManager.py:650
@@ -265,8 +267,9 @@ msgid "Exit"
 msgstr "Esci"
 
 #: ../../../JWLManager.py:836
+#, fuzzy
 msgid "Save before quitting?"
-msgstr "Vuoi salvare prima di uscire?"
+msgstr "Salvare prima di uscire?"
 
 #: ../../../JWLManager.py:918
 msgid "Grey"
@@ -371,7 +374,7 @@ msgstr "Aggiunto \"{}\" in {}"
 
 #: ../../../JWLManager.py:1362
 msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
-msgstr "MODIFICA IL CAMPO SOPRA PRIMA DI RE-IMPORTARE"
+msgstr "MODIFICA IL CAMPO SOPRA PRIMA DI REIMPORTARE"
 
 #: ../../../JWLManager.py:1363
 msgid ""
@@ -382,8 +385,9 @@ msgstr ""
 "L'IMPORTAZIONE\n"
 
 #: ../../../JWLManager.py:1364
+#, fuzzy
 msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-msgstr "TUTTE LE NOTE INIZIANO CON UN'INTESTAZIONE INDICANTE LA CATEGORIA, ETC."
+msgstr "TUTTE LE NOTE INIZIANO CON UN'INTESTAZIONE INDICANTE LA CATEGORIA, ECC."
 
 #: ../../../JWLManager.py:1365
 msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
@@ -394,12 +398,13 @@ msgid "LINE AFTER HEADER IS NOTE TITLE"
 msgstr "LA LINEA DOPO L'INTESTAZIONE È IL TITOLO DELLA NOTA"
 
 #: ../../../JWLManager.py:1367
+#, fuzzy
 msgid ""
 "REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
 "HEADER\n"
 msgstr ""
-"IL RESTO È IL CORPO DELLA NOTA; PUò ESSERE MULTI-LINEA ED È TERMINATO "
-"DALL'INTESTAZIONE DELLA NOTA SUCCESSIVA\n"
+"IL RESTO È IL CORPO DELLA NOTA; PUÒ ESSERE MULTILINEA E TERMINA CON "
+"L'INTESTAZIONE DELLA NOTA SUCCESSIVA\n"
 
 #: ../../../JWLManager.py:1368
 msgid "SEPARATE TAGS WITH \",\" (commas)"
@@ -515,8 +520,9 @@ msgid "Take note of what you were doing and"
 msgstr "Prendi nota di quello che stai facendo e"
 
 #: ../../../JWLManager.py:1960
+#, fuzzy
 msgid "inform the developer"
-msgstr "dillo allo sviluppatore"
+msgstr "informa lo sviluppatore"
 
 #: ../../../JWLManager.py:1966
 msgid "The app will terminate."
@@ -646,4 +652,3 @@ msgstr "L'applicazione verrà terminata."
 
 #~ msgid "Select the language and Bible edition to add.\n"
 #~ msgstr ""
-
