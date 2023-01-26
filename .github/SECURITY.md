@@ -32,4 +32,4 @@ The app is saved as an exception to your security settings, and you can open it 
 
 ## Alternative
 
-Please keep in mind that I make these packages for convenience only. If they don't work, please try downloading the [*Source code (zip)*](https://github.com/erykjj/jwlmanager/releases/latest), and execute the Python script directly from within the unzipped folder via `python3 JWLManager.py`.
+Please keep in mind that I make these packages for convenience only. If they don't work, please try downloading the [*Source code (zip)*](https://github.com/erykjj/jwlmanager/releases/latest), and execute the Python script directly from within the unzipped folder via `python3 JWLManager.py`. Of course, this requires you have Python installed, along with the required dependencies.
