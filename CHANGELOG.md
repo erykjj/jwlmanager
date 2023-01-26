@@ -5,6 +5,7 @@
 
 - Status bar message when the data is being processed (tree structure is being constructed)
   - The speed of this process depends on the hardware used and the amount of data to sort into the different tree levels
+- Added [**SECURITY** info](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md)
 
 ### Changed
 
