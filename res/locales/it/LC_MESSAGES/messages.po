@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-23 19:21-0500\n"
-"PO-Revision-Date: 2023-01-25 18:51+0000\n"
+"PO-Revision-Date: 2023-01-28 13:52+0000\n"
 "Last-Translator: Nick <nico.s.cell@gmail.com>\n"
 "Language-Team: it <LL@li.org>\n"
 "Language: it\n"
@@ -127,7 +127,6 @@ msgid "NOT saved!"
 msgstr "NON salvato!"
 
 #: ../../../JWLManager.py:601
-#, fuzzy
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
@@ -220,7 +219,7 @@ msgstr "elementi eliminati"
 
 #: ../../../JWLManager.py:754
 msgid "Mask"
-msgstr "Offusca"
+msgstr "&Nascondi"
 
 #: ../../../JWLManager.py:754
 msgid ""
@@ -228,15 +227,15 @@ msgid ""
 "MASK all text fields?"
 msgstr ""
 "Sei sicuro di voler\n"
-"OFFUSCARE tutte le caselle di testo?"
+"NASCONDERE tutte le caselle di testo?"
 
 #: ../../../JWLManager.py:757
 msgid "Masking. Please wait…"
-msgstr "Offuscamento. Attendere…"
+msgstr "Sto nascondendo. Attendere…"
 
 #: ../../../JWLManager.py:763
 msgid "Data masked"
-msgstr "Dati offuscati"
+msgstr "Dati nascosti"
 
 #: ../../../JWLManager.py:770
 msgid "Reindex"
@@ -267,7 +266,6 @@ msgid "Exit"
 msgstr "Esci"
 
 #: ../../../JWLManager.py:836
-#, fuzzy
 msgid "Save before quitting?"
 msgstr "Salvare prima di uscire?"
 
@@ -385,9 +383,8 @@ msgstr ""
 "L'IMPORTAZIONE\n"
 
 #: ../../../JWLManager.py:1364
-#, fuzzy
 msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-msgstr "TUTTE LE NOTE INIZIANO CON UN'INTESTAZIONE INDICANTE LA CATEGORIA, ECC."
+msgstr "OGNI NOTA INIZIA CON UN'INTESTAZIONE CHE INDICA LA CATEGORIA, ECC."
 
 #: ../../../JWLManager.py:1365
 msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
@@ -398,7 +395,6 @@ msgid "LINE AFTER HEADER IS NOTE TITLE"
 msgstr "LA LINEA DOPO L'INTESTAZIONE È IL TITOLO DELLA NOTA"
 
 #: ../../../JWLManager.py:1367
-#, fuzzy
 msgid ""
 "REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE "
 "HEADER\n"
@@ -412,7 +408,7 @@ msgstr "SEPARA ETICHETTE CON \",\" (virgole)"
 
 #: ../../../JWLManager.py:1369
 msgid "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
-msgstr "O LASCIA VUOTO SE NESSUN ETICHETTA: {TAGS=bible,notes} O {TAGS=}\n"
+msgstr "O LASCIA VUOTO SE NON CI SONO ETICHETTE: {TAGS=bible,notes} O {TAGS=}\n"
 
 #: ../../../JWLManager.py:1370
 msgid "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
@@ -435,7 +431,7 @@ msgstr "da"
 #: ../../../JWLManager.py:1372 ../../../JWLManager.py:1413
 #: ../../../JWLManager.py:1427
 msgid "on"
-msgstr "il"
+msgstr "su"
 
 #: ../../../JWLManager.py:1458 ../../../JWLManager.py:1467
 #: ../../../JWLManager.py:1476
@@ -471,7 +467,7 @@ msgid ""
 msgstr ""
 "Errore nell'importazione!\n"
 "\n"
-"Elemento errato"
+"Inserimento difettoso"
 
 #: ../../../JWLManager.py:1578
 msgid ""
@@ -479,7 +475,7 @@ msgid ""
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
 "Il formato del file importato è errato:\n"
-"Missing {HIGHLIGHTS} tag line"
+"Manca la linea di tag {HIGHLIGHTS}"
 
 #: ../../../JWLManager.py:1663
 msgid ""
@@ -520,7 +516,6 @@ msgid "Take note of what you were doing and"
 msgstr "Prendi nota di quello che stai facendo e"
 
 #: ../../../JWLManager.py:1960
-#, fuzzy
 msgid "inform the developer"
 msgstr "informa lo sviluppatore"
 
