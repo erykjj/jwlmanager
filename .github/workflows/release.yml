@@ -1,4 +1,4 @@
-name: 'Draft Release v0.1.4'
+name: 'Draft Release v0.1.5'
 
 on:
   push:
@@ -25,6 +25,8 @@ jobs:
     env:
       TAG: ${{ github.ref_name }}
     steps:
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Download LinuxBIN
       uses: actions/download-artifact@v3
       with:
