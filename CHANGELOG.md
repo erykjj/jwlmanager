@@ -3,6 +3,16 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [2.1.0] - 2023-01-28
+### Added
+
 - Status bar message when the data is being processed (tree structure is being constructed)
   - The speed of this process depends on the hardware used and the amount of data to sort into the different tree levels
 - Added [**SECURITY** info](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md)
@@ -14,16 +24,14 @@
 - Improved status bar messages
 - More complete year classification for many publications
 - Updated translations
+  - Special thanks to @Nickyes & @AlessandroLucchet
 - Slight layout adjustments
-
-### Fixed
 
 ### Removed
 
 - Removed options for Grouped and Detailed views
   - Replaced with additional Type grouping
 
-____
 ## [2.0.2] - 2023-01-18
 ### Added
 
@@ -309,6 +317,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.0
 [2.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.1
 [2.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.2
 [1.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v1.2.2
