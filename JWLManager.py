@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.1.0'
+VERSION = 'v2.1.1'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -1145,7 +1145,6 @@ class ConstructTree():
         notes = self.merge_df(notes)
         i_notes = load_independent()
         notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
-        notes = notes.astype({'Year':'int'})
         self.current = notes
 
 
