@@ -7,11 +7,14 @@
 
 ### Fixed
 
-- Fixed a bug resulting from trying to convert a string year to integer
-
 ### Removed
 
 ____
+## [2.1.1] - 2023-02-05
+### Fixed
+
+- Fixed a bug resulting from trying to convert a string year to integer
+
 ## [2.1.0] - 2023-01-28
 ### Added
 
