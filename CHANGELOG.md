@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed a bug resulting from trying to convert a string year to integer
+
 ### Removed
 
 ____
