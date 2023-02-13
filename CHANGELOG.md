@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Small error correction in HELP
+
 ### Fixed
 
 ### Removed

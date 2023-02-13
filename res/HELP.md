@@ -82,7 +82,7 @@ The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 
 
 **{DATE=}** is the date of last modification for each note in the format *yyyy-mm-dd*. If empty, and the note is new, the date of import is used; if the note is updated, the currently-set date is retained. Keep in mind that if you are using the option to first delete the notes with a special {TITLE=} character, the historical date will also need to be reimported.
 
-Each note has to start with such a header. The very next line after the header is the note title. **Titles** will be automatically abbreviated with inner words being replaced with "[...]" in order to meet the length limit and display properly. A multi-line body follows, terminated by the header of the next note or the file-terminating header =\=={END}===.
+Each note has to start with such a header. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header =\=={END}===.
 
 Here is an example blue note for Jude 21 (in  Spanish):
 
