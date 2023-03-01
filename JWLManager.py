@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.1.1'
+VERSION = 'v2.1.2'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -1134,7 +1134,10 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lng = self.languages[row[1]] or f'#{row[1]}'
+            if row[1] in self.languages.keys():
+                lng = self.languages[row[1]]
+            else:
+                lng = f'#{row[1]}'
 
             code, year = self.process_code(row[2], row[3])
             detail, year = self.process_detail(row[2], row[4], row[5], row[3], year)
