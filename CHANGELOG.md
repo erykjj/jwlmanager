@@ -5,15 +5,20 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [2.1.2] - 2023-03-01
+### Changed
+
 - Small error correction in HELP
 
 ### Fixed
 
 - Fixed an issue with unrecognized languages
 
-### Removed
-
-____
 ## [2.1.1] - 2023-02-05
 ### Fixed
 
@@ -326,6 +331,8 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.2
+[2.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.1
 [2.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.0
 [2.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.1
 [2.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.0.2
