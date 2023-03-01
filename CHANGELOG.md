@@ -9,6 +9,8 @@
 
 ### Fixed
 
+- Fixed an issue with unrecognized languages
+
 ### Removed
 
 ____
