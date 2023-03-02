@@ -199,22 +199,22 @@
     <message>
         <location filename="main_window.ui" line="656"/>
         <source>&amp;About…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Sobre…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="659"/>
         <source>About…</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="683"/>
         <source>Save &amp;As…</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar &amp;Como…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="686"/>
         <source>Save archive as…</source>
-        <translation type="unfinished"></translation>
+        <translation>Savar arquivo como…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="689"/>
@@ -224,12 +224,12 @@
     <message>
         <location filename="main_window.ui" line="701"/>
         <source>E&amp;xpand All</source>
-        <translation type="unfinished"></translation>
+        <translation>E&amp;xpandir Todos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="704"/>
         <source>Expand all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Expandir todos os itens</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="707"/>
@@ -239,12 +239,12 @@
     <message>
         <location filename="main_window.ui" line="719"/>
         <source>&amp;Collapse All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Recolher Todos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="722"/>
         <source>Collapse all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Recolher todos os itens</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="725"/>
@@ -254,12 +254,12 @@
     <message>
         <location filename="main_window.ui" line="737"/>
         <source>&amp;Select All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Selecionar Todos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="740"/>
         <source>Select all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecionar todos os itens</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="743"/>
@@ -269,12 +269,12 @@
     <message>
         <location filename="main_window.ui" line="755"/>
         <source>&amp;Unselect All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Desmarcar Todos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="758"/>
         <source>Unselect all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Desmarcar todos os itens</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="761"/>
@@ -284,30 +284,30 @@
     <message>
         <location filename="main_window.ui" line="772"/>
         <source>Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Código</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="775"/>
         <source>Use publication code as title</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar código de publicação com título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="786"/>
         <location filename="main_window.ui" line="789"/>
         <source>Short</source>
         <oldsource>Short Title</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Curto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="792"/>
         <source>Use short publication title</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar título de publicação curto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="800"/>
         <location filename="main_window.ui" line="803"/>
         <source>Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="833"/>
@@ -342,12 +342,12 @@
     <message>
         <location filename="main_window.ui" line="815"/>
         <source>&amp;New</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Novo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="818"/>
         <source>Create an empty archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Criar um arquivo em branco</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="821"/>
@@ -372,12 +372,12 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="850"/>
