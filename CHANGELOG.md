@@ -5,6 +5,8 @@
 
 ### Changed
 
+- Updated translations
+
 ### Fixed
 
 - Fixed more "unknown"-language issues
