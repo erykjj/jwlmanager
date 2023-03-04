@@ -918,7 +918,7 @@ class ConstructTree():
             detail = _('* OTHER *')
         else:
             detail = None
-        if issue:
+        if issue > 19000000:
             y = str(issue)[0:4]
             m = str(issue)[4:6]
             d = str(issue)[6:]
@@ -1411,7 +1411,7 @@ class ExportItems():
     def export_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             tags = row[2] or ''
-            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags+"}{DATE="+row[3][:10]+"}===\n"+row[0]+"\n"+row[1].rstrip()
+            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags+"}{DATE="+row[3][:10]+"}===\n"+(row[0] or '')+"\n"+(row[1] or '').rstrip()
             self.export_file.write(txt)
 
 
