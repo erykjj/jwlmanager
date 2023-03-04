@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU" sourcelanguage="en_US">
+<TS version="2.1" language="pl_PL">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation>JWLManager</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="120"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="125"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
@@ -293,7 +303,6 @@
         <location filename="main_window.ui" line="786"/>
         <location filename="main_window.ui" line="789"/>
         <source>Short</source>
-        <oldsource>Short Title</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -306,31 +315,6 @@
         <location filename="main_window.ui" line="803"/>
         <source>Full</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="833"/>
-        <source>&amp;Mask</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="913"/>
-        <source>Pусский</source>
-        <translation>Pусский</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="916"/>
-        <source>ru</source>
-        <translation>ru</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="924"/>
-        <source>中文</source>
-        <translation>中文</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="927"/>
-        <source>zh</source>
-        <translation>zh</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="806"/>
@@ -353,79 +337,94 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="833"/>
+        <source>&amp;Mask</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="main_window.ui" line="836"/>
         <source>Mask text data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="894"/>
-        <source>pt</source>
-        <translation>pt</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="847"/>
         <source>English</source>
-        <translation>English</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="120"/>
-        <source>Title</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="125"/>
-        <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="850"/>
         <source>en</source>
-        <translation>en</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="858"/>
         <source>Español</source>
-        <translation>Español</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="861"/>
         <source>es</source>
-        <translation>es</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="872"/>
-        <source>de</source>
-        <translation>de</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="880"/>
-        <source>Français</source>
-        <translation>Français</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="883"/>
-        <source>fr</source>
-        <translation>fr</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="891"/>
-        <source>Português</source>
-        <translation>Português</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="902"/>
-        <source>Italiano</source>
-        <translation>Italiano</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="905"/>
-        <source>it</source>
-        <translation>it</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="869"/>
         <source>Deutsch</source>
-        <translation>Deutsch</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="872"/>
+        <source>de</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="880"/>
+        <source>Français</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="883"/>
+        <source>fr</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="891"/>
+        <source>Português</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="894"/>
+        <source>pt</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="902"/>
+        <source>Italiano</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="905"/>
+        <source>it</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="913"/>
+        <source>Pусский</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="916"/>
+        <source>ru</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="924"/>
+        <source>中文</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="927"/>
+        <source>zh</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
