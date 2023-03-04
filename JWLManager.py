@@ -55,6 +55,7 @@ def get_language():
         'es': 'Spanish (español)',
         'fr': 'French (français)',
         'it': 'Italian (italiano)',
+        # 'pl': 'Polish (Polski)',
         # 'pt': 'Portuguese (português)',
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
@@ -409,6 +410,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.current_data = tree.current
         self.int_total = tree.total
         self.total.setText(f"**{tree.total:,}**")
+        self.selected.setText("**0**")
 
     def tree_selection(self):
 
