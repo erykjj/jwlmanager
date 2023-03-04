@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed more "unknown"-language issues
+
 ### Removed
 
 ____

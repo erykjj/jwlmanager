@@ -35,7 +35,7 @@ import pandas as pd
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-  OR
+
 from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
