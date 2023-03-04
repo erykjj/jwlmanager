@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-23 19:21-0500\n"
-"PO-Revision-Date: 2023-03-02 18:49+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2023-03-03 04:38+0000\n"
+"Last-Translator: Goykew <goykew@gmail.com>\n"
 "Language-Team: pl <LL@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -21,14 +21,12 @@ msgstr ""
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:208
-#, fuzzy
 msgid "Help"
-msgstr "Help"
+msgstr "Pomoc"
 
 #: ../../../JWLManager.py:223 ../../../JWLManager.py:355
-#, fuzzy
 msgid "Data Viewer"
-msgstr "Data Viewer"
+msgstr "Przeglądarka danych"
 
 #: ../../../JWLManager.py:337 ../../../JWLManager.py:364
 #: ../../../JWLManager.py:436 ../../../JWLManager.py:577
@@ -37,9 +35,8 @@ msgstr "Data Viewer"
 #: ../../../JWLManager.py:1317 ../../../JWLManager.py:1327
 #: ../../../JWLManager.py:1347 ../../../JWLManager.py:1432
 #: ../../../JWLManager.py:1449
-#, fuzzy
 msgid "Notes"
-msgstr "Notes"
+msgstr "Notatki"
 
 #: ../../../JWLManager.py:337 ../../../JWLManager.py:370
 #: ../../../JWLManager.py:436 ../../../JWLManager.py:573
@@ -51,38 +48,33 @@ msgid "Annotations"
 msgstr "Annotations"
 
 #: ../../../JWLManager.py:348 ../../../JWLManager.py:1673
-#, fuzzy
 msgid "Warning"
-msgstr "Warning"
+msgstr "Ostrzeżenie"
 
 #: ../../../JWLManager.py:348
-#, fuzzy
 msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"You are trying to preview {} items.\n"
-"Please select a smaller subset."
+"Próbujesz wyświetlić podgląd elementów {}.\n"
+"Wybierz mniejszy podzbiór."
 
 #: ../../../JWLManager.py:366 ../../../JWLManager.py:436
 #: ../../../JWLManager.py:575 ../../../JWLManager.py:699
 #: ../../../JWLManager.py:890 ../../../JWLManager.py:1315
 #: ../../../JWLManager.py:1345
-#, fuzzy
 msgid "Highlights"
-msgstr "Highlights"
+msgstr "Podkreślone"
 
 #: ../../../JWLManager.py:368 ../../../JWLManager.py:886
 #: ../../../JWLManager.py:1311
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Bookmarks"
+msgstr "Zakładki"
 
 #: ../../../JWLManager.py:372 ../../../JWLManager.py:888
 #: ../../../JWLManager.py:1313
-#, fuzzy
 msgid "Favorites"
-msgstr "Favorites"
+msgstr "Ulubione"
 
 #: ../../../JWLManager.py:374 ../../../JWLManager.py:376
 #: ../../../JWLManager.py:852 ../../../JWLManager.py:1184
@@ -107,14 +99,12 @@ msgid "Save current archive?"
 msgstr "Save current archive?"
 
 #: ../../../JWLManager.py:485
-#, fuzzy
 msgid "NEW ARCHIVE"
-msgstr "NEW ARCHIVE"
+msgstr "NOWE ARCHIWUM"
 
 #: ../../../JWLManager.py:519
-#, fuzzy
 msgid "Open archive"
-msgstr "Open archive"
+msgstr "Otwórz archiwum"
 
 #: ../../../JWLManager.py:519 ../../../JWLManager.py:594
 #: ../../../JWLManager.py:596
@@ -139,14 +129,12 @@ msgid "File \"{}\" not recognized!"
 msgstr "File \"{}\" not recognized!"
 
 #: ../../../JWLManager.py:594 ../../../JWLManager.py:596
-#, fuzzy
 msgid "Save archive"
-msgstr "Save archive"
+msgstr "Zapisz archiwum"
 
 #: ../../../JWLManager.py:598
-#, fuzzy
 msgid "NOT saved!"
-msgstr "NOT saved!"
+msgstr "NIE zapisano!"
 
 #: ../../../JWLManager.py:601
 #, fuzzy
@@ -163,14 +151,12 @@ msgid "Saved"
 msgstr "Saved"
 
 #: ../../../JWLManager.py:658
-#, fuzzy
 msgid "Export file"
-msgstr "Export file"
+msgstr "Eksportuj plik"
 
 #: ../../../JWLManager.py:658
-#, fuzzy
 msgid "Text files"
-msgstr "Text files"
+msgstr "Pliki tekstowe"
 
 #: ../../../JWLManager.py:661
 #, fuzzy
@@ -183,9 +169,8 @@ msgid "items will be EXPORTED. Proceed?"
 msgstr "items will be EXPORTED. Proceed?"
 
 #: ../../../JWLManager.py:673
-#, fuzzy
 msgid "NOT exported!"
-msgstr "NOT exported!"
+msgstr "NIE eksportowano!"
 
 #: ../../../JWLManager.py:681
 #, fuzzy
@@ -397,14 +382,12 @@ msgid "Type"
 msgstr "Type"
 
 #: ../../../JWLManager.py:1185 ../../../JWLManager.py:1246
-#, fuzzy
 msgid "Language"
-msgstr "Language"
+msgstr "Język"
 
 #: ../../../JWLManager.py:1186
-#, fuzzy
 msgid "Year"
-msgstr "Year"
+msgstr "Rok"
 
 #: ../../../JWLManager.py:1187
 #, fuzzy
@@ -412,9 +395,8 @@ msgid "Tag"
 msgstr "Tag"
 
 #: ../../../JWLManager.py:1188
-#, fuzzy
 msgid "Color"
-msgstr "Color"
+msgstr "Kolor"
 
 #: ../../../JWLManager.py:1224
 #, fuzzy
@@ -427,9 +409,8 @@ msgid "Select the language and Bible edition to add:"
 msgstr "Select the language and Bible edition to add:"
 
 #: ../../../JWLManager.py:1247
-#, fuzzy
 msgid "Edition"
-msgstr "Edition"
+msgstr "Edycja"
 
 #: ../../../JWLManager.py:1274
 #, fuzzy
@@ -452,13 +433,12 @@ msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
 msgstr "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
 
 #: ../../../JWLManager.py:1363
-#, fuzzy
 msgid ""
 "LEAVE {TITLE=} (empty) IF YOU DON'T WANT TO DELETE ANY NOTES WHILE "
 "IMPORTING\n"
 msgstr ""
-"LEAVE {TITLE=} (empty) IF YOU DON'T WANT TO DELETE ANY NOTES WHILE "
-"IMPORTING\n"
+"POZOSTAW {TITLE=} (puste), JEŚLI NIE CHCESZ USUWAĆ ŻADNYCH NOTATEK PODCZAS "
+"IMPORTOWANIA\n"
 
 #: ../../../JWLManager.py:1364
 #, fuzzy
