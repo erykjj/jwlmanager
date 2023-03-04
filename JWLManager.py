@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.1.2'
+VERSION = 'v2.1.3'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -35,7 +35,7 @@ import pandas as pd
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
-
+  OR
 from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
@@ -967,7 +967,10 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lng = self.languages[row[2]]  or f'#{row[2]}'
+            if row[2] in self.languages.keys():
+                lng = self.languages[row[2]]
+            else:
+                lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[4]
@@ -994,7 +997,10 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lng = self.languages[row[2]]  or f'#{row[2]}'
+            if row[2] in self.languages.keys():
+                lng = self.languages[row[2]]
+            else:
+                lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[4]
@@ -1020,7 +1026,10 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lng = self.languages[row[2]]  or f'#{row[2]}'
+            if row[2] in self.languages.keys():
+                lng = self.languages[row[2]]
+            else:
+                lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], None, None, row[3], year)
             item = row[4]
@@ -1051,7 +1060,10 @@ class ConstructTree():
         """
         lst = []
         for row in self.cur.execute(sql):
-            lng = self.languages[row[2]]  or f'#{row[2]}'
+            if row[2] in self.languages.keys():
+                lng = self.languages[row[2]]
+            else:
+                lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[7], row[8], row[3], year)
             col = self.process_color(row[6] or 0)
