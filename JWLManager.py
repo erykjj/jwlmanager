@@ -1793,7 +1793,10 @@ class ImportNotes():
 
 
     def import_independent(self, attribs, title, note):
-        result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE Title = '{title}' AND BlockType = 0;").fetchone()
+        if not title:
+            result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE Title IS NULL AND Content = '{note}' AND BlockType = 0;").fetchone()
+        else:
+            result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE Title = '{title}' AND Content = '{note}' AND BlockType = 0;").fetchone()
         if result:
             unique_id = result[0]
             date = attribs['DATE'] or result[1]
@@ -1801,7 +1804,10 @@ class ImportNotes():
         else:
             date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
             unique_id = uuid.uuid1()
-            sql = f"INSERT Into Note (Guid, Title, Content, BlockType, LastModified) VALUES ('{unique_id}', '{title}', '{note}', 0, '{date}');"
+            if not title:
+                sql = f"INSERT Into Note (Guid, Content, BlockType, LastModified) VALUES ('{unique_id}', '{note}', 0, '{date}');"
+            else:
+                sql = f"INSERT Into Note (Guid, Title, Content, BlockType, LastModified) VALUES ('{unique_id}', '{title}', '{note}', 0, '{date}');"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
