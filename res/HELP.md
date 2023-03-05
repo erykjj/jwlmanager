@@ -44,7 +44,7 @@ Exporting of Annotations and Highlights is also possible - not so much with a vi
 
 You need to provide a text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting. Or you can create your own. The Higlights file is a CSV text file with a **{HIGHLIGHTS}** header. The Annotations file is also a CSV file, starting with **{ANNOTATIONS}**. You can simply **drag-and-drop the import file** into the app.
 
-Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, *overlapping highlights will be combined and the color changed to the one being imported*.
+Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
 
 The accepted format for the Notes import file is like this:
     
