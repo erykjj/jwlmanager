@@ -12,6 +12,7 @@
 - Fixed more "unknown"-language issues
 - Fixed publication issue date being processed incorrectly
 - Fixed selection count not resetting on category change
+- Fixed importing notes with no title
 
 ### Removed
 
