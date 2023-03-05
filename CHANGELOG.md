@@ -5,6 +5,14 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [2.1.3] - 2023-03-04
+### Changed
+
 - Updated translations
 
 ### Fixed
@@ -14,9 +22,6 @@
 - Fixed selection count not resetting on category change
 - Fixed importing notes with no title
 
-### Removed
-
-____
 ## [2.1.2] - 2023-03-01
 ### Changed
 
@@ -338,6 +343,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.3
 [2.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.2
 [2.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.1
 [2.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.0
