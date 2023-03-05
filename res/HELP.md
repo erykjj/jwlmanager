@@ -50,27 +50,28 @@ The accepted format for the Notes import file is like this:
     
     {TITLE=»}
     ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{TAGS=}{DATE=2021-10-19}===
-    » Title
+    » Note Title
     Multi-line...
     ...note
     ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{TAGS=research}{DATE=}===
-    » Title
+    » Another Note Title
     Multi-line...
     ...
     ...note
     ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2021-10-19}===
-    » Title
+    » Still Another Note Title
     Multi-line...
     ...note
     ==={END}===
 
-The **{TITLE=}** attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with this character (in this case "»"). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted before notes from the import file are imported. Otherwise, *notes with same title at same location will be over-written*, but those where the title was modified even slightly will create an almost duplicate note. **Note**: this affects *all* notes - regardless of language or publication.
+The **{TITLE=}** attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with this character (in this case "»"). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted before notes from the import file are imported. Otherwise, *notes with same title at same location will be over-written*, but those where the title was modified even slightly will create an almost duplicate note (this affects *all* notes - regardless of language or publication).
 
 Each note definition starts with an attribute line. **{CAT=}** define the category. The **{LANG=}** attribute defines the language of the note (0 = English; 1 = Spanish; 2 = German; 3 = French; 4 = Italian; 5 = Brazilian Portuguese; 6 = Dutch; 7 = Japanese, etc.),  and **{ED=}** defines the Bible edition to associate the note with ("nwtsty" = Study Bible; "Rbi8" = Reference Bible) - **{PUB=}** for publications.
 
-**Note**: unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
-
-**Note**: if separated from their corresponding colored highlights, the note "stickies" appear in all Bibles *except* the Bible that is referenced at the bottom of the note in the "Personal Study" section, though the notes themselves are there in the reference pane (the default gray note icons do show correctly). The stickies *do* show in all the other Bibles. This may be a bug (or a feature?) in the app itself. For now, to have colored note icons (without any highlighting), I import my notes as for the Reference Bible (*Rbi8*); this way I can see the stickies in the Study Bible (*nwtsty*).
+**Observations:**
+  * Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
+  * Unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
+  * If separated from their corresponding colored highlights, the note "stickies" appear in all Bibles *except* the Bible that is referenced at the bottom of the note in the "Personal Study" section, though the notes themselves are there in the reference pane (the default gray note icons do show correctly). The stickies *do* show in all the other Bibles. This may be a bug (or a feature?) in the app itself. For now, to have colored note icons (without any highlighting), I import my notes as for the Reference Bible (*Rbi8*); this way I can see the stickies in the Study Bible (*nwtsty*).
 
 ![notes](images/notes.png)
 
