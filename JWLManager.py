@@ -1738,7 +1738,7 @@ class ImportNotes():
         if attribs['COLOR'] == '0':
             return 'NULL'
         unique_id = uuid.uuid1()
-        # FIX: may need to add BlockRange as well?
+        # FIX: may need to add BlockRange as well? OR do color 0 (grey) when no corresponding blockrange/usermark?
         sql = f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 WHERE NOT EXISTS ( SELECT 1 FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']} );"
         print(sql)
         self.cur.execute(sql)
