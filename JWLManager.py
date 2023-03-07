@@ -1245,7 +1245,7 @@ class ExportItems():
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
-            if row[10] and row[11]:
+            if row[10] != None:
                 rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
             else:
                 rng = ""
@@ -1256,7 +1256,7 @@ class ExportItems():
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
-            if row[10] and row[11]:
+            if row[10] != None:
                 rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
             else:
                 rng = ""
@@ -1267,7 +1267,7 @@ class ExportItems():
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
-            if row[10] and row[11]:
+            if row[10] != None:
                 rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
             else:
                 rng = ""
