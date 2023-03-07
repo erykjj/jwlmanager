@@ -34,7 +34,7 @@ For Favorites only. Used for adding a Bible translation to your favorites, since
 
 Select the Category and the item(s) you wish to eliminate from the database. For example, you may want to remove highlighting you made in some older magazines, or bookmarks you never knew you had, or clear your favorites completely, etc.
 
-#### Eport
+#### Export
 
 This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else). If the note is attached to a highlight, the range data is also exported.
 
