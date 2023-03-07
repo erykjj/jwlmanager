@@ -1149,7 +1149,7 @@ class AddFavorites():
             self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng))
             return
         tag_id, position = self.tag_positions()
-        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ({location}, {tag_id}, {position});")
+        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );")
         self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
 
@@ -1414,7 +1414,7 @@ class ImportAnnotations():
                     if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
                         self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';")
                     else:
-                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ({location_id}, '{attribs[5]}', '{value}');")
+                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( {location_id}, '{attribs[5]}', '{value}' );")
                 except:
                     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                     self.cur.execute("ROLLBACK;")
@@ -1488,7 +1488,7 @@ class ImportHighlights():
 
     def add_usermark(self, attribs, location_id):
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]};")
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]} );") # TODO: Version is always 1 - no need to export/import
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
@@ -1507,7 +1507,7 @@ class ImportHighlights():
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
         self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
-        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ({attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id});")
+        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );")
         return
 
 class ImportNotes():
@@ -1645,7 +1645,7 @@ class ImportNotes():
         else:
             unique_id = uuid.uuid1()
             date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
-            sql = f"INSERT Into Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{date}');"
+            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{date}' );"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
@@ -1667,7 +1667,7 @@ class ImportNotes():
         else:
             date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
             unique_id = uuid.uuid1()
-            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{date}');"
+            sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ( '{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{date}' );"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
@@ -1686,9 +1686,9 @@ class ImportNotes():
             date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
             unique_id = uuid.uuid1()
             if not title:
-                sql = f"INSERT Into Note (Guid, Content, BlockType, LastModified) VALUES ('{unique_id}', '{note}', 0, '{date}');"
+                sql = f"INSERT INTO Note (Guid, Content, BlockType, LastModified) VALUES ( '{unique_id}', '{note}', 0, '{date}' );"
             else:
-                sql = f"INSERT Into Note (Guid, Title, Content, BlockType, LastModified) VALUES ('{unique_id}', '{title}', '{note}', 0, '{date}');"
+                sql = f"INSERT INTO Note (Guid, Title, Content, BlockType, LastModified) VALUES ( '{unique_id}', '{title}', '{note}', 0, '{date}' );"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
