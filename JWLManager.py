@@ -1422,8 +1422,8 @@ class ImportAnnotations():
         return count
 
     def add_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {int(attribs[0])}, {int(attribs[1])}, '{attribs[2]}', {int(attribs[3])}, {int(attribs[4])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])});")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {int(attribs[0])} AND IssueTagNumber = {int(attribs[1])} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {int(attribs[3])} AND Type = {int(attribs[4])};").fetchone()
+        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {attribs[0]}, {attribs[1]}, '{attribs[2]}', {attribs[3]}, {attribs[4]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {attribs[0]} AND IssueTagNumber = {attribs[1]} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {attribs[3]} AND Type = {attribs[4]});")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {attribs[0]} AND IssueTagNumber = {attribs[1]} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {attribs[3]} AND Type = {attribs[4]};").fetchone()
         return result[0]
 
 class ImportHighlights():
@@ -1477,24 +1477,24 @@ class ImportHighlights():
         return count
 
     def add_scripture_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs[10]}', {int(attribs[11])}, {int(attribs[6])}, {int(attribs[7])}, {int(attribs[12])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND BookNumber = {int(attribs[6])} AND ChapterNumber = {int(attribs[7])} );")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND BookNumber = {int(attribs[6])} AND ChapterNumber = {int(attribs[7])};").fetchone()
+        self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs[10]}', {attribs[11]}, {attribs[6]}, {attribs[7]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]} );")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]};").fetchone()
         return result[0]
 
     def add_publication_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {int(attribs[9])}, '{attribs[10]}', {int(attribs[11])}, {int(attribs[8])}, {int(attribs[12])} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND IssueTagNumber = {int(attribs[9])} AND DocumentId = {int(attribs[8])} AND Type = {int(attribs[12])});")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {int(attribs[11])} AND IssueTagNumber = {int(attribs[9])} AND DocumentId = {int(attribs[8])} AND Type = {int(attribs[12])};").fetchone()
+        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {attribs[9]}, '{attribs[10]}', {attribs[11]}, {attribs[8]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]});")
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]};").fetchone()
         return result[0]
 
     def add_usermark(self, attribs, location_id):
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {int(attribs[4])}, {location_id}, 0, '{unique_id}', {int(attribs[5])};")
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]};")
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
     def import_highlight(self, attribs, location_id):
         usermark_id = self.add_usermark(attribs, location_id)
-        result = self.cur.execute(f"SELECT * FROM BlockRange join UserMark USING (UserMarkId) where Identifier = {int(attribs[1])} AND LocationId = {location_id};")
+        result = self.cur.execute(f"SELECT * FROM BlockRange join UserMark USING (UserMarkId) where Identifier = {attribs[1]} AND LocationId = {location_id};")
         ns = int(attribs[2])
         ne = int(attribs[3])
         blocks = []
@@ -1507,7 +1507,7 @@ class ImportHighlights():
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
         self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
-        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ({int(attribs[0])}, {int(attribs[1])}, {ns}, {ne}, {usermark_id});")
+        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ({attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id});")
         return
 
 class ImportNotes():
