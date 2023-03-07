@@ -89,13 +89,11 @@ def resource_path(relative_path):
 def read_res(lng):
 
     def load_books(lng):
-        sql = f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};"
-        for row in cur.execute(sql).fetchall():
+        for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};").fetchall():
             books[row[0]] = row[1]
 
     def load_languages():
-        sql =  "SELECT Language, Name, Code FROM Languages;"
-        for row in cur.execute(sql).fetchall():
+        for row in cur.execute("SELECT Language, Name, Code FROM Languages;").fetchall():
             languages[row[0]] = row[1]
             if row[2] == lng:
                 ui_lang = row[0]
@@ -103,35 +101,13 @@ def read_res(lng):
 
     def load_pubs(lng):
         types = {}
-        sql =  f"SELECT Type, [Group] FROM Types WHERE Language = {lng};"
-        for row in cur.execute(sql).fetchall():
+        for row in cur.execute(f"SELECT Type, [Group] FROM Types WHERE Language = {lng};").fetchall():
             types[row[0]] = row[1]
-        sql = """
-            SELECT Language,
-                Symbol,
-                ShortTitle Short,
-                Title 'Full',
-                Year,
-                Type,
-                Favorite
-            FROM Publications;
-        """
         lst = []
-        for row in cur.execute(sql).fetchall():
+        for row in cur.execute("SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Publications;").fetchall():
             note = [ int(row[0]), row[1], row[2], row[3], row[4], types[row[5]], row[6] ]
             lst.append(note)
-        sql = f"""
-            SELECT Language,
-                Symbol,
-                ShortTitle Short,
-                Title 'Full',
-                Year,
-                Type,
-                Favorite
-            FROM Extras
-            WHERE Language = {lng};
-        """
-        for row in cur.execute(sql).fetchall():
+        for row in cur.execute(f"SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Extras WHERE Language = {lng};").fetchall():
             note = [ int(row[0]), row[1], row[2], row[3], row[4], types[row[5]], row[6] ]
             lst.append(note)
         pubs = pd.DataFrame(lst, columns=['Language', 'Symbol', 'Short', 'Full', 'Year', 'Type', 'Favorite'])
@@ -610,8 +586,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def usermark_count():
             con = sqlite3.connect(f"{tmp_path}/{db_name}")
             cur = con.cursor()
-            sql = "SELECT count(UserMarkId) FROM UserMark;"
-            um = cur.execute(sql).fetchone()[0]
+            um = cur.execute("SELECT count(UserMarkId) FROM UserMark;").fetchone()[0]
             cur.close()
             con.close()
             return um
@@ -952,23 +927,8 @@ class ConstructTree():
 
 
     def get_annotations(self):
-        sql = """
-            SELECT LocationId,
-                l.KeySymbol,
-                l.MepsLanguage,
-                l.IssueTagNumber,
-                TextTag,
-                l.BookNumber,
-                l.ChapterNumber,
-                l.Title
-            FROM InputField
-                JOIN
-                Location l USING (
-                    LocationId
-                );
-        """
         lst = []
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING ( LocationId );"):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -982,23 +942,8 @@ class ConstructTree():
         self.current = self.merge_df(annotations)
 
     def get_bookmarks(self):
-        sql = """
-            SELECT LocationId,
-                l.KeySymbol,
-                l.MepsLanguage,
-                l.IssueTagNumber,
-                BookmarkId,
-                l.BookNumber,
-                l.ChapterNumber,
-                l.Title
-            FROM Bookmark b
-                JOIN
-                Location l USING (
-                    LocationId
-                );
-        """
         lst = []
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING ( LocationId );"):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -1012,22 +957,8 @@ class ConstructTree():
         self.current = self.merge_df(bookmarks)
 
     def get_favorites(self):
-        sql = """
-            SELECT LocationId,
-                l.KeySymbol,
-                l.MepsLanguage,
-                l.IssueTagNumber,
-                TagMapId
-            FROM TagMap tm
-                JOIN
-                Location l USING (
-                    LocationId
-                )
-            WHERE tm.NoteId IS NULL
-            ORDER BY tm.Position;
-        """
         lst = []
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING ( LocationId ) WHERE tm.NoteId IS NULL ORDER BY tm.Position;"):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -1041,27 +972,8 @@ class ConstructTree():
         self.current = self.merge_df(favorites)
 
     def get_highlights(self):
-        sql = """
-            SELECT LocationId,
-                l.KeySymbol,
-                l.MepsLanguage,
-                l.IssueTagNumber,
-                b.BlockRangeId,
-                u.UserMarkId,
-                u.ColorIndex,
-                l.BookNumber,
-                l.ChapterNumber
-            FROM UserMark u
-                JOIN
-                Location l USING (
-                    LocationId
-                ),
-                BlockRange b USING (
-                    UserMarkId
-                );
-        """
         lst = []
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );"):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -1078,76 +990,16 @@ class ConstructTree():
     def get_notes(self):
 
         def load_independent():
-            sql = """
-                SELECT NoteId Id,
-                    ColorIndex Color,
-                    GROUP_CONCAT(Name, ' | ') Tags,
-                    substr(LastModified, 0, 11) Modified
-                FROM (
-                        SELECT *
-                            FROM Note n
-                                LEFT JOIN
-                                TagMap tm USING (
-                                    NoteId
-                                )
-                                LEFT JOIN
-                                Tag t USING (
-                                    TagId
-                                )
-                                LEFT JOIN
-                                UserMark u USING (
-                                    UserMarkId
-                                )
-                            ORDER BY t.Name
-                    )
-                    n
-                WHERE n.BlockType = 0
-                GROUP BY n.NoteId;
-            """
             lst = []
-            for row in self.cur.execute(sql):
+            for row in self.cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM ( SELECT * FROM Note n LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) ORDER BY t.Name ) n WHERE n.BlockType = 0 GROUP BY n.NoteId;"):
                 col = row[1] or 0
                 yr = row[3][0:4]
                 note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), self.process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
                 lst.append(note)
             return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail',  'Short', 'Full', 'Type'])
 
-        sql = """
-            SELECT NoteId Id,
-                MepsLanguage Language,
-                KeySymbol Symbol,
-                IssueTagNumber Issue,
-                BookNumber Book,
-                ChapterNumber Chapter,
-                ColorIndex Color,
-                GROUP_CONCAT(Name, ' | ') Tags,
-                substr(LastModified, 0, 11) Modified
-            FROM (
-                    SELECT *
-                        FROM Note n
-                            JOIN
-                            Location l USING (
-                                LocationId
-                            )
-                            LEFT JOIN
-                            TagMap tm USING (
-                                NoteId
-                            )
-                            LEFT JOIN
-                            Tag t USING (
-                                TagId
-                            )
-                            LEFT JOIN
-                            UserMark u USING (
-                                UserMarkId
-                            )
-                        ORDER BY t.Name
-                )
-                n
-            GROUP BY n.NoteId;
-        """
         lst = []
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM ( SELECT * FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) ORDER BY t.Name ) n GROUP BY n.NoteId;"):
             if row[1] in self.languages.keys():
                 lng = self.languages[row[1]]
             else:
@@ -1390,45 +1242,7 @@ class ExportItems():
 
     def export_bible(self):
         # regular Bible (book, chapter and verse)
-        sql = f"""
-            SELECT l.MepsLanguage,
-                l.KeySymbol,
-                l.BookNumber,
-                l.ChapterNumber,
-                n.BlockIdentifier,
-                u.ColorIndex,
-                n.Title,
-                n.Content,
-                GROUP_CONCAT(t.Name),
-                n.LastModified,
-                b.StartToken,
-                b.EndToken
-            FROM Note n
-                JOIN
-                Location l USING (
-                    LocationId
-                )
-                LEFT JOIN
-                TagMap tm USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
-                )
-                LEFT JOIN
-                UserMark u USING (
-                    UserMarkId
-                )
-                LEFT JOIN
-                BlockRange b USING (
-                    UserMarkId
-                )
-            WHERE n.BlockType = 2 AND 
-                NoteId IN {self.items}
-            GROUP BY n.NoteId;
-        """
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] and row[11]:
@@ -1439,45 +1253,7 @@ class ExportItems():
             self.export_file.write(txt)
 
         # note in book header - similar to a publication
-        sql = f"""
-            SELECT l.MepsLanguage,
-                l.KeySymbol,
-                l.BookNumber,
-                l.ChapterNumber,
-                n.BlockIdentifier,
-                u.ColorIndex,
-                n.Title,
-                n.Content,
-                GROUP_CONCAT(t.Name),
-                n.LastModified,
-                b.StartToken,
-                b.EndToken
-            FROM Note n
-                JOIN
-                Location l USING (
-                    LocationId
-                )
-                LEFT JOIN
-                TagMap tm USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
-                )
-                LEFT JOIN
-                UserMark u USING (
-                    UserMarkId
-                )
-                LEFT JOIN
-                BlockRange b USING (
-                    UserMarkId
-                )
-            WHERE n.BlockType = 2 AND 
-                NoteId IN {self.items}
-            GROUP BY n.NoteId;
-        """
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] and row[11]:
@@ -1488,46 +1264,7 @@ class ExportItems():
             self.export_file.write(txt)
 
     def export_publications(self):
-        sql = f"""
-            SELECT l.MepsLanguage,
-                l.KeySymbol,
-                l.IssueTagNumber,
-                l.DocumentId,
-                n.BlockIdentifier,
-                u.ColorIndex,
-                n.Title,
-                n.Content,
-                GROUP_CONCAT(t.Name),
-                n.LastModified,
-                b.StartToken,
-                b.EndToken
-            FROM Note n
-                JOIN
-                Location l USING (
-                    LocationId
-                )
-                LEFT JOIN
-                TagMap tm USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
-                )
-                LEFT JOIN
-                UserMark u USING (
-                    UserMarkId
-                )
-                LEFT JOIN
-                BlockRange b USING (
-                    UserMarkId
-                )
-            WHERE n.BlockType = 1 AND 
-                l.BookNumber IS NULL AND 
-                NoteId IN {self.items} 
-            GROUP BY n.NoteId;
-        """
-        for row in self.cur.execute(sql):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] and row[11]:
@@ -1861,18 +1598,19 @@ class ImportNotes():
             position = self.cur.execute(f"SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};").fetchone()[0] + 1
             self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
 
-    def add_usermark(self, attribs, location_id):
+    def add_usermark(self, attribs, location_id): # CHECK: need to use int() for attribs??
         if attribs['COLOR'] == '0':
             return 'NULL'
         unique_id = uuid.uuid1()
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']};").fetchone()
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']};").fetchone() # FIX: JOIN BlockRange !!!
         if result:
             return result[0]
-        # else:
-        #     self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) SELECT {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1;")
-        #     usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id};").fetchone()[0]
-        #     self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) SELECT 1, {attribs['BLOCK']}, 1, 2, {usermark_id};") # TODO: StartToken, EndToken
-        #     return usermark_id
+        elif 'RANGE' in attribs.keys():
+            ns, ne = attribs['RANGE'].split('-')
+            self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 );")
+            usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id};").fetchone()[0]
+            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( 1, {attribs['BLOCK']}, {ns}, {ne}, {usermark_id} );")
+            return usermark_id
         else:
             return 'NULL'
 
@@ -2054,17 +1792,11 @@ class Reindex():
         con.close()
 
     def make_table(self, table):
-        self.cur.executescript(f"""
-            CREATE TABLE CrossReference (Old INTEGER,
-              New INTEGER PRIMARY KEY AUTOINCREMENT);
-            INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};""")
+        self.cur.executescript(f"CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};")
 
     def update_table(self, table, field):
         app.processEvents()
-        self.cur.executescript(f"""
-            UPDATE {table} SET {field} = (SELECT -New FROM CrossReference
-              WHERE CrossReference.Old = {table}.{field});
-            UPDATE {table} SET {field} = abs({field});""")
+        self.cur.executescript(f"UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});")
         self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
