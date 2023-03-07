@@ -3,7 +3,8 @@
 ## [Unreleased]
 ### Added
 
-- Exporting and importing associated highlight range *along* with the notes
+- Big adjustments in *import/export mechanism*
+  - Exporting and importing associated highlight range *along* with the notes
   - I wanted to keep highlights and notes as separate entities, but unless both are imported, the note markers are not colored nor placed in the right place in the parragraph
   - So now there is also an {RANGE=} attribute in the note header (see [HELP](./res/HELP.md) for more info
 
