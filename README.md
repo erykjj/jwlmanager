@@ -7,7 +7,7 @@ This is a **multi-platform application** for viewing and performing various oper
 
 In addition to the main functions of **viewing, exporting, importing, and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** by exporting the desired items and importing them into an existent archive or into a new one.
 
-Keep in mind that the more items there are to be sorted into a tree structure, the longer it will take.
+Keep in mind that the more items there are to be sorted into a tree structure, the longer it will take. Also, *do* keep a backup until you're convinced all is well ;-)
 
 ![preview](res/images/JWLManager.gif)
 
@@ -67,7 +67,7 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 [![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 ____
-[^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2).
+[^#]: This is the current (Qt6/PySide6-based) branch for newer operating systems (Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer). For older systems, see the [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2, and no longer maintained).
 [^*]: To start with: Chinese, French, German, Italian, Portuguese, Russian and Spanish; other volunteers also appreciated.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: `pip3 install argparse filehash pandas PySide6 regex`.
