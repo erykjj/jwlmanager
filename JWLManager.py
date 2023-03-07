@@ -1601,14 +1601,14 @@ class ImportNotes():
     def add_usermark(self, attribs, location_id): # CHECK: need to use int() for attribs??
         if attribs['COLOR'] == '0':
             return 'NULL'
-        unique_id = uuid.uuid1()
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']};").fetchone() # FIX: JOIN BlockRange !!!
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']};").fetchone()
         if result:
             return result[0]
         elif 'RANGE' in attribs.keys():
-            ns, ne = attribs['RANGE'].split('-')
+            unique_id = uuid.uuid1()
             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 );")
-            usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id};").fetchone()[0]
+            usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
+            ns, ne = attribs['RANGE'].split('-')
             self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( 1, {attribs['BLOCK']}, {ns}, {ne}, {usermark_id} );")
             return usermark_id
         else:
