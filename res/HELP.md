@@ -36,7 +36,7 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 
 #### Export
 
-This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else). If the note is attached to a highlight, the range data is also exported.
+This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else). If the note is attached to a highlight, the range data is also exported. Of course, if you just want to keep the note, you can edit the export file and remove the {RANGE=} attributes before importing (or delete the highlights within the app after).
 
 Exporting of Annotations and Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 
@@ -79,7 +79,7 @@ For Bible notes, **{BK=}{CH=}{VER=}** are all numeric and refer to the number of
 
 The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) indicates the color of the note. The words themselves will not be highlighted; instead, there will be a colored sticky in the left margin next to the verse with the note.
 
-The **{RANGE=)** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0,1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added. Alternatively, use the "work-around" explained in the "Observations" (above).
+The **{RANGE=}** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0,1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added. Alternatively, use the "work-around" explained in the "Observations" (above).
 
 **{TAGS=}** is used to add one or more tags to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
 
