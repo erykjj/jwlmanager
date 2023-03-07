@@ -1598,18 +1598,26 @@ class ImportNotes():
             position = self.cur.execute(f"SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};").fetchone()[0] + 1
             self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
 
-    def add_usermark(self, attribs, location_id): # CHECK: need to use int() for attribs??
-        if attribs['COLOR'] == '0':
+    def add_usermark(self, attribs, location_id):
+        if 'COLOR' in attribs.keys():
+            color = attribs['COLOR']
+        if color == '0':
             return 'NULL'
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {attribs['BLOCK']};").fetchone()
+        if 'VER' in attribs.keys():
+            block_type = 2
+            identifier = attribs['VER']
+        else:
+            block_type = 1
+            identifier = attribs['BLOCK']
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone()
         if result:
             return result[0]
         elif 'RANGE' in attribs.keys():
             unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 );")
+            self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {color}, {location_id}, 0, '{unique_id}', 1 );")
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
             ns, ne = attribs['RANGE'].split('-')
-            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( 1, {attribs['BLOCK']}, {ns}, {ne}, {usermark_id} );")
+            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( {block_type}, {identifier}, {ns}, {ne}, {usermark_id} );")
             return usermark_id
         else:
             return 'NULL'
