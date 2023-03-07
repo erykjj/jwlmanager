@@ -3,11 +3,6 @@
 ## [Unreleased]
 ### Added
 
-- Big adjustments in *import/export mechanism*
-  - Exporting and importing associated highlight range *along* with the notes
-  - I wanted to keep highlights and notes as separate entities, but unless both are imported, the note markers are not colored nor placed in the right place in the parragraph
-  - So now there is also an {RANGE=} attribute in the note header (see [HELP](./res/HELP.md) for more info
-
 ### Changed
 
 ### Fixed
@@ -15,6 +10,16 @@
 ### Removed
 
 ____
+## [2.2.0] - 2023-03-07
+### Added
+
+- Big adjustments in the **import/export mechanism** - please report any [issues](https://github.com/erykjj/jwlmanager/issues)
+  - Exporting and importing now handles the associated highlight range *along* with the notes
+    - I wanted to keep highlights and notes as separate entities, but unless both are imported, the note markers are not colored nor placed in the right place in the parragraph
+  - So now there is also an **{RANGE=}** attribute in the note header (see [HELP](./res/HELP.md) for more info
+
+**NOTE**: because of the many changes, the original [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2) will not be maintained anymore
+
 ## [2.1.3] - 2023-03-04
 ### Changed
 
@@ -348,6 +353,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.0
 [2.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.3
 [2.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.2
 [2.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.1
