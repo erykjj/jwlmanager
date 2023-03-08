@@ -49,11 +49,11 @@ Editing or creating a Highlights or Annotations import file is *not* recommended
 The accepted format for the Notes import file is like this:
     
     {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0,1}{TAGS=}{DATE=2021-10-19}===
+    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2021-10-19}===
     » Note Title
     Multi-line...
     ...note
-    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{RANGE=0,1}{TAGS=research}{DATE=}===
+    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{RANGE=0-1}{TAGS=research}{DATE=}===
     » Another Note Title
     Multi-line...
     ...
@@ -83,7 +83,7 @@ For Bible notes, **{BK=}{CH=}{VER=}** are all numeric and refer to the number of
 
 The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) indicates the color of the note. The words themselves will not be highlighted; instead, there will be a colored sticky in the left margin next to the verse with the note.
 
-The **{RANGE=}** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0,1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added. Alternatively, use the "work-around" explained in the "Observations" (above).
+The **{RANGE=}** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0-1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added. Alternatively, use the "work-around" explained in the "Observations" (above).
 
 **{TAGS=}** is used to add one or more tags to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
 
