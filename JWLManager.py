@@ -1616,9 +1616,11 @@ class ImportNotes():
             unique_id = uuid.uuid1()
             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {color}, {location_id}, 0, '{unique_id}', 1 );")
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-            if 'RANGE' in attribs.keys():
+            try:
                 ns, ne = attribs['RANGE'].split('-')
                 self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( {block_type}, {identifier}, {ns}, {ne}, {usermark_id} );")
+            except:
+                pass
             return usermark_id
 
     def add_scripture_location(self, attribs):
