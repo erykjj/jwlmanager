@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed duplicate Bible note export
+
 ### Removed
 
 ____
