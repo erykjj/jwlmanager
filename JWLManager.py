@@ -1612,17 +1612,14 @@ class ImportNotes():
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone()
         if result:
             return result[0]
-        elif 'RANGE' in attribs.keys():
+        else:
             unique_id = uuid.uuid1()
             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {color}, {location_id}, 0, '{unique_id}', 1 );")
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-            ns, ne = attribs['RANGE'].split('-')
-            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( {block_type}, {identifier}, {ns}, {ne}, {usermark_id} );")
+            if 'RANGE' in attribs.keys():
+                ns, ne = attribs['RANGE'].split('-')
+                self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( {block_type}, {identifier}, {ns}, {ne}, {usermark_id} );")
             return usermark_id
-        else:
-            return 'NULL'
-
-
 
     def add_scripture_location(self, attribs):
         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
