@@ -7,11 +7,14 @@
 
 ### Fixed
 
-- Fixed duplicate Bible note export
-
 ### Removed
 
 ____
+## [2.2.1] - 2023-03-08
+### Fixed
+
+- Fixed duplicate Bible note export
+
 ## [2.2.0] - 2023-03-07
 ### Added
 
@@ -355,6 +358,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.1
 [2.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.0
 [2.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.3
 [2.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.2
