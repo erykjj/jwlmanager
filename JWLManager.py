@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.2.1'
+VERSION = 'v2.2.2'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -141,8 +141,8 @@ read_res(lang)
 #### Main app classes
 
 class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.setupUi(self)
         self.setAcceptDrops(True)
         self.status_label = QLabel()
