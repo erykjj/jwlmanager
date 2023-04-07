@@ -10,6 +10,11 @@
 ### Removed
 
 ____
+## [2.2.2] - 2023-04-07
+### Fixed
+
+- Fixed start-up issue on recently released Qt6.5
+
 ## [2.2.1] - 2023-03-08
 ### Fixed
 
