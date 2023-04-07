@@ -1,4 +1,4 @@
-# JWLManager - v2[^#]
+# JWLManager[^#]
 **Looking for help with translation on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)**[^*]   ![Translation status](https://hosted.weblate.org/widgets/jwlmanager/-/qt-ui/88x31-black.png)
 
 ## Purpose
