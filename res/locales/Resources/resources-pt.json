@@ -1,112 +1,112 @@
 {
-  "types": {
-    "1": "Bíblias",
-    "2": "Livros",
-    "4": "Brochuras",
-    "6": "Índices",
-    "7": "Periodicals",
-    "10": "Folhetos",
-    "12": "Programs",
-    "13": "Periodicals",
-    "14": "Periodicals",
-    "17": "Outros",
-    "22": "Series",
-    "25": "Multimédia",
-    "30": "Periódicos",
-    "31": "Programas"
-  },
-  "extras": {
-    "CO-invpw": {
-      "short": "Convite à convenção",
-      "long": "Convite à Convenção Regional"
+    "types": {
+        "1": "Bíblias",
+        "2": "Livros",
+        "4": "Brochuras",
+        "6": "Índices",
+        "7": "Periódicos",
+        "10": "Folhetos",
+        "12": "Programas",
+        "13": "Periódicos",
+        "14": "Periódicos",
+        "17": "Outros",
+        "22": "Series",
+        "25": "Multimédia",
+        "30": "Periódicos",
+        "31": "Programas"
     },
-    "S-196": {
-      "short": "Use \"Seja Feliz para Sempre!\"",
-      "long": "Como usar \"Seja Feliz para Sempre!\" no ministério"
-    },
-    "cj": {
-      "short": "Comentário à Tiago",
-      "long": "Comentário à Carta de Tiago"
-    },
-    "cn": {
-      "short": "Concordância",
-      "long": "Concordância Abrangente da Tradução do Novo Mundo das Sagradas Escrituras"
-    },
-    "co-r": {
-      "short": "Convention video",
-      "long": "Vídeo de convenção"
-    },
-    "dx": {
-      "short": "Índice",
-      "long": "Índice das Publicações da Torre de Vigia"
-    },
-    "igw": {
-      "short": "Introduction to God’s Word",
-      "long": "Introdução à Palavra de Deus"
-    },
-    "jwb": {
-      "short": "JW Broadcasting",
-      "long": "Vídeo de JW Broadcasting"
-    },
-    "jwb-": {
-      "short": "Adoração matinal",
-      "long": "Vídeo de Adoração matinal"
-    },
-    "jwbcov": {
-      "short": "Vídeo de música da convenção",
-      "long": "Vídeo de música da Covenção Regional"
-    },
-    "ks10": {
-      "short": "Pastorear (ks)",
-      "long": "\"Pastorear a Congregação de Deus\" (ks)"
-    },
-    "mwbv": {
-      "short": "Making Music video",
-      "long": "Vídeo de Fazendo música"
-    },
-    "om": {
-      "short": "Nosso Ministério",
-      "long": "Organizados Para Efetuar o Nosso Ministério"
-    },
-    "or": {
-      "short": "Organizados",
-      "long": "Organização Para Pregar o Reino e Fazer Discípulos"
-    },
-    "osg": {
-      "short": "Original song video",
-      "long": "Vídeo de canção original"
-    },
-    "pk": {
-      "short": "Vídeo de Amigo de Jeová",
-      "long": "Vídeo de Torne-se Amigo de Jeová"
-    },
-    "pkon": {
-      "short": "Children's song video",
-      "long": "Vídeo de canção infantil"
-    },
-    "pt14": {
-      "short": "Efetua o Teu Ministério",
-      "long": "\"Efetua Plenamente o Teu Ministério\""
-    },
-    "qm": {
-      "short": "Qualificados",
-      "long": "Qualificados Para Ser Ministros"
-    },
-    "sfl": {
-      "short": "Pastorear (sfl)",
-      "long": "\"Pastorear a Congregação de Deus\" (sfl)"
-    },
-    "sfla": {
-      "short": "Adenda",
-      "long": "Adenda à \"Pastorear a Congregação de Deus\""
-    },
-    "sgd": {
-      "short": "Guia de Estudo Bíblico",
-      "long": "Guia para o Estudo da Palavra de Deus"
-    },
-    "ws-": {
-      "short": "Segurança Mundial",
-      "long": "Segurança Mundial sob o “Príncipe da Paz”"
+    "extras": {
+        "CO-invpw": {
+            "short": "Convite à convenção",
+            "long": "Convite à Convenção Regional"
+        },
+        "S-196": {
+            "short": "Use \"Seja Feliz para Sempre!\"",
+            "long": "Como usar \"Seja Feliz para Sempre!\" no ministério"
+        },
+        "cj": {
+            "short": "Comentário à Tiago",
+            "long": "Comentário à Carta de Tiago"
+        },
+        "cn": {
+            "short": "Concordância",
+            "long": "Concordância Abrangente da Tradução do Novo Mundo das Sagradas Escrituras"
+        },
+        "co-r": {
+            "short": "Vídeo de convenção",
+            "long": "Vídeo de Covenção Regional"
+        },
+        "dx": {
+            "short": "Índice",
+            "long": "Índice das Publicações da Torre de Vigia"
+        },
+        "igw": {
+            "short": "Introdução à Palavra de Deus",
+            "long": "Introdução à Palavra de Deus"
+        },
+        "jwb": {
+            "short": "JW Broadcasting",
+            "long": "Vídeo de JW Broadcasting"
+        },
+        "jwb-": {
+            "short": "Adoração matinal",
+            "long": "Vídeo de Adoração matinal"
+        },
+        "jwbcov": {
+            "short": "Vídeo de música da convenção",
+            "long": "Vídeo de música da Covenção Regional"
+        },
+        "ks10": {
+            "short": "Pastorear (ks)",
+            "long": "\"Pastorear a Congregação de Deus\" (ks)"
+        },
+        "mwbv": {
+            "short": "Fazendo música",
+            "long": "Vídeo de Fazendo música"
+        },
+        "om": {
+            "short": "Nosso Ministério",
+            "long": "Organizados Para Efetuar o Nosso Ministério"
+        },
+        "or": {
+            "short": "Organização",
+            "long": "Organização Para Pregar o Reino e Fazer Discípulos"
+        },
+        "osg": {
+            "short": "Canção original",
+            "long": "Vídeo de canção original"
+        },
+        "pk": {
+            "short": "Vídeo de Amigo de Jeová",
+            "long": "Vídeo de Torne-se Amigo de Jeová"
+        },
+        "pkon": {
+            "short": "Canção infantil",
+            "long": "Vídeo de canção infantil"
+        },
+        "pt14": {
+            "short": "Efetua o Teu Ministério",
+            "long": "\"Efetua Plenamente o Teu Ministério\""
+        },
+        "qm": {
+            "short": "Qualificados",
+            "long": "Qualificados Para Ser Ministros"
+        },
+        "sfl": {
+            "short": "Pastorear (sfl)",
+            "long": "\"Pastorear a Congregação de Deus\" (sfl)"
+        },
+        "sfla": {
+            "short": "Adenda",
+            "long": "Adenda à \"Pastorear a Congregação de Deus\""
+        },
+        "sgd": {
+            "short": "Guia de Estudo Bíblico",
+            "long": "Guia para o Estudo da Palavra de Deus"
+        },
+        "ws-": {
+            "short": "Segurança Mundial",
+            "long": "Segurança Mundial sob o “Príncipe da Paz”"
+        }
     }
-  }
 }
