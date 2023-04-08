@@ -1,0 +1,112 @@
+{
+  "types": {
+    "1": "Bibles",
+    "2": "Books",
+    "4": "Brochures",
+    "6": "Indexes",
+    "7": "Periodicals",
+    "10": "Tracts",
+    "12": "Programs",
+    "13": "Periodicals",
+    "14": "Periodicals",
+    "17": "Other",
+    "22": "Series",
+    "25": "Media",
+    "30": "Periodicals",
+    "31": "Programs"
+  },
+  "extras": {
+    "CO-invpw": {
+      "short": "Convention Invitation",
+      "long": "Invitation to the Regional Convention"
+    },
+    "S-196": {
+      "short": "Use \"Enjoy Life\"",
+      "long": "How to Use \"Enjoy Life\" in the Ministry"
+    },
+    "cj": {
+      "short": "Commentary on James",
+      "long": "Commentary on the Letter of James"
+    },
+    "cn": {
+      "short": "Concordance",
+      "long": "Comprehensive Concordance of the New World Translation of the Holy Scriptures"
+    },
+    "co-r": {
+      "short": "Convention video",
+      "long": "Convention video"
+    },
+    "dx": {
+      "short": "Index",
+      "long": "Watch Tower Publications Index"
+    },
+    "igw": {
+      "short": "Introduction to God’s Word",
+      "long": "Introduction to God’s Word"
+    },
+    "jwb": {
+      "short": "JW Broadcasting",
+      "long": "JW Broadcasting video"
+    },
+    "jwb-": {
+      "short": "Morning Worship",
+      "long": "Morning Worship video"
+    },
+    "jwbcov": {
+      "short": "Convention music video",
+      "long": "Regional Covention music video presentation"
+    },
+    "ks10": {
+      "short": "Shepherd (ks)",
+      "long": "\"Shepherd the Flock of God\" (ks)"
+    },
+    "mwbv": {
+      "short": "Making Music video",
+      "long": "Making Music video"
+    },
+    "om": {
+      "short": "Our Ministry",
+      "long": "Organized to Accomplish Our Ministry"
+    },
+    "or": {
+      "short": "Organization",
+      "long": "Organization for Kingdom-Preaching and Disciple-Making"
+    },
+    "osg": {
+      "short": "Original song video",
+      "long": "Original song video"
+    },
+    "pk": {
+      "short": "Jehovah's Friend video",
+      "long": "Become Jehovah's Friend video"
+    },
+    "pkon": {
+      "short": "Children's song video",
+      "long": "Children's song video"
+    },
+    "pt14": {
+      "short": "Accomplish Your Ministry",
+      "long": "Fully Accomplish Your Ministry"
+    },
+    "qm": {
+      "short": "Qualified",
+      "long": "Qualified to Be Ministers"
+    },
+    "sfl": {
+      "short": "Shepherd (sfl)",
+      "long": "\"Shepherd the Flock of God\" (sfl)"
+    },
+    "sfla": {
+      "short": "Addendum",
+      "long": "Addendum to \"Shepherd the Flock of God\""
+    },
+    "sgd": {
+      "short": "Bible Study Guidebook",
+      "long": "Guide for the Study of God’s Word"
+    },
+    "ws-": {
+      "short": "Worldwide Security",
+      "long": "Worldwide Security Under the “Prince of Peace”"
+    }
+  }
+}

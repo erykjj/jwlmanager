@@ -1,0 +1,112 @@
+{
+  "types": {
+    "1": "Bibles",
+    "2": "Livres",
+    "4": "Brochures",
+    "6": "Indices",
+    "7": "Périodiques",
+    "10": "Tracts",
+    "12": "Programmes",
+    "13": "Périodiques",
+    "14": "Périodiques",
+    "17": "Autres",
+    "22": "Rubriques",
+    "25": "Multimédia",
+    "30": "Périodiques",
+    "31": "Programmes"
+  },
+  "extras": {
+    "CO-invpw": {
+      "short": "Invitation à l’assemblée",
+      "long": "Invitation à l'assemblée régionale"
+    },
+    "S-196": {
+      "short": "Utilisez « Vivez pour toujours »",
+      "long": "Comment utiliser « Vivez pour toujours » dans le ministère"
+    },
+    "cj": {
+      "short": "Commentaire sur Jacques",
+      "long": "Commentaire sur la lettre de Jacques"
+    },
+    "cn": {
+      "short": "Concordance",
+      "long": "Concordance complète des Saintes Écritures. Traduction du monde nouveau"
+    },
+    "co-r": {
+      "short": "Vidéo de l'assemblée",
+      "long": "Vidéo de l'assemblée"
+    },
+    "dx": {
+      "short": "Index",
+      "long": "Index des publications de la Société Watch Tower"
+    },
+    "igw": {
+      "short": "Introduction à la Parole de Dieu",
+      "long": "Introduction à la Parole de Dieu"
+    },
+    "jwb": {
+      "short": "JW Broadcasting",
+      "long": "Vidéo de JW Broadcasting"
+    },
+    "jwb-": {
+      "short": "Culte matinal",
+      "long": "Vidéo du Culte matinal"
+    },
+    "jwbcov": {
+      "short": "Vidéo musical de l'assemblée",
+      "long": "Vidéo de l'assemblée régionale"
+    },
+    "ks10": {
+      "short": "Paître (ks)",
+      "long": "« Paître le troupeau de Dieu » (ks)"
+    },
+    "mwbv": {
+      "short": "Vidéo de Ils font de la musique",
+      "long": "Vidéo de Ils font de la musique"
+    },
+    "om": {
+      "short": "Notre ministère",
+      "long": "Organisés pour bien remplir notre ministère"
+    },
+    "or": {
+      "short": "Organisation",
+      "long": "Une organisation pour prêcher le Royaume et faire des disciples"
+    },
+    "osg": {
+      "short": "Vidéo de chanson originale",
+      "long": "Vidéo de la chanson originale"
+    },
+    "pk": {
+      "short": "Vidéo de l'Ami de Jéhovah",
+      "long": "Vidéo de « Deviens l'ami de Jéhovah »"
+    },
+    "pkon": {
+      "short": "Vidéo de chanson pour enfants",
+      "long": "Vidéo de chanson pour enfants"
+    },
+    "pt14": {
+      "short": "Accomplis ton ministère",
+      "long": "Accomplis pleinement ton ministère"
+    },
+    "qm": {
+      "short": "Qualifiés",
+      "long": "Qualifiés pour le ministère"
+    },
+    "sfl": {
+      "short": "Paître (sfl)",
+      "long": "« Paître le troupeau de Dieu » (sfl)"
+    },
+    "sfla": {
+      "short": "Addendum",
+      "long": "Addendum à « Paître le troupeau de Dieu »"
+    },
+    "sgd": {
+      "short": "Guide d’étude de la Parole de Dieu",
+      "long": "Guide d’étude de la Parole de Dieu"
+    },
+    "ws-": {
+      "short": "Sécurité universelle",
+      "long": "Sécurité universelle sous le Règne du « Prince de paix »"
+    }
+  }
+}
