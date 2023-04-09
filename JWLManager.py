@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.2.2'
+VERSION = 'v2.2.3'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -56,7 +56,7 @@ def get_language():
         'fr': 'French (français)',
         'it': 'Italian (italiano)',
         # 'pl': 'Polish (Polski)',
-        # 'pt': 'Portuguese (português)',
+        'pt': 'Portuguese (português)',
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
         }
