@@ -10,6 +10,11 @@
 ### Removed
 
 ____
+## [2.2.9] - 2023-04-09
+### Added
+
+- Added Portuguese translation
+
 ## [2.2.2] - 2023-04-07
 ### Fixed
 
@@ -363,6 +368,8 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.2.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.3
+[2.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.2
 [2.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.1
 [2.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.0
 [2.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.1.3
