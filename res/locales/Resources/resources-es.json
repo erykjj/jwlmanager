@@ -1,112 +1,112 @@
 {
-  "types": {
-    "1": "Biblias",
-    "2": "Libros",
-    "4": "Folletos",
-    "6": "Índices",
-    "7": "Periódicos",
-    "10": "Tratados",
-    "12": "Programas",
-    "13": "Periódicos",
-    "14": "Periódicos",
-    "17": "Otros",
-    "22": "Series",
-    "25": "Multimedia",
-    "30": "Periódicos",
-    "31": "Programas"
-  },
-  "extras": {
-    "CO-invpw": {
-      "short": "Invitación a la asamblea",
-      "long": "Invitación a la Asamblea Regional"
+    "types": {
+        "1": "Biblias",
+        "2": "Libros",
+        "4": "Folletos",
+        "6": "Índices",
+        "7": "Periódicos",
+        "10": "Tratados",
+        "12": "Programas",
+        "13": "Periódicos",
+        "14": "Periódicos",
+        "17": "Otros",
+        "22": "Series",
+        "25": "Multimedia",
+        "30": "Periódicos",
+        "31": "Programas"
     },
-    "S-196": {
-      "short": "Usar \"Disfrute de la vida\"",
-      "long": "Cómo usar \"Disfrute de la vida\" en el ministerio"
-    },
-    "cj": {
-      "short": "Comentario sobre Santiago",
-      "long": "Comentario sobre la Carta de Santiago"
-    },
-    "cn": {
-      "short": "Concordancia",
-      "long": "Concordancia exhaustiva de la Traducción del Nuevo Mundo de las Sagradas Escrituras"
-    },
-    "co-r": {
-      "short": "Video de la asamblea",
-      "long": "Video de la asamblea"
-    },
-    "dx": {
-      "short": "Índice",
-      "long": "Índice de publicaciones Watch Tower"
-    },
-    "igw": {
-      "short": "Introducción a la Palabra de Dios",
-      "long": "Introducción a la Palabra de Dios"
-    },
-    "jwb": {
-      "short": "JW Broadcasting",
-      "long": "Video de JW Broadcasting"
-    },
-    "jwb-": {
-      "short": "Adoración matutina",
-      "long": "Video de Adoración matutina"
-    },
-    "jwbcov": {
-      "short": "Video musical de la asamblea",
-      "long": "Video musical de la Asamblea Regional"
-    },
-    "ks10": {
-      "short": "Pastoreen (ks)",
-      "long": "\"Pastoreen el rebaño de Dios\" (ks)"
-    },
-    "mwbv": {
-      "short": "Video musical",
-      "long": "Video musical"
-    },
-    "om": {
-      "short": "Nuestro ministerio",
-      "long": "Organizados para efectuar nuestro ministerio"
-    },
-    "or": {
-      "short": "Oraganizados",
-      "long": "Organización para predicar el Reino y hacer discípulos"
-    },
-    "osg": {
-      "short": "Video musical original",
-      "long": "Video musical original"
-    },
-    "pk": {
-      "short": "Video de Amigo de Dios",
-      "long": "Video de Hazte amigo de Jehová"
-    },
-    "pkon": {
-      "short": "Video de canciones para niños",
-      "long": "Video de canciones para niños"
-    },
-    "pt14": {
-      "short": "Efectúa tu ministerio",
-      "long": "\"Efectúa tu ministerio plenamente\""
-    },
-    "qm": {
-      "short": "Capacitados",
-      "long": "Capacitados para ser ministros"
-    },
-    "sfl": {
-      "short": "Pastoreen (sfl)",
-      "long": "\"Pastoreen el rebaño de Dios\" (sfl)"
-    },
-    "sfla": {
-      "short": "Anexo",
-      "long": "Anexo a \"Pastoreen el rebaño de Dios\""
-    },
-    "sgd": {
-      "short": "Guía de estudio bíblico",
-      "long": "Guía para el estudio de la Palabra de Dios"
-    },
-    "ws-": {
-      "short": "Seguridad mundial",
-      "long": "Seguridad mundial bajo el \"Príncipe de Paz\""
+    "extras": {
+        "CO-invpw": {
+            "short": "Invitación a la asamblea",
+            "long": "Invitación a la Asamblea Regional"
+        },
+        "S-196": {
+            "short": "Usar \"Disfrute de la vida\"",
+            "long": "Cómo usar \"Disfrute de la vida\" en el ministerio"
+        },
+        "cj": {
+            "short": "Comentario sobre Santiago",
+            "long": "Comentario sobre la Carta de Santiago"
+        },
+        "cn": {
+            "short": "Concordancia",
+            "long": "Concordancia exhaustiva de la Traducción del Nuevo Mundo de las Sagradas Escrituras"
+        },
+        "co-r": {
+            "short": "Video de la asamblea",
+            "long": "Video de la asamblea"
+        },
+        "dx": {
+            "short": "Índice",
+            "long": "Índice de publicaciones Watch Tower"
+        },
+        "igw": {
+            "short": "Introducción a la Palabra de Dios",
+            "long": "Introducción a la Palabra de Dios"
+        },
+        "jwb": {
+            "short": "JW Broadcasting",
+            "long": "Video de JW Broadcasting"
+        },
+        "jwb-": {
+            "short": "Adoración matutina",
+            "long": "Video de Adoración matutina"
+        },
+        "jwbcov": {
+            "short": "Video musical de la asamblea",
+            "long": "Video musical de la Asamblea Regional"
+        },
+        "ks10": {
+            "short": "Pastoreen (ks)",
+            "long": "\"Pastoreen el rebaño de Dios\" (ks)"
+        },
+        "mwbv": {
+            "short": "Video musical",
+            "long": "Video musical"
+        },
+        "om": {
+            "short": "Nuestro ministerio",
+            "long": "Organizados para efectuar nuestro ministerio"
+        },
+        "or": {
+            "short": "Oraganizados",
+            "long": "Organización para predicar el Reino y hacer discípulos"
+        },
+        "osg": {
+            "short": "Video musical original",
+            "long": "Video musical original"
+        },
+        "pk": {
+            "short": "Video de Amigo de Dios",
+            "long": "Video de Hazte amigo de Jehová"
+        },
+        "pkon": {
+            "short": "Video de canciones para niños",
+            "long": "Video de canciones para niños"
+        },
+        "pt14": {
+            "short": "Efectúa tu ministerio",
+            "long": "\"Efectúa tu ministerio plenamente\""
+        },
+        "qm": {
+            "short": "Capacitados",
+            "long": "Capacitados para ser ministros"
+        },
+        "sfl": {
+            "short": "Pastoreen (sfl)",
+            "long": "\"Pastoreen el rebaño de Dios\" (sfl)"
+        },
+        "sfla": {
+            "short": "Anexo",
+            "long": "Anexo a \"Pastoreen el rebaño de Dios\""
+        },
+        "sgd": {
+            "short": "Guía de estudio bíblico",
+            "long": "Guía para el estudio de la Palabra de Dios"
+        },
+        "ws-": {
+            "short": "Seguridad mundial",
+            "long": "Seguridad mundial bajo el \"Príncipe de Paz\""
+        }
     }
-  }
 }

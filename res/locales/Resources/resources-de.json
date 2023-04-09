@@ -1,108 +1,112 @@
 {
-  "types": {
-    "1": "",
-    "2": "",
-    "4": "",
-    "6": "",
-    "7": "",
-    "10": "",
-    "12": "",
-    "13": "",
-    "14": "",
-    "17": "",
-    "22": "",
-    "25": "",
-    "30": "",
-    "31": ""
-  },
-  "extras": {
-    "CO-invpw": {
-      "short": "",
-      "long": ""
+    "types": {
+        "1": "",
+        "2": "",
+        "4": "",
+        "6": "",
+        "7": "",
+        "10": "",
+        "12": "",
+        "13": "",
+        "14": "",
+        "17": "",
+        "22": "",
+        "25": "",
+        "30": "",
+        "31": ""
     },
-    "cj": {
-      "short": "",
-      "long": ""
-    },
-    "cn": {
-      "short": "",
-      "long": ""
-    },
-    "co-r": {
-      "short": "",
-      "long": ""
-    },
-    "dx": {
-      "short": "",
-      "long": ""
-    },
-    "igw": {
-      "short": "",
-      "long": ""
-    },
-    "jwb": {
-      "short": "",
-      "long": ""
-    },
-    "jwb-": {
-      "short": "",
-      "long": ""
-    },
-    "jwbcov": {
-      "short": "",
-      "long": ""
-    },
-    "ks10": {
-      "short": "",
-      "long": ""
-    },
-    "mwbv": {
-      "short": "",
-      "long": ""
-    },
-    "om": {
-      "short": "",
-      "long": ""
-    },
-    "or": {
-      "short": "",
-      "long": ""
-    },
-    "osg": {
-      "short": "",
-      "long": ""
-    },
-    "pk": {
-      "short": "",
-      "long": ""
-    },
-    "pkon": {
-      "short": "",
-      "long": ""
-    },
-    "pt14": {
-      "short": "",
-      "long": ""
-    },
-    "qm": {
-      "short": "",
-      "long": ""
-    },
-    "sfl": {
-      "short": "",
-      "long": ""
-    },
-    "sfla": {
-      "short": "",
-      "long": ""
-    },
-    "sgd": {
-      "short": "",
-      "long": ""
-    },
-    "ws-": {
-      "short": "",
-      "long": ""
+    "extras": {
+        "CO-invpw": {
+            "short": "",
+            "long": ""
+        },
+        "S-196": {
+            "short": "",
+            "long": ""
+        },
+        "cj": {
+            "short": "",
+            "long": ""
+        },
+        "cn": {
+            "short": "",
+            "long": ""
+        },
+        "co-r": {
+            "short": "",
+            "long": ""
+        },
+        "dx": {
+            "short": "",
+            "long": ""
+        },
+        "igw": {
+            "short": "",
+            "long": ""
+        },
+        "jwb": {
+            "short": "",
+            "long": ""
+        },
+        "jwb-": {
+            "short": "",
+            "long": ""
+        },
+        "jwbcov": {
+            "short": "",
+            "long": ""
+        },
+        "ks10": {
+            "short": "",
+            "long": ""
+        },
+        "mwbv": {
+            "short": "",
+            "long": ""
+        },
+        "om": {
+            "short": "",
+            "long": ""
+        },
+        "or": {
+            "short": "",
+            "long": ""
+        },
+        "osg": {
+            "short": "",
+            "long": ""
+        },
+        "pk": {
+            "short": "",
+            "long": ""
+        },
+        "pkon": {
+            "short": "",
+            "long": ""
+        },
+        "pt14": {
+            "short": "",
+            "long": ""
+        },
+        "qm": {
+            "short": "",
+            "long": ""
+        },
+        "sfl": {
+            "short": "",
+            "long": ""
+        },
+        "sfla": {
+            "short": "",
+            "long": ""
+        },
+        "sgd": {
+            "short": "",
+            "long": ""
+        },
+        "ws-": {
+            "short": "",
+            "long": ""
+        }
     }
-  }
 }
