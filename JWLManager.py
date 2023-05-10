@@ -1609,7 +1609,7 @@ class ImportNotes():
         else:
             block_type = 1
             identifier = attribs['BLOCK']
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone()
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone() # NOTE: this selects the last range of certain color in a paragraph
         if result:
             return result[0]
         else:
