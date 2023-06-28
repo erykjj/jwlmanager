@@ -10,7 +10,12 @@
 ### Removed
 
 ____
-## [2.2.9] - 2023-04-09
+## [2.2.4] - 2023-06-28
+### Fixed
+
+- Fixed incorrect TextTag selection affecting import/deletion of Annotations
+
+## [2.2.3] - 2023-04-09
 ### Added
 
 - Added Portuguese translation
@@ -368,6 +373,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.2.4]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.4
 [2.2.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.3
 [2.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.2
 [2.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.1
