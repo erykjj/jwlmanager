@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.2.3'
+VERSION = 'v2.2.4'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -935,7 +935,7 @@ class ConstructTree():
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
-            item = row[4]
+            item = row[0]
             rec = [ item, lng, code, year, detail ]
             lst.append(rec)
         annotations = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
@@ -1185,7 +1185,7 @@ class DeleteItems():
         elif self.category == _('Notes'):
             return self.delete("Note", "NoteId")
         elif self.category == _('Annotations'):
-            return self.delete("InputField", "TextTag")
+            return self.delete("InputField", "LocationId")
 
     def delete(self, table, field):
         return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
@@ -1296,7 +1296,7 @@ class ExportItems():
 
     def export_annotations(self):
         self.export_annotations_header()
-        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE TextTag IN {self.items};"):
+        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
             self.export_file.write(f"\n{row[0]}")
             for item in range(1,7):
                 string = str(row[item]).replace("\n", r"\n")
@@ -1361,7 +1361,7 @@ class PreviewItems():
             self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
 
     def preview_annotations(self):
-        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE TextTag IN {self.items};"):
+        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
             title = row[0]
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
