@@ -5,9 +5,10 @@
 
 ### Changed
 
+- Updated manifest file to be inline with new JW Library v14
 - Updated blank database to include new playlist tables
-- Updated manifest file to be inline with new JW Library
 - Notes export includes CREATED date and MODIFIED date, instead of the previous DATE (modified date)
+- Notes import can handle older DATE= attribute, as well as new CREATED= and MODIFIED= attributes
 
 ### Fixed
 
