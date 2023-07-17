@@ -1839,7 +1839,6 @@ class Reindex():
         self.update_table('Bookmark', 'LocationId')
         self.update_table('Bookmark', 'PublicationLocationId')
         self.update_table('TagMap', 'LocationId')
-        self.update_table('PlaylistMedia', 'LocationId')
         self.drop_table()
 
 
