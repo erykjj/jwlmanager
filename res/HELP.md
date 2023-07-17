@@ -49,7 +49,7 @@ Editing or creating a Highlights or Annotations import file is *not* recommended
 The accepted format for the Notes import file is like this:
     
     {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2021-10-19}===
+    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2022-10-19}===
     » Note Title
     Multi-line...
     ...note
@@ -58,7 +58,7 @@ The accepted format for the Notes import file is like this:
     Multi-line...
     ...
     ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2021-10-19}===
+    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2022-10-19}===
     » Still Another Note Title
     Multi-line...
     ...note
@@ -71,10 +71,9 @@ Each note definition starts with an attribute line. **{CAT=}** define the catego
 **Observations:**
   * Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
   * Unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
-  * If separated from their corresponding colored highlights, the note "stickies" appear in all Bibles *except* the Bible that is referenced at the bottom of the note in the "Personal Study" section, though the notes themselves are there in the reference pane (the default gray note icons do show correctly). The stickies *do* show in all the other Bibles. This may be a bug (or a feature?) in the app itself. For now, to have colored note icons (without any highlighting), I import my notes as for the Reference Bible (*Rbi8*); this way I can see the stickies in the Study Bible (*nwtsty*). This also applies between languages: a colored note without an associated highlight added to (for example) an English publication, will not have the note marker showing, but it *will* appear in the Spanish version of the same publication.
     * To sum up:
       - {COLOR=} 1-6 *and* {RANGE=} → colored stickie with highlight
-      - {COLOR=} 1-6 and *NO* {RANGE=} → colored stickie in other language/version (at start of paragraph/verse and no highlight)
+      - {COLOR=} 1-6 and *NO* {RANGE=} → colored stickie (at start of paragraph/verse and no highlight)
       - {COLOR=0} (with/without {RANGE=}) → grey stickie (at start of paragraph/verse and no highlight)
 
 ![notes](images/notes.png)
@@ -93,7 +92,7 @@ Each note has to start with such a header. The very next line after the header i
 
 Here is an example blue note for Jude 21 (in  Spanish):
 
-    ==={CAT=BIBLE}{LANG=1}{ED=Rbi8}{BK=65}{CH=1}{VER=21}{COLOR=3}{TAGS=}{DATE=}===
+    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=65}{CH=1}{VER=21}{COLOR=3}{TAGS=}{DATE=}===
     » para mantenerse en el amor de Dios
     1. _edificándonos sobre nuestra santísima fe_ mediante el **estudio** diligente de la Palabra de Dios y la participación en la obra de predicar
     2. _**orando** con espíritu santo_, o en armonía con su influencia
