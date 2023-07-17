@@ -468,7 +468,7 @@ class Window(QMainWindow, Ui_MainWindow):
             zipped.extractall(tmp_path)
         m = {
             "name": "UserDataBackup",
-            "creationDate": datetime.now().strftime("%Y-%m-%d"),
+            "creationDate": datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
             "version": 1,
             "type": 0,
             "userDataBackup": {
@@ -563,7 +563,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def save_as_file(self):
         fname = ()
         if self.save_filename == '':
-            now = datetime.now().strftime("%Y-%m-%d")
+            now = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), f"{self.working_dir}/MODIFIED_{now}.jwlibrary", _('JW Library archives')+'(*.jwlibrary)')
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
@@ -1634,7 +1634,7 @@ class ImportNotes():
             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
             unique_id = uuid.uuid1()
-            date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
+            date = attribs['DATE'] or datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{date}' );"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
@@ -1655,7 +1655,7 @@ class ImportNotes():
             date = attribs['DATE'] or result[1]
             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
-            date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
+            date = attribs['DATE'] or datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified) VALUES ( '{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{date}' );"
         self.cur.execute(sql)
@@ -1673,7 +1673,7 @@ class ImportNotes():
             date = attribs['DATE'] or result[1]
             sql = f"UPDATE Note SET Content = '{note}', LastModified = '{date}' WHERE Guid = '{unique_id}';"
         else:
-            date = attribs['DATE'] or datetime.now().strftime("%Y-%m-%d")
+            date = attribs['DATE'] or datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
             if not title:
                 sql = f"INSERT INTO Note (Guid, Content, BlockType, LastModified) VALUES ( '{unique_id}', '{note}', 0, '{date}' );"
