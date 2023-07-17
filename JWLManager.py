@@ -563,7 +563,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def save_as_file(self):
         fname = ()
         if self.save_filename == '':
-            now = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+            now = datetime.now().strftime("%Y-%m-%d")
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), f"{self.working_dir}/MODIFIED_{now}.jwlibrary", _('JW Library archives')+'(*.jwlibrary)')
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
