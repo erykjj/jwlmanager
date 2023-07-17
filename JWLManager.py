@@ -595,9 +595,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         update_manifest()
         with ZipFile(self.save_filename, "w", compression=ZIP_DEFLATED) as newzip:
-            # newzip.write(f"{tmp_path}/manifest.json", "manifest.json")
-            # newzip.write(f"{tmp_path}/default_thumbnail.png", "default_thumbnail.png")
-            # newzip.write(f"{tmp_path}/{db_name}", db_name)
             files = os.listdir(tmp_path)
             for f in files:
                 newzip.write(f'{tmp_path}/{f}', f)
