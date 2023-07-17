@@ -7,10 +7,11 @@
 
 - Updated blank database to include new playlist tables
 - Updated manifest file to be inline with new JW Library
+- Notes export includes CREATED date and MODIFIED date, instead of the previous DATE (modified date)
 
 ### Fixed
 
-- Reindexing a table removed from newer databases caused crash
+- Fixed crash generatd by reindexing a table that was removed from newer databases
 
 ### Removed
 
