@@ -582,14 +582,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def zipfile(self):
 
-        def usermark_count():
-            con = sqlite3.connect(f"{tmp_path}/{db_name}")
-            cur = con.cursor()
-            um = cur.execute("SELECT count(UserMarkId) FROM UserMark;").fetchone()[0]
-            cur.close()
-            con.close()
-            return um
-
         def update_manifest():
             with open(f"{tmp_path}/manifest.json", 'r') as json_file:
                 m = json.load(json_file)
@@ -604,6 +596,7 @@ class Window(QMainWindow, Ui_MainWindow):
         update_manifest()
         with ZipFile(self.save_filename, "w", compression=ZIP_DEFLATED) as newzip:
             newzip.write(f"{tmp_path}/manifest.json", "manifest.json")
+            newzip.write(f"{tmp_path}/default_thumbnail.png", "default_thumbnail.png")
             newzip.write(f"{tmp_path}/{db_name}", db_name)
         self.archive_saved()
 
