@@ -5,7 +5,12 @@
 
 ### Changed
 
+- Updated blank database to include new playlist tables
+- Updated manifest file to be inline with new JW Library
+
 ### Fixed
+
+- Reindexing a table removed from newer databases caused crash
 
 ### Removed
 
