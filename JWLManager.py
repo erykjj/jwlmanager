@@ -742,7 +742,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog(_('Please wait…'), None, 0, 14, self)
+        self.pd = QProgressDialog(_('Please wait…'), None, 0, 13, self)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
