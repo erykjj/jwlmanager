@@ -30,7 +30,7 @@ chmod +x JWLManager.py
 If you use the `-h` flag, you'll see the following options:
 
 ```
-usage: JWLManager.py [-h] [-v] [-en | -es | -fr]
+usage: JWLManager.py [-h] [-v] [-en | -es | -fr | -it | -pt]
 
 Manage .jwlibrary backup archives
 
