@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.2.4'
+VERSION = 'v2.3.0'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -472,12 +472,11 @@ class Window(QMainWindow, Ui_MainWindow):
             "version": 1,
             "type": 0,
             "userDataBackup": {
-                "userMarkCount": 0,
                 "lastModifiedDate": datetime.now(timezone.utc).isoformat(timespec='seconds'),
                 "deviceName": "JWLManager",
                 "databaseName": "userData.db",
                 "hash": "",
-                "schemaVersion": 8 } }
+                "schemaVersion": 13 } }
         with open(f"{tmp_path}/manifest.json", 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
@@ -594,7 +593,6 @@ class Window(QMainWindow, Ui_MainWindow):
         def update_manifest():
             with open(f"{tmp_path}/manifest.json", 'r') as json_file:
                 m = json.load(json_file)
-            m["userDataBackup"]["userMarkCount"] = usermark_count()
             m["userDataBackup"]["lastModifiedDate"] = datetime.now(timezone.utc).isoformat(timespec='seconds')
             sha256hash = FileHash('sha256')
             m["userDataBackup"]["hash"] = sha256hash.hash_file(f"{tmp_path}/{db_name}")
