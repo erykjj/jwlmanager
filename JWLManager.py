@@ -468,7 +468,7 @@ class Window(QMainWindow, Ui_MainWindow):
             zipped.extractall(tmp_path)
         m = {
             "name": "UserDataBackup",
-            "creationDate": datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
+            "creationDate": datetime.now().strftime('%Y-%m-%d'),
             "version": 1,
             "type": 0,
             "userDataBackup": {
@@ -563,7 +563,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def save_as_file(self):
         fname = ()
         if self.save_filename == '':
-            now = datetime.now().strftime("%Y-%m-%d")
+            now = datetime.now().strftime('%Y-%m-%d')
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), f"{self.working_dir}/MODIFIED_{now}.jwlibrary", _('JW Library archives')+'(*.jwlibrary)')
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
