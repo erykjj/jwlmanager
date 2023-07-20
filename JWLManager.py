@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.3.0'
+VERSION = 'v2.3.1'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -472,7 +472,7 @@ class Window(QMainWindow, Ui_MainWindow):
             "version": 1,
             "type": 0,
             "userDataBackup": {
-                "lastModifiedDate": datetime.now(timezone.utc).isoformat(timespec='seconds'),
+                "lastModifiedDate": datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'),
                 "deviceName": "JWLManager",
                 "databaseName": "userData.db",
                 "hash": "",
@@ -618,7 +618,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_file():
             fname = ()
-            now = datetime.now().strftime("%Y-%m-%d")
+            now = datetime.now().strftime('%Y-%m-%d')
             fname = QFileDialog.getSaveFileName(self, _('Export file'), f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt", _('Text files')+' (*.txt)')
             return fname
 
