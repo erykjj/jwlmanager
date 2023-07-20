@@ -865,6 +865,8 @@ class ConstructTree():
     def process_code(self, code, issue):
         if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
             code = 'ws-'
+        elif not code:
+            code = ''
         yr = ''
         dated = regex.search(self.code_yr, code) # Year included in code
         if dated:
