@@ -10,6 +10,15 @@
 ### Removed
 
 ____
+## [2.3.1] - 2023-07-20
+### Changed
+
+- Adjusted some date string formats
+
+### Fixed
+
+- Added check for empty/non-existent KeySymbol field causing crashes
+
 ## [2.3.0] - 2023-07-17
 ### Changed
 
@@ -387,6 +396,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.1
 [2.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.0
 [2.2.4]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.4
 [2.2.3]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.3
