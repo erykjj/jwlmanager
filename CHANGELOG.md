@@ -7,11 +7,14 @@
 
 ### Fixed
 
-- Fixed one playlist table not being reindexed along with the rest causing a crash
-
 ### Removed
 
 ____
+## [2.3.2] - 2023-07-24
+### Fixed
+
+- Fixed one playlist table not being reindexed along with the rest causing a crash
+
 ## [2.3.1] - 2023-07-20
 ### Changed
 
@@ -398,6 +401,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.2
 [2.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.1
 [2.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.0
 [2.2.4]:https://github.com/erykjj/jwlmanager/releases/tag/v2.2.4
