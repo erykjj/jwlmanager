@@ -7,6 +7,8 @@
 
 ### Fixed
 
+- Fixed one playlist table not being reindexed along with the rest causing a crash
+
 ### Removed
 
 ____
