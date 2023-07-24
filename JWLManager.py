@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.3.1'
+VERSION = 'v2.3.2'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -735,7 +735,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog(_('Please wait…'), None, 0, 13, self)
+        self.pd = QProgressDialog(_('Please wait…'), None, 0, 14, self)
         self.pd.setWindowModality(Qt.WindowModal)
         self.pd.setWindowTitle('Reindexing')
         self.pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -780,7 +780,8 @@ class Window(QMainWindow, Ui_MainWindow):
               WHERE LocationId IS NOT NULL) AND LocationId NOT IN
               (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
               (SELECT PublicationLocationId FROM Bookmark)
-              AND LocationId NOT IN (SELECT LocationId FROM InputField);
+              AND LocationId NOT IN (SELECT LocationId FROM InputField)
+              AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
 
             DELETE FROM UserMark WHERE LocationId NOT IN
               (SELECT LocationId FROM Location);
@@ -1840,6 +1841,7 @@ class Reindex():
         self.update_table('Bookmark', 'LocationId')
         self.update_table('Bookmark', 'PublicationLocationId')
         self.update_table('TagMap', 'LocationId')
+        self.update_table('PlaylistItemLocationMap', 'LocationId')
         self.drop_table()
 
 
