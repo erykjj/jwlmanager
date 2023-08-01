@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.3.2'
+VERSION = 'v2.3.3'
 
 import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
@@ -64,8 +64,8 @@ def get_language():
     tr = {}
     localedir = PROJECT_PATH / 'res/locales/'
 
-    parser = argparse.ArgumentParser(description="Manage .jwlibrary backup archives")
-    parser.add_argument('-v', '--version', action='version', version=f"{APP} {VERSION}", help='show version and exit')
+    parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
+    parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
     language_group = parser.add_argument_group('interface language', '-en or leave out for English')
     group = language_group.add_mutually_exclusive_group(required=False)
     for k in sorted(available_languages.keys()):
@@ -89,11 +89,11 @@ def resource_path(relative_path):
 def read_res(lng):
 
     def load_books(lng):
-        for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};").fetchall():
+        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
             books[row[0]] = row[1]
 
     def load_languages():
-        for row in cur.execute("SELECT Language, Name, Code FROM Languages;").fetchall():
+        for row in cur.execute('SELECT Language, Name, Code FROM Languages;').fetchall():
             languages[row[0]] = row[1]
             if row[2] == lng:
                 ui_lang = row[0]
@@ -101,7 +101,7 @@ def read_res(lng):
 
     def load_pubs(lng):
         types = {}
-        for row in cur.execute(f"SELECT Type, [Group] FROM Types WHERE Language = {lng};").fetchall():
+        for row in cur.execute(f'SELECT Type, [Group] FROM Types WHERE Language = {lng};').fetchall():
             types[row[0]] = row[1]
         lst = []
         for row in cur.execute("SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Publications;").fetchall():
@@ -132,7 +132,7 @@ def read_res(lng):
 
 PROJECT_PATH = Path(__file__).resolve().parent
 tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
-db_name = "userData.db"
+db_name = 'userData.db'
 
 lang = get_language()
 read_res(lang)
@@ -164,8 +164,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.int_total = 0
         self.modified = False
         self.title_format = 'short'
-        self.save_filename = ""
-        self.current_archive = ""
+        self.save_filename = ''
+        self.current_archive = ''
         self.working_dir = Path.home()
         self.lang = lang
         for item in self.menuLanguage.actions():
@@ -327,7 +327,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         self.viewer_text.setHtml(fn.txt)
-        self.viewer_window.setWindowTitle(_('Data Viewer')+f": {selection.data(0,0)}")
+        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
         self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.viewer_window.finished.connect(self.viewer_window.hide())
         self.viewer_window.show()
@@ -385,8 +385,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.leaves = tree.leaves
         self.current_data = tree.current
         self.int_total = tree.total
-        self.total.setText(f"**{tree.total:,}**")
-        self.selected.setText("**0**")
+        self.total.setText(f'**{tree.total:,}**')
+        self.selected.setText('**0**')
 
     def tree_selection(self):
 
@@ -405,7 +405,7 @@ class Window(QMainWindow, Ui_MainWindow):
         recurse(self.treeWidget.invisibleRootItem())
         for item in checked_leaves:
             self.selected_items += len(self.leaves[item])
-        self.selected.setText(f"**{self.selected_items:,}**")
+        self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
 
@@ -418,10 +418,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.help_window.activateWindow()
 
     def about_box(self):
-        year = f"MIT ©{datetime.now().year}"
-        owner = "Eryk J."
-        web = "https://github.com/erykjj/jwlmanager"
-        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode("utf-8")
+        year = f'MIT ©{datetime.now().year}'
+        owner = 'Eryk J.'
+        web = 'https://github.com/erykjj/jwlmanager'
+        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
         text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
         dialog = QDialog(self)
         outer = QVBoxLayout()
@@ -455,29 +455,29 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.save_file()
             elif reply == QMessageBox.Cancel:
                 return
-        self.status_label.setStyleSheet("color: black;")
+        self.status_label.setStyleSheet('color: black;')
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         global db_name
         try:
-            os.remove(f"{tmp_path}/manifest.json")
-            os.remove(f"{tmp_path}/{db_name}")
+            os.remove(f'{tmp_path}/manifest.json')
+            os.remove(f'{tmp_path}/{db_name}')
         except:
             pass
         db_name = 'userData.db'
-        with ZipFile(self.resource_path("res/blank"),"r") as zipped:
+        with ZipFile(self.resource_path('res/blank'),'r') as zipped:
             zipped.extractall(tmp_path)
         m = {
-            "name": "UserDataBackup",
-            "creationDate": datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z'),
-            "version": 1,
-            "type": 0,
-            "userDataBackup": {
-                "lastModifiedDate": datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z'),
-                "deviceName": "JWLManager",
-                "databaseName": "userData.db",
-                "hash": "",
-                "schemaVersion": 13 } }
-        with open(f"{tmp_path}/manifest.json", 'w') as json_file:
+            'name': APP,
+            'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'version': 1,
+            'type': 0,
+            'userDataBackup': {
+                'lastModifiedDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'deviceName': f'{APP}_{VERSION}',
+                'databaseName': 'userData.db',
+                'hash': '',
+                'schemaVersion': 13 } }
+        with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
 
@@ -490,22 +490,22 @@ class Window(QMainWindow, Ui_MainWindow):
                 return
         if not archive:
             fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
-            if fname[0] == "":
+            if fname[0] == '':
                 return
             archive = fname[0]
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
-        self.status_label.setStyleSheet("color: black;")
-        self.status_label.setText(f"{Path(archive).stem}  ")
+        self.status_label.setStyleSheet('color: black;')
+        self.status_label.setText(f'{Path(archive).stem}  ')
         global db_name
         try:
-            os.remove(f"{tmp_path}/manifest.json")
-            os.remove(f"{tmp_path}/{db_name}")
+            os.remove(f'{tmp_path}/manifest.json')
+            os.remove(f'{tmp_path}/{db_name}')
         except:
             pass
-        with ZipFile(archive,"r") as zipped:
+        with ZipFile(archive,'r') as zipped:
             zipped.extractall(tmp_path)
-        if os.path.exists(f"{tmp_path}/user_data.db"):
+        if os.path.exists(f'{tmp_path}/user_data.db'):
             db_name = 'user_data.db' # iPhone & iPad backups
         else:
             db_name = 'userData.db' # Windows & Android
@@ -522,7 +522,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSelect_All.setEnabled(True)
         self.actionUnselect_All.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
-        self.selected.setText("**0**")
+        self.selected.setText('**0**')
         self.switchboard(self.combo_category.currentText())
 
 
@@ -535,18 +535,18 @@ class Window(QMainWindow, Ui_MainWindow):
     def dropEvent(self, event):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
-        if suffix == ".jwlibrary":
+        if suffix == '.jwlibrary':
             self.load_file(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
-        elif suffix == ".txt":
+        elif suffix == '.txt':
             with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
                 header = f.readline().strip()
-            if header == r"{ANNOTATIONS}":
+            if header == r'{ANNOTATIONS}':
                 self.import_file(file, _('Annotations'))
-            elif header == r"{HIGHLIGHTS}":
+            elif header == r'{HIGHLIGHTS}':
                 self.import_file(file, _('Highlights'))
-            elif regex.search("{TITLE=", header):
+            elif regex.search('{TITLE=', header):
                 self.import_file(file, _('Notes'))
             else:
                 QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
@@ -564,7 +564,7 @@ class Window(QMainWindow, Ui_MainWindow):
         fname = ()
         if self.save_filename == '':
             now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f"{self.working_dir}/MODIFIED_{now}.jwlibrary", _('JW Library archives')+'(*.jwlibrary)')
+            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f'{self.working_dir}/MODIFIED_{now}.jwlibrary', _('JW Library archives')+'(*.jwlibrary)')
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
         if fname[0] == '':
@@ -577,24 +577,27 @@ class Window(QMainWindow, Ui_MainWindow):
                 return self.save_file()
         self.save_filename = fname[0]
         self.working_dir = Path(fname[0]).parent
-        self.status_label.setText(f"{Path(fname[0]).stem}  ")
+        self.status_label.setText(f'{Path(fname[0]).stem}  ')
         self.zipfile()
 
     def zipfile(self):
 
         def update_manifest():
-            with open(f"{tmp_path}/manifest.json", 'r') as json_file:
+            with open(f'{tmp_path}/manifest.json', 'r') as json_file:
                 m = json.load(json_file)
-            m["userDataBackup"]["lastModifiedDate"] = datetime.now(timezone.utc).isoformat(timespec='seconds')
+            m['name'] = APP
+            m['creationDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
+            m['userDataBackup']['lastModifiedDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             sha256hash = FileHash('sha256')
-            m["userDataBackup"]["hash"] = sha256hash.hash_file(f"{tmp_path}/{db_name}")
-            m["userDataBackup"]["databaseName"] = db_name
-            with open(f"{tmp_path}/manifest.json", 'w') as json_file:
+            m['userDataBackup']['hash'] = sha256hash.hash_file(f'{tmp_path}/{db_name}')
+            m['userDataBackup']['databaseName'] = db_name
+            with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
             return
 
         update_manifest()
-        with ZipFile(self.save_filename, "w", compression=ZIP_DEFLATED) as newzip:
+        with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
             files = os.listdir(tmp_path)
             for f in files:
                 newzip.write(f'{tmp_path}/{f}', f)
@@ -605,12 +608,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = True
         self.actionSave.setEnabled(True)
         self.actionSave_As.setEnabled(True)
-        self.status_label.setStyleSheet("font: italic;")
+        self.status_label.setStyleSheet('font: italic;')
 
     def archive_saved(self):
         self.modified = False
         self.actionSave.setEnabled(False)
-        self.status_label.setStyleSheet("font: normal;")
+        self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
@@ -619,10 +622,10 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_file():
             fname = ()
             now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Export file'), f"{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt", _('Text files')+' (*.txt)')
+            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt)')
             return fname
 
-        reply = QMessageBox.question(self, _('Export'), f"{self.selected_items} "+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        reply = QMessageBox.question(self, _('Export'), f'{self.selected_items} '+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         selected = []
@@ -649,8 +652,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         if not file:
-            fname = QFileDialog.getOpenFileName(self, _('Import file'), f"{self.working_dir}/", _('Import files')+' (*.txt)')
-            if fname[0] == "":
+            fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', _('Import files')+' (*.txt)')
+            if fname[0] == '':
                 self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
                 return
             file = fname[0]
@@ -671,7 +674,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
             return
         self.trim_db()
-        message = f" {fn.count} "+_('items imported/updated')
+        message = f' {fn.count} '+_('items imported/updated')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
         self.regroup(False, message)
@@ -707,7 +710,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        message = f" {fn.result} "+_('items deleted')
+        message = f' {fn.result} '+_('items deleted')
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
@@ -753,7 +756,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
     def trim_db(self):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         cur = con.cursor()
         sql = """
             PRAGMA temp_store = 2;
@@ -844,7 +847,7 @@ class ConstructTree():
 
 
     def get_data(self):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF';")
@@ -894,9 +897,9 @@ class ConstructTree():
             m = str(issue)[4:6]
             d = str(issue)[6:]
             if d == '00':
-                detail = f"{y}-{m}"
+                detail = f'{y}-{m}'
             else:
-                detail = f"{y}-{m}-{d}"
+                detail = f'{y}-{m}-{d}'
             if not year:
                 year = y
         if book and chapter:
@@ -922,7 +925,7 @@ class ConstructTree():
 
     def get_annotations(self):
         lst = []
-        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING ( LocationId );"):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING ( LocationId );'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -937,7 +940,7 @@ class ConstructTree():
 
     def get_bookmarks(self):
         lst = []
-        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING ( LocationId );"):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING ( LocationId );'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -952,7 +955,7 @@ class ConstructTree():
 
     def get_favorites(self):
         lst = []
-        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING ( LocationId ) WHERE tm.NoteId IS NULL ORDER BY tm.Position;"):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING ( LocationId ) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -967,7 +970,7 @@ class ConstructTree():
 
     def get_highlights(self):
         lst = []
-        for row in self.cur.execute("SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );"):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
@@ -1057,8 +1060,8 @@ class ConstructTree():
 class AddFavorites():
     def __init__(self, favorites):
         self.favorites = favorites
-        self.message = (0, "")
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        self.message = (0, '')
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1091,12 +1094,12 @@ class AddFavorites():
         language.addItem(' ')
         language.addItems(sorted(self.favorites['Lang'].unique()))
         language.setMaxVisibleItems(20)
-        language.setStyleSheet("QComboBox { combobox-popup: 0; }")
+        language.setStyleSheet('QComboBox { combobox-popup: 0; }')
         language.activated.connect(set_edition)
         publication = QComboBox(dialog)
         publication.setMinimumContentsLength(23)
         publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-        publication.setStyleSheet("QComboBox { combobox-popup: 0; }")
+        publication.setStyleSheet('QComboBox { combobox-popup: 0; }')
 
         buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         buttons.accepted.connect(dialog.accept)
@@ -1118,8 +1121,8 @@ class AddFavorites():
 
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
-      tag_id = self.cur.execute("SELECT TagId FROM Tag WHERE Type = 0;").fetchone()[0]
-      position = self.cur.execute(f"SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};").fetchone()
+      tag_id = self.cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+      position = self.cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
       if position[0] != None:
           return tag_id, position[0] + 1
       else:
@@ -1132,7 +1135,7 @@ class AddFavorites():
 
     def add_favorite(self):
         pub, lng = self.add_dialog()
-        if pub == " " or lng == " ":
+        if pub == ' ' or lng == ' ':
             self.message = (0, ' '+_('Nothing added!'))
             return
         language = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0]
@@ -1143,7 +1146,7 @@ class AddFavorites():
             self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng))
             return
         tag_id, position = self.tag_positions()
-        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );")
+        self.cur.execute(f'INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );')
         self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
 
@@ -1151,7 +1154,7 @@ class AddFavorites():
 class DeleteItems():
     def __init__(self, category=_('Notes'), items=[]):
         self.category = category
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1171,25 +1174,25 @@ class DeleteItems():
 
     def delete_items(self):
         if self.category == _('Bookmarks'):
-            return self.delete("Bookmark", "BookmarkId")
+            return self.delete('Bookmark', 'BookmarkId')
         elif self.category == _('Favorites'):
-            return self.delete("TagMap", "TagMapId")
+            return self.delete('TagMap', 'TagMapId')
         elif self.category == _('Highlights'):
-            return self.delete("BlockRange", "BlockRangeId")
+            return self.delete('BlockRange', 'BlockRangeId')
         elif self.category == _('Notes'):
-            return self.delete("Note", "NoteId")
+            return self.delete('Note', 'NoteId')
         elif self.category == _('Annotations'):
-            return self.delete("InputField", "LocationId")
+            return self.delete('InputField', 'LocationId')
 
     def delete(self, table, field):
-        return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
+        return self.cur.execute(f'DELETE FROM {table} WHERE {field} IN {self.items};').rowcount
 
 
 class ExportItems():
     def __init__(self, category=_('Notes'), items=[], fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.aborted = False
         try:
@@ -1231,7 +1234,7 @@ class ExportItems():
             _('OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n'),
             _('FILE SHOULD TERMINATE WITH "==={END}==="\n'),
             _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')]))
-        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
+        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
     def export_bible(self):
@@ -1240,10 +1243,10 @@ class ExportItems():
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] != None:
-                rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
+                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
             else:
-                rng = ""
-            txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])+"}{BK="+str(row[2])+"}{CH="+str(row[3])+"}{VER="+str(row[4])+"}{COLOR="+color+"}"+rng+"{TAGS="+tags+"}{CREATED="+row[12][:10]+"}{MODIFIED="+row[9][:10]+"}===\n"+row[6]+"\n"+row[7].rstrip()
+                rng = ''
+            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[12][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+row[6]+'\n'+row[7].rstrip()
             self.export_file.write(txt)
 
         # note in book header - similar to a publication
@@ -1251,10 +1254,10 @@ class ExportItems():
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] != None:
-                rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
+                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
             else:
-                rng = ""
-            txt = "\n==={CAT=BIBLE}{LANG="+str(row[0])+"}{ED="+str(row[1])+"}{BK="+str(row[2])+"}{CH="+str(row[3])+"}{VER="+str(row[4])+"}{DOC=0}{COLOR="+color+"}"+rng+"{TAGS="+tags+"}{CREATED="+row[12][:10]+"}{MODIFIED="+row[9][:10]+"}===\n"+row[6]+"\n"+row[7].rstrip()
+                rng = ''
+            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{DOC=0}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[12][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+row[6]+'\n'+row[7].rstrip()
             self.export_file.write(txt)
 
     def export_publications(self):
@@ -1262,54 +1265,54 @@ class ExportItems():
             color = str(row[5] or 0)
             tags = row[8] or ''
             if row[10] != None:
-                rng = "{RANGE="+f"{row[10]}-{row[11]}"+"}"
+                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
             else:
-                rng = ""
-            txt = "\n==={CAT=PUBLICATION}{LANG="+str(row[0])+"}{PUB="+str(row[1])+"}{ISSUE="+str(row[2])+"}{DOC="+str(row[3])+"}{BLOCK="+str(row[4])+"}{COLOR="+color+"}"+rng+"{TAGS="+tags+"}{CREATED="+row[12][:10]+"}{MODIFIED="+row[9][:10]+"}===\n"+row[6]+"\n"+row[7].rstrip()
+                rng = ''
+            txt = '\n==={CAT=PUBLICATION}{LANG='+str(row[0])+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[12][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+row[6]+'\n'+row[7].rstrip()
             self.export_file.write(txt)
 
     def export_independent(self):
         for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, n.Created FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             tags = row[2] or ''
-            txt = "\n==={CAT=INDEPENDENT}{TAGS="+tags+"}{CREATED="+row[4][:10]+"}{MODIFIED="+row[3][:10]+"}===\n"+(row[0] or '')+"\n"+(row[1] or '').rstrip()
+            txt = '\n==={CAT=INDEPENDENT}{TAGS='+tags+'}{CREATED='+row[4][:10]+'}{MODIFIED='+row[3][:10]+'}===\n'+(row[0] or '')+'\n'+(row[1] or '').rstrip()
             self.export_file.write(txt)
 
 
     def export_highlights(self):
         self.export_highlight_header()
         for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
-            self.export_file.write(f"\n{row[0]}")
+            self.export_file.write(f'\n{row[0]}')
             for item in range(1,13):
-                self.export_file.write(f",{row[item]}")
+                self.export_file.write(f',{row[item]}')
 
     def export_highlight_header(self):
         self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
-        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
+        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
     def export_annotations(self):
         self.export_annotations_header()
-        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
-            self.export_file.write(f"\n{row[0]}")
+        for row in self.cur.execute(f'SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};'):
+            self.export_file.write(f'\n{row[0]}')
             for item in range(1,7):
-                string = str(row[item]).replace("\n", r"\n")
-                self.export_file.write(f",{string}")
+                string = str(row[item]).replace('\n', r'\n')
+                self.export_file.write(f',{string}')
 
     def export_annotations_header(self):
         self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.MepsLanguage, Location.Type, InputField.TextTag,\n        InputField.Value')
-        self.export_file.write("\n\n"+_('Exported from')+f" {self.current_archive}\n"+_('by')+f" {APP} ({VERSION}) "+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
+        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
 
 class PreviewItems():
     def __init__(self, category=_('Notes'), items=[], books=[]):
         self.category = category
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.books = books
         self.aborted = False
-        self.txt = ""
+        self.txt = ''
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
             self.preview_items()
@@ -1328,45 +1331,45 @@ class PreviewItems():
             self.preview_annotations()
 
     def preview_bible(self):
-        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f'SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
             title = row[3] or '* '+_('NO TITLE')+' *'
             if row[4]:
                 note = regex.sub('\n', '<br />', row[4].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f"[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />"
+            self.txt += f'[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_publications(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f'SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
             title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
+            self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_independent(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f'SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
             title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f"[{row[2]}] <b>{title}</b><br />{note}<hr />"
+            self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_annotations(self):
-        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
+        for row in self.cur.execute(f'SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};'):
             title = row[0]
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f"<b>{title}</b><br />{note}<hr />"
+            self.txt += f'<b>{title}</b><br />{note}<hr />'
 
 
 class ImportAnnotations():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1399,19 +1402,19 @@ class ImportAnnotations():
     def import_items(self):
         count = 0
         for line in self.import_file:
-            if regex.match(r"^\d+,\d+,\w+,", line):
+            if regex.match(r'^\d+,\d+,\w+,', line):
                 try:
                     count += 1
                     attribs = regex.split(',', line.rstrip(), 6)
                     location_id = self.add_location(attribs)
-                    value = attribs[6].replace(r"\n", "\n")
+                    value = attribs[6].replace(r'\n', '\n')
                     if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
                         self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';")
                     else:
                         self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( {location_id}, '{attribs[5]}', '{value}' );")
                 except:
                     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                    self.cur.execute("ROLLBACK;")
+                    self.cur.execute('ROLLBACK;')
                     return 0
         return count
 
@@ -1422,7 +1425,7 @@ class ImportAnnotations():
 
 class ImportHighlights():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1455,10 +1458,10 @@ class ImportHighlights():
     def import_items(self):
         count = 0
         for line in self.import_file:
-            if regex.match(r"^(\d+,){6}", line):
+            if regex.match(r'^(\d+,){6}', line):
                 try:
                     count += 1
-                    attribs = regex.split(',', line.rstrip().replace("None", ""))
+                    attribs = regex.split(',', line.rstrip().replace('None', ''))
                     if attribs[6]:
                         location_id = self.add_scripture_location(attribs)
                     else:
@@ -1466,7 +1469,7 @@ class ImportHighlights():
                     self.import_highlight(attribs, location_id)
                 except:
                     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                    self.cur.execute("ROLLBACK;")
+                    self.cur.execute('ROLLBACK;')
                     return 0
         return count
 
@@ -1500,13 +1503,13 @@ class ImportHighlights():
                 ne = max(ce, ne)
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
-        self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
-        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );")
+        self.cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
+        self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );')
         return
 
 class ImportNotes():
     def __init__(self, fname=''):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'MEMORY'; \
@@ -1545,7 +1548,7 @@ class ImportNotes():
         if results < 1:
             return 0
         answer = QMessageBox.warning(None, _('Warning'), f"{results} "+_('notes starting with')+f" \"{title_char}\" "+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if answer == "No":
+        if answer == 'No':
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
         return results
@@ -1571,7 +1574,7 @@ class ImportNotes():
                     return 0
             except:
                 QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
-                self.cur.execute("ROLLBACK;")
+                self.cur.execute('ROLLBACK;')
                 return 0
         return count
 
@@ -1582,7 +1585,7 @@ class ImportNotes():
         return attribs
 
     def process_tags(self, note_id, tags):
-        self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
+        self.cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
         for tag in tags.split(','):
             tag = tag.strip()
             if not tag:
@@ -1638,8 +1641,8 @@ class ImportNotes():
             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
         else:
             unique_id = uuid.uuid1()
-            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
-            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
+            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{modified}', '{created}' );"
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
@@ -1661,8 +1664,8 @@ class ImportNotes():
             created = attribs.get('CREATED') or attribs.get('DATE') or result[2]
             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
         else:
-            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
-            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
+            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ( '{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{modified}', '{created}' );"
         self.cur.execute(sql)
@@ -1681,8 +1684,8 @@ class ImportNotes():
             created = attribs.get('CREATED') or attribs.get('DATE') or result[2]
             sql = f"UPDATE Note SET Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
         else:
-            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
-            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now().strftime('%Y-%m-%dT%H:%M:%S%Z')
+            created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
             if not title:
                 sql = f"INSERT INTO Note (Guid, Content, BlockType, LastModified, Created) VALUES ( '{unique_id}', '{note}', 0, '{modified}', '{created}' );"
