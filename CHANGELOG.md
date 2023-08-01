@@ -5,7 +5,11 @@
 
 ### Changed
 
+- Progressive code clean-up/refinement
+
 ### Fixed
+
+- Corrected UTC (time formats) and device name in modified manifest files
 
 ### Removed
 
