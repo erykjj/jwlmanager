@@ -3,6 +3,8 @@
 ## [Unreleased]
 ### Added
 
+- Added platform info in debug/exception dialog
+
 ### Changed
 
 - Progressive code clean-up/refinement
