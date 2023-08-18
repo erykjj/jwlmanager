@@ -9,6 +9,7 @@
 
 ### Fixed
 
+- Added code to handle older .jwlibrary archives (Note export)
 - Corrected UTC (time formats) and device name in modified manifest files
 
 ### Removed
