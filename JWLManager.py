@@ -29,7 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v2.3.3'
 
-import argparse, gettext, json, os, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+import argparse, gettext, json, os, platform, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -1881,7 +1881,7 @@ class DebugInfo():
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
-        text.setText(f"{APP} {VERSION}\n\n{tb_text}")
+        text.setText(f'{APP} {VERSION}\n{platform.platform()}\n\n{tb_text}')
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
         button = QDialogButtonBox(QDialogButtonBox.Abort)
