@@ -29,7 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v2.3.3'
 
-import argparse, gettext, json, os, platform, random, regex, shutil, sqlite3, sys, tempfile, traceback, uuid
+import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -39,7 +39,11 @@ from PySide6.QtWidgets import *
 from datetime import datetime, timezone
 from filehash import FileHash
 from pathlib import Path
+from platform import platform
+from random import randint
+from tempfile import mkdtemp
 from time import time
+from traceback import format_exception
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
@@ -131,7 +135,7 @@ def read_res(lng):
     con.close()
 
 PROJECT_PATH = Path(__file__).resolve().parent
-tmp_path = tempfile.mkdtemp(prefix='JWLManager_')
+tmp_path = mkdtemp(prefix='JWLManager_')
 db_name = 'userData.db'
 
 lang = get_language()
@@ -1506,7 +1510,7 @@ class ImportHighlights():
 
     def add_usermark(self, attribs, location_id):
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]} );") # TODO: Version is always 1 - no need to export/import
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]} );")
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
@@ -1740,7 +1744,7 @@ class ObscureItems():
         con.close()
 
     def obscure_text(self, str):
-        lst = list(self.words[random.randint(0,len(self.words)-1)])
+        lst = list(self.words[randint(0,len(self.words)-1)])
         l = len(lst)
         i = 0
         s = ''
@@ -1871,7 +1875,7 @@ class Reindex():
 
 class DebugInfo():
     def __init__(self, ex):
-        tb_lines = traceback.format_exception(ex.__class__, ex, ex.__traceback__)
+        tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
         dialog = QDialog()
         dialog.setMinimumSize(650, 375)
@@ -1881,7 +1885,7 @@ class DebugInfo():
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
-        text.setText(f'{APP} {VERSION}\n{platform.platform()}\n\n{tb_text}')
+        text.setText(f'{APP} {VERSION}\n{platform()}\n\n{tb_text}')
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
         button = QDialogButtonBox(QDialogButtonBox.Abort)
