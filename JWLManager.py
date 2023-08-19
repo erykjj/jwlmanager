@@ -1314,14 +1314,14 @@ class ExportItems():
 
     def export_annotations(self):
         self.export_annotations_header()
-        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
+        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
             self.export_file.write(f'\n{row[0]}')
-            for item in range(1,7):
+            for item in range(1,5):
                 string = str(row[item]).replace('\n', r'\n')
                 self.export_file.write(f',{string}')
 
     def export_annotations_header(self):
-        self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber, Location.KeySymbol,\n        Location.Type, InputField.TextTag,\n        InputField.Value')
+        self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber,\n        Location.KeySymbol, InputField.TextTag,\n        InputField.Value')
         self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
@@ -1426,16 +1426,13 @@ class ImportAnnotations():
             if regex.match(r'^\d+,\d+,\w+,', line):
                 try:
                     count += 1
-                    attribs = regex.split(',', line.rstrip(), 6)
-                    print(attribs)
+                    attribs = regex.split(',', line.rstrip(), 4)
                     location_id = self.add_location(attribs)
-                    print(location_id)
-                    value = attribs[6].replace(r'\n', '\n')
-                    print(value)
-                    if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';").fetchone():
-                        self.cur.execute(f"UPDATE InputField SET Value = '{value}' WHERE LocationId = {location_id} AND TextTag = '{attribs[5]}';")
+                    value = attribs[4].replace(r'\n', '\n')
+                    if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;", (location_id, attribs[3])).fetchone():
+                        self.cur.execute(f"UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;", (value, location_id, attribs[3]))
                     else:
-                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( {location_id}, '{attribs[5]}', '{value}' );")
+                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( ?, ?, ? );", (location_id,attribs[3], value))
                 except:
                     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                     self.cur.execute('ROLLBACK;')
@@ -1443,8 +1440,8 @@ class ImportAnnotations():
         return count
 
     def add_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT {attribs[0]}, {attribs[1]}, '{attribs[2]}', {attribs[3]}, {attribs[4]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = {attribs[0]} AND IssueTagNumber = {attribs[1]} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {attribs[3]} AND Type = {attribs[4]});")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = {attribs[0]} AND IssueTagNumber = {attribs[1]} AND KeySymbol = '{attribs[2]}' AND MepsLanguage = {attribs[3]} AND Type = {attribs[4]};").fetchone()
+        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);", (attribs[0], attribs[1], attribs[2], attribs[0], attribs[1], attribs[2]))
+        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;", (attribs[0], attribs[1], attribs[2])).fetchone()
         return result[0]
 
 class ImportHighlights():
