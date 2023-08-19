@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.3.3'
+VERSION = 'v2.4.0'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -1631,21 +1631,23 @@ class ImportNotes():
         else:
             block_type = 1
             identifier = attribs['BLOCK']
-        # if 'RANGE' in attribs.keys():
-        #     ns, ne = attribs['RANGE'].split('-')
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone() # NOTE: this selects the last range of certain color in a paragraph
+        if 'RANGE' in attribs.keys():
+            ns, ne = attribs['RANGE'].split('-')
+            fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
+        else:
+            fields = ''
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone()
         if result:
-            return result[0]
+            usermark_id = result[0]
         else:
             unique_id = uuid.uuid1()
             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {color}, {location_id}, 0, '{unique_id}', 1 );")
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-            try:
-                ns, ne = attribs['RANGE'].split('-')
-                self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( {block_type}, {identifier}, {ns}, {ne}, {usermark_id} );")
-            except:
-                pass
-            return usermark_id
+        try:
+            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( ?, ?, ?, ?, ? );", (block_type, identifier, ns, ne, usermark_id))
+        except:
+            pass
+        return usermark_id
 
     def add_scripture_location(self, attribs):
         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
