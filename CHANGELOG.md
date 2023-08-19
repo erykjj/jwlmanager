@@ -7,6 +7,8 @@
 
 ### Changed
 
+- Removed language from Annotation export/import
+  - Annotations are now cross-language: appearing in all languages of the same publication
 - Progressive code clean-up/refinement
 
 ### Fixed
