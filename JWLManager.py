@@ -1510,13 +1510,13 @@ class ImportHighlights():
 
     def add_usermark(self, attribs, location_id):
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]} );")
+        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( ?, ?, 0, ?, ? );", (attribs[4], location_id, unique_id, attribs[5]))
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
     def import_highlight(self, attribs, location_id):
         usermark_id = self.add_usermark(attribs, location_id)
-        result = self.cur.execute(f"SELECT * FROM BlockRange join UserMark USING (UserMarkId) where Identifier = {attribs[1]} AND LocationId = {location_id};")
+        result = self.cur.execute(f"SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};")
         ns = int(attribs[2])
         ne = int(attribs[3])
         blocks = []
@@ -1529,7 +1529,7 @@ class ImportHighlights():
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
         self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
-        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );")
+        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );", (attribs[0], attribs[1], ns, ne, usermark_id))
         return
 
 class ImportNotes():
@@ -1631,6 +1631,8 @@ class ImportNotes():
         else:
             block_type = 1
             identifier = attribs['BLOCK']
+        # if 'RANGE' in attribs.keys():
+        #     ns, ne = attribs['RANGE'].split('-')
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier};").fetchone() # NOTE: this selects the last range of certain color in a paragraph
         if result:
             return result[0]
