@@ -3,12 +3,23 @@
 ## [Unreleased]
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [2.4.0] - 2023-08-19
+### Added
+
 - Added platform info in debug/exception dialog
 
 ### Changed
 
 - Removed language from Annotation export/import
   - Annotations are now cross-language: appearing in all languages of the same publication
+  - **NOTE**: Importing Annotation files created with previous versions of JWLManager will fail
   - Also removed the sort by language option from Annotations - all are listed as "* NO LANGUAGE *"
 - Progressive code clean-up/refinement
 
@@ -20,9 +31,6 @@
   - Careful not to overlap ranges
 - Corrected UTC (time formats) and device name in modified manifest files
 
-### Removed
-
-____
 ## [2.3.2] - 2023-07-24
 ### Fixed
 
@@ -414,6 +422,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.0
 [2.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.2
 [2.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.1
 [2.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.0
