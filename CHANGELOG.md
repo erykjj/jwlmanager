@@ -16,6 +16,8 @@
 
 - Added code to handle older .jwlibrary archives (Note export)
 - Fixed import errors on some Annotations
+- Imported Notes attached to correct highlight if RANGE attribute provided
+  - Careful not to overlap ranges
 - Corrected UTC (time formats) and device name in modified manifest files
 
 ### Removed
