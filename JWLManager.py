@@ -343,12 +343,12 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Bookmarks'):
             self.disable_options([4,5], False, False, False)
         elif selection == _('Annotations'):
-            self.disable_options([4,5], False, True, True)
+            self.disable_options([2,4,5], False, True, True)
         elif selection == _('Favorites'):
             self.disable_options([4,5], True, False, False)
         self.regroup()
 
-    def disable_options(self, list=[], add=False, exp=False, imp=False):
+    def disable_options(self, lst=[], add=False, exp=False, imp=False):
         self.button_add.setVisible(add)
         self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
@@ -356,7 +356,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.blockSignals(True)
         for item in range(6):
             self.combo_grouping.model().item(item).setEnabled(True)
-        for item in list:
+        for item in lst:
             self.combo_grouping.model().item(item).setEnabled(False)
             if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
                 self.combo_grouping.setCurrentText(_('Title'))
@@ -929,7 +929,7 @@ class ConstructTree():
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]]
             else:
-                lng = f'#{row[2]}'
+                lng = _('* NO LANGUAGE *') #f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[0]
