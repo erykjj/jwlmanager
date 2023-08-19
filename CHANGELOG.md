@@ -9,11 +9,13 @@
 
 - Removed language from Annotation export/import
   - Annotations are now cross-language: appearing in all languages of the same publication
+  - Also removed the sort by language option from Annotations - all are listed as "* NO LANGUAGE *"
 - Progressive code clean-up/refinement
 
 ### Fixed
 
 - Added code to handle older .jwlibrary archives (Note export)
+- Fixed import errors on some Annotations
 - Corrected UTC (time formats) and device name in modified manifest files
 
 ### Removed
