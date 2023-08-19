@@ -89,7 +89,7 @@ def resource_path(relative_path):
 def read_res(lng):
 
     def load_books(lng):
-        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
+        for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};").fetchall():
             books[row[0]] = row[1]
 
     def load_languages():
@@ -101,7 +101,7 @@ def read_res(lng):
 
     def load_pubs(lng):
         types = {}
-        for row in cur.execute(f'SELECT Type, [Group] FROM Types WHERE Language = {lng};').fetchall():
+        for row in cur.execute(f"SELECT Type, [Group] FROM Types WHERE Language = {lng};").fetchall():
             types[row[0]] = row[1]
         lst = []
         for row in cur.execute("SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Publications;").fetchall():
@@ -1122,7 +1122,7 @@ class AddFavorites():
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
       tag_id = self.cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
-      position = self.cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
+      position = self.cur.execute(f"SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};").fetchone()
       if position[0] != None:
           return tag_id, position[0] + 1
       else:
@@ -1146,7 +1146,7 @@ class AddFavorites():
             self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng))
             return
         tag_id, position = self.tag_positions()
-        self.cur.execute(f'INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );')
+        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );")
         self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
 
@@ -1185,7 +1185,7 @@ class DeleteItems():
             return self.delete('InputField', 'LocationId')
 
     def delete(self, table, field):
-        return self.cur.execute(f'DELETE FROM {table} WHERE {field} IN {self.items};').rowcount
+        return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
 
 
 class ExportItems():
@@ -1314,7 +1314,7 @@ class ExportItems():
 
     def export_annotations(self):
         self.export_annotations_header()
-        for row in self.cur.execute(f'SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};'):
+        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
             self.export_file.write(f'\n{row[0]}')
             for item in range(1,7):
                 string = str(row[item]).replace('\n', r'\n')
@@ -1352,7 +1352,7 @@ class PreviewItems():
             self.preview_annotations()
 
     def preview_bible(self):
-        for row in self.cur.execute(f'SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
+        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             title = row[3] or '* '+_('NO TITLE')+' *'
             if row[4]:
                 note = regex.sub('\n', '<br />', row[4].rstrip())
@@ -1361,7 +1361,7 @@ class PreviewItems():
             self.txt += f'[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_publications(self):
-        for row in self.cur.execute(f'SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
@@ -1370,7 +1370,7 @@ class PreviewItems():
             self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_independent(self):
-        for row in self.cur.execute(f'SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;'):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
@@ -1379,7 +1379,7 @@ class PreviewItems():
             self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
 
     def preview_annotations(self):
-        for row in self.cur.execute(f'SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};'):
+        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
             title = row[0]
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
@@ -1524,8 +1524,8 @@ class ImportHighlights():
                 ne = max(ce, ne)
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
-        self.cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
-        self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );')
+        self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
+        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( {attribs[0]}, {attribs[1]}, {ns}, {ne}, {usermark_id} );")
         return
 
 class ImportNotes():
@@ -1568,7 +1568,7 @@ class ImportNotes():
         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
         if results < 1:
             return 0
-        answer = QMessageBox.warning(None, _('Warning'), f"{results} "+_('notes starting with')+f" \"{title_char}\" "+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if answer == 'No':
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
@@ -1606,7 +1606,7 @@ class ImportNotes():
         return attribs
 
     def process_tags(self, note_id, tags):
-        self.cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
+        self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
         for tag in tags.split(','):
             tag = tag.strip()
             if not tag:
@@ -1719,11 +1719,11 @@ class ImportNotes():
 
 class ObscureItems():
     def __init__(self):
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
-                                BEGIN; ")
+                                BEGIN;")
         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
         self.m = regex.compile(r'\p{L}')
         self.aborted = False
@@ -1799,7 +1799,7 @@ class ObscureItems():
 class Reindex():
     def __init__(self, progress):
         self.progress = progress
-        con = sqlite3.connect(f"{tmp_path}/{db_name}")
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
                                 PRAGMA journal_mode = 'OFF'; \
@@ -1812,8 +1812,8 @@ class Reindex():
             self.reindex_tags()
             self.reindex_ranges()
             self.reindex_locations()
-            self.cur.executescript('PRAGMA foreign_keys = "ON"; \
-                                    VACUUM;')
+            self.cur.executescript("PRAGMA foreign_keys = 'ON'; \
+                                    VACUUM;")
             con.commit()
         except Exception as ex:
             DebugInfo(ex)
