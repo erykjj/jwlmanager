@@ -6,6 +6,7 @@
 ### Changed
 
 - Improved Data Viewer
+  - Can view up to 1500 Notes
   - Now showing source of Note, as well as any tags, and sorted more practically (instead of by NoteId)
 
 ### Fixed
