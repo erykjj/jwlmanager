@@ -323,7 +323,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if row in self.leaves:
                 for id in self.leaves[row]:
                     items.append(id)
-        if len(items) > 1000:
+        if len(items) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
             return
         fn = PreviewItems(self.combo_category.currentText(), items, books)
