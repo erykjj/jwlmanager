@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.4.0'
+VERSION = 'v2.4.1'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -323,7 +323,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if row in self.leaves:
                 for id in self.leaves[row]:
                     items.append(id)
-        if len(items) > 500:
+        if len(items) > 1000:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
             return
         fn = PreviewItems(self.combo_category.currentText(), items, books)
@@ -1356,31 +1356,55 @@ class PreviewItems():
             self.preview_annotations()
 
     def preview_bible(self):
-        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, n.NoteId FROM Note n JOIN Location l USING (LocationId) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 2 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.BookNumber, l.ChapterNumber, n.BlockIdentifier;"):
             title = row[3] or '* '+_('NO TITLE')+' *'
             if row[4]:
                 note = regex.sub('\n', '<br />', row[4].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f'[{row[5]} - {self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><br />{note}<hr />'
+            if row[5]:
+                tags = ' {' + row[5] + '}'
+            else:
+                tags = ''
+            self.txt += f'[{self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
 
     def preview_publications(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 1 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            title = row[0] or '* '+_('NO TITLE')+' *'
-            if row[1]:
-                note = regex.sub('\n', '<br />', row[1].rstrip())
+        for row in self.cur.execute(f"SELECT l.KeySymbol, l.IssueTagNumber, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 1 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.KeySymbol, l.IssueTagNumber, l.DocumentId;"):
+            title = row[2] or '* '+_('NO TITLE')+' *'
+            if row[3]:
+                note = regex.sub('\n', '<br />', row[3].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
+            if row[4]:
+                tags = ' {' + row[4] + '}'
+            else:
+                tags = ''
+            if row[1] > 10000000:
+                issue = str(row[1])
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                source = row[0] + f' {yr}-{m}{d}'
+            else:
+                source = row[0]
+            self.txt += f'[{source}] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
 
     def preview_independent(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, n.NoteId FROM Note n WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT Title, Content, GROUP_CONCAT(t.Name) FROM Note LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE BlockType = 0 AND NoteId IN {self.items} GROUP BY NoteId ORDER BY Title;"):
             title = row[0] or '* '+_('NO TITLE')+' *'
             if row[1]:
                 note = regex.sub('\n', '<br />', row[1].rstrip())
             else:
                 note = '* '+_('NO TEXT')+' *'
-            self.txt += f'[{row[2]}] <b>{title}</b><br />{note}<hr />'
+            if row[2]:
+                tags = ' {' + row[2] + '}'
+            else:
+                tags = ''
+            self.txt += '[' + _('* INDEPENDENT *').strip(' *') + f'] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
 
     def preview_annotations(self):
         for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
