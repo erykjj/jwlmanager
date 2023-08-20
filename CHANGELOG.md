@@ -5,15 +5,19 @@
 
 ### Changed
 
-- Improved Data Viewer
-  - Can view up to 1500 Notes
-  - Now showing source of Note, as well as any tags, and sorted more practically (instead of by NoteId)
-
 ### Fixed
 
 ### Removed
 
 ____
+## [2.4.1] - 2023-08-20
+### Changed
+
+- Improved Data Viewer
+  - Can view up to 1500 Notes
+  - Now showing source of Note, as well as any tags, and sorted more practically (instead of by NoteId)
+
+
 ## [2.4.0] - 2023-08-19
 ### Added
 
@@ -426,6 +430,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.1
 [2.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.0
 [2.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.2
 [2.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.1
