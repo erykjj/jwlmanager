@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-01-23 19:21-0500\n"
-"PO-Revision-Date: 2023-05-30 13:22+0000\n"
-"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
+"PO-Revision-Date: 2023-08-25 18:58+0000\n"
+"Last-Translator: Eryk Michalak <gnu.ewm@protonmail.com>\n"
 "Language-Team: pl <LL@li.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 "Generated-By: Babel 2.11.0\n"
 
 #: ../../../JWLManager.py:208
@@ -43,9 +43,8 @@ msgstr "Notatki"
 #: ../../../JWLManager.py:697 ../../../JWLManager.py:894
 #: ../../../JWLManager.py:1319 ../../../JWLManager.py:1349
 #: ../../../JWLManager.py:1453
-#, fuzzy
 msgid "Annotations"
-msgstr "Annotations"
+msgstr "Adnotacje"
 
 #: ../../../JWLManager.py:348 ../../../JWLManager.py:1673
 msgid "Warning"
@@ -78,25 +77,21 @@ msgstr "Ulubione"
 
 #: ../../../JWLManager.py:374 ../../../JWLManager.py:376
 #: ../../../JWLManager.py:852 ../../../JWLManager.py:1184
-#, fuzzy
 msgid "Title"
-msgstr "Title"
+msgstr "Tytuł"
 
 #: ../../../JWLManager.py:399
-#, fuzzy
 msgid "Processing…"
-msgstr "Processing…"
+msgstr "Przetwarzanie…"
 
 #: ../../../JWLManager.py:477 ../../../JWLManager.py:513
 #: ../../../JWLManager.py:601
-#, fuzzy
 msgid "Save"
-msgstr "Save"
+msgstr "Zapisz"
 
 #: ../../../JWLManager.py:477 ../../../JWLManager.py:513
-#, fuzzy
 msgid "Save current archive?"
-msgstr "Save current archive?"
+msgstr "Zapisać obecne archiwum?"
 
 #: ../../../JWLManager.py:485
 msgid "NEW ARCHIVE"
@@ -108,25 +103,21 @@ msgstr "Otwórz archiwum"
 
 #: ../../../JWLManager.py:519 ../../../JWLManager.py:594
 #: ../../../JWLManager.py:596
-#, fuzzy
 msgid "JW Library archives"
-msgstr "JW Library archives"
+msgstr "Archiwa biblioteki JW"
 
 #: ../../../JWLManager.py:568 ../../../JWLManager.py:579
 #: ../../../JWLManager.py:581
-#, fuzzy
 msgid "Error"
-msgstr "Error"
+msgstr "Błąd"
 
 #: ../../../JWLManager.py:568
-#, fuzzy
 msgid "No archive has been opened!"
-msgstr "No archive has been opened!"
+msgstr "Nie otworzono żadnego archiwum!"
 
 #: ../../../JWLManager.py:579 ../../../JWLManager.py:581
-#, fuzzy
 msgid "File \"{}\" not recognized!"
-msgstr "File \"{}\" not recognized!"
+msgstr "Nie wykryto pliku \"{}\"!"
 
 #: ../../../JWLManager.py:594 ../../../JWLManager.py:596
 msgid "Save archive"
@@ -146,9 +137,8 @@ msgstr ""
 "Are you absolutely sure you want to replace the original?"
 
 #: ../../../JWLManager.py:650
-#, fuzzy
 msgid "Saved"
-msgstr "Saved"
+msgstr "Zapisano"
 
 #: ../../../JWLManager.py:658
 msgid "Export file"
@@ -159,14 +149,12 @@ msgid "Text files"
 msgstr "Pliki tekstowe"
 
 #: ../../../JWLManager.py:661
-#, fuzzy
 msgid "Export"
-msgstr "Export"
+msgstr "Eksportuj"
 
 #: ../../../JWLManager.py:661
-#, fuzzy
 msgid "items will be EXPORTED. Proceed?"
-msgstr "items will be EXPORTED. Proceed?"
+msgstr "elementy zostaną wyeksportowane. Kontynuować?"
 
 #: ../../../JWLManager.py:673
 msgid "NOT exported!"
