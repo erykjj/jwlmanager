@@ -10,6 +10,11 @@
 ### Removed
 
 ____
+## [2.4.2] - 2023-08-25
+### Fixed
+
+- Fixed crash when exporting notes with empty title and/or content fields (thank to @sircharlo)
+
 ## [2.4.1] - 2023-08-20
 ### Changed
 
@@ -430,6 +435,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[2.4.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.2
 [2.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.1
 [2.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.0
 [2.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.3.2
