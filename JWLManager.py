@@ -1250,6 +1250,8 @@ class ExportItems():
         # regular Bible (book, chapter and verse)
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken {columns} FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
+            title = row[6] or ''
+            content = row[7] or ''
             tags = row[8] or ''
             if row[10] != None:
                 rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
@@ -1259,7 +1261,7 @@ class ExportItems():
                 created = '{CREATED='+row[12][:10]+'}'
             else:
                 created = ''
-            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+row[6]+'\n'+row[7].rstrip()
+            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
             self.export_file.write(txt)
 
         # note in book header - similar to a publication
@@ -1280,6 +1282,8 @@ class ExportItems():
     def export_publications(self, columns):
         for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name), n.LastModified, b.StartToken, b.EndToken {columns} FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
+            title = row[6] or ''
+            content = row[7] or ''
             tags = row[8] or ''
             if row[10] != None:
                 rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
@@ -1289,7 +1293,7 @@ class ExportItems():
                 created = '{CREATED='+row[12][:10]+'}'
             else:
                 created = ''
-            txt = '\n==={CAT=PUBLICATION}{LANG='+str(row[0])+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+row[6]+'\n'+row[7].rstrip()
+            txt = '\n==={CAT=PUBLICATION}{LANG='+str(row[0])+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
             self.export_file.write(txt)
 
     def export_independent(self, columns):
