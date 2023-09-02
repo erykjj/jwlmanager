@@ -1344,12 +1344,14 @@ class PreviewItems():
         self.books = books
         self.languages = languages
         self.aborted = False
-        self.txt = ''
+        self.txt = '<header>\n\t<style>.tag { background-color: #e4e4e4; color: #768fb8; border-radius: 0.25em; padding: 25px 25px 25px 25px; }</style>\n</header>'
+        self.item_list = []
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
             # self.preview_items()
             if self.category == _('Notes'):
-                self.preview_notes()
+                self.get_notes()
+                self.show_notes()
             else:
                 self.preview_annotations()
         except Exception as ex:
@@ -1358,7 +1360,7 @@ class PreviewItems():
         self.cur.close()
         con.close()
 
-    def preview_notes(self):
+    def get_notes(self):
         sql = f'''
             SELECT n.BlockType Type,
                 n.Title,
@@ -1371,6 +1373,7 @@ class PreviewItems():
                 l.DocumentId,
                 l.IssueTagNumber,
                 l.KeySymbol,
+                l.Title,
                 n.LastModified Date
             FROM Note n
                 LEFT JOIN
@@ -1403,7 +1406,8 @@ class PreviewItems():
                 'issue': row[9] or 0,
                 'symbol': row[10],
                 'source': row[10],
-                'date': row[11]
+                'reference': row[11],
+                'date': row[12]
             }
             if item['type'] == 1 and item['language'] and item['document']:
                 if item['block']:
@@ -1426,11 +1430,27 @@ class PreviewItems():
                 else:
                     d = '-' + d
                 item['source'] += f' {yr}-{m}{d}'
-            self.txt += f'{item}<hr />'
+            self.item_list.append(item)
+
+    def show_notes(self):
+        for note in self.item_list:
+            self.txt += f"<b>{note['title']}</b><br />{note['content']}<br />"
+            if note['tags']:
+                self.txt += "<div style='text-align: right'>"
+                for tag in sorted(note['tags']):
+                    self.txt += f"<span class='tag'>{tag}</span>&nbsp;"
+                self.txt += '&nbsp;&nbsp;</div>'
+                self.txt += '<hr width="95%"/>'
+            if note['type'] > 0:
+                if note['link']:
+                    self.txt += "<a href='" + note['link'] + "'>"
+                self.txt += f"<i>{note['source']}</i><br />{note['reference']}"
+                if note['link']:
+                    self.txt += '</a>'
+            self.txt += '<hr />'
 
 
     def preview_items(self):
-        self.item_list = {}
         if self.category == _('Notes'):
             self.preview_bible()
             self.preview_publications()
