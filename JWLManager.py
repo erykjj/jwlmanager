@@ -1347,22 +1347,16 @@ class PreviewItems():
         self.txt = ''
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
-            self.preview_items()
+            # self.preview_items()
+            if self.category == _('Notes'):
+                self.preview_notes()
+            else:
+                self.preview_annotations()
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
         self.cur.close()
         con.close()
-
-    def preview_items(self):
-        self.item_list = {}
-        if self.category == _('Notes'):
-            self.preview_notes()
-            # self.preview_bible()
-            # self.preview_publications()
-            # self.preview_independent()
-        elif self.category == _('Annotations'):
-            self.preview_annotations()
 
     def preview_notes(self):
         sql = f'''
@@ -1410,8 +1404,28 @@ class PreviewItems():
                 'symbol': row[10],
                 'date': row[11]
             }
+            if item['type'] == 1 and item['language'] and item['document']:
+                if item['block']:
+                    par = f"&par={item['block']}"
+                else:
+                    par = ''
+                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
+            elif item['type'] == 2 and item['language']:
+                script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
+                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
+            else:
+                item['link'] = None
             self.txt += f'{item}<hr />'
 
+
+    def preview_items(self):
+        self.item_list = {}
+        if self.category == _('Notes'):
+            self.preview_bible()
+            self.preview_publications()
+            self.preview_independent()
+        elif self.category == _('Annotations'):
+            self.preview_annotations()
 
     def preview_bible(self):
         for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 2 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.BookNumber, l.ChapterNumber, n.BlockIdentifier;"):
