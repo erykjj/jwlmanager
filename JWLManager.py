@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.4.2'
+VERSION = 'v2.5.0'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -97,8 +97,8 @@ def read_res(lng):
             books[row[0]] = row[1]
 
     def load_languages():
-        for row in cur.execute('SELECT Language, Name, Code FROM Languages;').fetchall():
-            languages[row[0]] = row[1]
+        for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
+            languages[row[0]] = (row[1], row[3])
             if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
@@ -326,7 +326,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if len(items) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), items, books)
+        fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -931,7 +931,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING ( LocationId );'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]]
+                lng = self.languages[row[2]][0]
             else:
                 lng = _('* NO LANGUAGE *') #f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -946,7 +946,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING ( LocationId );'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]]
+                lng = self.languages[row[2]][0]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -961,7 +961,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING ( LocationId ) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]]
+                lng = self.languages[row[2]][0]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -976,7 +976,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]]
+                lng = self.languages[row[2]][0]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -1002,7 +1002,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM ( SELECT * FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) ORDER BY t.Name ) n GROUP BY n.NoteId;"):
             if row[1] in self.languages.keys():
-                lng = self.languages[row[1]]
+                lng = self.languages[row[1]][0]
             else:
                 lng = f'#{row[1]}'
 
@@ -1337,11 +1337,12 @@ class ExportItems():
 
 
 class PreviewItems():
-    def __init__(self, category=_('Notes'), items=[], books=[]):
+    def __init__(self, category, items, books, languages):
         self.category = category
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.books = books
+        self.languages = languages
         self.aborted = False
         self.txt = ''
         try:
@@ -1354,12 +1355,63 @@ class PreviewItems():
         con.close()
 
     def preview_items(self):
+        self.item_list = {}
         if self.category == _('Notes'):
-            self.preview_bible()
-            self.preview_publications()
-            self.preview_independent()
+            self.preview_notes()
+            # self.preview_bible()
+            # self.preview_publications()
+            # self.preview_independent()
         elif self.category == _('Annotations'):
             self.preview_annotations()
+
+    def preview_notes(self):
+        sql = f'''
+            SELECT n.BlockType Type,
+                n.Title,
+                n.Content,
+                GROUP_CONCAT(t.Name, '|'),
+                l.MepsLanguage,
+                l.BookNumber,
+                l.ChapterNumber,
+                n.BlockIdentifier,
+                l.DocumentId,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                n.LastModified Date
+            FROM Note n
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+                LEFT JOIN
+                TagMap USING (
+                    NoteId
+                )
+                LEFT JOIN
+                Tag t USING (
+                    TagId
+                )
+            WHERE n.NoteId IN {self.items} 
+            GROUP BY n.NoteId
+            ORDER BY Type, Date DESC;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'type': row[0],
+                'title': row[1] or '* '+_('NO TITLE')+' *',
+                'content': row[2] or '',
+                'tags': row[3].split('|') if row[3] else None,
+                'language': self.languages[row[4]][1] if row[4] else None,
+                'book': row[5],
+                'chapter': row[6],
+                'block': row[7],
+                'document': row[8],
+                'issue': row[9],
+                'symbol': row[10],
+                'date': row[11]
+            }
+            self.txt += f'{item}<hr />'
+
 
     def preview_bible(self):
         for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 2 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.BookNumber, l.ChapterNumber, n.BlockIdentifier;"):
