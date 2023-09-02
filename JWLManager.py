@@ -1400,8 +1400,9 @@ class PreviewItems():
                 'chapter': row[6],
                 'block': row[7],
                 'document': row[8],
-                'issue': row[9],
+                'issue': row[9] or 0,
                 'symbol': row[10],
+                'source': row[10],
                 'date': row[11]
             }
             if item['type'] == 1 and item['language'] and item['document']:
@@ -1415,6 +1416,16 @@ class PreviewItems():
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
             else:
                 item['link'] = None
+            if item['issue'] > 10000000:
+                issue = str(item['issue'])
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                item['source'] += f' {yr}-{m}{d}'
             self.txt += f'{item}<hr />'
 
 
