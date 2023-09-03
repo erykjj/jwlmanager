@@ -1344,7 +1344,7 @@ class PreviewItems():
         self.books = books
         self.languages = languages
         self.aborted = False
-        self.txt = '<header>\n\t<style>.tag { background-color: #e4e4e4; color: #768fb8; border-radius: 0.25em; padding: 25px 25px 25px 25px; }</style>\n</header>'
+        self.txt = '<header>\n\t<style>.tag { background-color: #e4e4e4; color: #768fb8; width: auto; height: auto; border-radius: 1.5rem; padding: 25px; }</style>\n</header>'
         self.item_list = []
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
@@ -1396,7 +1396,7 @@ class PreviewItems():
             item = {
                 'type': row[0],
                 'title': row[1] or '* '+_('NO TITLE')+' *',
-                'content': row[2] or '',
+                'content': row[2].replace('\n', '<br>') or '',
                 'tags': row[3].split('|') if row[3] else None,
                 'language': self.languages[row[4]][1] if row[4] else None,
                 'book': row[5],
@@ -1434,20 +1434,23 @@ class PreviewItems():
 
     def show_notes(self):
         for note in self.item_list:
-            self.txt += f"<b>{note['title']}</b><br />{note['content']}<br />"
-            if note['tags']:
-                self.txt += "<div style='text-align: right'>"
-                for tag in sorted(note['tags']):
-                    self.txt += f"<span class='tag'>{tag}</span>&nbsp;"
-                self.txt += '&nbsp;&nbsp;</div>'
-                self.txt += '<hr width="95%"/>'
-            if note['type'] > 0:
+            self.txt += f"<b>{note['title']}</b><br>{note['content']}<br>"
+            if note['tags'] or note['source'] or note['link']:
+                self.txt += '<hr width="95%">'
+                if note['tags']:
+                    self.txt += "<div style='text-align: right'>"
+                    for tag in sorted(note['tags']):
+                        self.txt += f"<span class='tag'>&nbsp;{tag}&nbsp;</span>&nbsp;&nbsp;"
+                    self.txt += '&nbsp;</div>'
+                if note['source']:
+                    self.txt += f"<br>&nbsp;&nbsp;&nbsp;<small><i>{note['source']}</i></small>"
+                if note['reference']:
+                    self.txt += f"&nbsp;&mdash;&nbsp;<small>{note['reference']}</small>"
+                # else:
+                #     self.txt += '<br>'
                 if note['link']:
-                    self.txt += "<a href='" + note['link'] + "'>"
-                self.txt += f"<i>{note['source']}</i><br />{note['reference']}"
-                if note['link']:
-                    self.txt += '</a>'
-            self.txt += '<hr />'
+                    self.txt += f"<br>&nbsp;&nbsp;&nbsp;<small>{note['link']}</small>"
+            self.txt += "<hr>"
 
 
     def preview_items(self):
