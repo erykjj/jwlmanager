@@ -1348,7 +1348,6 @@ class PreviewItems():
         self.item_list = []
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
-            # self.preview_items()
             if self.category == _('Notes'):
                 self.get_notes()
                 self.show_notes()
@@ -1460,66 +1459,6 @@ class PreviewItems():
                     lnk = note['link']
                     self.txt += f"<br><a href='{lnk}'>{lnk}</a>"
             self.txt += "</tt></strong></small></div><hr>"
-
-
-    def preview_items(self):
-        if self.category == _('Notes'):
-            self.preview_bible()
-            self.preview_publications()
-            self.preview_independent()
-        elif self.category == _('Annotations'):
-            self.preview_annotations()
-
-    def preview_bible(self):
-        for row in self.cur.execute(f"SELECT l.BookNumber, l.ChapterNumber, n.BlockIdentifier, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 2 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.BookNumber, l.ChapterNumber, n.BlockIdentifier;"):
-            title = row[3] or '* '+_('NO TITLE')+' *'
-            if row[4]:
-                note = regex.sub('\n', '<br />', row[4].rstrip())
-            else:
-                note = '* '+_('NO TEXT')+' *'
-            if row[5]:
-                tags = ' {' + row[5] + '}'
-            else:
-                tags = ''
-            self.txt += f'[{self.books[row[0]]} {row[1]}:{row[2]}] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
-
-    def preview_publications(self):
-        for row in self.cur.execute(f"SELECT l.KeySymbol, l.IssueTagNumber, n.Title, n.Content, GROUP_CONCAT(t.Name) FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 1 AND n.NoteId IN {self.items} GROUP BY n.NoteId ORDER BY l.KeySymbol, l.IssueTagNumber, l.DocumentId;"):
-            title = row[2] or '* '+_('NO TITLE')+' *'
-            if row[3]:
-                note = regex.sub('\n', '<br />', row[3].rstrip())
-            else:
-                note = '* '+_('NO TEXT')+' *'
-            if row[4]:
-                tags = ' {' + row[4] + '}'
-            else:
-                tags = ''
-            if row[1] > 10000000:
-                issue = str(row[1])
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                source = row[0] + f' {yr}-{m}{d}'
-            else:
-                source = row[0]
-            self.txt += f'[{source}] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
-
-    def preview_independent(self):
-        for row in self.cur.execute(f"SELECT Title, Content, GROUP_CONCAT(t.Name) FROM Note LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE BlockType = 0 AND NoteId IN {self.items} GROUP BY NoteId ORDER BY Title;"):
-            title = row[0] or '* '+_('NO TITLE')+' *'
-            if row[1]:
-                note = regex.sub('\n', '<br />', row[1].rstrip())
-            else:
-                note = '* '+_('NO TEXT')+' *'
-            if row[2]:
-                tags = ' {' + row[2] + '}'
-            else:
-                tags = ''
-            self.txt += '[' + _('* INDEPENDENT *').strip(' *') + f'] <b>{title}</b><i>{tags}</i><br />{note}<hr />'
 
     def preview_annotations(self):
         for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
