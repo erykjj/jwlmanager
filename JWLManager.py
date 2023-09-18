@@ -1344,7 +1344,7 @@ class PreviewItems():
         self.books = books
         self.languages = languages
         self.aborted = False
-        self.txt = '<header>\n\t<style>.tag { background-color: #e4e4e4; color: #768fb8; width: auto; height: auto; border-radius: 1.5rem; padding: 25px; }</style>\n</header>'
+        self.txt = '<header>\n\t<style>.tag { color: #768fb8; font-weight: bold; border-radius: 1.5rem; padding: 25px; } .tagline { text-align: right; }</style>\n</header>'  #.p1 { background-color: #b3b3cc; } .p2 { background-color: #d1d1e0; }#background-color: #e4e4e4; 
         self.item_list = []
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
@@ -1374,11 +1374,16 @@ class PreviewItems():
                 l.IssueTagNumber,
                 l.KeySymbol,
                 l.Title,
-                n.LastModified Date
+                n.LastModified Date,
+                u.ColorIndex
             FROM Note n
                 LEFT JOIN
                 Location l USING (
                     LocationId
+                )
+                LEFT JOIN
+                UserMark u USING (
+                    UserMarkId
                 )
                 LEFT JOIN
                 TagMap USING (
@@ -1407,7 +1412,8 @@ class PreviewItems():
                 'symbol': row[10],
                 'source': row[10],
                 'reference': row[11],
-                'date': row[12]
+                'date': row[12],
+                'color': row[13] or 0
             }
             if item['type'] == 1 and item['language'] and item['document']:
                 if item['block']:
@@ -1433,24 +1439,27 @@ class PreviewItems():
             self.item_list.append(item)
 
     def show_notes(self):
+        clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
         for note in self.item_list:
-            self.txt += f"<b>{note['title']}</b><br>{note['content']}<br>"
+            cl = f"style='background-color: {clrs[note['color']]};'"
+            self.txt += f"<div {cl}><b>{note['title']}</b>"
+            print(self.txt)
+            if note['content']:
+                self.txt += f"<br>{note['content']}"
             if note['tags'] or note['source'] or note['link']:
-                self.txt += '<hr width="95%">'
+                # self.txt += '<hr width="95%">'
                 if note['tags']:
-                    self.txt += "<div style='text-align: right'>"
+                    self.txt += "<br><span class='tagline'><tt>"
                     for tag in sorted(note['tags']):
-                        self.txt += f"<span class='tag'>&nbsp;{tag}&nbsp;</span>&nbsp;&nbsp;"
-                    self.txt += '&nbsp;</div>'
+                        self.txt += f"<span class='tag'>&nbsp;<small>{tag}</small>&nbsp;</span>&nbsp;"
+                    self.txt += '</tt></span>'
                 if note['source']:
-                    self.txt += f"<br>&nbsp;&nbsp;&nbsp;<small><i>{note['source']}</i></small>"
+                    self.txt += f"<br><small><i>{note['source']}</i></small>"
                 if note['reference']:
                     self.txt += f"&nbsp;&mdash;&nbsp;<small>{note['reference']}</small>"
-                # else:
-                #     self.txt += '<br>'
                 if note['link']:
-                    self.txt += f"<br>&nbsp;&nbsp;&nbsp;<small>{note['link']}</small>"
-            self.txt += "<hr>"
+                    self.txt += f"<br><small>{note['link']}</small>"
+            self.txt += "</div><hr>"
 
 
     def preview_items(self):
