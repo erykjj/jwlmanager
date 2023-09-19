@@ -30,6 +30,7 @@ APP = 'JWLManager'
 VERSION = 'v2.5.0'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
+# import csv
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -1352,7 +1353,8 @@ class PreviewItems():
                 self.get_notes()
                 self.show_notes()
             else:
-                self.preview_annotations()
+                self.get_annotations()
+                self.show_annotations()
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
@@ -1400,7 +1402,7 @@ class PreviewItems():
             item = {
                 'type': row[0],
                 'title': row[1] or '* '+_('NO TITLE')+' *',
-                'content': row[2].replace('\n', '<br>') or '',
+                'content': row[2].replace('\n', '<br>').rstrip() or '',
                 'tags': row[3].split('|') if row[3] else None,
                 'language': self.languages[row[4]][1] if row[4] else None,
                 'book': row[5],
@@ -1459,15 +1461,55 @@ class PreviewItems():
                     lnk = note['link']
                     self.txt += f"<br><a href='{lnk}'>{lnk}</a>"
             self.txt += "</tt></strong></small></div><hr>"
+            # self.export_notes()
 
-    def preview_annotations(self):
-        for row in self.cur.execute(f"SELECT TextTag, Value FROM InputField WHERE LocationId IN {self.items};"):
-            title = row[0]
-            if row[1]:
-                note = regex.sub('\n', '<br />', row[1].rstrip())
-            else:
-                note = '* '+_('NO TEXT')+' *'
-            self.txt += f'<b>{title}</b><br />{note}<hr />'
+    # def export_notes(self):
+    #     fields = ['type', 'color', 'title', 'content', 'tags', 'language', 'book', 'chapter', 'block', 'document', 'issue', 'symbol', 'source', 'reference', 'link', 'date']
+    #     with open('/mnt/ramdisk/Notes.csv', 'w', encoding='utf-8') as csvfile:
+    #         writer = csv.DictWriter(csvfile, fieldnames=fields)
+    #         writer.writeheader()
+    #         writer.writerows(self.item_list)
+
+    def get_annotations(self):
+        sql = f'''
+            SELECT TextTag,
+                Value,
+                l.DocumentId doc,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+            FROM InputField
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+            WHERE LocationId IN {self.items}
+            ORDER BY doc, i;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'tag': row[0],
+                'value': row[1].replace('\n', '<br>').rstrip() or '* '+_('NO TEXT')+' *',
+                'document': row[2],
+                'issue': row[3] or 0,
+                'symbol': row[4],
+                'source': row[4]
+            }
+            if item['issue'] > 10000000:
+                issue = str(item['issue'])
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                item['source'] += f' {yr}-{m}{d}'
+            self.item_list.append(item)
+
+    def show_annotations(self):
+        for note in self.item_list:
+            self.txt += f"<div style='background-color: #f1f1f1;'><tt><b><u>{note['source']}&nbsp;&mdash;&nbsp;{note['document']}&nbsp;&mdash;&nbsp;{note['tag']}</u></b></tt><br>{note['value']}</div><hr>"
 
 
 class ImportAnnotations():
