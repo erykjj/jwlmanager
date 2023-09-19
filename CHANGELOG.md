@@ -5,6 +5,7 @@
 
 ### Changed
 
+- Added View button for Notes and Annotations (replacing the right-click funtionality)
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
 
