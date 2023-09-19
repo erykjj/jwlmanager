@@ -205,9 +205,13 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.setWindowTitle(_('Data Viewer'))
             self.viewer_window.resize(640, 812)
             self.viewer_window.move(50, 50)
-            self.viewer_window.setMinimumSize(300, 300)
+            self.viewer_window.setMinimumSize(500, 500)
             self.viewer_text = QTextEdit(self.viewer_window)
-            layout = QHBoxLayout(self.viewer_window)
+            toolbar = QToolBar()
+            toolbar.addAction(QAction('CSV', toolbar))
+            toolbar.addAction(QAction('TXT', toolbar))
+            layout = QVBoxLayout(self.viewer_window)
+            layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
             self.viewer_window.setLayout(layout)
 
@@ -291,6 +295,12 @@ class Window(QMainWindow, Ui_MainWindow):
     def collapse_all(self):
         self.treeWidget.collapseAll()
 
+    def double_clicked(self, item):
+        if self.treeWidget.isExpanded(item):
+            self.treeWidget.setExpanded(item, False)
+        else:
+            self.treeWidget.expandRecursively(item, -1)
+
 
     def select_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
@@ -299,13 +309,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def unselect_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
-
-
-    def double_clicked(self, item):
-        if self.treeWidget.isExpanded(item):
-            self.treeWidget.setExpanded(item, False)
-        else:
-            self.treeWidget.expandRecursively(item, -1)
 
 
     def switchboard(self, selection):
@@ -510,7 +513,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def dropEvent(self, event):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
-        if suffix == '.jwlibrary':
+        if suffix == '.jwlibrary' or suffix == '.jwlplaylist':
             self.load_file(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
