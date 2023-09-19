@@ -29,8 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v2.5.0'
 
-import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
-# import csv
+import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -181,6 +180,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.current_data = []
 
 
+    def center(self):
+        qr = self.frameGeometry()
+        cp = QWidget.screen(self).availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
     def init_windows(self):
 
         def init_help():
@@ -208,8 +213,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.setMinimumSize(500, 500)
             self.viewer_text = QTextEdit(self.viewer_window)
             toolbar = QToolBar()
-            toolbar.addAction(QAction('CSV', toolbar))
-            toolbar.addAction(QAction('TXT', toolbar))
+            self.button_CSV = QAction('CSV', toolbar)
+            self.button_TXT = QAction('TXT', toolbar)
+            toolbar.addAction(self.button_CSV)
+            toolbar.addAction(self.button_TXT)
             layout = QVBoxLayout(self.viewer_window)
             layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
@@ -217,12 +224,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         init_help()
         init_viewer()
-
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QWidget.screen(self).availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
 
 
     def connect_signals(self):
@@ -246,13 +247,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
-        # self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
         self.button_export.clicked.connect(self.export)
         self.button_import.clicked.connect(self.import_file)
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
+        self.button_CSV.triggered.connect(self.export_csv)
+        self.button_TXT.triggered.connect(self.export_txt)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -674,13 +675,50 @@ class Window(QMainWindow, Ui_MainWindow):
         if fn.aborted:
             self.clean_up()
             sys.exit()
-        self.viewer_text.setHtml(fn.txt)
+        self.data_viewer_txt = fn.txt
+        self.data_viewer_dict = fn.item_list
+        self.viewer_text.setHtml(fn.html)
         self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {self.combo_category.currentText()}')
         self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.viewer_window.finished.connect(self.viewer_window.hide())
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
+
+    def export_csv(self):
+
+        def export_file():
+            fname = ()
+            now = datetime.now().strftime('%Y-%m-%d')
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}_{now}.csv', _('Text files')+' (*.csv)')
+            return fname[0]
+
+        fname = export_file()
+        if fname == '':
+            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+            return
+        fields = ['type', 'color', 'title', 'content', 'tags', 'language', 'book', 'chapter', 'block', 'document', 'issue', 'symbol', 'source', 'reference', 'link', 'date']
+        with open(fname, 'w', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(self.data_viewer_dict)
+            self.statusBar.showMessage(' '+_('Saved'), 3500)
+
+    def export_txt(self):
+
+        def export_file():
+            fname = ()
+            now = datetime.now().strftime('%Y-%m-%d')
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt)')
+            return fname[0]
+
+        fname = export_file()
+        if fname == '':
+            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+            return
+        with open(fname, 'w', encoding='utf-8') as txtfile:
+            txtfile.write(self.data_viewer_txt)
+            self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
     def add_favorite(self):
@@ -1342,7 +1380,8 @@ class PreviewItems():
         self.books = books
         self.languages = languages
         self.aborted = False
-        self.txt = '<header>\n\t<style>.tag { color: #768fb8; font-weight: bold; border-radius: 1.5rem; padding: 25px; } .tagline { text-align: right; }</style>\n</header>'
+        self.html = '<header>\n\t<style>.tag { color: #768fb8; font-weight: bold; border-radius: 1.5rem; padding: 25px; } .tagline { text-align: right; }</style>\n</header>'
+        self.txt = ''
         self.item_list = []
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
@@ -1399,7 +1438,7 @@ class PreviewItems():
             item = {
                 'type': row[0],
                 'title': row[1] or '* '+_('NO TITLE')+' *',
-                'content': row[2].replace('\n', '<br>').rstrip() or '',
+                'content': row[2].rstrip().replace('\n', '\\n') or '',
                 'tags': row[3].split('|') if row[3] else None,
                 'language': self.languages[row[4]][1] if row[4] else None,
                 'book': row[5],
@@ -1440,32 +1479,34 @@ class PreviewItems():
         clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
         for note in self.item_list:
             cl = f"style='background-color: {clrs[note['color']]};'"
-            self.txt += f"<div {cl}><b><u>{note['title']}</u></b>"
+            self.html += f"<div {cl}><b><u>{note['title']}</u></b>"
+            self.txt += note['title']
             if note['content']:
-                self.txt += f"<br>{note['content']}"
+                self.html += '<br>' + note['content'].replace('\\n', '<br>')
+                self.txt += '\n' + note['content'].replace('\\n', '\n')
             if note['tags'] or note['source'] or note['link']:
-                self.txt += '<br><small><strong><tt>__________'
-                self.txt += f"<br>{note['date'][:10]}"
+                self.html += f"<br><small><strong><tt>__________<br>{note['date'][:10]}"
+                self.txt += '\n__________\n' + note['date'][:10]
                 if note['tags']:
-                    self.txt += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                    self.txt += '\n'
                     for tag in sorted(note['tags']):
-                        self.txt += f"<span class='tag'>{tag}&nbsp;</span>&nbsp;"
+                        self.html += f"<span class='tag'>{tag}&nbsp;</span>&nbsp;"
+                        self.txt += '{' + tag + '} '
+                    self.txt = self.txt.strip()
                 if note['source']:
-                    self.txt += f"<br><i>{note['source']}</i>"
+                    self.html += f"<br><i>{note['source']}</i>"
+                    self.txt += '\n' + note['source']
                 if note['reference']:
-                    self.txt += f"&nbsp;&mdash;&nbsp;{note['reference']}"
+                    self.html += f"&nbsp;&mdash;&nbsp;{note['reference']}"
+                    self.txt += ' — ' + note['reference']
                 if note['link']:
                     lnk = note['link']
-                    self.txt += f"<br><a href='{lnk}'>{lnk}</a>"
-            self.txt += "</tt></strong></small></div><hr>"
-            # self.export_notes()
+                    self.html += f"<br><a href='{lnk}'>{lnk}</a>"
+                    self.txt += '\n' + lnk
+            self.html += "</tt></strong></small></div><hr>"
+            self.txt += '\n==========\n'
 
-    # def export_notes(self):
-    #     fields = ['type', 'color', 'title', 'content', 'tags', 'language', 'book', 'chapter', 'block', 'document', 'issue', 'symbol', 'source', 'reference', 'link', 'date']
-    #     with open('/mnt/ramdisk/Notes.csv', 'w', encoding='utf-8') as csvfile:
-    #         writer = csv.DictWriter(csvfile, fieldnames=fields)
-    #         writer.writeheader()
-    #         writer.writerows(self.item_list)
 
     def get_annotations(self):
         sql = f'''
@@ -1506,7 +1547,8 @@ class PreviewItems():
 
     def show_annotations(self):
         for note in self.item_list:
-            self.txt += f"<div style='background-color: #f1f1f1;'><tt><b><u>{note['source']}&nbsp;&mdash;&nbsp;{note['document']}&nbsp;&mdash;&nbsp;{note['tag']}</u></b></tt><br>{note['value']}</div><hr>"
+            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{note['source']}&nbsp;&mdash;&nbsp;{note['document']}&nbsp;&mdash;&nbsp;{note['tag']}</u></b></tt><br>{note['value']}</div><hr>".replace('\\n', '<br>')
+            self.txt += f"{note['source']} — {note['document']} — {note['tag']}\n{note['value']}\n==========\n".replace('\\n', '\n')
 
 
 class ImportAnnotations():
