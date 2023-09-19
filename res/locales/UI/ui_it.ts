@@ -102,7 +102,7 @@
     <message>
         <location filename="main_window.ui" line="409"/>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Vedi</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="475"/>
