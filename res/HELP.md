@@ -26,6 +26,10 @@ The ***View*** menu has some additional options (also accessible directly via th
 
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* archive in case you need to restore after messing up ;-)
 
+#### View (button)
+
+Shows selected Notes and Annotations in a Data Viewer window, from where which text can be copied (and pasted somewhere else) or saved as a CSV file.
+
 #### Add
 
 For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. Let me know if a required language is missing from the drop-down selection.
@@ -38,7 +42,7 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 
 This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else). If the note is attached to a highlight, the range data is also exported. Of course, if you just want to keep the note, you can edit the export file and remove the {RANGE=} attributes before importing (or delete the highlights within the app after).
 
-Exporting of Annotations and Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
+Exporting of Annotations and Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive. Annotations are language-agnostic - they show up in different language versions of the *same* publication.
 
 #### Import
 
@@ -49,7 +53,7 @@ Editing or creating a Highlights or Annotations import file is *not* recommended
 The accepted format for the Notes import file is like this:
     
     {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2022-10-19}===
+    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2023-10-19}===
     » Note Title
     Multi-line...
     ...note
@@ -58,7 +62,7 @@ The accepted format for the Notes import file is like this:
     Multi-line...
     ...
     ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2022-10-19}===
+    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2023-10-19}===
     » Still Another Note Title
     Multi-line...
     ...note
@@ -104,7 +108,7 @@ On a side-note, I format my notes with Markdown syntax (as above) for, even thou
 
 #### Mask
 
-If you need to share your complete archive but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm: check the detailed view or right-click on a Notes item to see the preview. Only tags are not obscured.
+If you need to share your complete archive but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm, view the Notes in the Data Viewer. Only tags are not obscured.
 
 #### Reindex
 
