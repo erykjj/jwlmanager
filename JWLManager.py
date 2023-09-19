@@ -242,12 +242,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_category.currentTextChanged.connect(self.switchboard)
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
-        self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
+        # self.treeWidget.setContextMenuPolicy(Qt.CustomContextMenu)
+        # self.treeWidget.customContextMenuRequested.connect(self.right_clicked)
         self.button_export.clicked.connect(self.export)
         self.button_import.clicked.connect(self.import_file)
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
+        self.button_view.clicked.connect(self.view)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -306,55 +307,56 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
-    def right_clicked(self):
+    # def right_clicked(self):
 
-        def recurse(parent):
-            selected.append(parent)
-            for i in range(parent.childCount()):
-                child = parent.child(i)
-                recurse(child)
+    #     def recurse(parent):
+    #         selected.append(parent)
+    #         for i in range(parent.childCount()):
+    #             child = parent.child(i)
+    #             recurse(child)
 
-        if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
-            return
-        selected = []
-        items = []
-        selection = self.treeWidget.currentItem()
-        recurse(selection)
-        for row in selected:
-            if row in self.leaves:
-                for id in self.leaves[row]:
-                    items.append(id)
-        if len(items) > 1500:
-            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
-            return
-        fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
-        if fn.aborted:
-            self.clean_up()
-            sys.exit()
-        self.viewer_text.setHtml(fn.txt)
-        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
-        self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-        self.viewer_window.finished.connect(self.viewer_window.hide())
-        self.viewer_window.show()
-        self.viewer_window.raise_()
-        self.viewer_window.activateWindow()
+    #     if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
+    #         return
+    #     selected = []
+    #     items = []
+    #     selection = self.treeWidget.currentItem()
+    #     recurse(selection)
+    #     for row in selected:
+    #         if row in self.leaves:
+    #             for id in self.leaves[row]:
+    #                 items.append(id)
+    #     if len(items) > 1500:
+    #         QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
+    #         return
+    #     fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
+    #     if fn.aborted:
+    #         self.clean_up()
+    #         sys.exit()
+    #     self.viewer_text.setHtml(fn.txt)
+    #     self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
+    #     self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+    #     self.viewer_window.finished.connect(self.viewer_window.hide())
+    #     self.viewer_window.show()
+    #     self.viewer_window.raise_()
+    #     self.viewer_window.activateWindow()
 
 
     def switchboard(self, selection):
         if selection == _('Notes'):
-            self.disable_options([], False, True, True)
+            self.disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
-            self.disable_options([4], False, True, True)
+            self.disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
-            self.disable_options([4,5], False, False, False)
+            self.disable_options([4,5], False, False, False, False)
         elif selection == _('Annotations'):
-            self.disable_options([2,4,5], False, True, True)
+            self.disable_options([2,4,5], False, True, True, True)
         elif selection == _('Favorites'):
-            self.disable_options([4,5], True, False, False)
+            self.disable_options([4,5], True, False, False, False)
         self.regroup()
 
-    def disable_options(self, lst=[], add=False, exp=False, imp=False):
+    def disable_options(self, lst=[], add=False, exp=False, imp=False, view=False):
         self.button_add.setVisible(add)
+        self.button_view.setVisible(view)
         self.button_export.setVisible(exp)
         self.button_import.setEnabled(imp)
         self.button_import.setVisible(imp)
@@ -685,6 +687,39 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
         self.tree_selection()
 
+
+    def view(self):
+
+        def recurse(parent):
+            selected.append(parent)
+            for i in range(parent.childCount()):
+                child = parent.child(i)
+                recurse(child)
+
+        if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
+            return
+        selected = []
+        items = []
+        selection = self.treeWidget.currentItem()
+        recurse(selection)
+        for row in selected:
+            if row in self.leaves:
+                for id in self.leaves[row]:
+                    items.append(id)
+        if len(items) > 1500:
+            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
+            return
+        fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
+        if fn.aborted:
+            self.clean_up()
+            sys.exit()
+        self.viewer_text.setHtml(fn.txt)
+        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
+        self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+        self.viewer_window.finished.connect(self.viewer_window.hide())
+        self.viewer_window.show()
+        self.viewer_window.raise_()
+        self.viewer_window.activateWindow()
 
     def add_favorite(self):
         fn = AddFavorites(favorites)
