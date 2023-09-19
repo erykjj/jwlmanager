@@ -6,6 +6,7 @@
 ### Changed
 
 - Data Viewer improvements
+  - Colored notes, links to source (via wol.jw.org)
 
 ### Fixed
 
