@@ -414,6 +414,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.selected_items += len(self.leaves[item])
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
+        self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
         self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
 
 
@@ -689,37 +690,28 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def view(self):
-
-        def recurse(parent):
-            selected.append(parent)
-            for i in range(parent.childCount()):
-                child = parent.child(i)
-                recurse(child)
-
-        if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
-            return
         selected = []
-        items = []
-        selection = self.treeWidget.currentItem()
-        recurse(selection)
-        for row in selected:
-            if row in self.leaves:
-                for id in self.leaves[row]:
-                    items.append(id)
-        if len(items) > 1500:
-            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
+        for item in it:
+            index = item.value()
+            if index in self.leaves:
+                for i in self.leaves[index]:
+                    selected.append(i)
+        if len(selected) > 2000:
+            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
+        fn = PreviewItems(self.combo_category.currentText(), selected, books, languages)
         if fn.aborted:
             self.clean_up()
             sys.exit()
         self.viewer_text.setHtml(fn.txt)
-        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
+        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {self.combo_category.currentText()}')
         self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.viewer_window.finished.connect(self.viewer_window.hide())
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
+
 
     def add_favorite(self):
         fn = AddFavorites(favorites)
