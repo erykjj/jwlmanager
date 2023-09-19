@@ -4,6 +4,7 @@
 ### Added
 
 - Added View button for Notes and Annotations (replacing the right-click funtionality)
+- Added functionality to save Data Viewer as CSV and TXT
 - Allow opening .jwlplaylist files
 
 ### Changed
