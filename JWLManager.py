@@ -307,39 +307,6 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
-    # def right_clicked(self):
-
-    #     def recurse(parent):
-    #         selected.append(parent)
-    #         for i in range(parent.childCount()):
-    #             child = parent.child(i)
-    #             recurse(child)
-
-    #     if self.combo_category.currentText() not in (_('Notes'), _('Annotations')):
-    #         return
-    #     selected = []
-    #     items = []
-    #     selection = self.treeWidget.currentItem()
-    #     recurse(selection)
-    #     for row in selected:
-    #         if row in self.leaves:
-    #             for id in self.leaves[row]:
-    #                 items.append(id)
-    #     if len(items) > 1500:
-    #         QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(items)), QMessageBox.Cancel)
-    #         return
-    #     fn = PreviewItems(self.combo_category.currentText(), items, books, languages)
-    #     if fn.aborted:
-    #         self.clean_up()
-    #         sys.exit()
-    #     self.viewer_text.setHtml(fn.txt)
-    #     self.viewer_window.setWindowTitle(_('Data Viewer')+f': {selection.data(0,0)}')
-    #     self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-    #     self.viewer_window.finished.connect(self.viewer_window.hide())
-    #     self.viewer_window.show()
-    #     self.viewer_window.raise_()
-    #     self.viewer_window.activateWindow()
-
 
     def switchboard(self, selection):
         if selection == _('Notes'):
@@ -497,7 +464,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif reply == QMessageBox.Cancel:
                 return
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary *.jwlplaylist)')
             if fname[0] == '':
                 return
             archive = fname[0]
