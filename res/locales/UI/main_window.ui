@@ -393,6 +393,22 @@
            <string>Add</string>
           </property>
          </widget>
+         <widget class="QPushButton" name="button_view">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>85</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>View</string>
+          </property>
+         </widget>
         </widget>
        </item>
       </layout>
