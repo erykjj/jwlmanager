@@ -3,15 +3,19 @@
 ## [Unreleased]
 ### Added
 
+- Added View button for Notes and Annotations (replacing the right-click funtionality)
+- Allow opening .jwlplaylist files
+
 ### Changed
 
-- Added View button for Notes and Annotations (replacing the right-click funtionality)
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
 
 ### Fixed
 
 ### Removed
+
+- Removed right-clicking for Data Viewer
 
 ____
 ## [2.4.2] - 2023-08-25
