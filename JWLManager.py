@@ -1440,7 +1440,7 @@ class PreviewItems():
                 'title': row[1] or '* '+_('NO TITLE')+' *',
                 'content': row[2].rstrip().replace('\n', '\\n') or '',
                 'tags': row[3],
-                'language': self.languages[row[4]][1] if row[4] else None,
+                'language': self.languages[row[4]][1] if row[4] >= 0 else None,
                 'book': row[5],
                 'chapter': row[6],
                 'block': row[7],
@@ -1460,10 +1460,7 @@ class PreviewItems():
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
             elif item['type'] == 2 and item['language']:
                 script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
-                if item['reference']:
-                    item['reference'] += ':' + str(item['block'])
-                else:
-                    item['reference'] = script
+                item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
             else:
                 item['link'] = None
@@ -1481,30 +1478,31 @@ class PreviewItems():
 
     def show_notes(self):
         clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
-        for note in self.item_list:
-            cl = f"style='background-color: {clrs[note['color']]};'"
-            self.html += f"<div {cl}><b><u>{note['title']}</u></b>"
-            self.txt += note['title']
-            if note['content']:
-                self.html += '<br>' + note['content'].replace('\\n', '<br>')
-                self.txt += '\n' + note['content'].replace('\\n', '\n')
-            if note['tags'] or note['source'] or note['link']:
-                self.html += f"<br><small><strong><tt>__________<br>{note['date']}"
-                self.txt += '\n__________\n' + note['date']
-                if note['tags']:
-                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + note['tags'] + '}</span>'
-                    self.txt += '\n{' + note['tags'] + '}'
-                if note['source']:
-                    self.html += f"<br><i>{note['source']}</i>"
-                    self.txt += '\n' + note['source']
-                if note['reference']:
-                    self.html += f"&nbsp;&mdash;&nbsp;{note['reference']}"
-                    self.txt += ' — ' + note['reference']
-                if note['link']:
-                    lnk = note['link']
+        for item in self.item_list:
+            cl = f"style='background-color: {clrs[item['color']]};'"
+            self.html += f"<div {cl}><b><u>{item['title']}</u></b>"
+            self.txt += item['title']
+            if item['content']:
+                self.html += '<br>' + item['content'].replace('\\n', '<br>')
+                self.txt += '\n' + item['content'].replace('\\n', '\n')
+            if item['tags'] or item['source'] or item['link']:
+                self.html += f"<br><small><strong><tt>__________<br>{item['date']}"
+                self.txt += '\n__________\n' + item['date']
+                if item['tags']:
+                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['tags'] + '}</span>'
+                    self.txt += '\n{' + item['tags'] + '}'
+                if item['source']:
+                    self.html += f"<br><i>{item['source']}</i>-{item['language']}"
+                    self.txt += f"\n{item['source']}-{item['language']}"
+                if item['reference']:
+                    self.html += f"&nbsp;&mdash;&nbsp;{item['reference']}"
+                    self.txt += ' — ' + item['reference']
+                if item['link']:
+                    lnk = item['link']
                     self.html += f"<br><a href='{lnk}'>{lnk}</a>"
                     self.txt += '\n' + lnk
-            self.html += "</tt></strong></small></div><hr>"
+                self.html += '</tt></strong></small>'
+            self.html += '</div><hr>'
             self.txt += '\n==========\n'
 
 
@@ -1546,9 +1544,9 @@ class PreviewItems():
             self.item_list.append(item)
 
     def show_annotations(self):
-        for note in self.item_list:
-            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{note['source']}&nbsp;&mdash;&nbsp;{note['document']}&nbsp;&mdash;&nbsp;{note['tag']}</u></b></tt><br>{note['value']}</div><hr>".replace('\\n', '<br>')
-            self.txt += f"{note['source']} — {note['document']} — {note['tag']}\n{note['value']}\n==========\n".replace('\\n', '\n')
+        for item in self.item_list:
+            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{item['source']}&nbsp;&mdash;&nbsp;{item['document']}&nbsp;&mdash;&nbsp;{item['tag']}</u></b></tt><br>{item['value']}</div><hr>".replace('\\n', '<br>')
+            self.txt += f"{item['source']} — {item['document']} — {item['tag']}\n{item['value']}\n==========\n".replace('\\n', '\n')
 
 
 class ImportAnnotations():
