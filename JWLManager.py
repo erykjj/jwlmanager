@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.5.0'
+VERSION = 'v2.5.0-RC2'
 
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -945,7 +945,7 @@ class ConstructTree():
                 year = y
         if book and chapter:
             bk = str(book).rjust(2, '0') + f': {self.books[book]}'
-            detail = 'Bk. ' + bk #+ ', Ch. ' + ch.rjust(3, ' ')
+            detail = 'Bk. ' + bk
         if not detail and year:
             detail = year
         if not year:
@@ -970,7 +970,7 @@ class ConstructTree():
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]][0]
             else:
-                lng = _('* NO LANGUAGE *') #f'#{row[2]}'
+                lng = _('* NO LANGUAGE *')
             code, year = self.process_code(row[1], row[3])
             detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[0]
