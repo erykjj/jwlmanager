@@ -689,8 +689,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_file():
             fname = ()
-            now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}_{now}.csv', _('Text files')+' (*.csv)')
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}.csv', _('Text files')+' (*.csv)')
             return fname[0]
 
         fname = export_file()
@@ -708,8 +707,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_file():
             fname = ()
-            now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt)')
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{self.combo_category.currentText()}.txt', _('Text files')+' (*.txt)')
             return fname[0]
 
         fname = export_file()
