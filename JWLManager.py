@@ -697,9 +697,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return
-        fields = ['type', 'color', 'title', 'content', 'tags', 'language', 'book', 'chapter', 'block', 'document', 'issue', 'symbol', 'source', 'reference', 'link', 'date']
+        fields = ['type', 'color', 'language', 'tags', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
         with open(fname, 'w', encoding='utf-8') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fields)
+            writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore', dialect='excel')
             writer.writeheader()
             writer.writerows(self.data_viewer_dict)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
@@ -1449,7 +1449,7 @@ class PreviewItems():
                 'symbol': row[10],
                 'source': row[10],
                 'reference': row[11],
-                'date': row[12],
+                'date': row[12][:19].replace('T', ' '),
                 'color': row[13] or 0
             }
             if item['type'] == 1 and item['language'] and item['document']:
