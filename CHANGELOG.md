@@ -11,6 +11,7 @@
 
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
+- Updated translations
 
 ### Fixed
 
