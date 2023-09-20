@@ -696,7 +696,10 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return
-        fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
+        if 'value' in self.data_viewer_dict[0].keys():
+            fields = ['source', 'document', 'tag', 'value']
+        else:
+            fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
         with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore', dialect='excel')
             writer.writeheader()
@@ -1523,7 +1526,7 @@ class PreviewItems():
         for row in self.cur.execute(sql):
             item = {
                 'tag': row[0],
-                'value': row[1].replace('\n', '<br>').rstrip() or '* '+_('NO TEXT')+' *',
+                'value': row[1].rstrip().replace('\n', '\\n') or '* '+_('NO TEXT')+' *',
                 'document': row[2],
                 'issue': row[3] or 0,
                 'symbol': row[4],
