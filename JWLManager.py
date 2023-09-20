@@ -60,7 +60,7 @@ def get_language():
         'fr': 'French (français)',
         'it': 'Italian (italiano)',
         # 'pl': 'Polish (Polski)',
-        'pt': 'Portuguese (português)',
+        'pt': 'Portuguese (Português)',
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
         }
@@ -70,7 +70,7 @@ def get_language():
 
     parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
     parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
-    language_group = parser.add_argument_group('interface language', '-en or leave out for English')
+    language_group = parser.add_argument_group('interface language', 'English by default')
     group = language_group.add_mutually_exclusive_group(required=False)
     for k in sorted(available_languages.keys()):
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])

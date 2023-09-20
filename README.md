@@ -39,13 +39,13 @@ options:
   -v, --version  show version and exit
 
 interface language:
-  -en or leave out for English
+  English by default
 
   -en            English (default)
   -es            Spanish (español)
   -fr            French (français)
   -it            Italian (italiano)
-  -pt            Portuguese (português)
+  -pt            Portuguese (Português)
 ```
 
 Alternatively, you can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included). See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc. The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*` .
