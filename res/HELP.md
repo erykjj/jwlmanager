@@ -22,13 +22,11 @@ The ***View*** menu has some additional options (also accessible directly via th
   * **Short** - abbreviated title
   * **Full** - complete title
 
-**Right-clicking** on a line in the Notes or Annotations categories will bring up a window with a preview of the selected items, provided there aren't too many. The ID of each note is provided for reference.
-
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* archive in case you need to restore after messing up ;-)
 
 #### View (button)
 
-Shows selected Notes and Annotations in a Data Viewer window, from where which text can be copied (and pasted somewhere else) or saved as a CSV file.
+Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or **saved as a CSV or TXT file**.
 
 #### Add
 
