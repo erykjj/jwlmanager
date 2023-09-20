@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.5.0-RC2'
+VERSION = 'v2.5.0-RC3'
 
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -1441,7 +1441,6 @@ class PreviewItems():
                 'title': row[1] or '* '+_('NO TITLE')+' *',
                 'content': row[2].rstrip().replace('\n', '\\n') or '',
                 'tags': row[3],
-                'language': self.languages[row[4]][1] if row[4] >= 0 else None,
                 'book': row[5],
                 'chapter': row[6],
                 'block': row[7],
@@ -1453,6 +1452,10 @@ class PreviewItems():
                 'date': row[12][:10],
                 'color': row[13] or 0
             }
+            if row[4] and row[4] >= 0:
+                item['language'] = self.languages[row[4]][1]
+            else:
+                item['language'] = None
             if item['type'] == 1 and item['language'] and item['document']:
                 if item['block']:
                     par = f"&par={item['block']}"
