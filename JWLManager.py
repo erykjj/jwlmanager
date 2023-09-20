@@ -697,8 +697,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return
-        fields = ['type', 'color', 'language', 'tags', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
-        with open(fname, 'w', encoding='utf-8') as csvfile:
+        fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
+        with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore', dialect='excel')
             writer.writeheader()
             writer.writerows(self.data_viewer_dict)
@@ -1380,7 +1380,7 @@ class PreviewItems():
         self.books = books
         self.languages = languages
         self.aborted = False
-        self.html = '<header>\n\t<style>.tag { color: #768fb8; font-weight: bold; border-radius: 1.5rem; padding: 25px; } .tagline { text-align: right; }</style>\n</header>'
+        self.html = ''
         self.txt = ''
         self.item_list = []
         try:
@@ -1402,7 +1402,7 @@ class PreviewItems():
             SELECT n.BlockType Type,
                 n.Title,
                 n.Content,
-                GROUP_CONCAT(t.Name, '|'),
+                GROUP_CONCAT(t.Name, ' | '),
                 l.MepsLanguage,
                 l.BookNumber,
                 l.ChapterNumber,
@@ -1439,7 +1439,7 @@ class PreviewItems():
                 'type': row[0],
                 'title': row[1] or '* '+_('NO TITLE')+' *',
                 'content': row[2].rstrip().replace('\n', '\\n') or '',
-                'tags': row[3].split('|') if row[3] else None,
+                'tags': row[3],
                 'language': self.languages[row[4]][1] if row[4] else None,
                 'book': row[5],
                 'chapter': row[6],
@@ -1449,7 +1449,7 @@ class PreviewItems():
                 'symbol': row[10],
                 'source': row[10],
                 'reference': row[11],
-                'date': row[12][:19].replace('T', ' '),
+                'date': row[12][:10],
                 'color': row[13] or 0
             }
             if item['type'] == 1 and item['language'] and item['document']:
@@ -1460,6 +1460,10 @@ class PreviewItems():
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
             elif item['type'] == 2 and item['language']:
                 script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
+                if item['reference']:
+                    item['reference'] += ':' + str(item['block'])
+                else:
+                    item['reference'] = script
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
             else:
                 item['link'] = None
@@ -1485,15 +1489,11 @@ class PreviewItems():
                 self.html += '<br>' + note['content'].replace('\\n', '<br>')
                 self.txt += '\n' + note['content'].replace('\\n', '\n')
             if note['tags'] or note['source'] or note['link']:
-                self.html += f"<br><small><strong><tt>__________<br>{note['date'][:10]}"
-                self.txt += '\n__________\n' + note['date'][:10]
+                self.html += f"<br><small><strong><tt>__________<br>{note['date']}"
+                self.txt += '\n__________\n' + note['date']
                 if note['tags']:
-                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-                    self.txt += '\n'
-                    for tag in sorted(note['tags']):
-                        self.html += f"<span class='tag'>{tag}&nbsp;</span>&nbsp;"
-                        self.txt += '{' + tag + '} '
-                    self.txt = self.txt.strip()
+                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + note['tags'] + '}</span>'
+                    self.txt += '\n{' + note['tags'] + '}'
                 if note['source']:
                     self.html += f"<br><i>{note['source']}</i>"
                     self.txt += '\n' + note['source']
