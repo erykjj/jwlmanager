@@ -1462,7 +1462,7 @@ class PreviewItems():
                 else:
                     par = ''
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
-            elif item['type'] == 2 and item['language']:
+            elif item['type'] == 2:
                 script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
                 item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
