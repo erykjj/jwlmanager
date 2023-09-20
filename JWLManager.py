@@ -1385,186 +1385,6 @@ class ExportItems():
         self.export_file.write('*' * 79)
 
 
-class PreviewItems():
-    def __init__(self, category, items, books, languages):
-        self.category = category
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        self.cur = con.cursor()
-        self.books = books
-        self.languages = languages
-        self.aborted = False
-        self.html = ''
-        self.txt = ''
-        self.item_list = []
-        try:
-            self.items = str(items).replace('[', '(').replace(']', ')')
-            if self.category == _('Notes'):
-                self.get_notes()
-                self.show_notes()
-            else:
-                self.get_annotations()
-                self.show_annotations()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
-        self.cur.close()
-        con.close()
-
-    def get_notes(self):
-        sql = f'''
-            SELECT n.BlockType Type,
-                n.Title,
-                n.Content,
-                GROUP_CONCAT(t.Name, ' | '),
-                l.MepsLanguage,
-                l.BookNumber,
-                l.ChapterNumber,
-                n.BlockIdentifier,
-                l.DocumentId,
-                l.IssueTagNumber,
-                l.KeySymbol,
-                l.Title,
-                n.LastModified Date,
-                u.ColorIndex
-            FROM Note n
-                LEFT JOIN
-                Location l USING (
-                    LocationId
-                )
-                LEFT JOIN
-                UserMark u USING (
-                    UserMarkId
-                )
-                LEFT JOIN
-                TagMap USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
-                )
-            WHERE n.NoteId IN {self.items} 
-            GROUP BY n.NoteId
-            ORDER BY Type, Date DESC;
-            '''
-        for row in self.cur.execute(sql):
-            item = {
-                'type': row[0],
-                'title': row[1] or '* '+_('NO TITLE')+' *',
-                'content': row[2].rstrip().replace('\n', '\\n') or '',
-                'tags': row[3],
-                'book': row[5],
-                'chapter': row[6],
-                'block': row[7],
-                'document': row[8],
-                'issue': row[9] or 0,
-                'symbol': row[10],
-                'source': row[10],
-                'reference': row[11],
-                'date': row[12][:10],
-                'color': row[13] or 0
-            }
-            if row[4] and row[4] >= 0:
-                item['language'] = self.languages[row[4]][1]
-            else:
-                item['language'] = None
-            if item['type'] == 1 and item['language'] and item['document']:
-                if item['block']:
-                    par = f"&par={item['block']}"
-                else:
-                    par = ''
-                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
-            elif item['type'] == 2:
-                script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
-                item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
-                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
-            else:
-                item['link'] = None
-            if item['issue'] > 10000000:
-                issue = str(item['issue'])
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                item['source'] += f' {yr}-{m}{d}'
-            self.item_list.append(item)
-
-    def show_notes(self):
-        clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
-        for item in self.item_list:
-            cl = f"style='background-color: {clrs[item['color']]};'"
-            self.html += f"<div {cl}><b><u>{item['title']}</u></b>"
-            self.txt += item['title']
-            if item['content']:
-                self.html += '<br>' + item['content'].replace('\\n', '<br>')
-                self.txt += '\n' + item['content'].replace('\\n', '\n')
-            if item['tags'] or item['source'] or item['link']:
-                self.html += f"<br><small><strong><tt>__________<br>{item['date']}"
-                self.txt += '\n__________\n' + item['date']
-                if item['tags']:
-                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['tags'] + '}</span>'
-                    self.txt += '\n{' + item['tags'] + '}'
-                if item['source']:
-                    self.html += f"<br><i>{item['source']}</i>-{item['language']}"
-                    self.txt += f"\n{item['source']}-{item['language']}"
-                if item['reference']:
-                    self.html += f"&nbsp;&mdash;&nbsp;{item['reference']}"
-                    self.txt += ' — ' + item['reference']
-                if item['link']:
-                    lnk = item['link']
-                    self.html += f"<br><a href='{lnk}'>{lnk}</a>"
-                    self.txt += '\n' + lnk
-                self.html += '</tt></strong></small>'
-            self.html += '</div><hr>'
-            self.txt += '\n==========\n'
-
-
-    def get_annotations(self):
-        sql = f'''
-            SELECT TextTag,
-                Value,
-                l.DocumentId doc,
-                l.IssueTagNumber,
-                l.KeySymbol,
-                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
-            FROM InputField
-                LEFT JOIN
-                Location l USING (
-                    LocationId
-                )
-            WHERE LocationId IN {self.items}
-            ORDER BY doc, i;
-            '''
-        for row in self.cur.execute(sql):
-            item = {
-                'tag': row[0],
-                'value': row[1].rstrip().replace('\n', '\\n') or '* '+_('NO TEXT')+' *',
-                'document': row[2],
-                'issue': row[3] or 0,
-                'symbol': row[4],
-                'source': row[4]
-            }
-            if item['issue'] > 10000000:
-                issue = str(item['issue'])
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                item['source'] += f' {yr}-{m}{d}'
-            self.item_list.append(item)
-
-    def show_annotations(self):
-        for item in self.item_list:
-            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{item['source']}&nbsp;&mdash;&nbsp;{item['document']}&nbsp;&mdash;&nbsp;{item['tag']}</u></b></tt><br>{item['value']}</div><hr>".replace('\\n', '<br>')
-            self.txt += f"{item['source']} — {item['document']} — {item['tag']}\n{item['value']}\n==========\n".replace('\\n', '\n')
-
-
 class ImportAnnotations():
     def __init__(self, fname=''):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
@@ -1896,6 +1716,186 @@ class ImportNotes():
         self.cur.execute(sql)
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs.get('TAGS'))
+
+
+class PreviewItems():
+    def __init__(self, category, items, books, languages):
+        self.category = category
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
+        self.cur = con.cursor()
+        self.books = books
+        self.languages = languages
+        self.aborted = False
+        self.html = ''
+        self.txt = ''
+        self.item_list = []
+        try:
+            self.items = str(items).replace('[', '(').replace(']', ')')
+            if self.category == _('Notes'):
+                self.get_notes()
+                self.show_notes()
+            else:
+                self.get_annotations()
+                self.show_annotations()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.aborted = True
+        self.cur.close()
+        con.close()
+
+    def get_notes(self):
+        sql = f'''
+            SELECT n.BlockType Type,
+                n.Title,
+                n.Content,
+                GROUP_CONCAT(t.Name, ' | '),
+                l.MepsLanguage,
+                l.BookNumber,
+                l.ChapterNumber,
+                n.BlockIdentifier,
+                l.DocumentId,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                l.Title,
+                n.LastModified Date,
+                u.ColorIndex
+            FROM Note n
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+                LEFT JOIN
+                UserMark u USING (
+                    UserMarkId
+                )
+                LEFT JOIN
+                TagMap USING (
+                    NoteId
+                )
+                LEFT JOIN
+                Tag t USING (
+                    TagId
+                )
+            WHERE n.NoteId IN {self.items} 
+            GROUP BY n.NoteId
+            ORDER BY Type, Date DESC;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'type': row[0],
+                'title': row[1] or '* '+_('NO TITLE')+' *',
+                'content': row[2].rstrip().replace('\n', '\\n') or '',
+                'tags': row[3],
+                'book': row[5],
+                'chapter': row[6],
+                'block': row[7],
+                'document': row[8],
+                'issue': row[9] or 0,
+                'symbol': row[10],
+                'source': row[10],
+                'reference': row[11],
+                'date': row[12][:10],
+                'color': row[13] or 0
+            }
+            if row[4] and row[4] >= 0:
+                item['language'] = self.languages[row[4]][1]
+            else:
+                item['language'] = None
+            if item['type'] == 1 and item['language'] and item['document']:
+                if item['block']:
+                    par = f"&par={item['block']}"
+                else:
+                    par = ''
+                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
+            elif item['type'] == 2:
+                script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
+                item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
+                item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
+            else:
+                item['link'] = None
+            if item['issue'] > 10000000:
+                issue = str(item['issue'])
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                item['source'] += f' {yr}-{m}{d}'
+            self.item_list.append(item)
+
+    def show_notes(self):
+        clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
+        for item in self.item_list:
+            cl = f"style='background-color: {clrs[item['color']]};'"
+            self.html += f"<div {cl}><b><u>{item['title']}</u></b>"
+            self.txt += item['title']
+            if item['content']:
+                self.html += '<br>' + item['content'].replace('\\n', '<br>')
+                self.txt += '\n' + item['content'].replace('\\n', '\n')
+            if item['tags'] or item['source'] or item['link']:
+                self.html += f"<br><small><strong><tt>__________<br>{item['date']}"
+                self.txt += '\n__________\n' + item['date']
+                if item['tags']:
+                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['tags'] + '}</span>'
+                    self.txt += '\n{' + item['tags'] + '}'
+                if item['source']:
+                    self.html += f"<br><i>{item['source']}</i>-{item['language']}"
+                    self.txt += f"\n{item['source']}-{item['language']}"
+                if item['reference']:
+                    self.html += f"&nbsp;&mdash;&nbsp;{item['reference']}"
+                    self.txt += ' — ' + item['reference']
+                if item['link']:
+                    lnk = item['link']
+                    self.html += f"<br><a href='{lnk}'>{lnk}</a>"
+                    self.txt += '\n' + lnk
+                self.html += '</tt></strong></small>'
+            self.html += '</div><hr>'
+            self.txt += '\n==========\n'
+
+
+    def get_annotations(self):
+        sql = f'''
+            SELECT TextTag,
+                Value,
+                l.DocumentId doc,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+            FROM InputField
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+            WHERE LocationId IN {self.items}
+            ORDER BY doc, i;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'tag': row[0],
+                'value': row[1].rstrip().replace('\n', '\\n') or '* '+_('NO TEXT')+' *',
+                'document': row[2],
+                'issue': row[3] or 0,
+                'symbol': row[4],
+                'source': row[4]
+            }
+            if item['issue'] > 10000000:
+                issue = str(item['issue'])
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                item['source'] += f' {yr}-{m}{d}'
+            self.item_list.append(item)
+
+    def show_annotations(self):
+        for item in self.item_list:
+            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{item['source']}&nbsp;&mdash;&nbsp;{item['document']}&nbsp;&mdash;&nbsp;{item['tag']}</u></b></tt><br>{item['value']}</div><hr>".replace('\\n', '<br>')
+            self.txt += f"{item['source']} — {item['document']} — {item['tag']}\n{item['value']}\n==========\n".replace('\\n', '\n')
 
 
 class ObscureItems():
