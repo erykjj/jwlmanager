@@ -6,6 +6,8 @@
 - Added View button for Notes and Annotations (replacing the right-click funtionality)
 - Added functionality to save Data Viewer as CSV and TXT
 - Allow opening .jwlplaylist files
+- Location.Title is now included in Note export ({TITLE=} attribute), and will be restored on import
+  - This is *not* the note title, but the page heading/subheading where the note is located (or Bible book name and chapter)
 
 ### Changed
 
