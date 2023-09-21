@@ -26,7 +26,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 
 #### View (button)
 
-Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or **saved as a CSV or TXT file**.
+Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or **saved as a CSV or TXT file**. Note that all files are Unicode UTF-8 encoded. If you open them in another application (MS Excel, for example), make sure to select the correct encoding.
 
 #### Add
 
