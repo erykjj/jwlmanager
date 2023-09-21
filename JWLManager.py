@@ -1798,32 +1798,32 @@ class PreviewItems():
                 'date': row[12][:10],
                 'color': row[13] or 0
             }
-            if row[4] and row[4] >= 0:
+            try:
                 item['language'] = self.languages[row[4]][1]
-            else:
+            except:
                 item['language'] = None
-            if item['type'] == 1 and item['language'] and item['document']:
+            if item['type'] == 1 and item['document']:
                 if item['block']:
                     par = f"&par={item['block']}"
                 else:
                     par = ''
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
+                if item['issue'] > 10000000:
+                    issue = str(item['issue'])
+                    yr = issue[0:4]
+                    m = issue[4:6]
+                    d = issue[6:]
+                    if d == '00':
+                        d = ''
+                    else:
+                        d = '-' + d
+                    item['source'] += f' {yr}-{m}{d}'
             elif item['type'] == 2:
                 script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
                 item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
             else:
                 item['link'] = None
-            if item['issue'] > 10000000:
-                issue = str(item['issue'])
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                item['source'] += f' {yr}-{m}{d}'
             self.item_list.append(item)
 
     def show_notes(self):
