@@ -2,7 +2,7 @@
 ######
 Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** also works.
 ######
-Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* OTHER \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* UN-TAGGED \**.
+Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* OTHER \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* NO TAG \**.
 ######
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
 ######
@@ -90,7 +90,7 @@ The **{RANGE=}** attribute is optional and indicates the starting and ending wor
 ######
 **{TAGS=}** is used to add one or more tags to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
 ######
-**{DATE=}** is the date of last modification for each note in the format *yyyy-mm-dd*. If empty, and the note is new, the date of import is used; if the note is updated, the currently-set date is retained. Keep in mind that if you are using the option to first delete the notes with a special {TITLE=} character, the historical date will also need to be reimported.
+**{CREATED=}** is the date the note was created, and **{MODIFIED=}** is the date of last modification for each note in the format *yyyy-mm-dd*. If empty, and the note is new, the date of import is used. Keep in mind that if you are using the option to first delete the notes with a special {TITLE=} character, the created date will also need to be reimported if you wish to retain it.
 ######
 Each note has to start with such a header. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header =\=={END}===.
 ######
