@@ -1574,7 +1574,7 @@ class ImportNotes():
     def import_items(self):
         count = 0
         notes = self.import_file.read().replace("'", "''")
-        for item in regex.finditer('\n===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S):
+        for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
             try:
                 count += 1
                 header = item.group(1)
