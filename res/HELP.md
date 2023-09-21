@@ -51,16 +51,17 @@ Editing or creating a Highlights or Annotations import file is *not* recommended
 The accepted format for the Notes import file is like this:
     
     {TITLE=»}
-    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{DATE=2023-10-19}===
+    
+    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{CREATED=2023-10-19}{MODIFIED=2022-10-19}===
     » Note Title
     Multi-line...
     ...note
-    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{RANGE=0-1}{TAGS=research}{DATE=}===
+    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{RANGE=0-1}{TAGS=research}{MODIFIED=2023-02-19}{CREATED=2023-10-19}===
     » Another Note Title
     Multi-line...
     ...
     ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}{DATE=2023-10-19}===
+    ==={CAT=INDEPENDENT}{TAGS=personal}{CREATED=2023-10-19}{CREATED=2023-10-19}===
     » Still Another Note Title
     Multi-line...
     ...note
