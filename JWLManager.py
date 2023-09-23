@@ -700,7 +700,7 @@ class Window(QMainWindow, Ui_MainWindow):
             fields = ['source', 'document', 'tag', 'value']
         else:
             fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
-        with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
+        with open(fname, 'w', encoding='utf-8-sig', newline='', ) as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore', dialect='excel')
             writer.writeheader()
             writer.writerows(self.data_viewer_dict)
@@ -1785,7 +1785,7 @@ class PreviewItems():
             item = {
                 'type': row[0],
                 'title': row[1] or '* '+_('NO TITLE')+' *',
-                'content': row[2].rstrip().replace('\n', '\\n') or '',
+                'content': row[2].rstrip() or '',
                 'tags': row[3],
                 'book': row[5],
                 'chapter': row[6],
@@ -1833,8 +1833,8 @@ class PreviewItems():
             self.html += f"<div {cl}><b><u>{item['title']}</u></b>"
             self.txt += item['title']
             if item['content']:
-                self.html += '<br>' + item['content'].replace('\\n', '<br>')
-                self.txt += '\n' + item['content'].replace('\\n', '\n')
+                self.html += '<br>' + item['content'].replace('\n', '<br>')
+                self.txt += '\n' + item['content']
             if item['tags'] or item['source'] or item['link']:
                 self.html += f"<br><small><strong><tt>__________<br>{item['date']}"
                 self.txt += '\n__________\n' + item['date']
@@ -1875,7 +1875,7 @@ class PreviewItems():
         for row in self.cur.execute(sql):
             item = {
                 'tag': row[0],
-                'value': row[1].rstrip().replace('\n', '\\n') or '* '+_('NO TEXT')+' *',
+                'value': row[1].rstrip() or '* '+_('NO TEXT')+' *',
                 'document': row[2],
                 'issue': row[3] or 0,
                 'symbol': row[4],
