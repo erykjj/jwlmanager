@@ -15,6 +15,7 @@
   - Colored notes, links to source (via wol.jw.org)
 - Updated translations
 - Updated Help file
+- Packages built on Python 11
 
 ### Fixed
 
