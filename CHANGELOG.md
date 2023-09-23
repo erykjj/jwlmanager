@@ -13,6 +13,8 @@
 
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
+- Tags in export/import file separated with "|" (instead of ",")
+  - **Careful with importing older export files!**
 - Updated translations
 - Updated Help file
 - Packages built on Python 11
@@ -24,6 +26,10 @@
 - Removed right-clicking for Data Viewer
 
 ____
+## [3.0.0-beta]
+
+- FOR TESTING AND FEEDBACK ONLY
+
 ## [2.4.2] - 2023-08-25
 ### Fixed
 
