@@ -1817,7 +1817,9 @@ class PreviewItems():
                         d = ''
                     else:
                         d = '-' + d
-                    item['source'] += f' {yr}-{m}{d}'
+                    item['issue'] = f' {yr}-{m}{d}'
+                else:
+                    item['issue'] = ''
             elif item['type'] == 2:
                 script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
                 item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
@@ -1842,8 +1844,8 @@ class PreviewItems():
                     self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['tags'] + '}</span>'
                     self.txt += '\n{' + item['tags'] + '}'
                 if item['source']:
-                    self.html += f"<br><i>{item['source']}</i>-{item['language']}"
-                    self.txt += f"\n{item['source']}-{item['language']}"
+                    self.html += f"<br><i>{item['source']}</i>-{item['language']}{item['issue']}"
+                    self.txt += f"\n{item['source']}-{item['language']}{item['issue']}"
                 if item['reference']:
                     self.html += f"&nbsp;&mdash;&nbsp;{item['reference']}"
                     self.txt += ' — ' + item['reference']
