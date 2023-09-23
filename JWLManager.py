@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v2.5.0-RC5'
+VERSION = 'v3.0.0-beta1'
 
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
