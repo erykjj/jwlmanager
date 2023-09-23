@@ -699,7 +699,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if 'value' in self.data_viewer_dict[0].keys():
             fields = ['source', 'document', 'tag', 'value']
         else:
-            fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'reference', 'link', 'date', 'title', 'content']
+            fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
         with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore', dialect='excel')
             writer.writeheader()
