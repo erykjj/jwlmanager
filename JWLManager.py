@@ -32,7 +32,6 @@ VERSION = 'v3.0.0-beta2'
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
-from xlsxwriter import Workbook
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
@@ -45,6 +44,7 @@ from random import randint
 from tempfile import mkdtemp
 from time import time
 from traceback import format_exception
+from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
@@ -256,7 +256,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
         self.button_CSV.triggered.connect(self.export_csv)
-        self.button_XLS.triggered.connect(self.export_xls)
+        self.button_XLS.triggered.connect(self.export_xlsx)
         self.button_TXT.triggered.connect(self.export_txt)
 
     def changeEvent(self, event):
@@ -725,7 +725,7 @@ class Window(QMainWindow, Ui_MainWindow):
             txtfile.write(self.data_viewer_txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
 
-    def export_xls(self):
+    def export_xlsx(self):
 
         def export_file():
             fname = ()
