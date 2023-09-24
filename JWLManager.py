@@ -32,6 +32,7 @@ VERSION = 'v3.0.0-beta2'
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
+from xlsxwriter import Workbook
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 from PySide6.QtWidgets import *
@@ -215,8 +216,10 @@ class Window(QMainWindow, Ui_MainWindow):
             toolbar = QToolBar()
             self.button_CSV = QAction('CSV', toolbar)
             self.button_TXT = QAction('TXT', toolbar)
+            self.button_XLS = QAction('MS Excel', toolbar)
             toolbar.addAction(self.button_CSV)
             toolbar.addAction(self.button_TXT)
+            toolbar.addAction(self.button_XLS)
             layout = QVBoxLayout(self.viewer_window)
             layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
@@ -253,6 +256,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
         self.button_CSV.triggered.connect(self.export_csv)
+        self.button_XLS.triggered.connect(self.export_xls)
         self.button_TXT.triggered.connect(self.export_txt)
 
     def changeEvent(self, event):
@@ -720,6 +724,28 @@ class Window(QMainWindow, Ui_MainWindow):
         with open(fname, 'w', encoding='utf-8') as txtfile:
             txtfile.write(self.data_viewer_txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
+
+    def export_xls(self):
+
+        def export_file():
+            fname = ()
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' XLSX', f'{self.working_dir}/{self.combo_category.currentText()}.xlsx', _('MS Excel files')+' (*.xlsx)')
+            return fname[0]
+
+        fname = export_file()
+        if fname == '':
+            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+            return
+        if 'value' in self.data_viewer_dict[0].keys():
+            fields = ['source', 'document', 'tag', 'value']
+        else:
+            fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
+        with Workbook(fname) as workbook:
+            worksheet = workbook.add_worksheet()
+            worksheet.write_row(row=0, col=0, data=fields)
+            for index, item in enumerate(self.data_viewer_dict):
+                row = map(lambda field_id: item.get(field_id, ''), fields)
+                worksheet.write_row(row=index + 1, col=0, data=row)
 
 
     def add_favorite(self):
