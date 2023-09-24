@@ -89,7 +89,7 @@ The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 
 ######
 The **{RANGE=}** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0-1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added.
 ######
-**{TAGS=}** is used to add one or more tags to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
+**{TAGS=}** is used to add one or more tags (separated by "|") to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
 ######
 **{CREATED=}** is the date the note was created, and **{MODIFIED=}** is the date of last modification for each note in the format *yyyy-mm-dd*. If empty, and the note is new, the date of import is used. Keep in mind that if you are using the option to first delete the notes with a special {TITLE=} character, the created date will also need to be reimported if you wish to retain it.
 ######
