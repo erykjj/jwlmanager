@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.0-beta2'
+VERSION = 'v3.0.0-beta3'
 
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -1817,7 +1817,7 @@ class PreviewItems():
                 'chapter': row[6],
                 'block': row[7],
                 'document': row[8],
-                'issue': row[9] or 0,
+                'issue': row[9] or '',
                 'symbol': row[10],
                 'source': row[10],
                 'reference': row[11],
@@ -1834,7 +1834,7 @@ class PreviewItems():
                 else:
                     par = ''
                 item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
-                if item['issue'] > 10000000:
+                if int(item['issue']) > 10000000:
                     issue = str(item['issue'])
                     yr = issue[0:4]
                     m = issue[4:6]
