@@ -746,11 +746,13 @@ class Window(QMainWindow, Ui_MainWindow):
             worksheet = workbook.add_worksheet(APP)
             worksheet.write_row(row=0, col=0, cell_format=bold, data=fields)
             worksheet.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
-            worksheet.freeze_panes(1, 0)
             for index, item in enumerate(self.data_viewer_dict):
                 row = map(lambda field_id: item.get(field_id, ''), fields)
                 worksheet.write_row(row=index+1, col=0, data=row)
                 worksheet.write_string(row=index+1, col=len(fields)-1, string=self.data_viewer_dict[index]['NOTE']) # overwrite any that may have been formatted as URLs
+            worksheet.autofit()
+            worksheet.freeze_panes(1, 0)
+            worksheet.set_column(len(fields)-2, len(fields)-1, 30)
 
 
     def add_favorite(self):
