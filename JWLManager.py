@@ -739,7 +739,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if 'value' in self.data_viewer_dict[0].keys():
             fields = ['source', 'document', 'tag', 'value']
         else:
-            fields = ['TYPE', 'COLOR', 'RANGE', 'TAGS', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'HEADING', 'ISSUE', 'DOC', 'BLOCK', 'LINK', 'CREATED', 'MODIFIED', 'TITLE', 'NOTE']
+            fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
         with Workbook(fname) as workbook:
             workbook.set_properties({'comments': _('Exported from')+f' {self.current_archive.name} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
             bold = workbook.add_format({'bold': True})
@@ -750,9 +750,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 row = map(lambda field_id: item.get(field_id, ''), fields)
                 worksheet.write_row(row=index+1, col=0, data=row)
                 worksheet.write_string(row=index+1, col=len(fields)-1, string=self.data_viewer_dict[index]['NOTE']) # overwrite any that may have been formatted as URLs
-            worksheet.autofit()
+            # worksheet.autofit()
             worksheet.freeze_panes(1, 0)
-            worksheet.set_column(len(fields)-2, len(fields)-1, 30)
+            # worksheet.set_column(len(fields)-4, len(fields)-1, 20)
+            worksheet.set_column(0, len(fields)-1, 20)
 
 
     def add_favorite(self):
@@ -1777,119 +1778,6 @@ class PreviewItems():
         self.cur.close()
         con.close()
 
-    # def get_notes(self):
-    #     sql = f'''
-    #         SELECT n.BlockType Type,
-    #             n.Title,
-    #             n.Content,
-    #             GROUP_CONCAT(t.Name, ' | '),
-    #             l.MepsLanguage,
-    #             l.BookNumber,
-    #             l.ChapterNumber,
-    #             n.BlockIdentifier,
-    #             l.DocumentId,
-    #             l.IssueTagNumber,
-    #             l.KeySymbol,
-    #             l.Title,
-    #             n.LastModified Date,
-    #             u.ColorIndex
-    #         FROM Note n
-    #             LEFT JOIN
-    #             Location l USING (
-    #                 LocationId
-    #             )
-    #             LEFT JOIN
-    #             UserMark u USING (
-    #                 UserMarkId
-    #             )
-    #             LEFT JOIN
-    #             TagMap USING (
-    #                 NoteId
-    #             )
-    #             LEFT JOIN
-    #             Tag t USING (
-    #                 TagId
-    #             )
-    #         WHERE n.NoteId IN {self.items} 
-    #         GROUP BY n.NoteId
-    #         ORDER BY Type, Date DESC;
-    #         '''
-    #     for row in self.cur.execute(sql):
-    #         item = {
-    #             'type': row[0],
-    #             'title': row[1] or '* '+_('NO TITLE')+' *',
-    #             'content': row[2].rstrip() or '',
-    #             'tags': row[3],
-    #             'book': row[5],
-    #             'chapter': row[6],
-    #             'block': row[7],
-    #             'document': row[8],
-    #             'issue': row[9] or '',
-    #             'symbol': row[10],
-    #             'source': row[10],
-    #             'reference': row[11],
-    #             'date': row[12][:10],
-    #             'color': row[13] or 0
-    #         }
-    #         try:
-    #             item['language'] = self.languages[row[4]][1]
-    #         except:
-    #             item['language'] = None
-    #         if item['type'] == 1 and item['document']:
-    #             if item['block']:
-    #                 par = f"&par={item['block']}"
-    #             else:
-    #                 par = ''
-    #             item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&docid={item['document']}{par}"
-    #             if int(item['issue']) > 10000000:
-    #                 issue = str(item['issue'])
-    #                 yr = issue[0:4]
-    #                 m = issue[4:6]
-    #                 d = issue[6:]
-    #                 if d == '00':
-    #                     d = ''
-    #                 else:
-    #                     d = '-' + d
-    #                 item['issue'] = f' {yr}-{m}{d}'
-    #             else:
-    #                 item['issue'] = ''
-    #         elif item['type'] == 2:
-    #             script = str(item['book']).zfill(2) + str(item['chapter']).zfill(3) + str(item['block']).zfill(3)
-    #             item['reference'] = f"{self.books[item['book']]} {item['chapter']}:{item['block']}"
-    #             item['link'] = f"https://www.jw.org/finder?wtlocale={item['language']}&pub={item['symbol']}&bible={script}"
-    #         else:
-    #             item['link'] = None
-    #         self.item_list.append(item)
-
-    # def show_notes(self):
-    #     clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
-    #     for item in self.item_list:
-    #         cl = f"style='background-color: {clrs[item['color']]};'"
-    #         self.html += f"<div {cl}><b><u>{item['title']}</u></b>"
-    #         self.txt += item['title']
-    #         if item['content']:
-    #             self.html += '<br>' + item['content'].replace('\n', '<br>')
-    #             self.txt += '\n' + item['content']
-    #         if item['tags'] or item['source'] or item['link']:
-    #             self.html += f"<br><small><strong><tt>__________<br>{item['date']}"
-    #             self.txt += '\n__________\n' + item['date']
-    #             if item['tags']:
-    #                 self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['tags'] + '}</span>'
-    #                 self.txt += '\n{' + item['tags'] + '}'
-    #             if item['source']:
-    #                 self.html += f"<br><i>{item['source']}</i>-{item['language']}{item['issue']}"
-    #                 self.txt += f"\n{item['source']}-{item['language']}{item['issue']}"
-    #             if item['reference']:
-    #                 self.html += f"&nbsp;&mdash;&nbsp;{item['reference']}"
-    #                 self.txt += ' — ' + item['reference']
-    #             if item['link']:
-    #                 lnk = item['link']
-    #                 self.html += f"<br><a href='{lnk}'>{lnk}</a>"
-    #                 self.txt += '\n' + lnk
-    #             self.html += '</tt></strong></small>'
-    #         self.html += '</div><hr>'
-    #         self.txt += '\n==========\n'
-
 
     def get_notes(self):
         sql = f'''
@@ -1949,8 +1837,8 @@ class PreviewItems():
                 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
-                'MODIFIED': row[12][:10],
-                'CREATED': row[13][:10],
+                'MODIFIED': row[12][:19],
+                'CREATED': row[13][:19],
                 'COLOR': row[14] or 0
             }
             try:
@@ -1983,7 +1871,8 @@ class PreviewItems():
             elif item['TYPE'] == 2:
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}:{item['VS']}"
+                if not item['HEADING']:
+                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
                 item['LINK'] = None
