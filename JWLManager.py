@@ -1837,8 +1837,8 @@ class PreviewItems():
                 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
-                'MODIFIED': row[12][:19],
-                'CREATED': row[13][:19],
+                'MODIFIED': row[12][:19].replace('T', ' '),
+                'CREATED': row[13][:19].replace('T', ' '),
                 'COLOR': row[14] or 0
             }
             try:
