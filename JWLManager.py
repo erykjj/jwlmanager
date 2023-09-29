@@ -1296,15 +1296,10 @@ class ExportItems():
             return self.export_annotations()
 
     def export_notes(self):
-        if self.cur.execute("SELECT * FROM pragma_table_info('Note') WHERE name = 'Created';").fetchone():
-            columns = ', n.Created' # JW Library v14+ has an extra column
-        else:
-            columns = ''
-
         self.export_note_header()
-        self.export_bible(columns)
-        self.export_publications(columns)
-        self.export_independent(columns)
+        self.export_bible()
+        self.export_publications()
+        self.export_independent()
         self.export_file.write('\n==={END}===')
 
     def export_note_header(self):
@@ -1323,9 +1318,9 @@ class ExportItems():
         self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
         self.export_file.write('*' * 79)
 
-    def export_bible(self, columns):
+    def export_bible(self):
         # regular Bible (book, chapter and verse)
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title {columns} FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             title = row[6] or ''
             content = row[7] or ''
@@ -1338,15 +1333,11 @@ class ExportItems():
                 pub_title = row[12]
             else:
                 pub_title = ''
-            if columns != '':
-                created = '{CREATED='+row[13][:10]+'}'
-            else:
-                created = ''
-            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
+            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
             self.export_file.write(txt)
 
         # note in book header - similar to a publication
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title {columns} FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType =1 AND l.BookNumber IS NOT NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType =1 AND l.BookNumber IS NOT NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             title = row[6] or ''
             content = row[7] or ''
@@ -1359,15 +1350,11 @@ class ExportItems():
                 pub_title = row[12]
             else:
                 pub_title = ''
-            if columns != '':
-                created = '{CREATED='+row[13][:10]+'}'
-            else:
-                created = ''
-            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{DOC=0}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
+            txt = '\n==={CAT=BIBLE}{LANG='+str(row[0])+'}{ED='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VER='+str(row[4])+'}{DOC=0}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
             self.export_file.write(txt)
 
-    def export_publications(self, columns):
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title {columns} FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+    def export_publications(self):
+        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             color = str(row[5] or 0)
             title = row[6] or ''
             content = row[7] or ''
@@ -1380,21 +1367,13 @@ class ExportItems():
                 pub_title = row[12]
             else:
                 pub_title = ''
-            if columns != '':
-                created = '{CREATED='+row[13][:10]+'}'
-            else:
-                created = ''
-            txt = '\n==={CAT=PUBLICATION}{LANG='+str(row[0])+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}'+created+'{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
+            txt = '\n==={CAT=PUBLICATION}{LANG='+str(row[0])+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{TITLE='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
             self.export_file.write(txt)
 
-    def export_independent(self, columns):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified {columns} FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
+    def export_independent(self):
+        for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, n.Created FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
             tags = row[2] or ''
-            if columns != '':
-                created = '{CREATED='+row[4][:10]+'}'
-            else:
-                created = ''
-            txt = '\n==={CAT=INDEPENDENT}{TAGS='+tags+'}'+created+'{MODIFIED='+row[3][:10]+'}===\n'+(row[0] or '')+'\n'+(row[1] or '').rstrip()
+            txt = '\n==={CAT=INDEPENDENT}{TAGS='+tags+'}{CREATED='+row[4][:10]+'}{MODIFIED='+row[3][:10]+'}===\n'+(row[0] or '')+'\n'+(row[1] or '').rstrip()
             self.export_file.write(txt)
 
 
@@ -2047,8 +2026,8 @@ class PreviewItems():
                     self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['TAGS'] + '}</span>'
                     self.txt += '\n{' + item['TAGS'] + '}'
                 if item['PUB']:
-                    self.html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}"
-                    self.txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}"
+                    self.html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
+                    self.txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".strip()
                 if item['HEADING']:
                     self.html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
                     self.txt += ' — ' + item['HEADING']
