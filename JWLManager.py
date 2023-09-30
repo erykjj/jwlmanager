@@ -625,7 +625,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
         self.working_dir = Path(fname[0]).parent
-        fn = ExportItems(self.combo_category.currentText(), selected, fname[0],
+        fn = ExportItems(self.combo_category.currentText(), selected, books, lang_by_num, fname[0],
             Path(self.current_archive).stem)
         if fn.aborted:
             self.clean_up()
@@ -1270,23 +1270,23 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category=_('Notes'), items=[], fname='', current_archive=''):
+    def __init__(self, category, items, books, languages, fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.aborted = False
+        self.books = books
+        self.languages = languages
         self.item_list = []
         self.fname = fname
-        if regex.match(r'\.txt$', fname):
+        if regex.search(r'\.txt$', fname):
             self.xlsx = False
         else:
             self.xlsx = True
         try:
             self.items = str(items).replace('[', '(').replace(']', ')')
-            self.export_file = open(fname, 'w', encoding='utf-8')
             self.export_items()
-            self.export_file.close
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
@@ -1295,29 +1295,12 @@ class ExportItems():
 
     def export_items(self):
         if self.category == _('Highlights'):
-            return self.export_highlights()
+            self.export_highlights()
         elif self.category == _('Notes'):
-            self.get_notes()
-            if self.xlsx:
-                if 'value' in self.item_list[0].keys():
-                    fields = ['source', 'document', 'tag', 'value']
-                else:
-                    fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
-                with Workbook(self.fname) as wb:
-                    wb.set_properties({'comments': _('Exported from')+f' {self.current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
-                    bold = wb.add_format({'bold': True})
-                    ws = wb.add_worksheet(APP)
-                    ws.write_row(row=0, col=0, cell_format=bold, data=fields)
-                    ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
-                    for index, item in enumerate(self.item_list):
-                        row = map(lambda field_id: item.get(field_id, ''), fields)
-                        ws.write_row(row=index+1, col=0, data=row)
-                        ws.write_string(row=index+1, col=len(fields)-1, string=self.item_list[index]['NOTE']) # overwrite any that may have been formatted as URLs
-                    ws.freeze_panes(1, 0)
-                    ws.set_column(0, len(fields)-1, 20)
-            # return self.export_notes()
+            self.export_notes()
         elif self.category == _('Annotations'):
-            return self.export_annotations()
+            self.export_annotations()
+
 
     def get_notes(self):
         sql = f'''
@@ -1368,7 +1351,7 @@ class ExportItems():
                 'TYPE': row[0],
                 'TITLE': row[1] or '* '+_('NO TITLE')+' *',
                 'NOTE': row[2].rstrip() or '',
-                'TAGS': row[3],
+                'TAGS': row[3] or '',
                 'BK': row[5],
                 'CH': row[6],
                 'VS': row[7],
@@ -1418,19 +1401,59 @@ class ExportItems():
                 item['LINK'] = None
             self.item_list.append(item)
 
-
-
-
     def export_notes(self):
-        self.export_note_header()
-        self.export_bible()
-        self.export_publications()
-        self.export_independent()
-        self.export_file.write('\n==={END}===')
+        self.get_notes()
+        if self.xlsx:
+            if 'value' in self.item_list[0].keys():
+                fields = ['source', 'document', 'tag', 'value']
+            else:
+                fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
+            wb = Workbook(self.fname)
+            wb.set_properties({'comments': _('Exported from')+f' {self.current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
+            bold = wb.add_format({'bold': True})
+            ws = wb.add_worksheet(APP)
+            ws.write_row(row=0, col=0, cell_format=bold, data=fields)
+            ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
+            for index, item in enumerate(self.item_list):
+                row = map(lambda field_id: item.get(field_id, ''), fields)
+                ws.write_row(row=index+1, col=0, data=row)
+                ws.write_string(row=index+1, col=len(fields)-1, string=self.item_list[index]['NOTE']) # overwrite any that may have been formatted as URLs
+            ws.freeze_panes(1, 0)
+            ws.set_column(0, len(fields)-1, 20)
+            wb.close()
+        else:
+            self.export_file = open(self.fname, 'w', encoding='utf-8')
+            self.export_file.write(self.export_note_header())
+            for row in self.item_list:
+                tags = row['TAGS'].replace(' | ', '|')
+                col = str(row['COLOR']) or '0'
+                rng = row['RANGE'] or ''
+                hdg = row['HEADING'] or ''
+                txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
+                if row.get('BK'):
+                    bk = str(row['BK'])
+                    ch = str(row['CH'])
+                    vs = str(row['VS'])
+                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    if row.get('RANGE'):
+                        txt += '{RANGE='+rng+'}'
+                    if row.get('DOC'):
+                        txt += '{DOC=0}'
+                elif row.get('DOC'):
+                    doc = str(row['DOC']) or ''
+                    iss = str(row['ISSUE']) or ''
+                    blk = str(row['BLOCK']) or ''
+                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}{ISSUE='+iss+'}{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    if row.get('RANGE'):
+                        txt += '{RANGE='+rng+'}'
+                txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
+                self.export_file.write(txt)
+            self.export_file.write('\n==={END}===')
+            self.export_file.close
 
     def export_note_header(self):
         # Note: added invisible char on first line to force UTF-8 encoding
-        self.export_file.write('\n'.join(['{TITLE=}\n ',
+        txt = '\n'.join(['{TITLE=}\n ',
             _('MODIFY FIELD ABOVE BEFORE RE-IMPORTING'),
             _('LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
             _('EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.'),
@@ -1440,70 +1463,9 @@ class ExportItems():
             _('SEPARATE TAGS WITH "|"'),
             _('OR LEAVE EMPTY IF NO TAG: {TAGS=bible|notes} OR {TAGS=}\n'),
             _('FILE SHOULD TERMINATE WITH "==={END}==="\n'),
-            _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')]))
-        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
-        self.export_file.write('*' * 79)
-
-    def export_bible(self):
-        # regular Bible (book, chapter and verse)
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 2 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            lng = lang_by_num[row[0]][1]
-            color = str(row[5] or 0)
-            title = row[6] or ''
-            content = row[7] or ''
-            tags = row[8] or ''
-            if row[10] != None:
-                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
-            else:
-                rng = ''
-            if row[12]:
-                pub_title = row[12]
-            else:
-                pub_title = ''
-            txt = '\n==={LANG='+lng+'}{PUB='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VS='+str(row[4])+'}{HEADING='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
-            self.export_file.write(txt)
-
-        # note in book header - similar to a publication
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.BookNumber, l.ChapterNumber, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType =1 AND l.BookNumber IS NOT NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            lng = lang_by_num[row[0]][1]
-            color = str(row[5] or 0)
-            title = row[6] or ''
-            content = row[7] or ''
-            tags = row[8] or ''
-            if row[10] != None:
-                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
-            else:
-                rng = ''
-            if row[12]:
-                pub_title = row[12]
-            else:
-                pub_title = ''
-            txt = '\n==={LANG='+lng+'}{PUB='+str(row[1])+'}{BK='+str(row[2])+'}{CH='+str(row[3])+'}{VS='+str(row[4])+'}{DOC=0}{HEADING='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
-            self.export_file.write(txt)
-
-    def export_publications(self):
-        for row in self.cur.execute(f"SELECT l.MepsLanguage, l.KeySymbol, l.IssueTagNumber, l.DocumentId, n.BlockIdentifier, u.ColorIndex, n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, b.StartToken, b.EndToken, l.Title, n.Created FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) LEFT JOIN BlockRange b USING ( UserMarkId ) WHERE n.BlockType = 1 AND l.BookNumber IS NULL AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            lng = lang_by_num[row[0]][1]
-            color = str(row[5] or 0)
-            title = row[6] or ''
-            content = row[7] or ''
-            tags = row[8] or ''
-            if row[10] != None:
-                rng = '{RANGE='+f'{row[10]}-{row[11]}'+'}'
-            else:
-                rng = ''
-            if row[12]:
-                pub_title = row[12]
-            else:
-                pub_title = ''
-            txt = '\n==={LANG='+lng+'}{PUB='+str(row[1])+'}{ISSUE='+str(row[2])+'}{DOC='+str(row[3])+'}{BLOCK='+str(row[4])+'}{HEADING='+pub_title+'}{COLOR='+color+'}'+rng+'{TAGS='+tags+'}{CREATED='+row[13][:10]+'}{MODIFIED='+row[9][:10]+'}===\n'+title+'\n'+content.rstrip()
-            self.export_file.write(txt)
-
-    def export_independent(self):
-        for row in self.cur.execute(f"SELECT n.Title, n.Content, GROUP_CONCAT(t.Name, '|'), n.LastModified, n.Created FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) WHERE n.BlockType = 0 AND NoteId IN {self.items} GROUP BY n.NoteId;"):
-            tags = row[2] or ''
-            txt = '\n==={TAGS='+tags+'}{CREATED='+row[4][:10]+'}{MODIFIED='+row[3][:10]+'}===\n'+(row[0] or '')+'\n'+(row[1] or '').rstrip()
-            self.export_file.write(txt)
+            _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')])
+        txt += '\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n"+'*' * 79
+        return txt
 
 
     def export_highlights(self):
