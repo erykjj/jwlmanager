@@ -1,23 +1,34 @@
 # JWLManager Changelog
 
 ## [Unreleased]
+
+**Major release**
+
 ### Added
 
 - Added View button for Notes and Annotations (replacing the right-click funtionality)
-- Added functionality to save Data Viewer as CSV, TXT and MS Excel (XLSX) files
+- Added functionality to save Data Viewer content to a text file
 - Allow opening .jwlplaylist files
 - Location.Title is now included in Note export ({TITLE=} attribute), and will be restored on import
   - This is *not* the note title, but the page heading/subheading where the note is located (or Bible book name and chapter)
 
 ### Changed
 
+- **Export and import Notes and Annotations to/from Excel (*.xlsx) or custom text file (serial with attribute headers)**
+  - Attribute tags/labels simplified (see HELP file)
+    - Tags separated with "|" (instead of ",")
+    - **Will not work with older export files**
+
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
-- Tags in export/import file separated with "|" (instead of ",")
-  - **Careful with importing older export files!**
+  - Close Data Viewer window on archive change
+
 - Updated translations
 - Updated Help file
+
 - Packages built on Python 11
+- **Removed support for older JW Library archives**
+  - Only v14 and up - please update your app
 
 ### Fixed
 
