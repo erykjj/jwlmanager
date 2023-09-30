@@ -502,6 +502,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionUnselect_All.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
         self.selected.setText('**0**')
+        self.viewer_window.close()
         self.switchboard(self.combo_category.currentText())
 
 
