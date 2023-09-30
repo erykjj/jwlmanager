@@ -216,12 +216,12 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.setMinimumSize(500, 500)
             self.viewer_text = QTextEdit(self.viewer_window)
             toolbar = QToolBar()
-            self.button_CSV = QAction('CSV', toolbar)
+            # self.button_CSV = QAction('CSV', toolbar)
             self.button_TXT = QAction('TXT', toolbar)
-            self.button_XLS = QAction('MS Excel', toolbar)
-            toolbar.addAction(self.button_CSV)
+            # self.button_XLS = QAction('MS Excel', toolbar)
+            # toolbar.addAction(self.button_CSV)
             toolbar.addAction(self.button_TXT)
-            toolbar.addAction(self.button_XLS)
+            # toolbar.addAction(self.button_XLS)
             layout = QVBoxLayout(self.viewer_window)
             layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
@@ -257,8 +257,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
-        self.button_CSV.triggered.connect(self.export_csv)
-        self.button_XLS.triggered.connect(self.export_xlsx)
+        # self.button_CSV.triggered.connect(self.export_csv)
+        # self.button_XLS.triggered.connect(self.export_xlsx)
         self.button_TXT.triggered.connect(self.export_txt)
 
     def changeEvent(self, event):
@@ -691,26 +691,26 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
 
-    def export_csv(self):
+    # def export_csv(self):
 
-        def export_file():
-            fname = ()
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}.csv', _('Text files')+' (*.csv)')
-            return fname[0]
+    #     def export_file():
+    #         fname = ()
+    #         fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}.csv', _('Text files')+' (*.csv)')
+    #         return fname[0]
 
-        fname = export_file()
-        if fname == '':
-            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-            return
-        if 'value' in self.data_viewer_dict[0].keys():
-            fields = ['source', 'document', 'tag', 'value']
-        else:
-            fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
-        with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore')
-            writer.writeheader()
-            writer.writerows(self.data_viewer_dict)
-            self.statusBar.showMessage(' '+_('Saved'), 3500)
+    #     fname = export_file()
+    #     if fname == '':
+    #         self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+    #         return
+    #     if 'value' in self.data_viewer_dict[0].keys():
+    #         fields = ['source', 'document', 'tag', 'value']
+    #     else:
+    #         fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
+    #     with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
+    #         writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore')
+    #         writer.writeheader()
+    #         writer.writerows(self.data_viewer_dict)
+    #         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
     def export_txt(self):
 
@@ -727,39 +727,39 @@ class Window(QMainWindow, Ui_MainWindow):
             txtfile.write(self.data_viewer_txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
 
-    def export_xlsx(self):
+    # def export_xlsx(self):
 
-        def export_file():
-            fname = ()
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' XLSX', f'{self.working_dir}/{self.combo_category.currentText()}.xlsx', _('MS Excel files')+' (*.xlsx)')
-            return fname[0]
+    #     def export_file():
+    #         fname = ()
+    #         fname = QFileDialog.getSaveFileName(self, _('Save') + ' XLSX', f'{self.working_dir}/{self.combo_category.currentText()}.xlsx', _('MS Excel files')+' (*.xlsx)')
+    #         return fname[0]
 
-        fname = export_file()
-        if fname == '':
-            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-            return
-        if 'VALUE' in self.data_viewer_dict[0].keys():
-            fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
-        else:
-            fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
-        with Workbook(fname) as wb:
-            if self.current_archive != '':
-                name = self.current_archive.name
-            else:
-                name = _('NEW ARCHIVE')
-            wb.set_properties({'comments': _('Exported from')+f' {name} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
-            bold = wb.add_format({'bold': True})
-            ws = wb.add_worksheet(APP)
-            ws.write_row(row=0, col=0, cell_format=bold, data=fields)
-            ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
-            for index, item in enumerate(self.data_viewer_dict):
-                row = map(lambda field_id: item.get(field_id, ''), fields)
-                ws.write_row(row=index+1, col=0, data=row)
-                ws.write_string(row=index+1, col=len(fields)-1, string=self.data_viewer_dict[index]['NOTE']) # overwrite any that may have been formatted as URLs
-            # ws.autofit()
-            ws.freeze_panes(1, 0)
-            # ws.set_column(len(fields)-4, len(fields)-1, 20)
-            ws.set_column(0, len(fields)-1, 20)
+    #     fname = export_file()
+    #     if fname == '':
+    #         self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+    #         return
+    #     if 'VALUE' in self.data_viewer_dict[0].keys():
+    #         fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
+    #     else:
+    #         fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
+    #     with Workbook(fname) as wb:
+    #         if self.current_archive != '':
+    #             name = self.current_archive.name
+    #         else:
+    #             name = _('NEW ARCHIVE')
+    #         wb.set_properties({'comments': _('Exported from')+f' {name} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
+    #         bold = wb.add_format({'bold': True})
+    #         ws = wb.add_worksheet(APP)
+    #         ws.write_row(row=0, col=0, cell_format=bold, data=fields)
+    #         ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
+    #         for index, item in enumerate(self.data_viewer_dict):
+    #             row = map(lambda field_id: item.get(field_id, ''), fields)
+    #             ws.write_row(row=index+1, col=0, data=row)
+    #             ws.write_string(row=index+1, col=len(fields)-1, string=self.data_viewer_dict[index]['NOTE']) # overwrite any that may have been formatted as URLs
+    #         # ws.autofit()
+    #         ws.freeze_panes(1, 0)
+    #         # ws.set_column(len(fields)-4, len(fields)-1, 20)
+    #         ws.set_column(0, len(fields)-1, 20)
 
 
     def add_favorite(self):
@@ -1294,12 +1294,39 @@ class ExportItems():
         con.close()
 
     def export_items(self):
-        if self.category == _('Highlights'): # TODO: fix opening file
+        if self.category == _('Highlights'):
             self.export_highlights()
         elif self.category == _('Notes'):
             self.export_notes()
         elif self.category == _('Annotations'):
             self.export_annotations()
+
+    def create_xlsx(self, fields):
+        last_field = fields[-1]
+        wb = Workbook(self.fname)
+        wb.set_properties({'comments': _('Exported from')+f' {self.current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
+        bold = wb.add_format({'bold': True})
+        ws = wb.add_worksheet(APP)
+        ws.write_row(row=0, col=0, cell_format=bold, data=fields)
+        ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
+        for index, item in enumerate(self.item_list):
+            row = map(lambda field_id: item.get(field_id, ''), fields)
+            ws.write_row(row=index+1, col=0, data=row)
+            ws.write_string(row=index+1, col=len(fields)-1, string=self.item_list[index][last_field]) # overwrite any that may have been formatted as URLs
+        ws.freeze_panes(1, 0)
+        ws.set_column(0, len(fields)-1, 20)
+        wb.close()
+
+    def process_issue(self, i):
+        issue = str(i)
+        yr = issue[0:4]
+        m = issue[4:6]
+        d = issue[6:]
+        if d == '00':
+            d = ''
+        else:
+            d = '-' + d
+        return f'{yr}-{m}{d}'
 
 
     def get_notes(self):
@@ -1357,7 +1384,7 @@ class ExportItems():
                 'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
-                'ISSUE': None,
+                # 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
                 'MODIFIED': row[12][:19].replace('T', ' '),
@@ -1380,15 +1407,7 @@ class ExportItems():
                     par = ''
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
-                    issue = str(row[9])
-                    yr = issue[0:4]
-                    m = issue[4:6]
-                    d = issue[6:]
-                    if d == '00':
-                        d = ''
-                    else:
-                        d = '-' + d
-                    item['ISSUE'] = f'{yr}-{m}{d}'
+                    item['ISSUE'] = self.process_issue(row[9])
                 else:
                     item['ISSUE'] = ''
             elif item['TYPE'] == 2:
@@ -1404,23 +1423,8 @@ class ExportItems():
     def export_notes(self):
         self.get_notes()
         if self.xlsx:
-            if 'value' in self.item_list[0].keys():
-                fields = ['source', 'document', 'tag', 'value']
-            else:
-                fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
-            wb = Workbook(self.fname)
-            wb.set_properties({'comments': _('Exported from')+f' {self.current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
-            bold = wb.add_format({'bold': True})
-            ws = wb.add_worksheet(APP)
-            ws.write_row(row=0, col=0, cell_format=bold, data=fields)
-            ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
-            for index, item in enumerate(self.item_list):
-                row = map(lambda field_id: item.get(field_id, ''), fields)
-                ws.write_row(row=index+1, col=0, data=row)
-                ws.write_string(row=index+1, col=len(fields)-1, string=self.item_list[index]['NOTE']) # overwrite any that may have been formatted as URLs
-            ws.freeze_panes(1, 0)
-            ws.set_column(0, len(fields)-1, 20)
-            wb.close()
+            fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
+            self.create_xlsx(fields)
         else:
             self.export_file = open(self.fname, 'w', encoding='utf-8')
             self.export_file.write(self.export_note_header())
@@ -1441,9 +1445,9 @@ class ExportItems():
                         txt += '{DOC=0}'
                 elif row.get('DOC'):
                     doc = str(row['DOC']) or ''
-                    iss = str(row['ISSUE']) or ''
+                    iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
                     blk = str(row['BLOCK']) or ''
-                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}{ISSUE='+iss+'}{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                 txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
@@ -1452,7 +1456,7 @@ class ExportItems():
             self.export_file.close
 
     def export_note_header(self):
-        # Note: added invisible char on first line to force UTF-8 encoding
+        # Note: invisible char on first line to force UTF-8 encoding
         txt = '\n'.join(['{TITLE=}\n ',
             _('MODIFY FIELD ABOVE BEFORE RE-IMPORTING'),
             _('LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
@@ -1464,7 +1468,7 @@ class ExportItems():
             _('OR LEAVE EMPTY IF NO TAG: {TAGS=bible|notes} OR {TAGS=}\n'),
             _('FILE SHOULD TERMINATE WITH "==={END}==="\n'),
             _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')])
-        txt += '\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n"+'*' * 79
+        txt += '\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"+'*' * 79
         return txt
 
 
@@ -1479,23 +1483,58 @@ class ExportItems():
 
     def export_highlight_header(self):
         self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
-        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
+        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
         self.export_file.write('*' * 79)
 
 
+    def get_annotations(self):
+        sql = f'''
+            SELECT TextTag,
+                Value,
+                l.DocumentId doc,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+            FROM InputField
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+            WHERE LocationId IN {self.items}
+            ORDER BY doc, i;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'LABEL': row[0],
+                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                'DOC': row[2],
+                'PUB': row[4]
+            }
+            if row[3] > 10000000:
+                item['ISSUE'] = self.process_issue(row[3])
+            else:
+                item['ISSUE'] = None
+            self.item_list.append(item)
+
     def export_annotations(self):
-        self.export_file = open(self.fname, 'w', encoding='utf-8')
-        self.export_annotations_header()
-        for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
-            self.export_file.write(f'\n{row[0]}')
-            for item in range(1,5):
-                string = str(row[item]).replace('\n', r'\n')
-                self.export_file.write(f',{string}')
-        self.export_file.close()
+        self.get_annotations()
+        if self.xlsx:
+            fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
+            self.create_xlsx(fields)
+        else:
+            self.export_file = open(self.fname, 'w', encoding='utf-8')
+            self.export_annotations_header()
+            for row in self.item_list:
+                iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
+                txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
+                self.export_file.write(txt)
+            self.export_file.write('\n==={END}===')
+            self.export_file.close()
 
     def export_annotations_header(self):
-        self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber,\n        Location.KeySymbol, InputField.TextTag,\n        InputField.Value')
-        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n\n")
+        # Note: invisible char on first line to force UTF-8 encoding
+        self.export_file.write('{ANNOTATIONS}\n ')
+        self.export_file.write('\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
         self.export_file.write('*' * 79)
 
 
@@ -2071,7 +2110,6 @@ class PreviewItems():
                 'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
-                # 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
                 'MODIFIED': row[12][:19].replace('T', ' '),
@@ -2158,7 +2196,6 @@ class PreviewItems():
                 'LABEL': row[0],
                 'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
                 'DOC': row[2],
-                # 'ISSUE': row[3] or 0,
                 'PUB': row[4]
             }
             if row[3] > 10000000:
