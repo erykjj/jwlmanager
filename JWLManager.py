@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.0-beta3'
+VERSION = 'v3.0.0-beta4'
 
 import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -216,12 +216,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.setMinimumSize(500, 500)
             self.viewer_text = QTextEdit(self.viewer_window)
             toolbar = QToolBar()
-            # self.button_CSV = QAction('CSV', toolbar)
             self.button_TXT = QAction('TXT', toolbar)
-            # self.button_XLS = QAction('MS Excel', toolbar)
-            # toolbar.addAction(self.button_CSV)
             toolbar.addAction(self.button_TXT)
-            # toolbar.addAction(self.button_XLS)
             layout = QVBoxLayout(self.viewer_window)
             layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
@@ -257,9 +253,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
-        # self.button_CSV.triggered.connect(self.export_csv)
-        # self.button_XLS.triggered.connect(self.export_xlsx)
-        self.button_TXT.triggered.connect(self.export_txt)
+        self.button_TXT.triggered.connect(self.save_txt)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -691,28 +685,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
 
-    # def export_csv(self):
-
-    #     def export_file():
-    #         fname = ()
-    #         fname = QFileDialog.getSaveFileName(self, _('Save') + ' CSV', f'{self.working_dir}/{self.combo_category.currentText()}.csv', _('Text files')+' (*.csv)')
-    #         return fname[0]
-
-    #     fname = export_file()
-    #     if fname == '':
-    #         self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-    #         return
-    #     if 'value' in self.data_viewer_dict[0].keys():
-    #         fields = ['source', 'document', 'tag', 'value']
-    #     else:
-    #         fields = ['type', 'color', 'tags', 'language', 'source', 'book', 'chapter', 'block', 'document', 'reference', 'link', 'date', 'title', 'content']
-    #     with open(fname, 'w', encoding='utf-8', newline='') as csvfile:
-    #         writer = csv.DictWriter(csvfile, fieldnames=fields, extrasaction='ignore')
-    #         writer.writeheader()
-    #         writer.writerows(self.data_viewer_dict)
-    #         self.statusBar.showMessage(' '+_('Saved'), 3500)
-
-    def export_txt(self):
+    def save_txt(self):
 
         def export_file():
             fname = ()
@@ -726,40 +699,6 @@ class Window(QMainWindow, Ui_MainWindow):
         with open(fname, 'w', encoding='utf-8') as txtfile:
             txtfile.write(self.data_viewer_txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
-
-    # def export_xlsx(self):
-
-    #     def export_file():
-    #         fname = ()
-    #         fname = QFileDialog.getSaveFileName(self, _('Save') + ' XLSX', f'{self.working_dir}/{self.combo_category.currentText()}.xlsx', _('MS Excel files')+' (*.xlsx)')
-    #         return fname[0]
-
-    #     fname = export_file()
-    #     if fname == '':
-    #         self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-    #         return
-    #     if 'VALUE' in self.data_viewer_dict[0].keys():
-    #         fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
-    #     else:
-    #         fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
-    #     with Workbook(fname) as wb:
-    #         if self.current_archive != '':
-    #             name = self.current_archive.name
-    #         else:
-    #             name = _('NEW ARCHIVE')
-    #         wb.set_properties({'comments': _('Exported from')+f' {name} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
-    #         bold = wb.add_format({'bold': True})
-    #         ws = wb.add_worksheet(APP)
-    #         ws.write_row(row=0, col=0, cell_format=bold, data=fields)
-    #         ws.autofilter(first_row=0, last_row=99999, first_col=0, last_col=len(fields)-1)
-    #         for index, item in enumerate(self.data_viewer_dict):
-    #             row = map(lambda field_id: item.get(field_id, ''), fields)
-    #             ws.write_row(row=index+1, col=0, data=row)
-    #             ws.write_string(row=index+1, col=len(fields)-1, string=self.data_viewer_dict[index]['NOTE']) # overwrite any that may have been formatted as URLs
-    #         # ws.autofit()
-    #         ws.freeze_panes(1, 0)
-    #         # ws.set_column(len(fields)-4, len(fields)-1, 20)
-    #         ws.set_column(0, len(fields)-1, 20)
 
 
     def add_favorite(self):
@@ -2054,6 +1993,7 @@ class PreviewItems():
         else:
             d = '-' + d
         return f'{yr}-{m}{d}'
+
 
     def get_notes(self):
         sql = f'''
