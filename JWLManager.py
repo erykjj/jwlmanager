@@ -738,8 +738,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
             return
-        if 'value' in self.data_viewer_dict[0].keys():
-            fields = ['source', 'document', 'tag', 'value']
+        if 'VALUE' in self.data_viewer_dict[0].keys():
+            fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
         else:
             fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
         with Workbook(fname) as wb:
@@ -1294,7 +1294,7 @@ class ExportItems():
         con.close()
 
     def export_items(self):
-        if self.category == _('Highlights'):
+        if self.category == _('Highlights'): # TODO: fix opening file
             self.export_highlights()
         elif self.category == _('Notes'):
             self.export_notes()
@@ -1469,11 +1469,13 @@ class ExportItems():
 
 
     def export_highlights(self):
+        self.export_file = open(self.fname, 'w', encoding='utf-8')
         self.export_highlight_header()
         for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
             self.export_file.write(f'\n{row[0]}')
             for item in range(1,13):
                 self.export_file.write(f',{row[item]}')
+        self.export_file.close()
 
     def export_highlight_header(self):
         self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
@@ -1482,12 +1484,14 @@ class ExportItems():
 
 
     def export_annotations(self):
+        self.export_file = open(self.fname, 'w', encoding='utf-8')
         self.export_annotations_header()
         for row in self.cur.execute(f"SELECT l.DocumentId, l.IssueTagNumber, l.KeySymbol, TextTag, Value FROM InputField JOIN Location l USING (LocationId) WHERE l.LocationId IN {self.items};"):
             self.export_file.write(f'\n{row[0]}')
             for item in range(1,5):
                 string = str(row[item]).replace('\n', r'\n')
                 self.export_file.write(f',{string}')
+        self.export_file.close()
 
     def export_annotations_header(self):
         self.export_file.write('{ANNOTATIONS}\n \nENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)\n\nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED ANNOTATIONS\n\nFIELDS: Location.DocumentId, Location.IssueTagNumber,\n        Location.KeySymbol, InputField.TextTag,\n        InputField.Value')
@@ -2001,6 +2005,16 @@ class PreviewItems():
         self.cur.close()
         con.close()
 
+    def process_issue(self, i):
+        issue = str(i)
+        yr = issue[0:4]
+        m = issue[4:6]
+        d = issue[6:]
+        if d == '00':
+            d = ''
+        else:
+            d = '-' + d
+        return f'{yr}-{m}{d}'
 
     def get_notes(self):
         sql = f'''
@@ -2057,7 +2071,7 @@ class PreviewItems():
                 'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
-                'ISSUE': None,
+                # 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
                 'MODIFIED': row[12][:19].replace('T', ' '),
@@ -2080,15 +2094,7 @@ class PreviewItems():
                     par = ''
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
-                    issue = str(row[9])
-                    yr = issue[0:4]
-                    m = issue[4:6]
-                    d = issue[6:]
-                    if d == '00':
-                        d = ''
-                    else:
-                        d = '-' + d
-                    item['ISSUE'] = f'{yr}-{m}{d}'
+                    item['ISSUE'] = self.process_issue(row[9])
                 else:
                     item['ISSUE'] = ''
             elif item['TYPE'] == 2:
@@ -2149,29 +2155,22 @@ class PreviewItems():
             '''
         for row in self.cur.execute(sql):
             item = {
-                'tag': row[0],
-                'value': row[1].rstrip() or '* '+_('NO TEXT')+' *',
-                'document': row[2],
-                'issue': row[3] or 0,
-                'symbol': row[4],
-                'source': row[4]
+                'LABEL': row[0],
+                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                'DOC': row[2],
+                # 'ISSUE': row[3] or 0,
+                'PUB': row[4]
             }
-            if item['issue'] > 10000000:
-                issue = str(item['issue'])
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                item['source'] += f' {yr}-{m}{d}'
+            if row[3] > 10000000:
+                item['ISSUE'] = self.process_issue(row[3])
+            else:
+                item['ISSUE'] = ''
             self.item_list.append(item)
 
     def show_annotations(self):
         for item in self.item_list:
-            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u>{item['source']}&nbsp;&mdash;&nbsp;{item['document']}&nbsp;&mdash;&nbsp;{item['tag']}</u></b></tt><br>{item['value']}</div><hr>".replace('\\n', '<br>')
-            self.txt += f"{item['source']} — {item['document']} — {item['tag']}\n{item['value']}\n==========\n".replace('\\n', '\n')
+            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u><i>{item['PUB']}</i> {item['ISSUE']}&nbsp;&mdash;&nbsp;{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</u></b></tt><br>{item['VALUE']}</div><hr>".replace('\n', '<br>')
+            self.txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
 
 class ObscureItems():
