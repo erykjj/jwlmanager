@@ -526,7 +526,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.import_file(file, _('Annotations'))
             elif header == r'{HIGHLIGHTS}':
                 self.import_file(file, _('Highlights'))
-            elif regex.search('{TITLE=', header):
+            elif regex.search('{NOTES=', header):
                 self.import_file(file, _('Notes'))
             else:
                 QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
@@ -605,9 +605,6 @@ class Window(QMainWindow, Ui_MainWindow):
             fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Export files')+' (*.txt *.xlsx)')
             return fname
 
-        # reply = QMessageBox.question(self, _('Export'), f'{self.selected_items} '+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        # if reply == QMessageBox.No:
-        #     return
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
@@ -1390,11 +1387,6 @@ class ExportItems():
             self.export_file.write('\n==={END}===')
             self.export_file.close
 
-    # def export_note_header(self):
-    #     # Note: invisible char on first line to force UTF-8 encoding
-    #     txt = '{NOTES=}\n \n' + _('Exported from') + f' {self.current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"
-    #     return txt + '*'*79
-
 
     def export_highlights(self):
         self.export_file = open(self.fname, 'w', encoding='utf-8')
@@ -1454,11 +1446,6 @@ class ExportItems():
                 self.export_file.write(txt)
             self.export_file.write('\n==={END}===')
             self.export_file.close()
-
-    # def export_annotations_header(self):
-    #     # Note: invisible char on first line to force UTF-8 encoding
-    #     txt = '{ANNOTATIONS}\n \n' + _('Exported from') + f' {self.current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"
-    #     return txt + '*'*79
 
 
 class ImportAnnotations():
