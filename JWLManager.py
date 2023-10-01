@@ -29,7 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v3.0.0-beta4'
 
-import argparse, csv, gettext, json, os, regex, shutil, sqlite3, sys, uuid
+import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
