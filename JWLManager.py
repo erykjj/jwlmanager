@@ -605,9 +605,9 @@ class Window(QMainWindow, Ui_MainWindow):
             fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Export files')+' (*.txt *.xlsx)')
             return fname
 
-        reply = QMessageBox.question(self, _('Export'), f'{self.selected_items} '+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if reply == QMessageBox.No:
-            return
+        # reply = QMessageBox.question(self, _('Export'), f'{self.selected_items} '+_('items will be EXPORTED. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        # if reply == QMessageBox.No:
+        #     return
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
@@ -2043,8 +2043,8 @@ class PreviewItems():
                 'DOC': row[8],
                 'PUB': row[10],
                 'HEADING': row[11],
-                'MODIFIED': row[12][:19].replace('T', ' '),
-                'CREATED': row[13][:19].replace('T', ' '),
+                'MODIFIED': row[12][:10],
+                # 'CREATED': row[13][:10],
                 'COLOR': row[14] or 0
             }
             try:
