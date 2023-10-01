@@ -21,7 +21,7 @@
 
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
-  - Close Data Viewer window on archive change
+  - Close Data Viewer window on archive change (thank you, @vegsetup for the suggestion)
 
 - Updated translations
 - Updated Help file
