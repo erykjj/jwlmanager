@@ -100,7 +100,6 @@ def read_res(lng):
     def load_languages():
         for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
             lang_by_num[row[0]] = (row[1], row[3])
-            lang_by_sym[row[3]] = row[0]
             if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
@@ -124,10 +123,9 @@ def read_res(lng):
         pubs = pubs.drop(['Language', 'Favorite'], axis=1) # Delete columns
         return favs, pubs
 
-    global _, books, favorites, lang_by_num, lang_by_sym, publications
+    global _, books, favorites, lang_by_num, publications
     _ = tr[lng].gettext
     lang_by_num = {}
-    lang_by_sym = {}
     books = {}
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
     cur = con.cursor()
@@ -621,7 +619,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
         self.working_dir = Path(fname[0]).parent
-        fn = ExportItems(self.combo_category.currentText(), selected, books, lang_by_num, fname[0],
+        fn = ExportItems(self.combo_category.currentText(), selected, books, fname[0],
             Path(self.current_archive).stem)
         if fn.aborted:
             self.clean_up()
@@ -651,7 +649,7 @@ class Window(QMainWindow, Ui_MainWindow):
         elif category == _('Highlights'):
             fn = ImportHighlights(file)
         elif category == _('Notes'):
-            fn = ImportNotes(file, lang_by_sym)
+            fn = ImportNotes(file)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -1215,14 +1213,13 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category, items, books, languages, fname='', current_archive=''):
+    def __init__(self, category, items, books, fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.aborted = False
         self.books = books
-        self.languages = languages
         self.item_list = []
         self.fname = fname
         if regex.search(r'\.txt$', fname):
@@ -1412,8 +1409,8 @@ class ExportItems():
             elif item['TYPE'] == 2:
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                if not item['HEADING']:
-                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
+                # if not item['HEADING']:
+                #     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
                 item['LINK'] = None
@@ -1791,7 +1788,7 @@ class ImportHighlights():
 #         self.process_tags(note_id, attribs.get('TAGS'))
 
 class ImportNotes(): # TODO: what about firt line header??
-    def __init__(self, fname, languages):
+    def __init__(self, fname):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
@@ -1799,7 +1796,6 @@ class ImportNotes(): # TODO: what about firt line header??
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
-        self.languages = languages
         try:
             df = pd.read_excel(fname)
             self.count = self.import_items(df)
@@ -1866,9 +1862,8 @@ class ImportNotes(): # TODO: what about firt line header??
         return usermark_id
 
     def add_scripture_location(self, attribs):
-        lng = self.languages[attribs['LANG']]
-        self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs['PUB'], lng, attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], lng, attribs['BK'], attribs['CH']))
-        result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], lng, attribs['BK'], attribs['CH'])).fetchone()
+        self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+        result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()
         return result[0]
 
     def import_bible(self, attribs):
@@ -1896,10 +1891,9 @@ class ImportNotes(): # TODO: what about firt line header??
 
 
     def add_publication_location(self, attribs):
-        lng = self.languages[attribs['LANG']]
         issue = int(str(attribs['ISSUE']).replace('-', '').ljust(8, '0'))
-        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (issue, attribs['PUB'], lng, attribs['DOC'], attribs['HEADING'], attribs['PUB'], lng, issue, attribs['DOC']))
-        result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], lng, issue, attribs['DOC'])).fetchone()
+        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (issue, attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], issue, attribs['DOC']))
+        result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], issue, attribs['DOC'])).fetchone()
         return result[0]
 
     def import_publication(self, attribs):
