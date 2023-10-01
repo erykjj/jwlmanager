@@ -1257,6 +1257,11 @@ class ExportItems():
         ws.set_column(0, len(fields)-1, 20)
         wb.close()
 
+    def export_header(self, category):
+        # Note: invisible char on first line to force UTF-8 encoding
+        txt = category + '\n \n' + _('Exported from') + f' {self.current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"
+        return txt + '*'*79
+
 
     def get_notes(self):
         sql = f'''
@@ -1356,7 +1361,7 @@ class ExportItems():
             self.create_xlsx(fields)
         else:
             self.export_file = open(self.fname, 'w', encoding='utf-8')
-            self.export_file.write(self.export_note_header())
+            self.export_file.write(self.export_header('{NOTES=}'))
             for row in self.item_list:
                 tags = row['TAGS'].replace(' | ', '|')
                 col = str(row['COLOR']) or '0'
@@ -1385,21 +1390,10 @@ class ExportItems():
             self.export_file.write('\n==={END}===')
             self.export_file.close
 
-    def export_note_header(self):
-        # Note: invisible char on first line to force UTF-8 encoding
-        txt = '\n'.join(['{NOTES=}\n ',
-            _('MODIFY FIELD ABOVE BEFORE RE-IMPORTING'),
-            _('LEAVE {NOTES=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
-            _('EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.'),
-            _('BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n'),
-            _('LINE AFTER HEADER IS NOTE TITLE'),
-            _('REST IS NOTE BODY; CAN BE MULTI-LINE AND IS TERMINATED BY NEXT NOTE HEADER\n'),
-            _('SEPARATE TAGS WITH "|"'),
-            _('OR LEAVE EMPTY IF NO TAG: {TAGS=bible|notes} OR {TAGS=}\n'),
-            _('FILE SHOULD TERMINATE WITH "==={END}==="\n'),
-            _('ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)')])
-        txt += '\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"+'*' * 79
-        return txt
+    # def export_note_header(self):
+    #     # Note: invisible char on first line to force UTF-8 encoding
+    #     txt = '{NOTES=}\n \n' + _('Exported from') + f' {self.current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"
+    #     return txt + '*'*79
 
 
     def export_highlights(self):
@@ -1453,7 +1447,7 @@ class ExportItems():
             self.create_xlsx(fields)
         else:
             self.export_file = open(self.fname, 'w', encoding='utf-8')
-            self.export_annotations_header()
+            self.export_file.write(self.export_header('{ANNOTATIONS}'))
             for row in self.item_list:
                 iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
                 txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
@@ -1461,11 +1455,10 @@ class ExportItems():
             self.export_file.write('\n==={END}===')
             self.export_file.close()
 
-    def export_annotations_header(self):
-        # Note: invisible char on first line to force UTF-8 encoding
-        self.export_file.write('{ANNOTATIONS}\n ')
-        self.export_file.write('\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
-        self.export_file.write('*' * 79)
+    # def export_annotations_header(self):
+    #     # Note: invisible char on first line to force UTF-8 encoding
+    #     txt = '{ANNOTATIONS}\n \n' + _('Exported from') + f' {self.current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n"
+    #     return txt + '*'*79
 
 
 class ImportAnnotations():
