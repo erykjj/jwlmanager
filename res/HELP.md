@@ -40,6 +40,8 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 ######
 This is most useful for Notes and Annotations, as it exports notes from selected publications to an MS Excel (.xlsx) or a text file which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication.
 ######
+The links to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported.
+######
 Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 #####
 ### Import
