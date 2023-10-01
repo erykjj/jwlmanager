@@ -1593,201 +1593,7 @@ class ImportHighlights():
         self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );", (attribs[0], attribs[1], ns, ne, usermark_id))
         return
 
-
-# class ImportNotes():
-#     def __init__(self, fname=''):
-#         con = sqlite3.connect(f'{tmp_path}/{db_name}')
-#         self.cur = con.cursor()
-#         self.cur.executescript("PRAGMA temp_store = 2; \
-#                                 PRAGMA journal_mode = 'MEMORY'; \
-#                                 PRAGMA foreign_keys = 'OFF'; \
-#                                 BEGIN;")
-#         self.aborted = False
-#         try:
-#             self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
-#             if self.pre_import():
-#                 self.count = self.import_items()
-#             else:
-#                 self.count = 0
-#             self.import_file.close
-#             self.cur.execute("PRAGMA foreign_keys = 'ON';")
-#             con.commit()
-#         except Exception as ex:
-#             DebugInfo(ex)
-#             self.aborted = True
-#         self.cur.close()
-#         con.close()
-
-#     def pre_import(self):
-#         line = self.import_file.readline()
-#         m = regex.search('{TITLE=(.?)}', line)
-#         if m:
-#             title_char = m.group(1) or ''
-#         else:
-#             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
-#             return False
-#         if title_char:
-#             self.delete_notes(title_char)
-#         return True
-
-#     def delete_notes(self, title_char):
-#         results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
-#         if results < 1:
-#             return 0
-#         answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-#         if answer == 'No':
-#           return 0
-#         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
-#         return results
-
-#     def import_items(self):
-#         count = 0
-#         notes = self.import_file.read().replace("'", "''")
-#         for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
-#             try:
-#                 count += 1
-#                 header = item.group(1)
-#                 title = item.group(2)
-#                 note = item.group(3)
-#                 attribs = self.process_header(header)
-#                 if attribs['CAT'] == 'BIBLE':
-#                     self.import_bible(attribs, title, note)
-#                 elif attribs['CAT'] == 'PUBLICATION':
-#                     self.import_publication(attribs, title, note)
-#                 elif attribs['CAT'] == 'INDEPENDENT':
-#                     self.import_independent(attribs, title, note)
-#                 else:
-#                     QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMalformed header')+f':\n{attribs}', QMessageBox.Abort)
-#                     return 0
-#             except:
-#                 QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
-#                 self.cur.execute('ROLLBACK;')
-#                 return 0
-#         return count
-
-#     def process_header(self, line):
-#         attribs = {}
-#         for (key, value) in regex.findall('{(.*?)=(.*?)}', line):
-#             attribs[key] = value
-#         attribs['TITLE'] = attribs.get('TITLE') or None
-#         return attribs
-
-#     def process_tags(self, note_id, tags):
-#         self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
-#         for tag in tags.split('|'):
-#             tag = tag.strip()
-#             if not tag:
-#                 continue
-#             self.cur.execute(f"INSERT INTO Tag ( Type, Name ) SELECT 1, '{tag}' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = '{tag}' );")
-#             tag_id = self.cur.execute(f"SELECT TagId from Tag WHERE Name = '{tag}';").fetchone()[0]
-#             position = self.cur.execute(f"SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};").fetchone()[0] + 1
-#             self.cur.execute(f"INSERT Into TagMap (NoteId, TagId, Position) SELECT {note_id}, {tag_id}, {position} WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = {note_id} AND TagId = {tag_id});")
-
-#     def add_usermark(self, attribs, location_id):
-#         if 'COLOR' in attribs.keys():
-#             color = attribs['COLOR']
-#         if color == '0':
-#             return 'NULL'
-#         if 'VER' in attribs.keys():
-#             block_type = 2
-#             identifier = attribs['VER']
-#         else:
-#             block_type = 1
-#             identifier = attribs['BLOCK']
-#         if 'RANGE' in attribs.keys():
-#             ns, ne = attribs['RANGE'].split('-')
-#             fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
-#         else:
-#             fields = ''
-#         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {color} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone()
-#         if result:
-#             usermark_id = result[0]
-#         else:
-#             unique_id = uuid.uuid1()
-#             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {color}, {location_id}, 0, '{unique_id}', 1 );")
-#             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-#         try:
-#             self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( ?, ?, ?, ?, ? );", (block_type, identifier, ns, ne, usermark_id))
-#         except:
-#             pass
-#         return usermark_id
-
-#     def add_scripture_location(self, attribs):
-#         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type ) SELECT '{attribs['ED']}', {attribs['LANG']}, {attribs['BK']}, {attribs['CH']}, '{attribs['TITLE']}', 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']} );")
-#         result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs['ED']}' AND MepsLanguage = {attribs['LANG']} AND BookNumber = {attribs['BK']} AND ChapterNumber = {attribs['CH']};").fetchone()
-#         return result[0]
-
-#     def import_bible(self, attribs, title, note):
-#         location_scripture = self.add_scripture_location(attribs)
-#         usermark_id = self.add_usermark(attribs, location_scripture)
-#         block_type = 2
-#         try:
-#             block_type = int(attribs['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
-#         except:
-#             pass
-#         result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE LocationId = {location_scripture} AND Title = '{title}' AND BlockIdentifier = {attribs['VER']} AND BlockType = {block_type};").fetchone()
-#         if result:
-#             unique_id = result[0]
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or result[1]
-#             created = attribs.get('CREATED') or attribs.get('DATE') or result[2]
-#             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
-#         else:
-#             unique_id = uuid.uuid1()
-#             created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', {usermark_id}, {location_scripture}, '{title}', '{note}', {block_type}, {attribs['VER']}, '{modified}', '{created}' );"
-#         self.cur.execute(sql)
-#         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-#         self.process_tags(note_id, attribs.get('TAGS'))
-
-
-#     def add_publication_location(self, attribs):
-#         self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT {attribs['ISSUE']}, '{attribs['PUB']}', {attribs['LANG']}, {attribs['DOC']}, '{attribs['TITLE']}', 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0);")
-#         result = self.cur.execute(f"SELECT LocationId from Location WHERE KeySymbol = '{attribs['PUB']}' AND MepsLanguage = {attribs['LANG']} AND IssueTagNumber = {attribs['ISSUE']} AND DocumentId = {attribs['DOC']} AND Type = 0;").fetchone()
-#         return result[0]
-
-#     def import_publication(self, attribs, title, note):
-#         location_id = self.add_publication_location(attribs)
-#         usermark_id = self.add_usermark(attribs, location_id)
-#         result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE LocationId = {location_id} AND Title = '{title}' AND BlockIdentifier = {attribs['BLOCK']};").fetchone()
-#         if result:
-#             unique_id = result[0]
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or result[1]
-#             created = attribs.get('CREATED') or attribs.get('DATE') or result[2]
-#             sql = f"UPDATE Note SET UserMarkId = {usermark_id}, Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
-#         else:
-#             created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             unique_id = uuid.uuid1()
-#             sql = f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ( '{unique_id}', {usermark_id}, {location_id}, '{title}', '{note}', 1, {attribs['BLOCK']}, '{modified}', '{created}' );"
-#         self.cur.execute(sql)
-#         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-#         self.process_tags(note_id, attribs.get('TAGS'))
-
-
-#     def import_independent(self, attribs, title, note):
-#         if not title:
-#             result = self.cur.execute(f"SELECT Guid, LastModified FROM Note WHERE Title IS NULL AND Content = '{note}' AND BlockType = 0;").fetchone()
-#         else:
-#             result = self.cur.execute(f"SELECT Guid, LastModified, Created FROM Note WHERE Title = '{title}' AND Content = '{note}' AND BlockType = 0;").fetchone()
-#         if result:
-#             unique_id = result[0]
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or result[1]
-#             created = attribs.get('CREATED') or attribs.get('DATE') or result[2]
-#             sql = f"UPDATE Note SET Content = '{note}', LastModified = '{modified}', Created = '{created}' WHERE Guid = '{unique_id}';"
-#         else:
-#             created = attribs.get('CREATED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             modified = attribs.get('MODIFIED') or attribs.get('DATE') or datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-#             unique_id = uuid.uuid1()
-#             if not title:
-#                 sql = f"INSERT INTO Note (Guid, Content, BlockType, LastModified, Created) VALUES ( '{unique_id}', '{note}', 0, '{modified}', '{created}' );"
-#             else:
-#                 sql = f"INSERT INTO Note (Guid, Title, Content, BlockType, LastModified, Created) VALUES ( '{unique_id}', '{title}', '{note}', 0, '{modified}', '{created}' );"
-#         self.cur.execute(sql)
-#         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-#         self.process_tags(note_id, attribs.get('TAGS'))
-
-class ImportNotes(): # TODO: what about firt line header??
+class ImportNotes():
     def __init__(self, fname):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
@@ -1801,12 +1607,13 @@ class ImportNotes(): # TODO: what about firt line header??
                 self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
                 if self.pre_import():
                     df = self.read_text()
+                    self.count = self.import_notes(df)
                 else:
                     self.count = 0
                 self.import_file.close
             else:
                 df = pd.read_excel(fname).replace("'", "''", regex=True)
-            self.count = self.import_notes(df)
+                self.count = self.import_notes(df)
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
         except Exception as ex:
