@@ -1260,6 +1260,66 @@ class ExportItems():
         return txt + '*'*79
 
 
+    def get_annotations(self):
+        sql = f'''
+            SELECT TextTag,
+                Value,
+                l.DocumentId doc,
+                l.IssueTagNumber,
+                l.KeySymbol,
+                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+            FROM InputField
+                LEFT JOIN
+                Location l USING (
+                    LocationId
+                )
+            WHERE LocationId IN {self.items}
+            ORDER BY doc, i;
+            '''
+        for row in self.cur.execute(sql):
+            item = {
+                'LABEL': row[0],
+                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                'DOC': row[2],
+                'PUB': row[4]
+            }
+            if row[3] > 10000000:
+                item['ISSUE'] = row[3]
+            else:
+                item['ISSUE'] = None
+            self.item_list.append(item)
+
+    def export_annotations(self):
+        self.get_annotations()
+        if self.xlsx:
+            fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
+            self.create_xlsx(fields)
+        else:
+            self.export_file = open(self.fname, 'w', encoding='utf-8')
+            self.export_file.write(self.export_header('{ANNOTATIONS}'))
+            for row in self.item_list:
+                iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
+                txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
+                self.export_file.write(txt)
+            self.export_file.write('\n==={END}===')
+            self.export_file.close()
+
+
+    def export_highlights(self):
+        self.export_file = open(self.fname, 'w', encoding='utf-8')
+        self.export_highlight_header()
+        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
+            self.export_file.write(f'\n{row[0]}')
+            for item in range(1,13):
+                self.export_file.write(f',{row[item]}')
+        self.export_file.close()
+
+    def export_highlight_header(self):
+        self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
+        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
+        self.export_file.write('*' * 79)
+
+
     def get_notes(self):
         sql = f'''
             SELECT n.BlockType Type,
@@ -1386,66 +1446,6 @@ class ExportItems():
                 self.export_file.write(txt)
             self.export_file.write('\n==={END}===')
             self.export_file.close
-
-
-    def export_highlights(self):
-        self.export_file = open(self.fname, 'w', encoding='utf-8')
-        self.export_highlight_header()
-        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
-            self.export_file.write(f'\n{row[0]}')
-            for item in range(1,13):
-                self.export_file.write(f',{row[item]}')
-        self.export_file.close()
-
-    def export_highlight_header(self):
-        self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
-        self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
-        self.export_file.write('*' * 79)
-
-
-    def get_annotations(self):
-        sql = f'''
-            SELECT TextTag,
-                Value,
-                l.DocumentId doc,
-                l.IssueTagNumber,
-                l.KeySymbol,
-                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
-            FROM InputField
-                LEFT JOIN
-                Location l USING (
-                    LocationId
-                )
-            WHERE LocationId IN {self.items}
-            ORDER BY doc, i;
-            '''
-        for row in self.cur.execute(sql):
-            item = {
-                'LABEL': row[0],
-                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
-                'DOC': row[2],
-                'PUB': row[4]
-            }
-            if row[3] > 10000000:
-                item['ISSUE'] = row[3]
-            else:
-                item['ISSUE'] = None
-            self.item_list.append(item)
-
-    def export_annotations(self):
-        self.get_annotations()
-        if self.xlsx:
-            fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
-            self.create_xlsx(fields)
-        else:
-            self.export_file = open(self.fname, 'w', encoding='utf-8')
-            self.export_file.write(self.export_header('{ANNOTATIONS}'))
-            for row in self.item_list:
-                iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
-                self.export_file.write(txt)
-            self.export_file.write('\n==={END}===')
-            self.export_file.close()
 
 
 class ImportAnnotations():
