@@ -46,7 +46,7 @@ Exporting of Highlights is also possible - not so much with a view of direct edi
 #####
 ### Import
 ######
-You can work with the exported MS Excel file (reusing the column headings) or use a special text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import file** into the app.
+You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the Notes, Highlights or Annotations to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import file** into the app.
 ######
 Editing or creating a Highlights import file is *not* recommended. Exported Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
 #### Importing Notes
@@ -55,13 +55,13 @@ The `{NOTES=}` attribute in the first line is *required* to identify a Notes exp
 Attribute key and value pairs must be placed within `{}`. The keys correspond to the first-row column-headings in the MS Excel file. They can be in any order within the note-header. The header line starts and ends with `===`. This header is **required** for each note, and must contain *at least one* attribute pair. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header or `==={END}===`.
 ##### Attributes for all notes (including "independent" ones)
   - **CREATED**
-    - date note was created (yyyy-mm-dd or yyyy-mm-dd HH:MM:SS) - optional
+    - date note was created (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) - optional
     - if not provided and note is being updated, its current value will be used; otherwise, modified date if available; if not, the date and time of import is used
     - eg. `{CREATED=2018-12-10}`
   - **MODIFIED**
-    - date note was modified (yyyy-mm-dd or yyyy-mm-dd HH:MM:SS) - optional
+    - date note was modified (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) - optional
     - if not provided, the date and time of import is used
-    - eg. `{MODIFIED=2019-12-10 22:15:00}`
+    - eg. `{MODIFIED=2019-12-10T22:15:00}`
   - **TAGS**
     - tags (separated by "|") - optional
     - if not provided, no tag is added; if a note is replacing/updating another, its tags will be updated or removed
@@ -76,8 +76,8 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - if no COLOR is provided (or `{COLOR=0}`), token range will be ingnored
     - eg. `{RANGE=4-11}`
   - **LANG**
-    - language (for Bible and publications notes) - optional (will be English if not provided)
-    - eg. `{LANG=E}`
+    - language (for Bible and publications notes) - optional (will be 0 = English if not provided)
+    - eg. `{LANG=1}`
   - **PUB**
     - publication symbol - **required** for notes attached to any publication or Bible
     - if not provided, note will be considered "independent" and attributes listed below will be ignored
@@ -98,8 +98,8 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - eg. `{VS=6}`
 ##### Attributes for publication notes:
   - **ISSUE**
-    - issue (yyyy-mm or yyyy-mm-dd) - **required** for periodical publications
-    - eg. `{ISSUE=2011-04}`
+    - issue (yyyymm00 or yyyymm01 or yyyymm15 ) - **required** for periodical publications
+    - eg. `{ISSUE=20110400}`
   - **DOC**
     - document - **required**
     - eg. `{DOC=202011126}`
