@@ -26,7 +26,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 #####
 ### View (button)
 ######
-Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or **saved as a CSV or TXT file**. Note that all files are Unicode UTF-8 encoded. If you open them in another application (MS Excel, for example), make sure to select the correct encoding.
+Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or saved to a text file.
 #####
 ### Add
 ######
@@ -38,73 +38,78 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 #####
 ### Export
 ######
-This is most useful for Notes, as it exports notes from selected publications to a text file which you can edit directly (add, remove, modify) and later import into your archive (or share with someone else). If the note is attached to a highlight, the range data is also exported. Of course, if you just want to keep the note, you can edit the export file and remove the {RANGE=} attributes before importing (or delete the highlights within the app after).
+This is most useful for Notes and Annotations, as it exports notes from selected publications to an MS Excel (.xlsx) or a text file which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication.
 ######
-Exporting of Annotations and Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive. Annotations are language-agnostic - they show up in different language versions of the *same* publication.
+Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 #####
 ### Import
 ######
-You need to provide a text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting. Or you can create your own. The Higlights file is a CSV text file with a **{HIGHLIGHTS}** header. The Annotations file is also a CSV file, starting with **{ANNOTATIONS}**. You can simply **drag-and-drop the import file** into the app.
+You can work with the exported MS Excel file (reusing the column headings) or use a special text file (UTF-8 encoded) with the Notes, Highlights or Annotations to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import file** into the app.
 ######
-Editing or creating a Highlights or Annotations import file is *not* recommended. Rather, exported Highlights or Annotations can be merged into another archive. Any conflicting/duplicate entries will be replaced. In the case of Highlights, *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
+Editing or creating a Highlights import file is *not* recommended. Exported Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
+#### Importing Notes
+The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the import file are imported. Otherwise, *notes with the same title at the same location will be over-written*, but those where the title was modified even slightly will create an almost duplicate note.
 ######
-The accepted format for the Notes import file is like this:
-    
-    {TITLE=»}
-    
-    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=1}{CH=1}{VER=1}{COLOR=1}{RANGE=0-1}{TAGS=}{CREATED=2023-10-19}{MODIFIED=2022-10-19}===
-    » Note Title
-    Multi-line...
-    ...note
-    ==={CAT=PUBLICATION}{LANG=1}{PUB=rsg17}{ISSUE=0}{DOC=1204075}{BLOCK=517}{COLOR=0}{RANGE=0-1}{TAGS=research}{MODIFIED=2023-02-19}{CREATED=2023-10-19}===
-    » Another Note Title
-    Multi-line...
-    ...
-    ...note
-    ==={CAT=INDEPENDENT}{TAGS=personal}{CREATED=2023-10-19}{CREATED=2023-10-19}===
-    » Still Another Note Title
-    Multi-line...
-    ...note
-    ==={END}===
-######
-The **{TITLE=}** attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with this character (in this case "»"). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted before notes from the import file are imported. Otherwise, *notes with same title at same location will be over-written*, but those where the title was modified even slightly will create an almost duplicate note (this affects *all* notes - regardless of language or publication).
-######
-Each note definition starts with an attribute line. **{CAT=}** define the category. The **{LANG=}** attribute defines the language of the note (0 = English; 1 = Spanish; 2 = German; 3 = French; 4 = Italian; 5 = Brazilian Portuguese; 6 = Dutch; 7 = Japanese, etc.),  and **{ED=}** defines the Bible edition to associate the note with ("nwtsty" = Study Bible; "Rbi8" = Reference Bible) - **{PUB=}** for publications.
-######
-**Observations:**
-  * Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
-  * Unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
-    * To sum up:
-      - {COLOR=} 1-6 *and* {RANGE=} → colored stickie with highlight
-      - {COLOR=} 1-6 and *NO* {RANGE=} → colored stickie (at start of paragraph/verse and no highlight)
-      - {COLOR=0} (with/without {RANGE=}) → grey stickie (at start of paragraph/verse and no highlight)
-######
-![notes](images/notes.png)
-######
-For Bible notes, **{BK=}{CH=}{VER=}** are all numeric and refer to the number of the book (1-66), the chapter and the verse, respectively. For books with just one chapter, use "1" for the chapter number. **{ISSUE=}{DOC=}{BLOCK=}** are the attributes associated with locations within a publication - they are, obviously, a bit more complicated to create, so it's best to simply modify the export file and re-import.
-######
-The **{TITLE=}** attribute is *not* the note title, but the page heading/title where the note is located (or Bible book name and chapter). It is optional.
-######
-The **{COLOR=}** setting (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) indicates the color of the note. The words themselves will not be highlighted; instead, there will be a colored sticky in the left margin next to the verse with the note.
-######
-The **{RANGE=}** attribute is optional and indicates the starting and ending word number (beginning with 0) of the associated highlight. So, {RANGE=0-1} indicates the first two words of the paragraph (indicated by {BLOCK=} in the case of publications, or {VER=} in the case of Bibles). If provided, a highlight of the indicated will be imported (created/replaced as may be the case), unless the color is 0 (grey). To have colored note markers (stickies), either provide a valid range *or* import the corresponding highlights *first*. Otherwise, only a grey marker will be added.
-######
-**{TAGS=}** is used to add one or more tags (separated by "|") to each note. If empty, no tag is added; if a note is replacing/updating another, its tags will be updated or removed.
-######
-**{CREATED=}** is the date the note was created, and **{MODIFIED=}** is the date of last modification for each note in the format *yyyy-mm-dd*. If empty, and the note is new, the date of import is used. Keep in mind that if you are using the option to first delete the notes with a special {TITLE=} character, the created date will also need to be reimported if you wish to retain it.
-######
-Each note has to start with such a header. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header =\=={END}===.
-######
-Here is an example blue note for Jude 21 (in  Spanish):
-######
-    ==={CAT=BIBLE}{LANG=1}{ED=nwtsty}{BK=65}{CH=1}{VER=21}{COLOR=3}{TAGS=}{DATE=}===
-    » para mantenerse en el amor de Dios
-    1. _edificándonos sobre nuestra santísima fe_ mediante el **estudio** diligente de la Palabra de Dios y la participación en la obra de predicar
-    2. _**orando** con espíritu santo_, o en armonía con su influencia
-    3. ejerciendo **fe** en el sacrificio redentor de Jesucristo, que hace posible la _vida eterna_
-######
-On a side-note, I format my notes with Markdown syntax (as above) for, even though JW Library doesn't allow rich-text formatting in the notes, that may change in the future and it should then be realtively easy to convert.
-#####
+Attribute key and value pairs must be placed within `{}`. The keys correspond to the first-row column-headings in the MS Excel file. They can be in any order within the note-header. The header line starts and ends with `===`. This header is **required** for each note, and must contain *at least one* attribute pair. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header or `==={END}===`.
+##### Attributes for all notes (including "independent" ones)
+  - **CREATED**
+    - date note was created (yyyy-mm-dd or yyyy-mm-dd HH:MM:SS) - optional
+    - if not provided and note is being updated, its current value will be used; otherwise, modified date if available; if not, the date and time of import is used
+    - eg. `{CREATED=2018-12-10}`
+  - **MODIFIED**
+    - date note was modified (yyyy-mm-dd or yyyy-mm-dd HH:MM:SS) - optional
+    - if not provided, the date and time of import is used
+    - eg. `{MODIFIED=2019-12-10 22:15:00}`
+  - **TAGS**
+    - tags (separated by "|") - optional
+    - if not provided, no tag is added; if a note is replacing/updating another, its tags will be updated or removed
+    - eg. `{TAGS=Ministerio|Personal}`
+##### Attributes for notes attached to any publication
+  - **COLOR**
+    - note color (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) - optional (will be 0 = grey if not provided)
+    - eg. `{COLOR=2}`
+  - **RANGE**
+    - 0-based index of the tokens ("words") to highlight - optional
+    - if not provided, note will be attached to start of verse/paragraph (no highlighting)
+    - if no COLOR is provided (or `{COLOR=0}`), token range will be ingnored
+    - eg. `{RANGE=4-11}`
+  - **LANG**
+    - language (for Bible and publications notes) - optional (will be English if not provided)
+    - eg. `{LANG=E}`
+  - **PUB**
+    - publication symbol - **required** for notes attached to any publication or Bible
+    - if not provided, note will be considered "independent" and attributes listed below will be ignored
+    - eg. `{PUB=nwtsty}`
+  - **HEADING**
+    - specifies the heading/chapter title where note is placed (or Bible book and chapter) - optional
+    - eg. `{HEADING=Genesis 1}`
+##### Attributes for Bible notes
+  - **BK**
+    - Bible book number (1-66) - **required**
+    - eg. `{BK=1}`
+  - **CH**
+    - chapter number - **required**
+    - for books with just one chapter, use 1
+    - eg. `{CH=45}`
+  - **VS**
+    - verse number - **required**
+    - eg. `{VS=6}`
+##### Attributes for publication notes:
+  - **ISSUE**
+    - issue (yyyy-mm or yyyy-mm-dd) - **required** for periodical publications
+    - eg. `{ISSUE=2011-04}`
+  - **DOC**
+    - document - **required**
+    - eg. `{DOC=202011126}`
+  - **BLOCK**
+    - "paragraph" block - **required**
+    - eg. `{BLOCK=6}`
+##### Observations
+  - Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
+  - Unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
+    - `{COLOR=}` with value of 1 to 6 *and* `{RANGE=}` → colored stickie with highlight
+    - `{COLOR=}` with value of 1 to 6 and *NO* `{RANGE=}` → colored stickie (at start of paragraph/verse and no highlight)
+    - `{COLOR=0}` (with/without `{RANGE=}`) → grey stickie (at start of paragraph/verse and no highlight)
 ### UTILITIES
 ######
 ### Mask
