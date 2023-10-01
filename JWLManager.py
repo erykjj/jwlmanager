@@ -602,7 +602,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_file():
             fname = ()
             now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Export files')+' (*.txt *.xlsx)')
+            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)')
             return fname
 
         selected = []
@@ -629,7 +629,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         if not file:
-            fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', _('Import files')+' (*.txt *.xlsx)')
+            fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)')
             if fname[0] == '':
                 self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
                 return
