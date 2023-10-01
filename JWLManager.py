@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.0-beta4'
+VERSION = 'v3.0.0-beta5'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -1257,17 +1257,6 @@ class ExportItems():
         ws.set_column(0, len(fields)-1, 20)
         wb.close()
 
-    def process_issue(self, i):
-        issue = str(i)
-        yr = issue[0:4]
-        m = issue[4:6]
-        d = issue[6:]
-        if d == '00':
-            d = ''
-        else:
-            d = '-' + d
-        return f'{yr}-{m}{d}'
-
 
     def get_notes(self):
         sql = f'''
@@ -1319,26 +1308,26 @@ class ExportItems():
                 'TITLE': row[1] or '* '+_('NO TITLE')+' *',
                 'NOTE': row[2].rstrip() or '',
                 'TAGS': row[3] or '',
+                'LANG': row[4],
                 'BK': row[5],
                 'CH': row[6],
                 'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
-                # 'ISSUE': None,
                 'PUB': row[10],
                 'HEADING': row[11],
-                'MODIFIED': row[12][:19].replace('T', ' '),
-                'CREATED': row[13][:19].replace('T', ' '),
+                'MODIFIED': row[12][:19],
+                'CREATED': row[13][:19],
                 'COLOR': row[14] or 0
             }
-            try:
-                item['LANG'] = self.languages[row[4]][1]
-            except:
-                item['LANG'] = None
             if row[15]:
                 item['RANGE'] = f'{row[15]}-{row[16]}'
             else:
                 item['RANGE'] = None
+            if 'T' not in item['MODIFIED']:
+                item['MODIFIED'] = item['MODIFIED'][:10] + 'T00:00:00'
+            if 'T' not in item['CREATED']:
+                item['CREATED'] = item['CREATED'][:10] + 'T00:00:00'
             if item['TYPE'] == 1 and item['DOC']:
                 if item['BLOCK']:
                     par = f"&par={item['BLOCK']}"
@@ -1347,9 +1336,9 @@ class ExportItems():
                     par = ''
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
-                    item['ISSUE'] = self.process_issue(row[9])
+                    item['ISSUE'] = row[9]
                 else:
-                    item['ISSUE'] = ''
+                    item['ISSUE'] = None
             elif item['TYPE'] == 2:
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
@@ -1373,12 +1362,13 @@ class ExportItems():
                 col = str(row['COLOR']) or '0'
                 rng = row['RANGE'] or ''
                 hdg = row['HEADING'] or ''
+                lng = str(row['LANG'])
                 txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
                 if row.get('BK'):
                     bk = str(row['BK'])
                     ch = str(row['CH'])
                     vs = str(row['VS'])
-                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{HEADING='+hdg+'}{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                     if row.get('DOC'):
@@ -1387,7 +1377,7 @@ class ExportItems():
                     doc = str(row['DOC']) or ''
                     iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
                     blk = str(row['BLOCK']) or ''
-                    txt += '{LANG='+row['LANG']+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                 txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
@@ -1451,7 +1441,7 @@ class ExportItems():
                 'PUB': row[4]
             }
             if row[3] > 10000000:
-                item['ISSUE'] = self.process_issue(row[3])
+                item['ISSUE'] = row[3]
             else:
                 item['ISSUE'] = None
             self.item_list.append(item)
