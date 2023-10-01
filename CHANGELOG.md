@@ -9,15 +9,16 @@
 - Added View button for Notes and Annotations (replacing the right-click funtionality)
 - Added functionality to save Data Viewer content to a text file
 - Allow opening .jwlplaylist files
-- Location.Title is now included in Note export ({TITLE=} attribute), and will be restored on import
+- Location.Title is now included in Note export ({HEADING=} attribute), and will be restored on import
   - This is *not* the note title, but the page heading/subheading where the note is located (or Bible book name and chapter)
 
 ### Changed
 
-- **Export and import Notes and Annotations to/from Excel (*.xlsx) or custom text file (serial with attribute headers)**
-  - Attribute tags/labels simplified (see HELP file)
-    - Tags separated with "|" (instead of ",")
-    - **Will not work with older export files**
+- **Export and import Notes and Annotations to/from Excel or custom text file (serial with attribute headers)**
+  - Use file-type dropdown to choose between *.txt and *.xlsx
+- Attribute tags/labels simplified (see HELP file)
+  - Tags separated with "|" (instead of ",")
+  - **Will not work with older export files**
 
 - Data Viewer improvements
   - Colored notes, links to source (via wol.jw.org)
@@ -35,6 +36,7 @@
 ### Removed
 
 - Removed right-clicking for Data Viewer
+- Removed confirmation on export (still required if over-writing an existing file)
 
 ____
 ## [3.0.0-beta]
