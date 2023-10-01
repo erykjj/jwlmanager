@@ -602,7 +602,11 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_file():
             fname = ()
             now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)')
+            if self.combo_category.currentText() == _('Highlights'):
+                flt = _('Text files')+' (*.txt)'
+            else:
+                flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
+            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', flt)
             return fname
 
         selected = []
@@ -629,7 +633,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         if not file:
-            fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)')
+            if self.combo_category.currentText() == _('Highlights'):
+                flt = _('Text files')+' (*.txt)'
+            else:
+                flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
+            fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)
             if fname[0] == '':
                 self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
                 return
@@ -1587,6 +1595,7 @@ class ImportHighlights():
         self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
         self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );", (attribs[0], attribs[1], ns, ne, usermark_id))
         return
+
 
 # class ImportNotes():
 #     def __init__(self, fname=''):
