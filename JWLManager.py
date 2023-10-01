@@ -247,7 +247,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.itemChanged.connect(self.tree_selection)
         self.treeWidget.doubleClicked.connect(self.double_clicked)
         self.button_export.clicked.connect(self.export)
-        self.button_import.clicked.connect(self.import_file)
+        self.button_import.clicked.connect(self.import_items)
         self.button_add.clicked.connect(self.add_favorite)
         self.button_delete.clicked.connect(self.delete)
         self.button_view.clicked.connect(self.view)
@@ -521,11 +521,11 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
                 header = f.readline().strip()
             if header == r'{ANNOTATIONS}':
-                self.import_file(file, _('Annotations'))
+                self.import_items(file, _('Annotations'))
             elif header == r'{HIGHLIGHTS}':
-                self.import_file(file, _('Highlights'))
+                self.import_items(file, _('Highlights'))
             elif regex.search('{NOTES=', header):
-                self.import_file(file, _('Notes'))
+                self.import_items(file, _('Notes'))
             else:
                 QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
         else:
@@ -626,7 +626,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(' '+_('Items exported'), 3500)
 
-    def import_file(self, file='', category = ''):
+    def import_items(self, file='', category = ''):
         reply = QMessageBox.warning(self, _('Import'), _('Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
@@ -1891,9 +1891,8 @@ class ImportNotes(): # TODO: what about firt line header??
 
 
     def add_publication_location(self, attribs):
-        issue = int(str(attribs['ISSUE']).replace('-', '').ljust(8, '0'))
-        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (issue, attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], issue, attribs['DOC']))
-        result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], issue, attribs['DOC'])).fetchone()
+        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
+        result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
         return result[0]
 
     def import_publication(self, attribs):
