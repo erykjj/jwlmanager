@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-10-01 18:13-0400\n"
-"PO-Revision-Date: 2023-05-30 13:01+0000\n"
+"PO-Revision-Date: 2023-10-01 23:46+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
 #: JWLManager.py:196
@@ -117,9 +118,8 @@ msgid "Text files"
 msgstr "Fichiers texte"
 
 #: JWLManager.py:606 JWLManager.py:637
-#, fuzzy
 msgid "MS Excel files"
-msgstr "Fichiers texte"
+msgstr "Fichiers MS Excel"
 
 #: JWLManager.py:607
 msgid "Export file"
@@ -400,13 +400,12 @@ msgstr ""
 "Slogan {HIGHLIGHTS} manquant"
 
 #: JWLManager.py:1632
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {NOTES=} attribute line"
 msgstr ""
 "Format de fichier d’importation incorrect :\n"
-"Ligne d’attribut {TITLE=} manquante ou mal formée"
+"Ligne d’attribut {NOTES=} manquante ou mal formée"
 
 #: JWLManager.py:1642
 msgid "notes starting with"
@@ -611,4 +610,3 @@ msgstr "L'application se terminera."
 #~ msgstr ""
 #~ "Format de fichier d’importation incorrect :\n"
 #~ "En-tête mal formé"
-
