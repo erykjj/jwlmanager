@@ -1397,9 +1397,9 @@ class ExportItems():
 
     def export_note_header(self):
         # Note: invisible char on first line to force UTF-8 encoding
-        txt = '\n'.join(['{TITLE=}\n ',
+        txt = '\n'.join(['{NOTES=}\n ',
             _('MODIFY FIELD ABOVE BEFORE RE-IMPORTING'),
-            _('LEAVE {TITLE=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
+            _('LEAVE {NOTES=} (empty) IF YOU DON\'T WANT TO DELETE ANY NOTES WHILE IMPORTING\n'),
             _('EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC.'),
             _('BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n'),
             _('LINE AFTER HEADER IS NOTE TITLE'),
@@ -1648,7 +1648,7 @@ class ImportHighlights():
 #         if m:
 #             title_char = m.group(1) or ''
 #         else:
-#             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {TITLE=} attribute line'), QMessageBox.Abort)
+#             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
 #             return False
 #         if title_char:
 #             self.delete_notes(title_char)
@@ -1811,7 +1811,7 @@ class ImportHighlights():
 #         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
 #         self.process_tags(note_id, attribs.get('TAGS'))
 
-class ImportNotes():
+class ImportNotes(): # TODO: what about firt line header??
     def __init__(self, fname, languages):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
