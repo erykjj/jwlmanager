@@ -1797,8 +1797,16 @@ class ImportNotes(): # TODO: what about firt line header??
                                 BEGIN;")
         self.aborted = False
         try:
-            df = pd.read_excel(fname)
-            self.count = self.import_items(df)
+            if regex.search(r'\.txt$', fname):
+                self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
+                if self.pre_import():
+                    df = self.read_text()
+                else:
+                    self.count = 0
+                self.import_file.close
+            else:
+                df = pd.read_excel(fname).replace("'", "''", regex=True)
+            self.count = self.import_notes(df)
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
         except Exception as ex:
@@ -1807,19 +1815,75 @@ class ImportNotes(): # TODO: what about firt line header??
         self.cur.close()
         con.close()
 
-    def import_items(self, df):
+
+    def pre_import(self):
+        line = self.import_file.readline()
+        m = regex.search('{NOTES=(.?)}', line)
+        if m:
+            title_char = m.group(1) or ''
+        else:
+            QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
+            return False
+        if title_char:
+            self.delete_notes(title_char)
+        return True
+
+    def delete_notes(self, title_char):
+        results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
+        if results < 1:
+            return 0
+        answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if answer == 'No':
+          return 0
+        results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
+        return results
+
+
+    def read_text(self):
+
+        def process_header(line):
+            attribs = {}
+            for (key, value) in regex.findall('{(.*?)=(.*?)}', line):
+                attribs[key] = value
+            attribs['HEADING'] = attribs.get('HEADING') or None
+            return attribs
+
+        count = 0
+        items = []
+        notes = self.import_file.read().replace("'", "''")
+        for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
+            try:
+                count += 1
+                header = item.group(1)
+                attribs = process_header(header)
+                attribs['TITLE'] = item.group(2)
+                attribs['NOTE'] = item.group(3)
+                items.append(attribs)
+            except:
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
+                self.cur.execute('ROLLBACK;')
+                return 0
+        df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
+        return df
+
+    def import_notes(self, df):
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
         count = 0
-        for i, row in df.iterrows():
-            count += 1
-            if pd.notna(row['BK']):
-                self.import_bible(row)
-            elif pd.notna(row['DOC']):
-                self.import_publication(row)
-            else:
-                self.import_independent(row)
+        for _, row in df.iterrows():
+            try:
+                count += 1
+                if pd.notna(row['BK']):
+                    self.import_bible(row)
+                elif pd.notna(row['DOC']):
+                    self.import_publication(row)
+                else:
+                    self.import_independent(row)
+            except:
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
+                self.cur.execute('ROLLBACK;')
+                return 0
         return count
 
 
@@ -1860,6 +1924,7 @@ class ImportNotes(): # TODO: what about firt line header??
         except:
             pass
         return usermark_id
+
 
     def add_scripture_location(self, attribs):
         self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
@@ -2023,6 +2088,7 @@ class PreviewItems():
                 'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
+                'ISSUE': row[9] or '',
                 'PUB': row[10],
                 'HEADING': row[11],
                 'MODIFIED': row[12][:10],
@@ -2046,8 +2112,6 @@ class PreviewItems():
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
                     item['ISSUE'] = self.process_issue(row[9])
-                else:
-                    item['ISSUE'] = ''
             elif item['TYPE'] == 2:
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
