@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.0-beta5'
+VERSION = 'v3.0.0-RC'
 
 import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -120,7 +120,7 @@ def read_res(lng):
         favs = favs.drop(['Full', 'Year', 'Type', 'Favorite'], axis=1)
         favs['Lang'] = favs['Language'].map(lang_by_num)
         pubs = pubs[pubs['Language'] == lng]
-        pubs = pubs.drop(['Language', 'Favorite'], axis=1) # Delete columns
+        pubs = pubs.drop(['Language', 'Favorite'], axis=1)
         return favs, pubs
 
     global _, books, favorites, lang_by_num, publications
@@ -1409,8 +1409,6 @@ class ExportItems():
             elif item['TYPE'] == 2:
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                # if not item['HEADING']:
-                #     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
                 item['LINK'] = None
@@ -1472,7 +1470,7 @@ class ImportAnnotations():
                     self.count = 0
                 self.import_file.close
             else:
-                df = pd.read_excel(fname) #.replace("'", "''", regex=True) # CHECK: may not be necessary when using ? SQL format
+                df = pd.read_excel(fname)
                 self.count = self.import_items(df)
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
@@ -1885,7 +1883,6 @@ class PreviewItems():
                 l.KeySymbol,
                 l.Title,
                 n.LastModified Date,
-                n.Created,
                 u.ColorIndex,
                 b.StartToken,
                 b.EndToken
@@ -1929,15 +1926,14 @@ class PreviewItems():
                 'PUB': row[10],
                 'HEADING': row[11],
                 'MODIFIED': row[12][:10],
-                # 'CREATED': row[13][:10],
-                'COLOR': row[14] or 0
+                'COLOR': row[13] or 0
             }
             try:
                 item['LANG'] = self.languages[row[4]][1]
             except:
                 item['LANG'] = None
-            if row[15]:
-                item['RANGE'] = f'{row[15]}-{row[16]}'
+            if row[14]:
+                item['RANGE'] = f'{row[14]}-{row[15]}'
             else:
                 item['RANGE'] = None
             if item['TYPE'] == 1 and item['DOC']:
