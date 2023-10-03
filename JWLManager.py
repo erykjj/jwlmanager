@@ -1152,9 +1152,9 @@ class AddFavorites():
       else:
           return tag_id, 0
 
-    def add_location(self, symbol, language): # FIX
-      self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{symbol}', {language}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1 );")
-      result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
+    def add_location(self, symbol, language):
+      self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, ?, ?, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1 );', (symbol, language, symbol, language))
+      result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
       return result[0]
 
     def add_favorite(self):
@@ -1462,23 +1462,23 @@ class ImportAnnotations():
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
-        # try:
-        if regex.search(r'\.txt$', fname):
-            self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
-            if self.pre_import():
-                df = self.read_text()
-                self.count = self.import_items(df)
+        try:
+            if regex.search(r'\.txt$', fname):
+                self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
+                if self.pre_import():
+                    df = self.read_text()
+                    self.count = self.import_items(df)
+                else:
+                    self.count = 0
+                self.import_file.close
             else:
-                self.count = 0
-            self.import_file.close
-        else:
-            df = pd.read_excel(fname) #.replace("'", "''", regex=True) # CHECK: may not be necessary when using ? SQL format
-            self.count = self.import_items(df)
-        self.cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        # except Exception as ex:
-        #     DebugInfo(ex)
-        #     self.aborted = True
+                df = pd.read_excel(fname) #.replace("'", "''", regex=True) # CHECK: may not be necessary when using ? SQL format
+                self.count = self.import_items(df)
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.aborted = True
         self.cur.close()
         con.close()
 
@@ -1500,7 +1500,7 @@ class ImportAnnotations():
 
         count = 0
         items = []
-        notes = self.import_file.read() #.replace("'", "''") # CHECK
+        notes = self.import_file.read()
         for item in regex.finditer('^===({.*?})===\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
             try:
                 count += 1
@@ -1525,17 +1525,17 @@ class ImportAnnotations():
         df['ISSUE'].fillna(0, inplace=True)
         count = 0
         for _, row in df.iterrows():
-            # try:
+            try:
                 count += 1
                 location_id = add_location(row)
                 if self.cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
                     self.cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
                 else:
                     self.cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( ?, ?, ? );', (location_id,row['LABEL'], row['VALUE']))
-            # except:
-            #     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
-            #     self.cur.execute('ROLLBACK;')
-            #     return 0
+            except:
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
+                self.cur.execute('ROLLBACK;')
+                return 0
         return count
 
 
@@ -1589,14 +1589,14 @@ class ImportHighlights():
                     return 0
         return count
 
-    def add_scripture_location(self, attribs): # FIX
-        self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs[10]}', {attribs[11]}, {attribs[6]}, {attribs[7]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]} );")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]};").fetchone()
+    def add_scripture_location(self, attribs):
+        self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
+        result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
         return result[0]
 
-    def add_publication_location(self, attribs): # FIX
-        self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {attribs[9]}, '{attribs[10]}', {attribs[11]}, {attribs[8]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]});")
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]};").fetchone()
+    def add_publication_location(self, attribs):
+        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ? );', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
+        result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
         return result[0]
 
     def add_usermark(self, attribs, location_id):
@@ -1749,7 +1749,7 @@ class ImportNotes():
             fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
         else:
             fields = ''
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone() # FIX
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone()
         if result:
             usermark_id = result[0]
         else:
@@ -2065,42 +2065,42 @@ class ObscureItems():
         return s
 
     def obscure_locations(self):
-        rows = self.cur.execute(f'SELECT Title, LocationId FROM Location;').fetchall()
+        rows = self.cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
         for row in rows:
             title, item = row
             if title:
                 title = self.obscure_text(title)
-                self.cur.execute(f'UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
+                self.cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
     def obscure_annotations(self):
-        rows = self.cur.execute(f'SELECT Value, TextTag FROM InputField;').fetchall()
+        rows = self.cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
         for row in rows:
             content, item = row
             if content:
                 content = self.obscure_text(content)
-                self.cur.execute(f'UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
+                self.cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
     def obscure_bookmarks(self):
-        rows = self.cur.execute(f'SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
+        rows = self.cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
                 title = self.obscure_text(title)
             if content:
                 content = self.obscure_text(content)
-                self.cur.execute(f'UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
+                self.cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
             else:
-                self.cur.execute(f'UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
+                self.cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
     def obscure_notes(self):
-        rows = self.cur.execute(f'SELECT Title, Content, NoteId FROM Note;').fetchall()
+        rows = self.cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
                 title = self.obscure_text(title)
             if content:
                 content = self.obscure_text(content)
-            self.cur.execute(f'UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
+            self.cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
 
 
 class Reindex():
