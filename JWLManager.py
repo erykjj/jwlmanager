@@ -2069,38 +2069,38 @@ class ObscureItems():
         for row in rows:
             title, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''") # CHECK
-                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {item};") # FIX
+                title = self.obscure_text(title)
+                self.cur.execute(f'UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
     def obscure_annotations(self):
         rows = self.cur.execute(f'SELECT Value, TextTag FROM InputField;').fetchall()
         for row in rows:
             content, item = row
             if content:
-                content = self.obscure_text(content).replace("'", "''") # CHECK
-                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';") # FIX
+                content = self.obscure_text(content)
+                self.cur.execute(f'UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
     def obscure_bookmarks(self):
         rows = self.cur.execute(f'SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''") # CHECK
+                title = self.obscure_text(title)
             if content:
-                content = self.obscure_text(content).replace("'", "''") # CHECK
-                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};") # FIX
+                content = self.obscure_text(content)
+                self.cur.execute(f'UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
             else:
-                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}' WHERE BookmarkId = {item};")
+                self.cur.execute(f'UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
     def obscure_notes(self):
         rows = self.cur.execute(f'SELECT Title, Content, NoteId FROM Note;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''") # CHECK
+                title = self.obscure_text(title)
             if content:
-                content = self.obscure_text(content).replace("'", "''") # CHECK
-            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};") # FIX
+                content = self.obscure_text(content)
+            self.cur.execute(f'UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
 
 
 class Reindex():
