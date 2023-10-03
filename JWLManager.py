@@ -1668,7 +1668,7 @@ class ImportNotes():
         if results < 1:
             return 0
         answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if answer == 'No':
+        if answer == QMessageBox.No:
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
         return results
@@ -1946,7 +1946,7 @@ class PreviewItems():
                 item['BLOCK'] = None
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
                 if not item['HEADING']:
-                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
+                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}:{item['VS']}"
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
                 item['LINK'] = None
