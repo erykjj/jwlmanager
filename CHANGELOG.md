@@ -33,6 +33,8 @@
 
 ### Fixed
 
+- Fixed minor bugs
+
 ### Removed
 
 - Removed right-clicking for Data Viewer
