@@ -1642,7 +1642,7 @@ class ImportNotes():
                     self.count = 0
                 self.import_file.close
             else:
-                df = pd.read_excel(fname).replace("'", "''", regex=True) # CHECK
+                df = pd.read_excel(fname)
                 self.count = self.import_items(df)
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
@@ -1687,7 +1687,7 @@ class ImportNotes():
 
         count = 0
         items = []
-        notes = self.import_file.read().replace("'", "''") # CHECK
+        notes = self.import_file.read()
         for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
             try:
                 count += 1
@@ -1731,8 +1731,8 @@ class ImportNotes():
             if not tag:
                 continue
             self.cur.execute('INSERT INTO Tag ( Type, Name ) SELECT 1, ? WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = ? );', (tag, tag))
-            tag_id = self.cur.execute(f"SELECT TagId from Tag WHERE Name = '{tag}';").fetchone()[0]
-            position = self.cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+            tag_id = self.cur.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
+            position = self.cur.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
             self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ? );', (note_id, tag_id, position, note_id, tag_id))
 
     def add_usermark(self, attribs, location_id):
