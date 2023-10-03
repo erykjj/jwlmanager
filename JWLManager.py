@@ -94,7 +94,7 @@ def resource_path(relative_path):
 def read_res(lng):
 
     def load_books(lng):
-        for row in cur.execute(f"SELECT Number, Name FROM BibleBooks WHERE Language = {lng};").fetchall():
+        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
             books[row[0]] = row[1]
 
     def load_languages():
@@ -106,7 +106,7 @@ def read_res(lng):
 
     def load_pubs(lng):
         types = {}
-        for row in cur.execute(f"SELECT Type, [Group] FROM Types WHERE Language = {lng};").fetchall():
+        for row in cur.execute(f'SELECT Type, [Group] FROM Types WHERE Language = {lng};').fetchall():
             types[row[0]] = row[1]
         lst = []
         for row in cur.execute("SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Publications;").fetchall():
@@ -1146,13 +1146,13 @@ class AddFavorites():
     def tag_positions(self):
       self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
       tag_id = self.cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
-      position = self.cur.execute(f"SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};").fetchone()
+      position = self.cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
       if position[0] != None:
           return tag_id, position[0] + 1
       else:
           return tag_id, 0
 
-    def add_location(self, symbol, language):
+    def add_location(self, symbol, language): # FIX
       self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, '{symbol}', {language}, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1 );")
       result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{symbol}' AND MepsLanguage = {language} AND IssueTagNumber = 0 AND Type = 1;").fetchone()
       return result[0]
@@ -1209,7 +1209,7 @@ class DeleteItems():
             return self.delete('InputField', 'LocationId')
 
     def delete(self, table, field):
-        return self.cur.execute(f"DELETE FROM {table} WHERE {field} IN {self.items};").rowcount
+        return self.cur.execute(f'DELETE FROM {table} WHERE {field} IN {self.items};').rowcount
 
 
 class ExportItems():
@@ -1313,7 +1313,7 @@ class ExportItems():
     def export_highlights(self):
         self.export_file = open(self.fname, 'w', encoding='utf-8')
         self.export_highlight_header()
-        for row in self.cur.execute(f"SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};"):
+        for row in self.cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};'):
             self.export_file.write(f'\n{row[0]}')
             for item in range(1,13):
                 self.export_file.write(f',{row[item]}')
@@ -1462,18 +1462,23 @@ class ImportAnnotations():
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
-        try:
+        # try:
+        if regex.search(r'\.txt$', fname):
             self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
             if self.pre_import():
-                self.count = self.import_items()
+                df = self.read_text()
+                self.count = self.import_items(df)
             else:
                 self.count = 0
             self.import_file.close
-            self.cur.execute("PRAGMA foreign_keys = 'ON';")
-            con.commit()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
+        else:
+            df = pd.read_excel(fname) #.replace("'", "''", regex=True) # CHECK: may not be necessary when using ? SQL format
+            self.count = self.import_items(df)
+        self.cur.execute("PRAGMA foreign_keys = 'ON';")
+        con.commit()
+        # except Exception as ex:
+        #     DebugInfo(ex)
+        #     self.aborted = True
         self.cur.close()
         con.close()
 
@@ -1485,29 +1490,54 @@ class ImportAnnotations():
             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {ANNOTATIONS} tag line'), QMessageBox.Abort)
             return False
 
-    def import_items(self):
+    def read_text(self):
+
+        def process_header(line):
+            attribs = {}
+            for (key, value) in regex.findall('{(.*?)=(.*?)}', line):
+                attribs[key] = value
+            return attribs
+
         count = 0
-        for line in self.import_file:
-            if regex.match(r'^\d+,\d+,\w+,', line):
-                try:
-                    count += 1
-                    attribs = regex.split(',', line.rstrip(), 4)
-                    location_id = self.add_location(attribs)
-                    value = attribs[4].replace(r'\n', '\n')
-                    if self.cur.execute(f"SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;", (location_id, attribs[3])).fetchone():
-                        self.cur.execute(f"UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;", (value, location_id, attribs[3]))
-                    else:
-                        self.cur.execute(f"INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( ?, ?, ? );", (location_id,attribs[3], value))
-                except:
-                    QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                    self.cur.execute('ROLLBACK;')
-                    return 0
+        items = []
+        notes = self.import_file.read() #.replace("'", "''") # CHECK
+        for item in regex.finditer('^===({.*?})===\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
+            try:
+                count += 1
+                header = item.group(1)
+                attribs = process_header(header)
+                attribs['VALUE'] = item.group(2)
+                items.append(attribs)
+            except:
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
+                self.cur.execute('ROLLBACK;')
+                return 0
+        df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+        return df
+
+    def import_items(self, df):
+
+        def add_location(attribs):
+            self.cur.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
+            result = self.cur.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
+            return result[0]
+
+        df['ISSUE'].fillna(0, inplace=True)
+        count = 0
+        for _, row in df.iterrows():
+            # try:
+                count += 1
+                location_id = add_location(row)
+                if self.cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
+                    self.cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
+                else:
+                    self.cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( ?, ?, ? );', (location_id,row['LABEL'], row['VALUE']))
+            # except:
+            #     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
+            #     self.cur.execute('ROLLBACK;')
+            #     return 0
         return count
 
-    def add_location(self, attribs):
-        self.cur.execute(f"INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);", (attribs[0], attribs[1], attribs[2], attribs[0], attribs[1], attribs[2]))
-        result = self.cur.execute(f"SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;", (attribs[0], attribs[1], attribs[2])).fetchone()
-        return result[0]
 
 class ImportHighlights():
     def __init__(self, fname=''):
@@ -1559,12 +1589,12 @@ class ImportHighlights():
                     return 0
         return count
 
-    def add_scripture_location(self, attribs):
+    def add_scripture_location(self, attribs): # FIX
         self.cur.execute(f"INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT '{attribs[10]}', {attribs[11]}, {attribs[6]}, {attribs[7]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]} );")
         result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND BookNumber = {attribs[6]} AND ChapterNumber = {attribs[7]};").fetchone()
         return result[0]
 
-    def add_publication_location(self, attribs):
+    def add_publication_location(self, attribs): # FIX
         self.cur.execute(f"INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT {attribs[9]}, '{attribs[10]}', {attribs[11]}, {attribs[8]}, {attribs[12]} WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]});")
         result = self.cur.execute(f"SELECT LocationId FROM Location WHERE KeySymbol = '{attribs[10]}' AND MepsLanguage = {attribs[11]} AND IssueTagNumber = {attribs[9]} AND DocumentId = {attribs[8]} AND Type = {attribs[12]};").fetchone()
         return result[0]
@@ -1577,7 +1607,7 @@ class ImportHighlights():
 
     def import_highlight(self, attribs, location_id):
         usermark_id = self.add_usermark(attribs, location_id)
-        result = self.cur.execute(f"SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};")
+        result = self.cur.execute(f'SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};')
         ns = int(attribs[2])
         ne = int(attribs[3])
         blocks = []
@@ -1589,8 +1619,8 @@ class ImportHighlights():
                 ne = max(ce, ne)
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
-        self.cur.execute(f"DELETE FROM BlockRange WHERE BlockRangeId IN {block};")
-        self.cur.execute(f"INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );", (attribs[0], attribs[1], ns, ne, usermark_id))
+        self.cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
+        self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );', (attribs[0], attribs[1], ns, ne, usermark_id))
         return
 
 class ImportNotes():
@@ -1607,13 +1637,13 @@ class ImportNotes():
                 self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
                 if self.pre_import():
                     df = self.read_text()
-                    self.count = self.import_notes(df)
+                    self.count = self.import_items(df)
                 else:
                     self.count = 0
                 self.import_file.close
             else:
-                df = pd.read_excel(fname).replace("'", "''", regex=True)
-                self.count = self.import_notes(df)
+                df = pd.read_excel(fname).replace("'", "''", regex=True) # CHECK
+                self.count = self.import_items(df)
             self.cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
         except Exception as ex:
@@ -1657,7 +1687,7 @@ class ImportNotes():
 
         count = 0
         items = []
-        notes = self.import_file.read().replace("'", "''")
+        notes = self.import_file.read().replace("'", "''") # CHECK
         for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
             try:
                 count += 1
@@ -1673,7 +1703,7 @@ class ImportNotes():
         df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
         return df
 
-    def import_notes(self, df):
+    def import_items(self, df):
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
@@ -1695,14 +1725,14 @@ class ImportNotes():
 
 
     def process_tags(self, note_id, tags):
-        self.cur.execute(f"DELETE FROM TagMap WHERE NoteId = {note_id};")
+        self.cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
         for tag in str(tags).split('|'):
             tag = tag.strip()
             if not tag:
                 continue
             self.cur.execute('INSERT INTO Tag ( Type, Name ) SELECT 1, ? WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = ? );', (tag, tag))
             tag_id = self.cur.execute(f"SELECT TagId from Tag WHERE Name = '{tag}';").fetchone()[0]
-            position = self.cur.execute(f"SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};").fetchone()[0] + 1
+            position = self.cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
             self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ? );', (note_id, tag_id, position, note_id, tag_id))
 
     def add_usermark(self, attribs, location_id):
@@ -1719,7 +1749,7 @@ class ImportNotes():
             fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
         else:
             fields = ''
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone()
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone() # FIX
         if result:
             usermark_id = result[0]
         else:
@@ -1727,7 +1757,7 @@ class ImportNotes():
             self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 );")
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
         try:
-            self.cur.execute(f"INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( ?, ?, ?, ?, ? );", (block_type, identifier, ns, ne, usermark_id))
+            self.cur.execute(f'INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( ?, ?, ?, ?, ? );', (block_type, identifier, ns, ne, usermark_id))
         except:
             pass
         return usermark_id
@@ -2035,42 +2065,42 @@ class ObscureItems():
         return s
 
     def obscure_locations(self):
-        rows = self.cur.execute(f"SELECT Title, LocationId FROM Location;").fetchall()
+        rows = self.cur.execute(f'SELECT Title, LocationId FROM Location;').fetchall()
         for row in rows:
             title, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''")
-                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {item};")
+                title = self.obscure_text(title).replace("'", "''") # CHECK
+                self.cur.execute(f"UPDATE Location SET Title = '{title}' WHERE LocationId = {item};") # FIX
 
     def obscure_annotations(self):
-        rows = self.cur.execute(f"SELECT Value, TextTag FROM InputField;").fetchall()
+        rows = self.cur.execute(f'SELECT Value, TextTag FROM InputField;').fetchall()
         for row in rows:
             content, item = row
             if content:
-                content = self.obscure_text(content).replace("'", "''")
-                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';")
+                content = self.obscure_text(content).replace("'", "''") # CHECK
+                self.cur.execute(f"UPDATE InputField SET Value = '{content}' WHERE TextTag = '{item}';") # FIX
 
     def obscure_bookmarks(self):
-        rows = self.cur.execute(f"SELECT Title, Snippet, BookmarkId FROM Bookmark;").fetchall()
+        rows = self.cur.execute(f'SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''")
+                title = self.obscure_text(title).replace("'", "''") # CHECK
             if content:
-                content = self.obscure_text(content).replace("'", "''")
-                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};")
+                content = self.obscure_text(content).replace("'", "''") # CHECK
+                self.cur.execute(f"UPDATE Bookmark SET Title = '{title}', Snippet = '{content}' WHERE BookmarkId = {item};") # FIX
             else:
                 self.cur.execute(f"UPDATE Bookmark SET Title = '{title}' WHERE BookmarkId = {item};")
 
     def obscure_notes(self):
-        rows = self.cur.execute(f"SELECT Title, Content, NoteId FROM Note;").fetchall()
+        rows = self.cur.execute(f'SELECT Title, Content, NoteId FROM Note;').fetchall()
         for row in rows:
             title, content, item = row
             if title:
-                title = self.obscure_text(title).replace("'", "''")
+                title = self.obscure_text(title).replace("'", "''") # CHECK
             if content:
-                content = self.obscure_text(content).replace("'", "''")
-            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};")
+                content = self.obscure_text(content).replace("'", "''") # CHECK
+            self.cur.execute(f"UPDATE Note SET Title = '{title}', Content = '{content}' WHERE NoteId = {item};") # FIX
 
 
 class Reindex():
@@ -2100,11 +2130,11 @@ class Reindex():
         con.close()
 
     def make_table(self, table):
-        self.cur.executescript(f"CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};")
+        self.cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};')
 
     def update_table(self, table, field):
         app.processEvents()
-        self.cur.executescript(f"UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});")
+        self.cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
         self.progress.setValue(self.progress.value() + 1)
 
     def drop_table(self):
