@@ -949,7 +949,7 @@ class ConstructTree():
 
     def get_annotations(self):
         lst = []
-        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING ( LocationId );'):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]][0]
             else:
@@ -964,7 +964,7 @@ class ConstructTree():
 
     def get_bookmarks(self):
         lst = []
-        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING ( LocationId );'):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]][0]
             else:
@@ -979,7 +979,7 @@ class ConstructTree():
 
     def get_favorites(self):
         lst = []
-        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING ( LocationId ) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]][0]
             else:
@@ -994,7 +994,7 @@ class ConstructTree():
 
     def get_highlights(self):
         lst = []
-        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId );'):
+        for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId);'):
             if row[2] in self.languages.keys():
                 lng = self.languages[row[2]][0]
             else:
@@ -1012,7 +1012,7 @@ class ConstructTree():
 
         def load_independent():
             lst = []
-            for row in self.cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM ( SELECT * FROM Note n LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) ORDER BY t.Name ) n WHERE n.BlockType = 0 GROUP BY n.NoteId;"):
+            for row in self.cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 GROUP BY n.NoteId;"):
                 col = row[1] or 0
                 yr = row[3][0:4]
                 note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), self.process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
@@ -1020,7 +1020,7 @@ class ConstructTree():
             return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail',  'Short', 'Full', 'Type'])
 
         lst = []
-        for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM ( SELECT * FROM Note n JOIN Location l USING ( LocationId ) LEFT JOIN TagMap tm USING ( NoteId ) LEFT JOIN Tag t USING ( TagId ) LEFT JOIN UserMark u USING ( UserMarkId ) ORDER BY t.Name ) n GROUP BY n.NoteId;"):
+        for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;"):
             if row[1] in self.languages.keys():
                 lng = self.languages[row[1]][0]
             else:
@@ -1144,7 +1144,7 @@ class AddFavorites():
             return ' ', ' '
 
     def tag_positions(self):
-      self.cur.execute("INSERT INTO Tag ( Type, Name ) SELECT 0, 'Favorite' WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite' );")
+      self.cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
       tag_id = self.cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
       position = self.cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
       if position[0] != None:
@@ -1153,7 +1153,7 @@ class AddFavorites():
           return tag_id, 0
 
     def add_location(self, symbol, language):
-      self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, Type ) SELECT 0, ?, ?, 1 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1 );', (symbol, language, symbol, language))
+      self.cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
       result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
       return result[0]
 
@@ -1170,7 +1170,7 @@ class AddFavorites():
             self.message = (0, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng))
             return
         tag_id, position = self.tag_positions()
-        self.cur.execute(f"INSERT INTO TagMap ( LocationId, TagId, Position ) VALUES ( {location}, {tag_id}, {position} );")
+        self.cur.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
         self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
 
@@ -1313,7 +1313,7 @@ class ExportItems():
     def export_highlights(self):
         self.export_file = open(self.fname, 'w', encoding='utf-8')
         self.export_highlight_header()
-        for row in self.cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING ( LocationId ), BlockRange b USING ( UserMarkId ) WHERE BlockRangeId IN {self.items};'):
+        for row in self.cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {self.items};'):
             self.export_file.write(f'\n{row[0]}')
             for item in range(1,13):
                 self.export_file.write(f',{row[item]}')
@@ -1516,7 +1516,7 @@ class ImportAnnotations():
     def import_items(self, df):
 
         def add_location(attribs):
-            self.cur.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
+            self.cur.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
             result = self.cur.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
             return result[0]
 
@@ -1529,7 +1529,7 @@ class ImportAnnotations():
                 if self.cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
                     self.cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
                 else:
-                    self.cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES ( ?, ?, ? );', (location_id,row['LABEL'], row['VALUE']))
+                    self.cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
             except:
                 QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
                 self.cur.execute('ROLLBACK;')
@@ -1588,18 +1588,18 @@ class ImportHighlights():
         return count
 
     def add_scripture_location(self, attribs):
-        self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type ) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
+        self.cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
         result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
         return result[0]
 
     def add_publication_location(self, attribs):
-        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type ) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ? );', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
+        self.cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
         result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
         return result[0]
 
     def add_usermark(self, attribs, location_id):
         unique_id = uuid.uuid1()
-        self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs[4]}, {location_id}, 0, '{unique_id}', {attribs[5]} );")
+        self.cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
         result = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()
         return result[0]
 
@@ -1618,7 +1618,7 @@ class ImportHighlights():
                 blocks.append(row[0])
         block = str(blocks).replace('[', '(').replace(']', ')')
         self.cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
-        self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES ( ?, ?, ?, ?, ? );', (attribs[0], attribs[1], ns, ne, usermark_id))
+        self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (attribs[0], attribs[1], ns, ne, usermark_id))
         return
 
 class ImportNotes():
@@ -1728,10 +1728,10 @@ class ImportNotes():
             tag = tag.strip()
             if not tag:
                 continue
-            self.cur.execute('INSERT INTO Tag ( Type, Name ) SELECT 1, ? WHERE NOT EXISTS ( SELECT 1 FROM Tag WHERE Name = ? );', (tag, tag))
+            self.cur.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
             tag_id = self.cur.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
             position = self.cur.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
-            self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS ( SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ? );', (note_id, tag_id, position, note_id, tag_id))
+            self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ?);', (note_id, tag_id, position, note_id, tag_id))
 
     def add_usermark(self, attribs, location_id):
         if attribs['COLOR'] == 0:
@@ -1747,22 +1747,22 @@ class ImportNotes():
             fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
         else:
             fields = ''
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = {attribs['COLOR']} AND LocationId = {location_id} AND Identifier = {identifier}{fields};").fetchone()
+        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
         if result:
             usermark_id = result[0]
         else:
             unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO UserMark ( ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version ) VALUES ( {attribs['COLOR']}, {location_id}, 0, '{unique_id}', 1 );")
+            self.cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id))
             usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
         try:
-            self.cur.execute(f'INSERT INTO BlockRange ( BlockType, Identifier, StartToken, EndToken, UserMarkId ) VALUES ( ?, ?, ?, ?, ? );', (block_type, identifier, ns, ne, usermark_id))
+            self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
         except:
             pass
         return usermark_id
 
 
     def add_scripture_location(self, attribs):
-        self.cur.execute('INSERT INTO Location ( KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? );', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+        self.cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
         result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()
         return result[0]
 
@@ -1790,7 +1790,7 @@ class ImportNotes():
 
 
     def add_publication_location(self, attribs):
-        self.cur.execute('INSERT INTO Location ( IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type ) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS ( SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
+        self.cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
         result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
         return result[0]
 
@@ -1807,7 +1807,7 @@ class ImportNotes():
             created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
             modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ( '{unique_id}', ?, ?, ?, ?, 1, ?, ?, ? );", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], attribs['BLOCK'], modified, created))
+            self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, 1, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], attribs['BLOCK'], modified, created))
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
 
@@ -1823,7 +1823,7 @@ class ImportNotes():
             created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
             modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO Note (Guid, Title, Content, BlockType, LastModified, Created) VALUES ( '{unique_id}', ?, ?, 0, ?, ? );", (attribs['TITLE'], attribs['NOTE'], modified, created))
+            self.cur.execute(f"INSERT INTO Note (Guid, Title, Content, BlockType, LastModified, Created) VALUES ('{unique_id}', ?, ?, 0, ?, ?);", (attribs['TITLE'], attribs['NOTE'], modified, created))
         note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
         self.process_tags(note_id, attribs['TAGS'])
 
