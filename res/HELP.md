@@ -30,7 +30,7 @@ Shows selected Notes and Annotations in a **Data Viewer** window, from where tex
 #####
 ### Add
 ######
-For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. Let me know if a required language is missing from the drop-down selection.
+For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself.
 #####
 ### Delete
 ######
@@ -38,11 +38,7 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 #####
 ### Export
 ######
-This is most useful for Notes and Annotations, as it exports notes from selected publications to an MS Excel (.xlsx) or a text file which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication.
-######
-The links to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported.
-######
-Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
+This is to export Notes and Annotations from selected publications to an MS Excel (.xlsx) or a text file which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication. The links to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 #####
 ### Import
 ######
@@ -50,7 +46,7 @@ You can work with the exported MS Excel file (reusing the column headings) or us
 ######
 Editing or creating a Highlights import file is *not* recommended. Exported Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
 #### Importing Notes
-The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the import file are imported. Otherwise, *notes with the same title at the same location will be over-written*, but those where the title was modified even slightly will create an almost duplicate note.
+The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the file are imported. Otherwise, *notes with the same title and at the same 'location' will be over-written*, but those where the title was modified even slightly will create an almost duplicate note.
 ######
 Attribute key and value pairs must be placed within `{}`. The keys correspond to the first-row column-headings in the MS Excel file. They can be in any order within the note-header. The header line starts and ends with `===`. This header is **required** for each note, and must contain *at least one* attribute pair. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header or `==={END}===`.
 ##### Attributes for all notes (including "independent" ones)
