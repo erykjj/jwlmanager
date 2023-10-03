@@ -14,6 +14,15 @@ Keep in mind that the more items there are to be sorted into a tree structure, t
 ____
 ## Usage
 
+You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included).
+
+See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc. The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*` .
+
+You can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
+- Linux terminal: `python3 JWLManager.py -es`
+- Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
+- macOS Terminal: `open -a JWLManager.app --args -es`
+
 Preferably, if you have Python 3 installed and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
 
 ```
@@ -47,14 +56,6 @@ interface language:
   -it            Italian (italiano)
   -pt            Portuguese (Português)
 ```
-
-Alternatively, you can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included). See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc. The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*` .
-
-You can launch the GUI in the desired language by appending the corresponding language code parameter. So, if you want to start the app in Spanish (instead of the default English), you would invoke it as...
-- Linux terminal: `python3 JWLManager.py -es`
-- Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
-- macOS Terminal: `open -a JWLManager.app --args -es`
-
 ____
 ## Operation
 
@@ -71,4 +72,4 @@ ____
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer
 [^*]: Chinese, German, Japanese, Polish and Russian; other volunteers also appreciated.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-[^2]: `pip3 install argparse filehash pandas PySide6 regex XlsxWriter`.
+[^2]: Install via `pip`: `argparse filehash pandas PySide6 regex XlsxWriter`.
