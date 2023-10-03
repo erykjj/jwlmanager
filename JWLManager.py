@@ -1320,7 +1320,7 @@ class ExportItems():
         self.export_file.close()
 
     def export_highlight_header(self):
-        self.export_file.write('{HIGHLIGHTS}\n \nTHIS FILE IS NOT MEANT TO BE MODIFIED MANUALLY\nYOU CAN USE IT TO BACKUP/TRANSFER/MERGE SELECTED HIGHLIGHTS\n\nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
+        self.export_file.write('{HIGHLIGHTS}\n \nFIELDS: BlockRange.BlockType, BlockRange.Identifier, BlockRange.StartToken,\n        BlockRange.EndToken, UserMark.ColorIndex, UserMark.Version,\n        Location.BookNumber, Location.ChapterNumber, Location.DocumentId,\n        Location.IssueTagNumber, Location.KeySymbol, Location.MepsLanguage,\n        Location.Type')
         self.export_file.write('\n\n'+_('Exported from')+f' {self.current_archive}\n'+_('by')+f' {APP} ({VERSION}) '+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n")
         self.export_file.write('*' * 79)
 
@@ -1382,7 +1382,7 @@ class ExportItems():
                 'BLOCK': row[7],
                 'DOC': row[8],
                 'PUB': row[10],
-                'HEADING': row[11],
+                'HEADING': row[11] or '',
                 'MODIFIED': row[12][:19],
                 'CREATED': row[13][:19],
                 'COLOR': row[14] or 0
@@ -1428,14 +1428,14 @@ class ExportItems():
                 tags = row['TAGS'].replace(' | ', '|')
                 col = str(row['COLOR']) or '0'
                 rng = row['RANGE'] or ''
-                hdg = row['HEADING'] or ''
+                hdg = ('{HEADING='+row['HEADING']+'}') if row['HEADING'] != '' else ''
                 lng = str(row['LANG'])
                 txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
                 if row.get('BK'):
                     bk = str(row['BK'])
                     ch = str(row['CH'])
                     vs = str(row['VS'])
-                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}'+hdg+'{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                     if row.get('DOC'):
@@ -1444,7 +1444,7 @@ class ExportItems():
                     doc = str(row['DOC']) or ''
                     iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
                     blk = str(row['BLOCK']) or ''
-                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}{HEADING='+hdg+'}{COLOR='+col+'}'
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}'+hdg+'{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                 txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
