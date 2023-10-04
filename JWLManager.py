@@ -29,7 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v3.0.0-RC'
 
-import argparse, gettext, json, os, regex, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -436,8 +436,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         global db_name
         try:
-            os.remove(f'{tmp_path}/manifest.json')
-            os.remove(f'{tmp_path}/{db_name}')
+            for f in glob.glob(f'{tmp_path}/*', recursive=True):
+                os.remove(f)
         except:
             pass
         db_name = 'userData.db'
