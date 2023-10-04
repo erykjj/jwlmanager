@@ -609,7 +609,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 flt = _('Text files')+' (*.txt)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
-            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', flt)
+            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.xlsx', flt)
             return fname
 
         selected = []
