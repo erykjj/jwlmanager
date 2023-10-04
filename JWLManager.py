@@ -1772,6 +1772,7 @@ class ImportNotes():
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
         df['TITLE'].fillna('', inplace=True)
+        df['NOTE'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
         df['BLOCK'].fillna(df['VS'], inplace=True)
         count = 0
