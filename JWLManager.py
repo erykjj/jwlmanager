@@ -608,7 +608,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if self.combo_category.currentText() == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
             else:
-                flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
+                flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', flt)
             return fname
 
@@ -639,7 +639,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if self.combo_category.currentText() == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
             else:
-                flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
+                flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             fname = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)
             if fname[0] == '':
                 self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
