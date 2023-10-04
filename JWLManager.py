@@ -1522,7 +1522,7 @@ class ImportAnnotations():
 
         df['ISSUE'].fillna(0, inplace=True)
         count = 0
-        for _, row in df.iterrows():
+        for i, row in df.iterrows():
             try:
                 count += 1
                 location_id = add_location(row)
@@ -1531,7 +1531,7 @@ class ImportAnnotations():
                 else:
                     self.cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
             except:
-                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                 self.cur.execute('ROLLBACK;')
                 return 0
         return count
@@ -1630,23 +1630,23 @@ class ImportNotes():
                                 PRAGMA foreign_keys = 'OFF'; \
                                 BEGIN;")
         self.aborted = False
-        # try:
-        if regex.search(r'\.txt$', fname):
-            self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
-            if self.pre_import():
-                df = self.read_text()
-                self.count = self.import_items(df)
+        try:
+            if regex.search(r'\.txt$', fname):
+                self.import_file = open(fname, 'r', encoding='utf-8', errors='namereplace')
+                if self.pre_import():
+                    df = self.read_text()
+                    self.count = self.import_items(df)
+                else:
+                    self.count = 0
+                self.import_file.close
             else:
-                self.count = 0
-            self.import_file.close
-        else:
-            df = pd.read_excel(fname)
-            self.count = self.import_items(df)
-        self.cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        # except Exception as ex:
-        #     DebugInfo(ex)
-        #     self.aborted = True
+                df = pd.read_excel(fname)
+                self.count = self.import_items(df)
+            self.cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.aborted = True
         self.cur.close()
         con.close()
 
@@ -1655,7 +1655,7 @@ class ImportNotes():
         line = self.import_file.readline()
         m = regex.search('{NOTES=(.?)}', line)
         if m:
-            title_char = m.group(1) or ''
+            title_char = m.group(1)
         else:
             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
             return False
@@ -1699,133 +1699,103 @@ class ImportNotes():
                 self.cur.execute('ROLLBACK;')
                 return 0
         df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
+        df['BLOCK'].fillna(df['VS'], inplace=True)
         return df
 
+
     def import_items(self, df):
+
+        def add_scripture_location(attribs):
+            self.cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+            result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()
+            return result[0]
+
+        def add_publication_location(attribs):
+            self.cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
+            result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
+            return result[0]
+
+        def add_usermark(attribs, location_id):
+            if attribs['COLOR'] == 0:
+                return 'NULL'
+            if pd.notna(attribs['VS']):
+                block_type = 2
+                identifier = attribs['VS']
+            else:
+                block_type = 1
+                identifier = attribs['BLOCK']
+            if pd.notna(attribs['RANGE']):
+                ns, ne = str(attribs['RANGE']).split('-')
+                fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
+            else:
+                fields = ''
+            result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
+            if result:
+                usermark_id = result[0]
+            else:
+                unique_id = uuid.uuid1()
+                self.cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id))
+                usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
+            try:
+                self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
+            except:
+                pass
+            return usermark_id
+
+        def update_note(attribs, location_id, block_type, usermark_id):
+
+            def process_tags(note_id, tags):
+                self.cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
+                for tag in str(tags).split('|'):
+                    tag = tag.strip()
+                    if not tag:
+                        continue
+                    self.cur.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
+                    tag_id = self.cur.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
+                    position = self.cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ?);', (note_id, tag_id, position, note_id, tag_id))
+
+            result = self.cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
+            if result:
+                unique_id = result[0]
+                modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
+                created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
+                self.cur.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
+            else:
+                unique_id = uuid.uuid1()
+                created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+                modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
+            note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+            process_tags(note_id, attribs['TAGS'])
+
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
         count = 0
-        for _, row in df.iterrows():
-            # try:
+        for i, row in df.iterrows():
+            try:
                 count += 1
                 if pd.notna(row['BK']):
-                    self.import_bible(row)
+                    location_id = add_scripture_location(row)
+                    usermark_id = add_usermark(row, location_id)
+                    block_type = 2
+                    try:
+                        block_type = int(row['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
+                    except:
+                        pass
+                    update_note(row, location_id, block_type, usermark_id)
                 elif pd.notna(row['DOC']):
-                    self.import_publication(row)
+                    location_id = add_publication_location(row)
+                    usermark_id = add_usermark(row, location_id)
+                    update_note(row, location_id, 1, usermark_id)
                 else:
-                    self.import_independent(row)
-            # except:
-            #     QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{row}', QMessageBox.Abort)
-            #     self.cur.execute('ROLLBACK;')
-            #     return 0
+                    update_note(row, None, 0, None)
+            except:
+                QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
+                self.cur.execute('ROLLBACK;')
+                return 0
         return count
-
-
-    def process_tags(self, note_id, tags):
-        self.cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
-        for tag in str(tags).split('|'):
-            tag = tag.strip()
-            if not tag:
-                continue
-            self.cur.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
-            tag_id = self.cur.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
-            position = self.cur.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
-            self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ?);', (note_id, tag_id, position, note_id, tag_id))
-
-    def add_usermark(self, attribs, location_id):
-        if attribs['COLOR'] == 0:
-            return 'NULL'
-        if pd.notna(attribs['VS']):
-            block_type = 2
-            identifier = attribs['VS']
-        else:
-            block_type = 1
-            identifier = attribs['BLOCK']
-        if pd.notna(attribs['RANGE']):
-            ns, ne = str(attribs['RANGE']).split('-')
-            fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
-        else:
-            fields = ''
-        result = self.cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
-        if result:
-            usermark_id = result[0]
-        else:
-            unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id))
-            usermark_id = self.cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-        try:
-            self.cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
-        except:
-            pass
-        return usermark_id
-
-
-    def add_scripture_location(self, attribs):
-        self.cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
-        result = self.cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()
-        return result[0]
-
-    def import_bible(self, attribs):
-        location_scripture = self.add_scripture_location(attribs)
-        usermark_id = self.add_usermark(attribs, location_scripture)
-        block_type = 2
-        try:
-            block_type = int(attribs['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
-        except:
-            pass
-        result = self.cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_scripture, attribs['TITLE'], attribs['VS'], block_type)).fetchone()
-        if result:
-            unique_id = result[0]
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
-            self.cur.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
-        else:
-            unique_id = uuid.uuid1()
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-            self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_scripture, attribs['TITLE'], attribs['NOTE'], block_type, attribs['VS'], modified, created))
-        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-        self.process_tags(note_id, attribs['TAGS'])
-
-
-    def add_publication_location(self, attribs):
-        self.cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
-        result = self.cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
-        return result[0]
-
-    def import_publication(self, attribs):
-        location_id = self.add_publication_location(attribs)
-        usermark_id = self.add_usermark(attribs, location_id)
-        result = self.cur.execute('SELECT Guid, LastModified FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'])).fetchone()
-        if result:
-            unique_id = result[0]
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
-            self.cur.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
-        else:
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-            unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, 1, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], attribs['BLOCK'], modified, created))
-        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-        self.process_tags(note_id, attribs['TAGS'])
-
-
-    def import_independent(self, attribs):
-        result = self.cur.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND Content = ? AND BlockType = 0;', (attribs['TITLE'], attribs['NOTE'])).fetchone()
-        if result:
-            unique_id = result[0]
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
-            self.cur.execute(f"UPDATE Note SET Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (attribs['NOTE'], modified, created))
-        else:
-            created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-            modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-            unique_id = uuid.uuid1()
-            self.cur.execute(f"INSERT INTO Note (Guid, Title, Content, BlockType, LastModified, Created) VALUES ('{unique_id}', ?, ?, 0, ?, ?);", (attribs['TITLE'], attribs['NOTE'], modified, created))
-        note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
-        self.process_tags(note_id, attribs['TAGS'])
 
 
 class PreviewItems():
