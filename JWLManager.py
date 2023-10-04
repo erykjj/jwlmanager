@@ -1372,7 +1372,7 @@ class ExportItems():
         for row in self.cur.execute(sql):
             item = {
                 'TYPE': row[0],
-                'TITLE': row[1] or '* '+_('NO TITLE')+' *',
+                'TITLE': row[1],
                 'NOTE': row[2].rstrip() or '',
                 'TAGS': row[3] or '',
                 'LANG': row[4],
@@ -1877,7 +1877,7 @@ class PreviewItems():
         for row in self.cur.execute(sql):
             item = {
                 'TYPE': row[0],
-                'TITLE': row[1] or '* '+_('NO TITLE')+' *',
+                'TITLE': row[1],
                 'NOTE': row[2].rstrip() or '',
                 'TAGS': row[3],
                 'BK': row[5],
