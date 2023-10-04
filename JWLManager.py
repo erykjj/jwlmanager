@@ -1941,7 +1941,7 @@ class PreviewItems():
                     self.txt += '\n{' + item['TAGS'] + '}'
                 if item['PUB']:
                     self.html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
-                    self.txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".strip()
+                    self.txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
                 if item['HEADING']:
                     self.html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
                     self.txt += ' — ' + item['HEADING']
