@@ -1696,7 +1696,6 @@ class ImportNotes():
                 self.cur.execute('ROLLBACK;')
                 return 0
         df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
-        df['BLOCK'].fillna(df['VS'], inplace=True)
         return df
 
     def import_items(self, df):
@@ -1768,6 +1767,7 @@ class ImportNotes():
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
+        df['BLOCK'].fillna(df['VS'], inplace=True)
         count = 0
         for i, row in df.iterrows():
             try:
