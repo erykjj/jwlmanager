@@ -14,7 +14,7 @@
 
 ### Changed
 
-- **Export and import Notes and Annotations to/from Excel or custom text file (with attribute headers)**
+- **Export and import Notes and Annotations to/from Excel (default) or custom text file (with attribute headers)**
   - Use file-type dropdown to choose between `*.txt` and `*.xlsx`
 - Attribute keys/labels simplified (see [HELP](res/HELP.md) file)
   - Tags separated with "|" (instead of ",")
@@ -39,6 +39,7 @@
 
 - Removed right-clicking for Data Viewer
 - Removed confirmation on export (still required if over-writing an existing file)
+- Removed unmaintained Qt5 branch from repo
 
 ____
 ## [3.0.0-RC]
