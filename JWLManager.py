@@ -1536,7 +1536,6 @@ class ImportAnnotations():
                 return 0
         return count
 
-
 class ImportHighlights():
     def __init__(self, fname=''):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
@@ -1650,7 +1649,6 @@ class ImportNotes():
         self.cur.close()
         con.close()
 
-
     def pre_import(self):
         line = self.import_file.readline()
         m = regex.search('{NOTES=(.?)}', line)
@@ -1672,7 +1670,6 @@ class ImportNotes():
           return 0
         results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
         return results
-
 
     def read_text(self):
 
@@ -1701,7 +1698,6 @@ class ImportNotes():
         df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
         df['BLOCK'].fillna(df['VS'], inplace=True)
         return df
-
 
     def import_items(self, df):
 
