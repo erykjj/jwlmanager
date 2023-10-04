@@ -1716,7 +1716,7 @@ class ImportNotes():
             return result[0]
 
         def add_usermark(attribs, location_id):
-            if attribs['COLOR'] == '0':
+            if int(attribs['COLOR']) == 0:
                 return None
             if pd.notna(attribs['VS']):
                 block_type = 2
