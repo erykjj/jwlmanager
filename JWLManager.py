@@ -434,6 +434,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 return
         self.status_label.setStyleSheet('color: black;')
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
+        self.modified = False
+        self.save_filename = ''
+        self.current_archive = ''
         global db_name
         try:
             for f in glob.glob(f'{tmp_path}/*', recursive=True):
@@ -493,6 +496,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionObscure.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
+        self.actionSave.setEnabled(False)
         self.actionSave_As.setEnabled(True)
         self.actionCollapse_All.setEnabled(True)
         self.actionExpand_All.setEnabled(True)
@@ -584,7 +588,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def archive_modified(self):
         self.modified = True
-        self.actionSave.setEnabled(True)
+        if self.save_filename:
+            self.actionSave.setEnabled(True)
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
