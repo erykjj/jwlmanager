@@ -588,8 +588,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def archive_modified(self):
         self.modified = True
-        if self.save_filename == '':
-            self.actionSave.setEnabled(True)
+        self.actionSave.setEnabled(True)
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
