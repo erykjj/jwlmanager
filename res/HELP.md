@@ -8,6 +8,7 @@ The **status bar** shows the name of the currently opened archive. The **Count**
 ######
 The items are initially **sorted** by decreasing count. Clicking on the column headers allows for sorting the tree as well; clicking the same header again reverses the sort.
 #####
+######
 ### View
 ######
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
@@ -24,22 +25,27 @@ The ***View*** menu has some additional options (also accessible directly via th
 ######
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* archive in case you need to restore after messing up ;-)
 #####
+######
 ### View (button)
 ######
 Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or saved to a text file.
 #####
+######
 ### Add
 ######
 For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself.
 #####
+######
 ### Delete
 ######
 Select the Category and the item(s) you wish to eliminate from the database. For example, you may want to remove highlighting you made in some older magazines, or bookmarks you never knew you had, or clear your favorites completely, etc.
 #####
+######
 ### Export
 ######
 This is to export Notes and Annotations from selected publications to an MS Excel (default) or a text file (use filetype dropdown to select) which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication. The links to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
 #####
+######
 ### Import
 ######
 You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the Notes, Highlights or Annotations to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line.
@@ -49,6 +55,7 @@ Editing or creating a Highlights import file is *not* recommended. Exported High
 The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the file are imported. Otherwise, *notes with the same title and at the same 'location' will be over-written*, but those where the title was modified even slightly will create an almost duplicate note.
 ######
 Attribute key and value pairs must be placed within `{}`. The keys correspond to the first-row column-headings in the MS Excel file. They can be in any order within the note-header. The header line starts and ends with `===`. This header is **required** for each note, and must contain *at least one* attribute pair. The very next line after the header is the note title. A multi-line body follows, terminated by the header of the next note or the file-terminating header or `==={END}===`.
+######
 ##### Attributes for all notes (including "independent" ones)
   - **CREATED**
     - date note was created (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) - optional
@@ -62,6 +69,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - tags (separated by "|") - optional
     - if not provided, no tag is added; if a note is replacing/updating another, its tags will be updated or removed
     - eg. `{TAGS=Ministerio|Personal}`
+######
 ##### Attributes for notes attached to any publication
   - **COLOR**
     - note color (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) - optional (will be 0 = grey if not provided)
@@ -81,6 +89,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
   - **HEADING**
     - specifies the heading/chapter title where note is placed (or Bible book and chapter) - optional
     - eg. `{HEADING=Genesis 1}`
+######
 ##### Attributes for Bible notes
   - **BK**
     - Bible book number (1-66) - **required**
@@ -92,6 +101,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
   - **VS**
     - verse number - **required**
     - eg. `{VS=6}`
+######
 ##### Attributes for publication notes:
   - **ISSUE**
     - issue (yyyymm00 or yyyymm01 or yyyymm15 ) - **required** for periodical publications
@@ -102,12 +112,15 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
   - **BLOCK**
     - "paragraph" block - **required**
     - eg. `{BLOCK=6}`
-##### Observations
+######
+##### Observations:
   - Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
   - Unless the corresponding colored highlights are also imported, the imported notes are placed at the *beginning* of the paragraph or verse that they are attached to.
     - `{COLOR=}` with value of 1 to 6 *and* `{RANGE=}` → colored stickie with highlight
     - `{COLOR=}` with value of 1 to 6 and *NO* `{RANGE=}` → colored stickie (at start of paragraph/verse and no highlight)
     - `{COLOR=0}` (with/without `{RANGE=}`) → grey stickie (at start of paragraph/verse and no highlight)
+######
+######
 ### UTILITIES
 ######
 ### Mask
