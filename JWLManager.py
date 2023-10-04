@@ -605,10 +605,9 @@ class Window(QMainWindow, Ui_MainWindow):
             fname = ()
             now = datetime.now().strftime('%Y-%m-%d')
             if self.combo_category.currentText() == _('Highlights'):
-                flt = _('Text files')+' (*.txt)'
+                fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.txt', _('Text files')+' (*.txt)')
             else:
-                flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
-            fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.xlsx', flt)
+                fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')
             return fname
 
         selected = []
