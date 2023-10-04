@@ -1716,8 +1716,8 @@ class ImportNotes():
             return result[0]
 
         def add_usermark(attribs, location_id):
-            if attribs['COLOR'] == 0:
-                return 'NULL'
+            if attribs['COLOR'] == '0':
+                return None
             if pd.notna(attribs['VS']):
                 block_type = 2
                 identifier = attribs['VS']
@@ -1771,6 +1771,7 @@ class ImportNotes():
 
         df['ISSUE'].fillna(0, inplace=True)
         df['TAGS'].fillna('', inplace=True)
+        df['TITLE'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
         df['BLOCK'].fillna(df['VS'], inplace=True)
         count = 0
@@ -1780,11 +1781,10 @@ class ImportNotes():
                 if pd.notna(row['BK']):
                     location_id = add_scripture_location(row)
                     usermark_id = add_usermark(row, location_id)
-                    block_type = 2
-                    try:
-                        block_type = int(row['DOC']) * 0 + 1 # special case of Bible note in book header, etc.
-                    except:
-                        pass
+                    if pd.notna(row['DOC']): # special case of Bible note in book header, etc.
+                        block_type = 1
+                    else:
+                        block_type = 2
                     update_note(row, location_id, block_type, usermark_id)
                 elif pd.notna(row['DOC']):
                     location_id = add_publication_location(row)
