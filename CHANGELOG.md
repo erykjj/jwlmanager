@@ -38,6 +38,7 @@
 ### Removed
 
 - Removed right-clicking for Data Viewer
+- Removed alert about UTF-8 on import (not applicable to MS Excel files)
 - Removed confirmation on export (still required if over-writing an existing file)
 - Removed unmaintained Qt5 branch from repo
 
