@@ -630,9 +630,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Items exported'), 3500)
 
     def import_items(self, file='', category = ''):
-        reply = QMessageBox.warning(self, _('Import'), _('Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.No:
-            return
+        # reply = QMessageBox.warning(self, _('Import'), _('Make sure your import file is UTF-8 encoded and properly formatted.\n\nImporting will modify the archive. Proceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        # if reply == QMessageBox.No:
+        #     return
         if not file:
             if self.combo_category.currentText() == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
