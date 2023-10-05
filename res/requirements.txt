@@ -1,0 +1,7 @@
+argparse
+filehash
+openpyxl
+pandas
+PySide6
+regex
+XlsxWriter
