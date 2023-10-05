@@ -1917,6 +1917,8 @@ class PreviewItems():
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
                 if not item['HEADING']:
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}:{item['VS']}"
+                elif ':' not in item['HEADING']:
+                    item['HEADING'] += f":{item['VS']}"
                 item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
                 item['LINK'] = None
