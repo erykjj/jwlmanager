@@ -37,7 +37,7 @@ jobs:
       run: |
         cd dist
         ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
-        tar.exe -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
+        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v3
       with:
