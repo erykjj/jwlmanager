@@ -2,8 +2,9 @@ pyinstaller == 5.13
 pyinstaller-hooks-contrib
 PySide6
 shiboken6
-regex
 argparse
 filehash
+openpyxl
 pandas
+regex
 XlsxWriter
