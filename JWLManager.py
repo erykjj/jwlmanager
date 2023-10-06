@@ -1256,7 +1256,8 @@ class ExportItems():
             ws.write_row(row=index+1, col=0, data=row)
             ws.write_string(row=index+1, col=len(fields)-1, string=self.item_list[index][last_field]) # overwrite any that may have been formatted as URLs
         ws.freeze_panes(1, 0)
-        ws.set_column(0, len(fields)-1, 20)
+        ws.set_column(0, 2, 20)
+        ws.set_column(3, len(fields)-1, 12)
         wb.close()
 
     def export_header(self, category):
@@ -1401,7 +1402,7 @@ class ExportItems():
                     item['VS'] = None
                 else:
                     par = ''
-                item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
                     item['ISSUE'] = row[9]
                 else:
@@ -1412,16 +1413,16 @@ class ExportItems():
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}:{item['VS']}"
                 elif ':' not in item['HEADING']:
                     item['HEADING'] += f":{item['VS']}"
-                script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
+                item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
             else:
-                item['LINK'] = None
+                item['Link'] = None
             self.item_list.append(item)
 
     def export_notes(self):
         self.get_notes()
         if self.xlsx:
-            fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE']
+            fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
             self.create_xlsx(fields)
         else:
             self.export_file = open(self.fname, 'w', encoding='utf-8')
@@ -1437,7 +1438,7 @@ class ExportItems():
                     bk = str(row['BK'])
                     ch = str(row['CH'])
                     vs = str(row['VS'])
-                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}'+hdg+'{COLOR='+col+'}'
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                     if row.get('DOC'):
@@ -1699,7 +1700,7 @@ class ImportNotes():
                 QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                 self.cur.execute('ROLLBACK;')
                 return 0
-        df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'LINK', 'TITLE', 'NOTE'])
+        df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
         return df
 
     def import_items(self, df):
@@ -1910,7 +1911,7 @@ class PreviewItems():
                     item['VS'] = None
                 else:
                     par = ''
-                item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
                     item['ISSUE'] = self.process_issue(row[9])
             elif item['TYPE'] == 2:
@@ -1920,9 +1921,9 @@ class PreviewItems():
                 elif ':' not in item['HEADING']:
                     item['HEADING'] += f":{item['VS']}"
                 script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                item['LINK'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
+                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
             else:
-                item['LINK'] = None
+                item['Link'] = None
             self.item_list.append(item)
 
     def show_notes(self):
@@ -1934,7 +1935,7 @@ class PreviewItems():
             if item['NOTE']:
                 self.html += '<br>' + item['NOTE'].replace('\n', '<br>')
                 self.txt += '\n' + item['NOTE']
-            if item['TAGS'] or item['PUB'] or item['LINK']:
+            if item['TAGS'] or item['PUB'] or item['Link']:
                 self.html += f"<br><small><strong><tt>__________<br>{item['MODIFIED']}"
                 self.txt += '\n__________\n' + item['MODIFIED']
                 if item['TAGS']:
@@ -1946,8 +1947,8 @@ class PreviewItems():
                 if item['HEADING']:
                     self.html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
                     self.txt += ' — ' + item['HEADING']
-                if item['LINK']:
-                    lnk = item['LINK']
+                if item['Link']:
+                    lnk = item['Link']
                     self.html += f"<br><a href='{lnk}'>{lnk}</a>"
                     self.txt += '\n' + lnk
                 self.html += '</tt></strong></small>'
