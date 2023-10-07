@@ -1331,7 +1331,20 @@ class ExportItems():
             SELECT n.BlockType Type,
                 n.Title,
                 n.Content,
-                GROUP_CONCAT(t.Name, ' | '),
+                (
+                    SELECT GROUP_CONCAT(t.Name, ' | ') 
+                        FROM Note nt
+                            LEFT JOIN
+                            TagMap USING (
+                                NoteId
+                            )
+                            JOIN
+                            Tag t USING (
+                                TagId
+                            )
+                        WHERE nt.NoteId = n.NoteId
+                )
+                tags,
                 l.MepsLanguage,
                 l.BookNumber,
                 l.ChapterNumber,
@@ -1353,14 +1366,6 @@ class ExportItems():
                 LEFT JOIN
                 UserMark u USING (
                     UserMarkId
-                )
-                LEFT JOIN
-                TagMap USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
                 )
                 LEFT JOIN
                 BlockRange b USING (
