@@ -35,18 +35,18 @@
     <message>
         <location filename="main_window.ui" line="181"/>
         <source>Grouping:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruppierung:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
         <source>Selected:</source>
         <oldsource>Selected: </oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Ausgewählt:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
         <source>Category:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kategorie:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
