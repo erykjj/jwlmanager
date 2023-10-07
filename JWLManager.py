@@ -1655,6 +1655,15 @@ class ImportNotes():
         con.close()
 
     def pre_import(self):
+
+        def delete_notes(title_char):
+            results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
+            if results < 1:
+                return
+            answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            if answer == QMessageBox.Yes:
+                self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
+
         line = self.import_file.readline()
         m = regex.search('{NOTES=(.?)}', line)
         if m:
@@ -1663,18 +1672,8 @@ class ImportNotes():
             QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
             return False
         if title_char:
-            self.delete_notes(title_char)
+            delete_notes(title_char)
         return True
-
-    def delete_notes(self, title_char):
-        results = len(self.cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
-        if results < 1:
-            return 0
-        answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if answer == QMessageBox.No:
-          return 0
-        results = self.cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
-        return results
 
     def read_text(self):
 
