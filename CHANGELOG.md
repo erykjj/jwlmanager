@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [3.0.0]
+
 **Major release**
 
 ### Added
@@ -41,11 +52,6 @@
 - Removed alert about UTF-8 on import (not applicable to MS Excel files)
 - Removed confirmation on export (still required if over-writing an existing file)
 - Removed unmaintained Qt5 branch from repo
-
-____
-## [3.0.0-RC]
-
-- FOR TESTING AND FEEDBACK ONLY
 
 ## [2.4.2] - 2023-08-25
 ### Fixed
@@ -136,8 +142,6 @@ ____
     - I wanted to keep highlights and notes as separate entities, but unless both are imported, the note markers are not colored nor placed in the right place in the parragraph
   - So now there is also an **{RANGE=}** attribute in the note header (see [HELP](./res/HELP.md) for more info
 
-**NOTE**: because of the many changes, the original [v1 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) (based on Qt5/PySide2) will not be maintained anymore
-
 ## [2.1.3] - 2023-03-04
 ### Changed
 
@@ -223,7 +227,7 @@ ____
 ### Changed
 
 - **UI framework** transitioned from Qt5 to Qt6 (PySide2 to PySide6)
-  - **NOTE**: Qt6 is not compatible with Windows 7/8, hence there is a separate [Qt5 branch](https://github.com/erykjj/jwlmanager/tree/Qt5) with bug-fix/maintenance releases for older operating systems
+  - **NOTE**: Qt6 is not compatible with Windows 7/8
 - Rearranged/cleaned up the folder structure
 - Cosmetic/layout changes to GUI
 - "Obscure" is now "Mask", which is a more appropriate term for this kind of data obfuscation
@@ -471,6 +475,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[3.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.0
 [2.4.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.2
 [2.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.1
 [2.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.0
