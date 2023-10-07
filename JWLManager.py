@@ -1755,7 +1755,10 @@ class ImportNotes():
                     position = self.cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                     self.cur.execute('INSERT Into TagMap (NoteId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE NoteId = ? AND TagId = ?);', (note_id, tag_id, position, note_id, tag_id))
 
-            result = self.cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
+            if location_id:
+                result = self.cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
+            else:
+                result = self.cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND BlockType = 0;', (attribs['TITLE'],)).fetchone()
             if result:
                 unique_id = result[0]
                 modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
