@@ -659,7 +659,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         message = f' {fn.count} '+_('items imported/updated')
         self.statusBar.showMessage(message, 3500)
-        self.archive_modified()
+        self.trim_db()
         self.regroup(False, message)
         self.tree_selection()
 
