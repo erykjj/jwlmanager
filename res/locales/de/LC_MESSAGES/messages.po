@@ -1,699 +1,470 @@
 # German translations for JWLManager.
-# Copyright (C) 2022 Eryk J.
+# Copyright (C) 2023 Eryk J.
 # This file is distributed under the same license as the JWLManager project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: JWLManager v2.0.1\n"
+"Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-10-01 18:13-0400\n"
-"PO-Revision-Date: 2023-10-08 04:09+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
-"Language-Team: de <LL@li.org>\n"
+"POT-Creation-Date: 2023-10-08 09:05-0400\n"
+"PO-Revision-Date: 2023-10-08 09:16-0400\n"
+"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language: de\n"
+"Language-Team: de <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.1-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: JWLManager.py:196
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:196
 msgid "Help"
-msgstr "Hilfe"
+msgstr ""
 
-#: JWLManager.py:211 JWLManager.py:685
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:211
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:685
 msgid "Data Viewer"
-msgstr "Datenbetrachter"
+msgstr ""
 
-#: JWLManager.py:314 JWLManager.py:386 JWLManager.py:387 JWLManager.py:528
-#: JWLManager.py:651 JWLManager.py:844 JWLManager.py:884 JWLManager.py:1179
-#: JWLManager.py:1206 JWLManager.py:1241 JWLManager.py:1819
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:314
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:386
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:387
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:532
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:651
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:844
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:884
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1179
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1206
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1241
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1822
 msgid "Notes"
-msgstr "Notizen"
+msgstr ""
 
-#: JWLManager.py:316 JWLManager.py:387 JWLManager.py:526 JWLManager.py:603
-#: JWLManager.py:634 JWLManager.py:649 JWLManager.py:882 JWLManager.py:1204
-#: JWLManager.py:1239
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:316
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:387
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:530
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:607
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:634
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:649
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:882
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1204
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1239
 msgid "Highlights"
-msgstr "Highlights"
+msgstr ""
 
-#: JWLManager.py:318 JWLManager.py:878 JWLManager.py:1200
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:318
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:878
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1200
 msgid "Bookmarks"
-msgstr "Lesezeichen"
+msgstr ""
 
-#: JWLManager.py:320 JWLManager.py:386 JWLManager.py:387 JWLManager.py:524
-#: JWLManager.py:647 JWLManager.py:886 JWLManager.py:1208 JWLManager.py:1243
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:320
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:386
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:387
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:528
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:647
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:886
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1208
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1243
 msgid "Annotations"
-msgstr "Annotationen"
+msgstr ""
 
-#: JWLManager.py:322 JWLManager.py:880 JWLManager.py:1202
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:322
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:880
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1202
 msgid "Favorites"
-msgstr "Favoriten"
+msgstr ""
 
-#: JWLManager.py:338 JWLManager.py:844 JWLManager.py:1073
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:338
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:844
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1073
 msgid "Title"
-msgstr "Titel"
+msgstr ""
 
-#: JWLManager.py:348
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:348
 msgid "Processing…"
-msgstr "Processing…"
+msgstr ""
 
-#: JWLManager.py:428 JWLManager.py:463 JWLManager.py:552 JWLManager.py:696
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:428
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:466
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:556
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:696
 msgid "Save"
-msgstr "Save"
+msgstr ""
 
-#: JWLManager.py:428 JWLManager.py:463
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:428
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:466
 msgid "Save current archive?"
-msgstr "Save current archive?"
+msgstr ""
 
-#: JWLManager.py:436
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:436
 msgid "NEW ARCHIVE"
-msgstr "NEW ARCHIVE"
+msgstr ""
 
-#: JWLManager.py:469
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:472
 msgid "Open archive"
-msgstr "Open archive"
+msgstr ""
 
-#: JWLManager.py:469 JWLManager.py:545 JWLManager.py:547
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:472
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:549
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:551
 msgid "JW Library archives"
-msgstr "JW Library archives"
+msgstr ""
 
-#: JWLManager.py:519 JWLManager.py:530 JWLManager.py:532
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:523
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:534
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:536
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
-#: JWLManager.py:519
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:523
 msgid "No archive has been opened!"
-msgstr "No archive has been opened!"
+msgstr ""
 
-#: JWLManager.py:530 JWLManager.py:532
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:534
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:536
 msgid "File \"{}\" not recognized!"
-msgstr "File \"{}\" not recognized!"
+msgstr ""
 
-#: JWLManager.py:545 JWLManager.py:547
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:549
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:551
 msgid "Save archive"
-msgstr "Save archive"
+msgstr ""
 
-#: JWLManager.py:549 JWLManager.py:701
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:553
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:701
 msgid "NOT saved!"
-msgstr "NOT saved!"
+msgstr ""
 
-#: JWLManager.py:552
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:556
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
-"It's recommended to save under another name.\n"
-"Are you absolutely sure you want to replace the original?"
 
-#: JWLManager.py:595 JWLManager.py:705
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:599
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:705
 msgid "Saved"
-msgstr "Saved"
-
-#: JWLManager.py:604 JWLManager.py:606 JWLManager.py:635 JWLManager.py:637
-#: JWLManager.py:696
-#, fuzzy
-msgid "Text files"
-msgstr "Text files"
-
-#: JWLManager.py:606 JWLManager.py:637
-#, fuzzy
-msgid "MS Excel files"
-msgstr "Text files"
-
-#: JWLManager.py:607
-#, fuzzy
-msgid "Export file"
-msgstr "Export file"
-
-#: JWLManager.py:619
-#, fuzzy
-msgid "NOT exported!"
-msgstr "NOT exported!"
-
-#: JWLManager.py:627
-#, fuzzy
-msgid "Items exported"
-msgstr "Items exported"
-
-#: JWLManager.py:630
-#, fuzzy
-msgid "Import"
-msgstr "Import"
-
-#: JWLManager.py:630
-#, fuzzy
-msgid ""
-"Make sure your import file is UTF-8 encoded and properly formatted.\n"
-"\n"
-"Importing will modify the archive. Proceed?"
 msgstr ""
-"Make sure your import file is UTF-8 encoded and properly formatted.\n"
-"\n"
-"Importing will modify the archive. Proceed?"
 
-#: JWLManager.py:638
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:608
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:610
+msgid "Export file"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:608
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:610
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:635
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:637
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:696
+msgid "Text files"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:610
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:637
+msgid "MS Excel files"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:622
+msgid "NOT exported!"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:630
+msgid "Items exported"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:638
 msgid "Import file"
-msgstr "Import file"
+msgstr ""
 
-#: JWLManager.py:640 JWLManager.py:657
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:640
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:657
 msgid "NOT imported!"
-msgstr "NOT imported!"
+msgstr ""
 
-#: JWLManager.py:645
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:645
 msgid "Importing. Please wait…"
-msgstr "Importing. Please wait…"
+msgstr ""
 
-#: JWLManager.py:660
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:660
 msgid "items imported/updated"
-msgstr "items imported/updated"
+msgstr ""
 
-#: JWLManager.py:676 JWLManager.py:1642
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:676
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1667
 msgid "Warning"
-msgstr "Warnung"
+msgstr ""
 
-#: JWLManager.py:676
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:676
 msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"Du versuchst {} Objekte anzeigen zu lassen.\n"
-"Bitte wähle weniger aus."
 
-#: JWLManager.py:721
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:721
 msgid "Delete"
-msgstr "Delete"
+msgstr ""
 
-#: JWLManager.py:721
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:721
 msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
 msgstr ""
-"Are you sure you want to\n"
-"DELETE these {} items?"
 
-#: JWLManager.py:724
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:724
 msgid "Deleting. Please wait…"
-msgstr "Deleting. Please wait…"
+msgstr ""
 
-#: JWLManager.py:737
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:737
 msgid "items deleted"
-msgstr "items deleted"
+msgstr ""
 
-#: JWLManager.py:745
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:745
 msgid "Mask"
-msgstr "Mask"
+msgstr ""
 
-#: JWLManager.py:745
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:745
 msgid ""
 "Are you sure you want to\n"
 "MASK all text fields?"
 msgstr ""
-"Are you sure you want to\n"
-"MASK all text fields?"
 
-#: JWLManager.py:748
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:748
 msgid "Masking. Please wait…"
-msgstr "Masking. Please wait…"
+msgstr ""
 
-#: JWLManager.py:754
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:754
 msgid "Data masked"
-msgstr "Data masked"
+msgstr ""
 
-#: JWLManager.py:761
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:761
 msgid "Reindex"
-msgstr "Reindex"
+msgstr ""
 
-#: JWLManager.py:761
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:761
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
 msgstr ""
-"This may take a few seconds.\n"
-"Proceed?"
 
-#: JWLManager.py:765
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:765
 msgid "Please wait…"
-msgstr "Please wait…"
+msgstr ""
 
-#: JWLManager.py:771
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:771
 msgid "Reindexing. Please wait…"
-msgstr "Reindexing. Please wait…"
+msgstr ""
 
-#: JWLManager.py:777
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:777
 msgid "Reindexed successfully"
-msgstr "Reindexed successfully"
+msgstr ""
 
-#: JWLManager.py:828
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:828
 msgid "Exit"
-msgstr "Exit"
+msgstr ""
 
-#: JWLManager.py:828
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:828
 msgid "Save before quitting?"
-msgstr "Save before quitting?"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Grey"
-msgstr "Grey"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Yellow"
-msgstr "Yellow"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Green"
-msgstr "Green"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Blue"
-msgstr "Blue"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Red"
-msgstr "Red"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Orange"
-msgstr "Orange"
+msgstr ""
 
-#: JWLManager.py:912
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:912
 msgid "Purple"
-msgstr "Purple"
+msgstr ""
 
-#: JWLManager.py:916 JWLManager.py:975 JWLManager.py:1018 JWLManager.py:1032
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:916
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:975
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1018
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1032
 msgid "* OTHER *"
-msgstr "* OTHER *"
+msgstr ""
 
-#: JWLManager.py:935
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:935
 msgid "* YEAR UNCERTAIN *"
-msgstr "* YEAR UNCERTAIN *"
+msgstr ""
 
-#: JWLManager.py:943
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:943
 msgid "Other"
-msgstr "Notes"
+msgstr ""
 
-#: JWLManager.py:944
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:944
 msgid "* NO YEAR *"
-msgstr "* NO YEAR *"
+msgstr ""
 
-#: JWLManager.py:956 JWLManager.py:1018
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:956
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1018
 msgid "* NO LANGUAGE *"
-msgstr "Language"
+msgstr ""
 
-#: JWLManager.py:1018 JWLManager.py:1032
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1018
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1032
 msgid "* NO TAG *"
-msgstr "* NO TAG *"
+msgstr ""
 
-#: JWLManager.py:1018
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1018
 msgid "* INDEPENDENT *"
-msgstr "* INDEPENDENT *"
+msgstr ""
 
-#: JWLManager.py:1072
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1072
 msgid "Type"
-msgstr "Type"
+msgstr ""
 
-#: JWLManager.py:1074 JWLManager.py:1135
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1074
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1135
 msgid "Language"
-msgstr "Language"
+msgstr ""
 
-#: JWLManager.py:1075
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1075
 msgid "Year"
-msgstr "Year"
+msgstr ""
 
-#: JWLManager.py:1076
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1076
 msgid "Tag"
-msgstr "Tag"
+msgstr ""
 
-#: JWLManager.py:1077
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1077
 msgid "Color"
-msgstr "Color"
+msgstr ""
 
-#: JWLManager.py:1113
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1113
 msgid "Add Favorite"
-msgstr "Add Favorite"
+msgstr ""
 
-#: JWLManager.py:1115
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1115
 msgid "Select the language and Bible edition to add:"
-msgstr "Select the language and Bible edition to add:"
+msgstr ""
 
-#: JWLManager.py:1136
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1136
 msgid "Edition"
-msgstr "Edition"
+msgstr ""
 
-#: JWLManager.py:1163
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1163
 msgid "Nothing added!"
-msgstr "Nothing added!"
+msgstr ""
 
-#: JWLManager.py:1170
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1170
 msgid "Favorite for \"{}\" in {} already exists."
-msgstr "Favorite for \"{}\" in {} already exists."
+msgstr ""
 
-#: JWLManager.py:1174
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1174
 msgid "Added \"{}\" in {}"
-msgstr "Added \"{}\" in {}"
+msgstr ""
 
-#: JWLManager.py:1249 JWLManager.py:1264 JWLManager.py:1324
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1249
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1265
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1325
 msgid "Exported from"
-msgstr "Exported from"
+msgstr ""
 
-#: JWLManager.py:1249 JWLManager.py:1264 JWLManager.py:1324
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1249
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1265
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1325
 msgid "by"
-msgstr "by"
+msgstr ""
 
-#: JWLManager.py:1249 JWLManager.py:1264 JWLManager.py:1324
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1249
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1265
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1325
 msgid "on"
-msgstr "on"
+msgstr ""
 
-#: JWLManager.py:1287 JWLManager.py:1981
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1288
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1996
 msgid "NO TEXT"
-msgstr "NO TEXT"
+msgstr ""
 
-#: JWLManager.py:1375 JWLManager.py:1890
-#, fuzzy
-msgid "NO TITLE"
-msgstr "NO TITLE"
-
-#: JWLManager.py:1485 JWLManager.py:1502 JWLManager.py:1541 JWLManager.py:1557
-#: JWLManager.py:1632 JWLManager.py:1670 JWLManager.py:1691 JWLManager.py:2155
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1497
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1519
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1543
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1577
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1593
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1676
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1703
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1803
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:2170
 msgid "Error!"
-msgstr "Error!"
+msgstr ""
 
-#: JWLManager.py:1485
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1497
 msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
-"Wrong import file format:\n"
-"Missing {ANNOTATIONS} tag line"
 
-#: JWLManager.py:1502 JWLManager.py:1557 JWLManager.py:1670 JWLManager.py:1691
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1519
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1543
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1593
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1703
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1803
 msgid ""
 "Error on import!\n"
 "\n"
 "Faulting entry"
 msgstr ""
-"Error on import!\n"
-"\n"
-"Faulting entry"
 
-#: JWLManager.py:1541
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1577
 msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
-"Wrong import file format:\n"
-"Missing {HIGHLIGHTS} tag line"
 
-#: JWLManager.py:1632
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1667
+msgid "notes starting with"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1667
+msgid ""
+"WILL BE DELETED before importing.\n"
+"\n"
+"Proceed with deletion? (NO to skip)"
+msgstr ""
+
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1676
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {NOTES=} attribute line"
 msgstr ""
-"Wrong import file format:\n"
-"Missing or malformed {TITLE=} attribute line"
 
-#: JWLManager.py:1642
-#, fuzzy
-msgid "notes starting with"
-msgstr "notes starting with"
-
-#: JWLManager.py:1642
-#, fuzzy
-msgid ""
-"WILL BE DELETED before importing.\n"
-"\n"
-"Proceed with deletion? (NO to skip)"
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:1904
+msgid "NO TITLE"
 msgstr ""
-"WILL BE DELETED before importing.\n"
-"\n"
-"Proceed with deletion? (NO to skip)"
 
-#: JWLManager.py:2157
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:2172
 msgid "Oops! Something went wrong…"
-msgstr "Oops! Something went wrong…"
+msgstr ""
 
-#: JWLManager.py:2157
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:2172
 msgid "Take note of what you were doing and"
-msgstr "Take note of what you were doing and"
+msgstr ""
 
-#: JWLManager.py:2157
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:2172
 msgid "inform the developer"
-msgstr "inform the developer"
+msgstr ""
 
-#: JWLManager.py:2163
-#, fuzzy
+#: ../../home/ej/ERYK/Projects/JWLManager/JWLManager.py:2178
 msgid "The app will terminate."
-msgstr "The app will terminate."
+msgstr ""
 
-#~ msgid "No archive selected"
-#~ msgstr ""
-
-#~ msgid "Yes"
-#~ msgstr ""
-
-#~ msgid "No"
-#~ msgstr ""
-
-#~ msgid "Cancel"
-#~ msgstr ""
-
-#~ msgid "Parsing tree"
-#~ msgstr ""
-
-#~ msgid "Obscure"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Are you sure you want to\n"
-#~ "OBSCURE all text fields?"
-#~ msgstr ""
-
-#~ msgid "Obscuring. Please wait…"
-#~ msgstr ""
-
-#~ msgid "Database obscured"
-#~ msgstr ""
-
-#~ msgid "Datailed View"
-#~ msgstr "Datailed View"
-
-#~ msgid "Processing data. Please wait…"
-#~ msgstr "Processing data. Please wait…"
-
-#~ msgid "Increased detail"
-#~ msgstr "Increased detail"
-
-#~ msgid "Reduced detail"
-#~ msgstr "Reduced detail"
-
-#~ msgid "Publication"
-#~ msgstr "Publication"
-
-#~ msgid "* MEDIA *"
-#~ msgstr "* MEDIA *"
-
-#~ msgid "OTHER"
-#~ msgstr "OTHER"
-
-#~ msgid "NO LANGUAGE"
-#~ msgstr "NO LANGUAGE"
-
-#~ msgid "* NO DATE *"
-#~ msgstr "* NO DATE *"
-
-#~ msgid "UN-TAGGED"
-#~ msgstr "UN-TAGGED"
-
-#~ msgid "UNKNOWN"
-#~ msgstr "UNKNOWN"
-
-#~ msgid "Jan."
-#~ msgstr "Jan."
-
-#~ msgid "Feb."
-#~ msgstr "Feb."
-
-#~ msgid "Mar."
-#~ msgstr "Mar."
-
-#~ msgid "Apr."
-#~ msgstr "Apr."
-
-#~ msgid "May"
-#~ msgstr "May"
-
-#~ msgid "June"
-#~ msgstr "June"
-
-#~ msgid "July"
-#~ msgstr "July"
-
-#~ msgid "Aug."
-#~ msgstr "Aug."
-
-#~ msgid "Sep."
-#~ msgstr "Sep."
-
-#~ msgid "Oct."
-#~ msgstr "Oct."
-
-#~ msgid "Nov."
-#~ msgstr "Nov."
-
-#~ msgid "Dec."
-#~ msgstr "Dec."
-
-#~ msgid "Ch."
-#~ msgstr "Ch."
-
-#~ msgid "* BLANK *"
-#~ msgstr "* BLANK *"
-
-#~ msgid "Please be patient…"
-#~ msgstr "Please be patient…"
-
-#~ msgid "Processing data"
-#~ msgstr "Processing data"
-
-#~ msgid ""
-#~ "Select the edition and language to add.\n"
-#~ "Make sure the edition exists in the selected language!\n"
-#~ msgstr ""
-#~ "Select the edition and language to add.\n"
-#~ "Make sure the edition exists in the selected language!\n"
-
-#~ msgid "Processing..."
-#~ msgstr ""
-
-#~ msgid "Select the language and Bible edition to add.\n"
-#~ msgstr ""
-
-#~ msgid "Export"
-#~ msgstr "Export"
-
-#~ msgid "items will be EXPORTED. Proceed?"
-#~ msgstr "items will be EXPORTED. Proceed?"
-
-#~ msgid "Import files"
-#~ msgstr "Import files"
-
-#~ msgid "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
-#~ msgstr "MODIFY FIELD ABOVE BEFORE RE-IMPORTING"
-
-#~ msgid ""
-#~ "LEAVE {TITLE=} (empty) IF YOU DON'T "
-#~ "WANT TO DELETE ANY NOTES WHILE "
-#~ "IMPORTING\n"
-#~ msgstr ""
-#~ "LEAVE {TITLE=} (empty) IF YOU DON'T "
-#~ "WANT TO DELETE ANY NOTES WHILE "
-#~ "IMPORTING\n"
-
-#~ msgid "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-#~ msgstr "EACH NOTE STARTS WITH HEADER INDICATING CATEGORY, ETC."
-
-#~ msgid "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
-#~ msgstr "BE CAREFUL WHEN MODIFYING THE ATTRIBUTES\n"
-
-#~ msgid "LINE AFTER HEADER IS NOTE TITLE"
-#~ msgstr "LINE AFTER HEADER IS NOTE TITLE"
-
-#~ msgid ""
-#~ "REST IS NOTE BODY; CAN BE "
-#~ "MULTI-LINE AND IS TERMINATED BY NEXT"
-#~ " NOTE HEADER\n"
-#~ msgstr ""
-#~ "REST IS NOTE BODY; CAN BE "
-#~ "MULTI-LINE AND IS TERMINATED BY NEXT"
-#~ " NOTE HEADER\n"
-
-#~ msgid "SEPARATE TAGS WITH \",\" (commas)"
-#~ msgstr "SEPARATE TAGS WITH \",\" (commas)"
-
-#~ msgid "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
-#~ msgstr "OR LEAVE EMPTY IF NO TAG: {TAGS=bible,notes} OR {TAGS=}\n"
-
-#~ msgid "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
-#~ msgstr "FILE SHOULD TERMINATE WITH \"==={END}===\"\n"
-
-#~ msgid "ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)"
-#~ msgstr "ENSURE YOUR FILE IS ENCODED AS UTF-8 (UNICODE)"
-
-#~ msgid ""
-#~ "Wrong import file format:\n"
-#~ "Malformed header"
-#~ msgstr ""
-#~ "Wrong import file format:\n"
-#~ "Malformed header"
