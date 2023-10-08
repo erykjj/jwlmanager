@@ -1343,8 +1343,7 @@ class ExportItems():
                                 TagId
                             )
                         WHERE nt.NoteId = n.NoteId
-                )
-                tags,
+                ),
                 l.MepsLanguage,
                 l.BookNumber,
                 l.ChapterNumber,
@@ -1849,7 +1848,19 @@ class PreviewItems():
             SELECT n.BlockType Type,
                 n.Title,
                 n.Content,
-                GROUP_CONCAT(t.Name, ' | '),
+                (
+                    SELECT GROUP_CONCAT(t.Name, ' | ') 
+                        FROM Note nt
+                            LEFT JOIN
+                            TagMap USING (
+                                NoteId
+                            )
+                            JOIN
+                            Tag t USING (
+                                TagId
+                            )
+                        WHERE nt.NoteId = n.NoteId
+                ),
                 l.MepsLanguage,
                 l.BookNumber,
                 l.ChapterNumber,
