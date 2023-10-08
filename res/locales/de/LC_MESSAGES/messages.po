@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v2.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-10-01 18:13-0400\n"
-"PO-Revision-Date: 2023-08-09 22:50+0000\n"
-"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: de\n"
+"PO-Revision-Date: 2023-10-08 04:09+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.1-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
 #: JWLManager.py:196
@@ -23,9 +24,8 @@ msgid "Help"
 msgstr "Hilfe"
 
 #: JWLManager.py:211 JWLManager.py:685
-#, fuzzy
 msgid "Data Viewer"
-msgstr "Data Viewer"
+msgstr "Datenbetrachter"
 
 #: JWLManager.py:314 JWLManager.py:386 JWLManager.py:387 JWLManager.py:528
 #: JWLManager.py:651 JWLManager.py:844 JWLManager.py:884 JWLManager.py:1179
@@ -41,9 +41,8 @@ msgid "Highlights"
 msgstr "Highlights"
 
 #: JWLManager.py:318 JWLManager.py:878 JWLManager.py:1200
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Bookmarks"
+msgstr "Lesezeichen"
 
 #: JWLManager.py:320 JWLManager.py:386 JWLManager.py:387 JWLManager.py:524
 #: JWLManager.py:647 JWLManager.py:886 JWLManager.py:1208 JWLManager.py:1243
@@ -51,14 +50,12 @@ msgid "Annotations"
 msgstr "Annotationen"
 
 #: JWLManager.py:322 JWLManager.py:880 JWLManager.py:1202
-#, fuzzy
 msgid "Favorites"
-msgstr "Favorites"
+msgstr "Favoriten"
 
 #: JWLManager.py:338 JWLManager.py:844 JWLManager.py:1073
-#, fuzzy
 msgid "Title"
-msgstr "Title"
+msgstr "Titel"
 
 #: JWLManager.py:348
 #, fuzzy
@@ -700,4 +697,3 @@ msgstr "The app will terminate."
 #~ msgstr ""
 #~ "Wrong import file format:\n"
 #~ "Malformed header"
-
