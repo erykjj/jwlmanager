@@ -11,7 +11,18 @@
 ### Removed
 
 ____
-## [3.0.0]
+## [3.0.1] - 2023-10-09
+### Added
+
+- If HEADING is provided for Bible references in the import file, it will over-write/update the Location.Title field in the archive
+  - If you do use that "feature", keep in mind the observation below...
+
+### Changed
+
+- Removed verse numbers from HEADING on export/import
+  - That field (Location.Title) applies to the whole chapter and will display incorrectly if there is more than one note at that location
+
+## [3.0.0] - 2023-10-07
 
 **Major release**
 
@@ -475,6 +486,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[3.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.1
 [3.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.0
 [2.4.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.2
 [2.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.1
