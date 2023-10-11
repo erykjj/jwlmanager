@@ -6,6 +6,9 @@
 
 ### Changed
 
+- Adjusted crash box to point to Github issues (instead of previous Gitlab repo)
+- Small adjustments to Qt-related code
+
 ### Fixed
 
 ### Removed
