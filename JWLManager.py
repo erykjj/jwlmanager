@@ -202,7 +202,6 @@ class Window(QMainWindow, Ui_MainWindow):
             text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
             layout = QHBoxLayout(self.help_window)
             layout.addWidget(text)
-            self.help_window.setLayout(layout)
 
         def init_viewer():
             self.viewer_window = QDialog(self)
@@ -219,7 +218,6 @@ class Window(QMainWindow, Ui_MainWindow):
             layout = QVBoxLayout(self.viewer_window)
             layout.addWidget(toolbar)
             layout.addWidget(self.viewer_text)
-            self.viewer_window.setLayout(layout)
 
         init_help()
         init_viewer()
@@ -401,7 +399,7 @@ class Window(QMainWindow, Ui_MainWindow):
         contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
         text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
         dialog = QDialog(self)
-        outer = QVBoxLayout()
+        outer = QVBoxLayout(dialog)
         top = QHBoxLayout()
         icon = QLabel(dialog)
         icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
@@ -418,7 +416,6 @@ class Window(QMainWindow, Ui_MainWindow):
         bottom.addWidget(button)
         outer.addLayout(top)
         outer.addLayout(bottom)
-        dialog.setLayout(outer)
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         dialog.exec()
 
@@ -1129,14 +1126,13 @@ class AddFavorites():
         buttons.accepted.connect(dialog.accept)
         buttons.rejected.connect(dialog.reject)
 
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(dialog)
         layout.addWidget(label)
         form = QFormLayout()
         form.addRow(_('Language')+':', language)
         form.addRow(_('Edition')+':', publication)
         layout.addLayout(form)
         layout.addWidget(buttons)
-        dialog.setLayout(layout)
         dialog.setWindowFlag(Qt.FramelessWindowHint)
         if dialog.exec():
             return publication.currentText(), language.currentText()
@@ -2184,7 +2180,6 @@ class DebugInfo():
         layout.addWidget(text)
         layout.addWidget(label2)
         layout.addWidget(button)
-        dialog.setLayout(layout)
         button.clicked.connect(dialog.close)
         dialog.exec()
 
