@@ -1379,7 +1379,7 @@ class ExportItems():
                 'LANG': row[4],
                 'BK': row[5],
                 'CH': row[6],
-                'VS': row[7],
+                'VS': row[7] or 0,
                 'BLOCK': row[7],
                 'DOC': row[8],
                 'PUB': row[10],
@@ -1407,7 +1407,7 @@ class ExportItems():
                     item['ISSUE'] = row[9]
                 else:
                     item['ISSUE'] = None
-            elif item['TYPE'] == 2:
+            elif item['TYPE'] == 2 or (item['TYPE'] == 0 and item['PUB'] != None):
                 item['BLOCK'] = None
                 if not item['HEADING']:
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
