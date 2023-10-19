@@ -1409,7 +1409,7 @@ class ExportItems():
                     item['ISSUE'] = row[9]
                 else:
                     item['ISSUE'] = None
-            elif item['TYPE'] == 2 or (item['TYPE'] == 0 and item['PUB'] != None):
+            elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
                 item['BLOCK'] = None
                 if not item['HEADING']:
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
@@ -1941,14 +1941,17 @@ class PreviewItems():
                 item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                 if row[9] > 10000000:
                     item['ISSUE'] = self.process_issue(row[9])
-            elif item['TYPE'] == 2:
+            elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
                 item['BLOCK'] = None
                 if not item['HEADING']:
-                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}:{item['VS']}"
-                elif ':' not in item['HEADING']:
-                    item['HEADING'] += f":{item['VS']}"
-                script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
+                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
+                if item['VS']:
+                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                    if ':' not in item['HEADING']:
+                        item['HEADING'] += f":{item['VS']}"
+                else:
+                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + '000'
+                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
             else:
                 item['Link'] = None
             self.item_list.append(item)
