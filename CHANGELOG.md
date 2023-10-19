@@ -13,6 +13,8 @@
 
 ### Fixed
 
+- Fixes for dealing with chapter-level Bible notes (no verse)
+
 ### Removed
 
 ____
