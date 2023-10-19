@@ -1799,7 +1799,7 @@ class ImportNotes():
                 if pd.notna(row['BK']):
                     location_id = add_scripture_location(row)
                     usermark_id = add_usermark(row, location_id)
-                    if pd.notna(row['BLOCK']): # see above
+                    if pd.notna(row['BLOCK']): # Bible book title
                         block_type = 1
                     elif pd.notna(row['VS']):
                         block_type = 2
