@@ -8,6 +8,8 @@
 
 - Adjusted crash box to point to Github issues (instead of previous Gitlab repo)
 - Small adjustments to Qt-related code
+- Testing branch: Data Viewer similar to JW Library, but with more meta-data
+  - Working on being able to edit/delete individual notes
 
 ### Fixed
 
