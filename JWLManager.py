@@ -1009,7 +1009,7 @@ class ConstructTree():
 
         def load_independent():
             lst = []
-            for row in self.cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 GROUP BY n.NoteId;"):
+            for row in self.cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;"):
                 col = row[1] or 0
                 yr = row[3][0:4]
                 note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), self.process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
@@ -1792,7 +1792,7 @@ class ImportNotes():
                 if pd.notna(row['BK']):
                     location_id = add_scripture_location(row)
                     usermark_id = add_usermark(row, location_id)
-                    if pd.notna(row['DOC']): # special case of Bible note in book header, etc.
+                    if pd.notna(row['DOC']): # special case of Bible note in book header, etc. # CHECK
                         block_type = 1
                     elif pd.notna(row['VS']):
                         block_type = 2
