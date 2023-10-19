@@ -1281,7 +1281,7 @@ class ExportItems():
         for row in self.cur.execute(sql):
             item = {
                 'LABEL': row[0],
-                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *', # FIX: what if None?
                 'DOC': row[2],
                 'PUB': row[4]
             }
@@ -1374,12 +1374,12 @@ class ExportItems():
             item = {
                 'TYPE': row[0],
                 'TITLE': row[1],
-                'NOTE': row[2].rstrip() or '',
+                'NOTE': row[2].rstrip() or '', # BUG: .rstrip on None!!
                 'TAGS': row[3] or '',
                 'LANG': row[4],
                 'BK': row[5],
                 'CH': row[6],
-                'VS': row[7] or 0,
+                'VS': row[7],
                 'BLOCK': row[7],
                 'DOC': row[8],
                 'PUB': row[10],
@@ -1413,7 +1413,10 @@ class ExportItems():
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
                 elif ':' in item['HEADING']:
                     item['HEADING'] = regex.match(r'(.*?):', item['HEADING']).group(1)
-                item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                if item['VS']:
+                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                else:
+                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + '000'
                 item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
             else:
                 item['Link'] = None
@@ -1791,8 +1794,10 @@ class ImportNotes():
                     usermark_id = add_usermark(row, location_id)
                     if pd.notna(row['DOC']): # special case of Bible note in book header, etc.
                         block_type = 1
-                    else:
+                    elif pd.notna(row['VS']):
                         block_type = 2
+                    else:
+                        block_type = 0
                     update_note(row, location_id, block_type, usermark_id)
                 elif pd.notna(row['DOC']):
                     location_id = add_publication_location(row)
@@ -1903,7 +1908,7 @@ class PreviewItems():
             item = {
                 'TYPE': row[0],
                 'TITLE': row[1] or '* '+_('NO TITLE')+' *',
-                'NOTE': row[2].rstrip() or '',
+                'NOTE': row[2].rstrip() or '', # BUG: None!!
                 'TAGS': row[3],
                 'BK': row[5],
                 'CH': row[6],
@@ -1994,7 +1999,7 @@ class PreviewItems():
         for row in self.cur.execute(sql):
             item = {
                 'LABEL': row[0],
-                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *', # FIX: None!?
                 'DOC': row[2],
                 'PUB': row[4]
             }
