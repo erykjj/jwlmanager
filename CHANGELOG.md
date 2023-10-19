@@ -13,8 +13,10 @@
 
 ### Fixed
 
-- Fixes for dealing with chapter-level Bible notes (no verse)
-- Fixes for handling notes and annotations with no content
+- Fixes for export/import in various special cases:
+  - Chapter-level Bible notes (no verse)
+  - Notes in Bible book titles
+  - Notes and annotations with no content
 
 ### Removed
 
