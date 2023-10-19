@@ -100,8 +100,12 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - for books with just one chapter, use 1
     - eg. `{CH=45}`
   - **VS**
-    - verse number - **required**
+    - verse number - **required** (see exceptions below)
     - eg. `{VS=6}`
+    - **special cases**:
+      - `{VS=0}` - for Psalm headings
+      - attribute omitted - for note at top of chapter (before verse 1)
+      - attribute omitted *and* `{BLOCK=1}` - for note attached to Bible book title
 ######
 ##### Attributes for publication notes:
   - **ISSUE**
