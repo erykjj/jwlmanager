@@ -1410,15 +1410,17 @@ class ExportItems():
                 else:
                     item['ISSUE'] = None
             elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
-                item['BLOCK'] = None
+                if not item['VS']:
+                    item['VS'] = 0
+                item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                if item['TYPE'] == 1: # Note in Bible book name
+                    item['VS'] = None
+                else:
+                    item['BLOCK'] = None
                 if not item['HEADING']:
                     item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
                 elif ':' in item['HEADING']:
                     item['HEADING'] = regex.match(r'(.*?):', item['HEADING']).group(1)
-                if item['VS']:
-                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                else:
-                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + '000'
                 item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
             else:
                 item['Link'] = None
@@ -1446,7 +1448,11 @@ class ExportItems():
                         vs = '{VS='+str(row['VS'])+'}'
                     else:
                         vs = ''
-                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
+                    if row.get('BLOCK'):
+                        blk = '{BLOCK='+str(row['BLOCK'])+'}'
+                    else:
+                        blk = ''
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                     if row.get('DOC'):
@@ -1786,7 +1792,6 @@ class ImportNotes():
         df['TITLE'].fillna('', inplace=True)
         df['NOTE'].fillna('', inplace=True)
         df['COLOR'].fillna(0, inplace=True)
-        df['BLOCK'].fillna(df['VS'], inplace=True)
         count = 0
         for i, row in df.iterrows():
             try:
@@ -1794,10 +1799,11 @@ class ImportNotes():
                 if pd.notna(row['BK']):
                     location_id = add_scripture_location(row)
                     usermark_id = add_usermark(row, location_id)
-                    if pd.notna(row['DOC']): # special case of Bible note in book header, etc. # CHECK
+                    if pd.notna(row['BLOCK']): # see above
                         block_type = 1
                     elif pd.notna(row['VS']):
                         block_type = 2
+                        row['BLOCK'] = row['VS']
                     else:
                         block_type = 0
                     update_note(row, location_id, block_type, usermark_id)
