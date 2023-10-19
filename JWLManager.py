@@ -1437,8 +1437,11 @@ class ExportItems():
                 if row.get('BK'):
                     bk = str(row['BK'])
                     ch = str(row['CH'])
-                    vs = str(row['VS'])
-                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}{VS='+vs+'}{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
+                    if row.get('VS'):
+                        vs = '{VS='+str(row['VS'])+'}'
+                    else:
+                        vs = ''
+                    txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
                     if row.get('RANGE'):
                         txt += '{RANGE='+rng+'}'
                     if row.get('DOC'):
