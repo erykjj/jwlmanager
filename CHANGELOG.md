@@ -14,6 +14,7 @@
 ### Fixed
 
 - Fixes for dealing with chapter-level Bible notes (no verse)
+- Fixes for handling notes and annotations with no content
 
 ### Removed
 
