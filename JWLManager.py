@@ -1281,10 +1281,11 @@ class ExportItems():
         for row in self.cur.execute(sql):
             item = {
                 'LABEL': row[0],
-                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *', # FIX: what if None?
+                'VALUE': row[1] or '* '+_('NO TEXT')+' *',
                 'DOC': row[2],
                 'PUB': row[4]
             }
+            item['VALUE'] = item['VALUE'].rstrip()
             if row[3] > 10000000:
                 item['ISSUE'] = row[3]
             else:
@@ -1374,7 +1375,7 @@ class ExportItems():
             item = {
                 'TYPE': row[0],
                 'TITLE': row[1],
-                'NOTE': row[2].rstrip() or '', # BUG: .rstrip on None!!
+                'NOTE': row[2] or '',
                 'TAGS': row[3] or '',
                 'LANG': row[4],
                 'BK': row[5],
@@ -1388,6 +1389,7 @@ class ExportItems():
                 'CREATED': row[13][:19],
                 'COLOR': row[14] or 0
             }
+            item['NOTE'] = item['NOTE'].rstrip()
             if row[15]:
                 item['RANGE'] = f'{row[15]}-{row[16]}'
             else:
@@ -1908,7 +1910,7 @@ class PreviewItems():
             item = {
                 'TYPE': row[0],
                 'TITLE': row[1] or '* '+_('NO TITLE')+' *',
-                'NOTE': row[2].rstrip() or '', # BUG: None!!
+                'NOTE': row[2] or '',
                 'TAGS': row[3],
                 'BK': row[5],
                 'CH': row[6],
@@ -1921,6 +1923,7 @@ class PreviewItems():
                 'MODIFIED': row[12][:10],
                 'COLOR': row[13] or 0
             }
+            item['NOTE'] = item['NOTE'].rstrip()
             try:
                 item['LANG'] = self.languages[row[4]][1]
             except:
@@ -1999,10 +2002,11 @@ class PreviewItems():
         for row in self.cur.execute(sql):
             item = {
                 'LABEL': row[0],
-                'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *', # FIX: None!?
+                'VALUE': row[1] or '* '+_('NO TEXT')+' *',
                 'DOC': row[2],
                 'PUB': row[4]
             }
+            item['VALUE'] = item['VALUE'].rstrip()
             if row[3] > 10000000:
                 item['ISSUE'] = self.process_issue(row[3])
             else:
