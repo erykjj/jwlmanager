@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.2'
+VERSION = 'v3.0.3'
 
 import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -1703,13 +1703,17 @@ class ImportNotes():
         count = 0
         items = []
         notes = self.import_file.read()
-        for item in regex.finditer('^===({.*?})===\n(.*?)\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
+        for item in regex.finditer('^===({.*?})===\n(.*?)(?=\n==={)', notes, regex.S | regex.M):
             try:
                 count += 1
                 header = item.group(1)
                 attribs = process_header(header)
-                attribs['TITLE'] = item.group(2)
-                attribs['NOTE'] = item.group(3)
+                if item.group(2):
+                    note = item.group(2).strip().split('\n')
+                else:
+                    note = ['', '']
+                attribs['TITLE'] = note[0]
+                attribs['NOTE'] = '\n'.join(note[1:])
                 items.append(attribs)
             except:
                 QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
