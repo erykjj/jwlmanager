@@ -6,10 +6,19 @@
 
 ### Changed
 
-- Adjusted crash box to point to Github issues (instead of previous Gitlab repo)
-- Small adjustments to Qt-related code
 - Testing branch: Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
+
+### Fixed
+
+### Removed
+
+____
+## [3.0.2] - 2023-10-20
+### Changed
+
+- Adjusted crash box to point to Github issues (instead of previous Gitlab repo)
+- Small adjustments to Qt-related code
 
 ### Fixed
 
@@ -17,10 +26,8 @@
   - Chapter-level Bible notes (no verse)
   - Notes in Bible book titles
   - Notes and annotations with no content
+- Fixed language selection in Add Favorite
 
-### Removed
-
-____
 ## [3.0.1] - 2023-10-09
 ### Added
 
@@ -496,6 +503,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[3.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.2
 [3.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.1
 [3.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.0
 [2.4.2]:https://github.com/erykjj/jwlmanager/releases/tag/v2.4.2
