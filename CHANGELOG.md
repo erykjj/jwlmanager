@@ -6,6 +6,7 @@
 
 ### Changed
 
+- Adjusted regex/processing of custom import files with missig title and/or note content
 - Testing branch: Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
 
