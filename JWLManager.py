@@ -1781,8 +1781,8 @@ class ImportNotes():
                 self.cur.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
             else:
                 unique_id = uuid.uuid1()
-                created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-                modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'))
+                modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
                 self.cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
             note_id = self.cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
             process_tags(note_id, attribs['TAGS'])
