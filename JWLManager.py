@@ -99,7 +99,8 @@ def read_res(lng):
 
     def load_languages():
         for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
-            lang_by_num[row[0]] = (row[1], row[3])
+            lang_name[row[0]] = row[1]
+            lang_symbol[row[0]] = row[3]
             if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
@@ -118,14 +119,15 @@ def read_res(lng):
         pubs = pd.DataFrame(lst, columns=['Language', 'Symbol', 'Short', 'Full', 'Year', 'Type', 'Favorite'])
         favs = pubs[pubs['Favorite'] == 1]
         favs = favs.drop(['Full', 'Year', 'Type', 'Favorite'], axis=1)
-        favs['Lang'] = favs['Language'].map(lang_by_num)
+        favs['Lang'] = favs['Language'].map(lang_name)
         pubs = pubs[pubs['Language'] == lng]
         pubs = pubs.drop(['Language', 'Favorite'], axis=1)
         return favs, pubs
 
-    global _, books, favorites, lang_by_num, publications
+    global _, books, favorites, lang_name, lang_symbol, publications
     _ = tr[lng].gettext
-    lang_by_num = {}
+    lang_name = {}
+    lang_symbol = {}
     books = {}
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
     cur = con.cursor()
@@ -346,7 +348,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(msg+_('Processing…'))
         app.processEvents()
         start = time()
-        tree = ConstructTree(self, self.treeWidget, books, publications, lang_by_num, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
+        tree = ConstructTree(self, self.treeWidget, books, publications, lang_name, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
         delta = 3500 - (time()-start) * 1000
         if message:
             self.statusBar.showMessage(msg, delta)
@@ -672,7 +674,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if len(selected) > 2000:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), selected, books, lang_by_num)
+        fn = PreviewItems(self.combo_category.currentText(), selected, books, lang_symbol)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -948,7 +950,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]][0]
+                lng = self.languages[row[2]]
             else:
                 lng = _('* NO LANGUAGE *')
             code, year = self.process_code(row[1], row[3])
@@ -963,7 +965,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]][0]
+                lng = self.languages[row[2]]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -978,7 +980,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]][0]
+                lng = self.languages[row[2]]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -993,7 +995,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId);'):
             if row[2] in self.languages.keys():
-                lng = self.languages[row[2]][0]
+                lng = self.languages[row[2]]
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
@@ -1019,7 +1021,7 @@ class ConstructTree():
         lst = []
         for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;"):
             if row[1] in self.languages.keys():
-                lng = self.languages[row[1]][0]
+                lng = self.languages[row[1]]
             else:
                 lng = f'#{row[1]}'
 
@@ -1931,7 +1933,7 @@ class PreviewItems():
             }
             item['NOTE'] = item['NOTE'].rstrip()
             try:
-                item['LANG'] = self.languages[row[4]][1]
+                item['LANG'] = self.languages[row[4]]
             except:
                 item['LANG'] = None
             if row[14]:
