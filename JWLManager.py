@@ -184,6 +184,32 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def init_windows():
 
+            def init_about():
+                    year = f'MIT ©{datetime.now().year}'
+                    owner = 'Eryk J.'
+                    web = 'https://github.com/erykjj/jwlmanager'
+                    contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
+                    text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
+                    self.about_window = QDialog(self)
+                    outer = QVBoxLayout(self.about_window)
+                    top = QHBoxLayout()
+                    icon = QLabel(self.about_window)
+                    icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
+                    icon.setGeometry(12,12,72,72)
+                    icon.setAlignment(Qt.AlignTop)
+                    top.addWidget(icon)
+                    label = QLabel(self.about_window)
+                    label.setText(text)
+                    label.setOpenExternalLinks(True)
+                    top.addWidget(label)
+                    button = QDialogButtonBox(QDialogButtonBox.Ok)
+                    button.accepted.connect(self.about_window.accept)
+                    bottom = QHBoxLayout()
+                    bottom.addWidget(button)
+                    outer.addLayout(top)
+                    outer.addLayout(bottom)
+                    self.about_window.setWindowFlag(Qt.FramelessWindowHint)
+
             def init_help():
                 self.help_window = QDialog(self)
                 self.help_window.setWindowFlags(Qt.Window)
@@ -197,6 +223,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
                 layout = QHBoxLayout(self.help_window)
                 layout.addWidget(text)
+                self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+                self.help_window.finished.connect(self.help_window.hide())
 
             def init_viewer():
                 self.viewer_window = QDialog(self)
@@ -214,6 +242,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout.addWidget(toolbar)
                 layout.addWidget(self.viewer_text)
 
+            init_about()
             init_help()
             init_viewer()
 
@@ -247,8 +276,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         super().__init__()
         init_ui()
-        set_vars()
         center()
+        set_vars()
         init_windows()
         connect_signals()
         self.new_file()
@@ -258,7 +287,6 @@ class Window(QMainWindow, Ui_MainWindow):
         if event.type() == QEvent.LanguageChange:
             self.retranslateUi(self)
         super().changeEvent(event)
-
 
     def change_language(self):
         changed = False
@@ -275,6 +303,7 @@ class Window(QMainWindow, Ui_MainWindow):
             translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
         app.installTranslator(translator[self.lang])
         app.processEvents()
+
 
     def change_title(self):
         changed = False
@@ -389,38 +418,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help_box(self):
-        self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-        self.help_window.finished.connect(self.help_window.hide())
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
 
     def about_box(self):
-        year = f'MIT ©{datetime.now().year}'
-        owner = 'Eryk J.'
-        web = 'https://github.com/erykjj/jwlmanager'
-        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
-        text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
-        dialog = QDialog(self)
-        outer = QVBoxLayout(dialog)
-        top = QHBoxLayout()
-        icon = QLabel(dialog)
-        icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
-        icon.setGeometry(12,12,72,72)
-        icon.setAlignment(Qt.AlignTop)
-        top.addWidget(icon)
-        label = QLabel(dialog)
-        label.setText(text)
-        label.setOpenExternalLinks(True)
-        top.addWidget(label)
-        button = QDialogButtonBox(QDialogButtonBox.Ok)
-        button.accepted.connect(dialog.accept)
-        bottom = QHBoxLayout()
-        bottom.addWidget(button)
-        outer.addLayout(top)
-        outer.addLayout(bottom)
-        dialog.setWindowFlag(Qt.FramelessWindowHint)
-        dialog.exec()
+        self.about_window.exec()
 
 
     def new_file(self):
@@ -540,7 +543,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.save_filename == '':
             return self.save_as_file()
         else:
-            self.zipfile()
+            self.zip_file()
 
     def save_as_file(self):
         fname = ()
@@ -560,9 +563,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = fname[0]
         self.working_dir = Path(fname[0]).parent
         self.status_label.setText(f'{Path(fname[0]).stem}  ')
-        self.zipfile()
+        self.zip_file()
 
-    def zipfile(self):
+    def zip_file(self):
 
         def update_manifest():
             with open(f'{tmp_path}/manifest.json', 'r') as json_file:
@@ -661,7 +664,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
-        self.tree_selection()
+        self.tree_selection() # CHECK
 
 
     def view(self):
@@ -715,7 +718,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if text[0]:
             self.archive_modified()
             self.regroup(False, text[1])
-            self.tree_selection()
+            self.tree_selection()  # CHECK
 
     def delete(self):
         reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -738,7 +741,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
-        self.tree_selection()
+        self.tree_selection()  # CHECK
 
 
     def obscure(self):
