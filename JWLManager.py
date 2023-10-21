@@ -1138,7 +1138,7 @@ class AddFavorites():
         if pub == ' ' or lng == ' ':
             self.message = (0, ' '+_('Nothing added!'))
             return
-        language = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0]
+        language = int(favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0])
         publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Symbol'].values[0]
         location = self.add_location(publication, language)
         result = self.cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
