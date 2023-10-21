@@ -739,15 +739,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return
         self.trim_db()
-        self.pd = QProgressDialog(_('Please wait…'), None, 0, 14, self)
-        self.pd.setWindowModality(Qt.WindowModal)
-        self.pd.setWindowTitle('Reindexing')
-        self.pd.setWindowFlag(Qt.FramelessWindowHint)
-        self.pd.setModal(True)
-        self.pd.setMinimumDuration(0)
         self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
         app.processEvents()
-        fn = Reindex(self.pd)
+        fn = Reindex()
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -2092,8 +2086,18 @@ class ObscureItems():
 
 
 class Reindex():
-    def __init__(self, progress):
-        self.progress = progress
+    def __init__(self):
+
+        def init_progress():
+            pd = QProgressDialog(_('Please wait…'), None, 0, 14)
+            pd.setWindowModality(Qt.WindowModal)
+            pd.setWindowTitle('Reindexing')
+            pd.setWindowFlag(Qt.FramelessWindowHint)
+            pd.setModal(True)
+            pd.setMinimumDuration(0)
+            return pd
+
+        self.progress_dialog = init_progress()
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.cur.executescript("PRAGMA temp_store = 2; \
@@ -2113,7 +2117,7 @@ class Reindex():
         except Exception as ex:
             DebugInfo(ex)
             self.aborted = True
-            self.progress.close()
+            self.progress_dialog.close()
         self.cur.close()
         con.close()
 
@@ -2123,7 +2127,7 @@ class Reindex():
     def update_table(self, table, field):
         app.processEvents()
         self.cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-        self.progress.setValue(self.progress.value() + 1)
+        self.progress_dialog.setValue(self.progress_dialog.value() + 1)
 
     def drop_table(self):
         self.cur.execute('DROP TABLE CrossReference;')
@@ -2197,7 +2201,6 @@ if __name__ == "__main__":
     translator[lang] = QTranslator()
     translator[lang].load(resource_path(f'res/locales/UI/qt_{lang}.qm'))
     app.installTranslator(translator[lang])
-
     font = QFont()
     font.setPixelSize(16)
     app.setFont(font)
