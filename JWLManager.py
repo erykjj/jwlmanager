@@ -283,7 +283,6 @@ class Window(QMainWindow, Ui_MainWindow):
         connect_signals()
         self.new_file()
 
-
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
             self.retranslateUi(self)
@@ -427,15 +426,18 @@ class Window(QMainWindow, Ui_MainWindow):
         self.about_window.exec()
 
 
+    def check_save(self):
+        reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), 
+            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
+            QMessageBox.Yes)
+        if reply == QMessageBox.Yes:
+            self.save_file()
+        elif reply == QMessageBox.Cancel:
+            return
+
     def new_file(self):
         if self.modified:
-            reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), 
-                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
-                QMessageBox.Yes)
-            if reply == QMessageBox.Yes:
-                self.save_file()
-            elif reply == QMessageBox.Cancel:
-                return
+            self.check_save()
         self.status_label.setStyleSheet('color: black;')
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         self.modified = False
@@ -467,11 +469,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def load_file(self, archive = ''):
         if self.modified:
-            reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
-            if reply == QMessageBox.Yes:
-                self.save_file()
-            elif reply == QMessageBox.Cancel:
-                return
+            self.check_save()
         if not archive:
             fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary *.jwlplaylist)')
             if fname[0] == '':
@@ -603,6 +601,16 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
+    def list_selected(self):
+        selected = []
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
+        for item in it:
+            index = item.value()
+            if index in self.leaves:
+                for i in self.leaves[index]:
+                    selected.append(i)
+        return selected
+
     def export(self):
 
         def export_file():
@@ -614,13 +622,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{self.combo_category.currentText()}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')
             return fname
 
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
+        selected = self.list_selected()
         fname = export_file()
         if fname[0] == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
@@ -669,13 +671,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def view(self):
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
+        selected = self.list_selected()
         if len(selected) > 2000:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
@@ -727,13 +723,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         self.statusBar.showMessage(' '+_('Deleting. Please wait…'))
         app.processEvents()
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
+        selected = self.list_selected()
         fn = DeleteItems(self.combo_category.currentText(), selected)
         if fn.aborted:
             self.clean_up()
