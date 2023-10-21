@@ -53,7 +53,7 @@ from res.ui_main_window import Ui_MainWindow
 #### Initial language setting based on passed arguments
 
 def get_language():
-    global available_languages
+    global available_languages, tr
     available_languages = { # add/enable completed languages
         # 'de': 'German (Deutsch)',
         'en': 'English (default)',
@@ -65,9 +65,8 @@ def get_language():
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
         }
-    global tr
     tr = {}
-    localedir = PROJECT_PATH / 'res/locales/'
+    localedir = project_path / 'res/locales/'
 
     parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
     parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
@@ -77,25 +76,25 @@ def get_language():
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
+
     lng = 'en'
     for l in args.keys():
         if args[l]:
             lng = l
-
     return lng
 
 def resource_path(relative_path):
     try:
         base_path = sys._MEIPASS
     except Exception:
-        base_path = PROJECT_PATH 
+        base_path = project_path 
     return os.path.join(base_path, relative_path)
 
-def read_res(lng):
+def read_resources(lng):
 
-    def load_books(lng):
+    def load_bible_books(lng):
         for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
-            books[row[0]] = row[1]
+            bible_books[row[0]] = row[1]
 
     def load_languages():
         for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
@@ -124,25 +123,24 @@ def read_res(lng):
         pubs = pubs.drop(['Language', 'Favorite'], axis=1)
         return favs, pubs
 
-    global _, books, favorites, lang_name, lang_symbol, publications
+    global _, bible_books, favorites, lang_name, lang_symbol, publications
     _ = tr[lng].gettext
     lang_name = {}
     lang_symbol = {}
-    books = {}
-    con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
+    bible_books = {}
+    con = sqlite3.connect(project_path / 'res/resources.db')
     cur = con.cursor()
     ui_lang = load_languages()
-    load_books(ui_lang)
+    load_bible_books(ui_lang)
     favorites, publications = load_pubs(ui_lang)
     cur.close()
     con.close()
 
-PROJECT_PATH = Path(__file__).resolve().parent
+project_path = Path(__file__).resolve().parent
 tmp_path = mkdtemp(prefix='JWLManager_')
 db_name = 'userData.db'
-
 lang = get_language()
-read_res(lang)
+read_resources(lang)
 
 
 #### Main app classes
@@ -348,7 +346,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(msg+_('Processing…'))
         app.processEvents()
         start = time()
-        tree = ConstructTree(self, self.treeWidget, books, publications, lang_name, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
+        tree = ConstructTree(self, self.treeWidget, bible_books, publications, lang_name, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
         delta = 3500 - (time()-start) * 1000
         if message:
             self.statusBar.showMessage(msg, delta)
@@ -621,7 +619,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
         self.working_dir = Path(fname[0]).parent
-        fn = ExportItems(self.combo_category.currentText(), selected, books, fname[0],
+        fn = ExportItems(self.combo_category.currentText(), selected, bible_books, fname[0],
             Path(self.current_archive).stem)
         if fn.aborted:
             self.clean_up()
@@ -674,7 +672,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if len(selected) > 2000:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), selected, books, lang_symbol)
+        fn = PreviewItems(self.combo_category.currentText(), selected, bible_books, lang_symbol)
         if fn.aborted:
             self.clean_up()
             sys.exit()
@@ -840,14 +838,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 class ConstructTree():
-    def __init__(self, window, tree, books, publications, languages, category=_('Notes'), grouping=_('Title'), title='code', current=[]):
+    def __init__(self, window, tree, bible_books, publications, languages, category=_('Notes'), grouping=_('Title'), title='code', current=[]):
         self.tree = tree
         self.window = window
         self.category = category
         self.grouping = grouping
         self.publications = publications
         self.languages = languages
-        self.books = books
+        self.bible_books = bible_books
         self.title_format = title
         self.total = 0
         self.aborted = False
@@ -926,7 +924,7 @@ class ConstructTree():
             if not year:
                 year = y
         if book and chapter:
-            bk = str(book).rjust(2, '0') + f': {self.books[book]}'
+            bk = str(book).rjust(2, '0') + f': {self.bible_books[book]}'
             detail = 'Bk. ' + bk
         if not detail and year:
             detail = year
@@ -1211,13 +1209,13 @@ class DeleteItems():
 
 
 class ExportItems():
-    def __init__(self, category, items, books, fname='', current_archive=''):
+    def __init__(self, category, items, bible_books, fname='', current_archive=''):
         self.category = category
         self.current_archive = current_archive
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
         self.aborted = False
-        self.books = books
+        self.bible_books = bible_books
         self.item_list = []
         self.fname = fname
         if regex.search(r'\.txt$', fname):
@@ -1420,7 +1418,7 @@ class ExportItems():
                 else:
                     item['BLOCK'] = None
                 if not item['HEADING']:
-                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
+                    item['HEADING'] = f"{self.bible_books[item['BK']]} {item['CH']}"
                 elif ':' in item['HEADING']:
                     item['HEADING'] = regex.match(r'(.*?):', item['HEADING']).group(1)
                 item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
@@ -1827,11 +1825,11 @@ class ImportNotes():
 
 
 class PreviewItems():
-    def __init__(self, category, items, books, languages):
+    def __init__(self, category, items, bible_books, languages):
         self.category = category
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
-        self.books = books
+        self.bible_books = bible_books
         self.languages = languages
         self.aborted = False
         self.html = ''
@@ -1956,7 +1954,7 @@ class PreviewItems():
             elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
                 item['BLOCK'] = None
                 if not item['HEADING']:
-                    item['HEADING'] = f"{self.books[item['BK']]} {item['CH']}"
+                    item['HEADING'] = f"{self.bible_books[item['BK']]} {item['CH']}"
                 if item['VS']:
                     item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
                     if ':' not in item['HEADING']:
