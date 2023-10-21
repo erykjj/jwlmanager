@@ -149,6 +149,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
 
         def init_ui():
+
+            def center():
+                qr = self.frameGeometry()
+                cp = QWidget.screen(self).availableGeometry().center()
+                qr.moveCenter(cp)
+                self.move(qr.topLeft())
+
             self.setupUi(self)
             self.setAcceptDrops(True)
             self.status_label = QLabel()
@@ -159,6 +166,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.setColumnWidth(0, 500)
             self.treeWidget.setColumnWidth(1, 30)
             self.button_add.setVisible(False)
+            center()
 
         def set_vars():
             self.total.setText('')
@@ -175,12 +183,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item.toolTip() == self.lang:
                     item.setChecked(True)
             self.current_data = []
-
-        def center():
-            qr = self.frameGeometry()
-            cp = QWidget.screen(self).availableGeometry().center()
-            qr.moveCenter(cp)
-            self.move(qr.topLeft())
 
         def init_windows():
 
@@ -276,7 +278,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         super().__init__()
         init_ui()
-        center()
         set_vars()
         init_windows()
         connect_signals()
