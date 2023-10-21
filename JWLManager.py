@@ -147,109 +147,112 @@ read_resources(lang)
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
+
+        def init_ui():
+            self.setupUi(self)
+            self.setAcceptDrops(True)
+            self.status_label = QLabel()
+            self.statusBar.addPermanentWidget(self.status_label, 0)
+            self.treeWidget.setSortingEnabled(True)
+            self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
+            self.treeWidget.setExpandsOnDoubleClick(False)
+            self.treeWidget.setColumnWidth(0, 500)
+            self.treeWidget.setColumnWidth(1, 30)
+            self.button_add.setVisible(False)
+
+        def set_vars():
+            self.total.setText('')
+            self.int_total = 0
+            self.modified = False
+            self.title_format = 'short'
+            self.save_filename = ''
+            self.current_archive = ''
+            self.working_dir = Path.home()
+            self.lang = lang
+            for item in self.menuLanguage.actions():
+                if item.toolTip() not in available_languages.keys():
+                    item.setVisible(False)
+                if item.toolTip() == self.lang:
+                    item.setChecked(True)
+            self.current_data = []
+
+        def center():
+            qr = self.frameGeometry()
+            cp = QWidget.screen(self).availableGeometry().center()
+            qr.moveCenter(cp)
+            self.move(qr.topLeft())
+
+        def init_windows():
+
+            def init_help():
+                self.help_window = QDialog(self)
+                self.help_window.setWindowFlags(Qt.Window)
+                self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
+                self.help_window.setWindowTitle(_('Help'))
+                self.help_window.resize(1020, 812)
+                self.help_window.move(50, 50)
+                self.help_window.setMinimumSize(300, 300)
+                text = QTextEdit(self.help_window)
+                text.setReadOnly(True)
+                text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
+                layout = QHBoxLayout(self.help_window)
+                layout.addWidget(text)
+
+            def init_viewer():
+                self.viewer_window = QDialog(self)
+                self.viewer_window.setWindowFlags(Qt.Window)
+                self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
+                self.viewer_window.setWindowTitle(_('Data Viewer'))
+                self.viewer_window.resize(640, 812)
+                self.viewer_window.move(50, 50)
+                self.viewer_window.setMinimumSize(500, 500)
+                self.viewer_text = QTextEdit(self.viewer_window)
+                toolbar = QToolBar()
+                self.button_TXT = QAction('TXT', toolbar)
+                toolbar.addAction(self.button_TXT)
+                layout = QVBoxLayout(self.viewer_window)
+                layout.addWidget(toolbar)
+                layout.addWidget(self.viewer_text)
+
+            init_help()
+            init_viewer()
+
+        def connect_signals():
+            self.actionQuit.triggered.connect(self.close)
+            self.actionHelp.triggered.connect(self.help_box)
+            self.actionAbout.triggered.connect(self.about_box)
+            self.actionNew.triggered.connect(self.new_file)
+            self.actionOpen.triggered.connect(self.load_file)
+            self.actionQuit.triggered.connect(self.clean_up)
+            self.actionSave.triggered.connect(self.save_file)
+            self.actionSave_As.triggered.connect(self.save_as_file)
+            self.actionObscure.triggered.connect(self.obscure)
+            self.actionReindex.triggered.connect(self.reindex)
+            self.actionExpand_All.triggered.connect(self.expand_all)
+            self.actionCollapse_All.triggered.connect(self.collapse_all)
+            self.actionSelect_All.triggered.connect(self.select_all)
+            self.actionUnselect_All.triggered.connect(self.unselect_all)
+            self.menuTitle_View.triggered.connect(self.change_title)
+            self.menuLanguage.triggered.connect(self.change_language)
+            self.combo_grouping.currentTextChanged.connect(self.regroup)
+            self.combo_category.currentTextChanged.connect(self.switchboard)
+            self.treeWidget.itemChanged.connect(self.tree_selection)
+            self.treeWidget.doubleClicked.connect(self.double_clicked)
+            self.button_export.clicked.connect(self.export)
+            self.button_import.clicked.connect(self.import_items)
+            self.button_add.clicked.connect(self.add_favorite)
+            self.button_delete.clicked.connect(self.delete)
+            self.button_view.clicked.connect(self.view)
+            self.button_TXT.triggered.connect(self.save_txt)
+
         super().__init__()
-        self.setupUi(self)
-        self.setAcceptDrops(True)
-        self.status_label = QLabel()
-        self.statusBar.addPermanentWidget(self.status_label, 0)
-        self.treeWidget.setSortingEnabled(True)
-        self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
-        self.treeWidget.setExpandsOnDoubleClick(False)
-        self.treeWidget.setColumnWidth(0, 500)
-        self.treeWidget.setColumnWidth(1, 30)
-        self.button_add.setVisible(False)
-        self.set_vars()
-        self.center()
-        self.init_windows()
-        self.connect_signals()
+        init_ui()
+        set_vars()
+        center()
+        init_windows()
+        connect_signals()
         self.new_file()
 
-    def set_vars(self):
-        self.total.setText('')
-        self.int_total = 0
-        self.modified = False
-        self.title_format = 'short'
-        self.save_filename = ''
-        self.current_archive = ''
-        self.working_dir = Path.home()
-        self.lang = lang
-        for item in self.menuLanguage.actions():
-            if item.toolTip() not in available_languages.keys():
-                item.setVisible(False)
-            if item.toolTip() == self.lang:
-                item.setChecked(True)
-        self.current_data = []
-
-
-    def center(self):
-        qr = self.frameGeometry()
-        cp = QWidget.screen(self).availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
-
-    def init_windows(self):
-
-        def init_help():
-            self.help_window = QDialog(self)
-            self.help_window.setWindowFlags(Qt.Window)
-            self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            self.help_window.setWindowTitle(_('Help'))
-            self.help_window.resize(1020, 812)
-            self.help_window.move(50, 50)
-            self.help_window.setMinimumSize(300, 300)
-            text = QTextEdit(self.help_window)
-            text.setReadOnly(True)
-            text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
-            layout = QHBoxLayout(self.help_window)
-            layout.addWidget(text)
-
-        def init_viewer():
-            self.viewer_window = QDialog(self)
-            self.viewer_window.setWindowFlags(Qt.Window)
-            self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            self.viewer_window.setWindowTitle(_('Data Viewer'))
-            self.viewer_window.resize(640, 812)
-            self.viewer_window.move(50, 50)
-            self.viewer_window.setMinimumSize(500, 500)
-            self.viewer_text = QTextEdit(self.viewer_window)
-            toolbar = QToolBar()
-            self.button_TXT = QAction('TXT', toolbar)
-            toolbar.addAction(self.button_TXT)
-            layout = QVBoxLayout(self.viewer_window)
-            layout.addWidget(toolbar)
-            layout.addWidget(self.viewer_text)
-
-        init_help()
-        init_viewer()
-
-
-    def connect_signals(self):
-        self.actionQuit.triggered.connect(self.close)
-        self.actionHelp.triggered.connect(self.help_box)
-        self.actionAbout.triggered.connect(self.about_box)
-        self.actionNew.triggered.connect(self.new_file)
-        self.actionOpen.triggered.connect(self.load_file)
-        self.actionQuit.triggered.connect(self.clean_up)
-        self.actionSave.triggered.connect(self.save_file)
-        self.actionSave_As.triggered.connect(self.save_as_file)
-        self.actionObscure.triggered.connect(self.obscure)
-        self.actionReindex.triggered.connect(self.reindex)
-        self.actionExpand_All.triggered.connect(self.expand_all)
-        self.actionCollapse_All.triggered.connect(self.collapse_all)
-        self.actionSelect_All.triggered.connect(self.select_all)
-        self.actionUnselect_All.triggered.connect(self.unselect_all)
-        self.menuTitle_View.triggered.connect(self.change_title)
-        self.menuLanguage.triggered.connect(self.change_language)
-        self.combo_grouping.currentTextChanged.connect(self.regroup)
-        self.combo_category.currentTextChanged.connect(self.switchboard)
-        self.treeWidget.itemChanged.connect(self.tree_selection)
-        self.treeWidget.doubleClicked.connect(self.double_clicked)
-        self.button_export.clicked.connect(self.export)
-        self.button_import.clicked.connect(self.import_items)
-        self.button_add.clicked.connect(self.add_favorite)
-        self.button_delete.clicked.connect(self.delete)
-        self.button_view.clicked.connect(self.view)
-        self.button_TXT.triggered.connect(self.save_txt)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -266,7 +269,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 changed = True
         if not changed:
             return
-        read_res(self.lang)
+        read_resources(self.lang)
         if self.lang not in translator.keys():
             translator[self.lang] = QTranslator()
             translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
