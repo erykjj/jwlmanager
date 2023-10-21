@@ -394,23 +394,19 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText(f'**{tree.total:,}**')
         self.selected.setText('**0**')
 
+
+    def list_selected(self):
+        selected = []
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
+        for item in it:
+            index = item.value()
+            if index in self.leaves:
+                for i in self.leaves[index]:
+                    selected.append(i)
+        return selected
+
     def tree_selection(self):
-
-        def recurse(parent):
-            for i in range(parent.childCount()):
-                child = parent.child(i)
-                grand_children = child.childCount()
-                if grand_children > 0:
-                    recurse(child)
-                else: 
-                    if child.checkState(0) == Qt.Checked:
-                        checked_leaves.append(child)
-
-        checked_leaves = []
-        self.selected_items = 0
-        recurse(self.treeWidget.invisibleRootItem())
-        for item in checked_leaves:
-            self.selected_items += len(self.leaves[item])
+        self.selected_items = len(self.list_selected())
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
@@ -600,16 +596,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
-
-    def list_selected(self):
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
-        return selected
 
     def export(self):
 
