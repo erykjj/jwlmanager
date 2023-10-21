@@ -653,7 +653,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
-        self.tree_selection() # CHECK
 
 
     def view(self):
@@ -701,7 +700,6 @@ class Window(QMainWindow, Ui_MainWindow):
         if text[0]:
             self.archive_modified()
             self.regroup(False, text[1])
-            self.tree_selection()  # CHECK
 
     def delete(self):
         reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -718,7 +716,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
-        self.tree_selection()  # CHECK
 
 
     def obscure(self):
