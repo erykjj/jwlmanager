@@ -29,6 +29,7 @@
 APP = 'JWLManager'
 VERSION = 'v3.1.0'
 
+
 import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
 
@@ -51,7 +52,6 @@ from res.ui_main_window import Ui_MainWindow
 
 
 #### Initial language setting based on passed arguments
-
 def get_language():
     global available_languages, tr
     available_languages = { # add/enable completed languages
@@ -143,8 +143,7 @@ lang = get_language()
 read_resources(lang)
 
 
-#### Main app classes
-
+#### Main app
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
 
@@ -979,7 +978,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         try:
                             count += 1
                             attribs = regex.split(',', line.rstrip().replace('None', ''))
-                            if attribs[6]: # CHECK
+                            if attribs[6]:
                                 location_id = add_scripture_location(attribs)
                             else:
                                 location_id = add_publication_location(attribs)
@@ -1604,7 +1603,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def clean_up(self):
        shutil.rmtree(tmp_path, ignore_errors=True)
 
-
 class ConstructTree():
     def __init__(self, window, tree, bible_books, publications, languages, category=_('Notes'), grouping=_('Title'), title='code', current=[]):
         self.tree = tree
@@ -1845,7 +1843,6 @@ class ConstructTree():
         filters = views[self.grouping]
         traverse(self.current, filters, self.tree)
 
-
 class PreviewItems():
     def __init__(self, category, items, bible_books, languages):
         self.category = category
@@ -2053,7 +2050,6 @@ class PreviewItems():
             self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u><i>{item['PUB']}</i> {item['ISSUE']}&nbsp;&mdash;&nbsp;{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</u></b></tt><br>{item['VALUE']}</div><hr>".replace('\n', '<br>')
             self.txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
-
 class DebugInfo():
     def __init__(self, ex):
         tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
@@ -2078,8 +2074,8 @@ class DebugInfo():
         button.clicked.connect(dialog.close)
         dialog.exec()
 
-#### Main app initialization
 
+#### Main app initialization
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     global translator
