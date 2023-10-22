@@ -27,7 +27,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v3.0.3'
+VERSION = 'v3.1.0'
 
 import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
 import pandas as pd
@@ -735,16 +735,88 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def reindex(self):
+
+        def init_progress():
+            pd = QProgressDialog(_('Please wait…'), None, 0, 14)
+            pd.setWindowModality(Qt.WindowModal)
+            pd.setWindowTitle('Reindexing')
+            pd.setWindowFlag(Qt.FramelessWindowHint)
+            pd.setModal(True)
+            pd.setMinimumDuration(0)
+            return pd
+
+        def make_table(table):
+            cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};')
+
+        def update_table(table, field):
+            app.processEvents()
+            cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+            progress_dialog.setValue(progress_dialog.value() + 1)
+
+        def reindex_notes():
+            make_table('Note')
+            update_table('Note', 'NoteId')
+            update_table('TagMap', 'NoteId')
+            cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_highlights():
+            make_table('UserMark')
+            update_table('UserMark', 'UserMarkId')
+            update_table('Note', 'UserMarkId')
+            update_table('BlockRange', 'UserMarkId')
+            cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_tags():
+            make_table('TagMap')
+            update_table('TagMap', 'TagMapId')
+            cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_ranges():
+            make_table('BlockRange')
+            update_table('BlockRange', 'BlockRangeId')
+            cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_locations():
+            make_table('Location')
+            update_table('Location', 'LocationId')
+            update_table('Note', 'LocationId')
+            update_table('InputField', 'LocationId')
+            update_table('UserMark', 'LocationId')
+            update_table('Bookmark', 'LocationId')
+            update_table('Bookmark', 'PublicationLocationId')
+            update_table('TagMap', 'LocationId')
+            update_table('PlaylistItemLocationMap', 'LocationId')
+            cur.execute('DROP TABLE CrossReference;')
+
         reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
         self.trim_db()
         self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
         app.processEvents()
-        fn = Reindex()
-        if fn.aborted:
+        progress_dialog = init_progress()
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
+        cur = con.cursor()
+        cur.executescript("PRAGMA temp_store = 2; \
+                                PRAGMA journal_mode = 'OFF'; \
+                                PRAGMA foreign_keys = 'OFF'; \
+                                BEGIN;")
+        try:
+            reindex_notes()
+            reindex_highlights()
+            reindex_tags()
+            reindex_ranges()
+            reindex_locations()
+            cur.executescript("PRAGMA foreign_keys = 'ON'; \
+                                    VACUUM;")
+            con.commit()
+        except Exception as ex:
+            DebugInfo(ex)
+            self.progress_dialog.close()
             self.clean_up()
             sys.exit()
+        cur.close()
+        con.close()
         message = ' '+_('Reindexed successfully')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
@@ -2083,90 +2155,6 @@ class ObscureItems():
             if content:
                 content = self.obscure_text(content)
             self.cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
-
-
-class Reindex():
-    def __init__(self):
-
-        def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 14)
-            pd.setWindowModality(Qt.WindowModal)
-            pd.setWindowTitle('Reindexing')
-            pd.setWindowFlag(Qt.FramelessWindowHint)
-            pd.setModal(True)
-            pd.setMinimumDuration(0)
-            return pd
-
-        self.progress_dialog = init_progress()
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        self.cur = con.cursor()
-        self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF'; \
-                                BEGIN;")
-        self.aborted = False
-        try:
-            self.reindex_notes()
-            self.reindex_highlights()
-            self.reindex_tags()
-            self.reindex_ranges()
-            self.reindex_locations()
-            self.cur.executescript("PRAGMA foreign_keys = 'ON'; \
-                                    VACUUM;")
-            con.commit()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
-            self.progress_dialog.close()
-        self.cur.close()
-        con.close()
-
-    def make_table(self, table):
-        self.cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};')
-
-    def update_table(self, table, field):
-        app.processEvents()
-        self.cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-        self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-
-    def drop_table(self):
-        self.cur.execute('DROP TABLE CrossReference;')
-
-    def reindex_notes(self):
-        self.make_table('Note')
-        self.update_table('Note', 'NoteId')
-        self.update_table('TagMap', 'NoteId')
-        self.drop_table()
-
-    def reindex_highlights(self):
-        self.make_table('UserMark')
-        self.update_table('UserMark', 'UserMarkId')
-        self.update_table('Note', 'UserMarkId')
-        self.update_table('BlockRange', 'UserMarkId')
-        self.drop_table()
-
-    def reindex_tags(self):
-        self.make_table('TagMap')
-        self.update_table('TagMap', 'TagMapId')
-        self.drop_table()
-
-    def reindex_ranges(self):
-        self.make_table('BlockRange')
-        self.update_table('BlockRange', 'BlockRangeId')
-        self.drop_table()
-
-    def reindex_locations(self):
-        self.make_table('Location')
-        self.update_table('Location', 'LocationId')
-        self.update_table('Note', 'LocationId')
-        self.update_table('InputField', 'LocationId')
-        self.update_table('UserMark', 'LocationId')
-        self.update_table('Bookmark', 'LocationId')
-        self.update_table('Bookmark', 'PublicationLocationId')
-        self.update_table('TagMap', 'LocationId')
-        self.update_table('PlaylistItemLocationMap', 'LocationId')
-        self.drop_table()
-
 
 class DebugInfo():
     def __init__(self, ex):
