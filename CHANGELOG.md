@@ -6,18 +6,25 @@
 
 ### Changed
 
-- Streamlined and cleaned up code
-- Adjusted regex/processing of custom import files with missig title and/or note content
 - Testing branch: Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
 
 ### Fixed
 
-- Fixed language format for Favorite selection
-
 ### Removed
 
 ____
+## [3.0.3] - 2023-10-22
+### Changed
+
+- Updated resource DB with new publication (scl)
+- Streamlined and cleaned up code
+- Adjusted regex/processing of custom import files with missig title and/or note content
+
+### Fixed
+
+- Fixed language format for Favorite selection
+
 ## [3.0.2] - 2023-10-20
 ### Changed
 
@@ -507,6 +514,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[3.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.3
 [3.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.2
 [3.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.1
 [3.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.0
