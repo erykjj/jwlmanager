@@ -702,17 +702,43 @@ class Window(QMainWindow, Ui_MainWindow):
             self.regroup(False, text[1])
 
     def delete(self):
+
+        def delete(table, field):
+            return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
+
+        def delete_items():
+            if category == _('Bookmarks'):
+                return delete('Bookmark', 'BookmarkId')
+            elif category == _('Favorites'):
+                return delete('TagMap', 'TagMapId')
+            elif category == _('Highlights'):
+                return delete('BlockRange', 'BlockRangeId')
+            elif category == _('Notes'):
+                return delete('Note', 'NoteId')
+            elif category == _('Annotations'):
+                return delete('InputField', 'LocationId')
+
         reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Deleting. Please wait…'))
         app.processEvents()
-        selected = self.list_selected()
-        fn = DeleteItems(self.combo_category.currentText(), selected)
-        if fn.aborted:
+        category = self.combo_category.currentText()
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
+        cur = con.cursor()
+        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+        try:
+            items = str(self.list_selected()).replace('[', '(').replace(']', ')')
+            result = delete_items()
+            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+        except Exception as ex:
+            DebugInfo(ex)
             self.clean_up()
             sys.exit()
-        message = f' {fn.result} '+_('items deleted')
+        cur.close()
+        con.close()
+        message = f' {result} '+_('items deleted')
         self.statusBar.showMessage(message, 3500)
         self.trim_db()
         self.regroup(False, message)
@@ -1282,43 +1308,6 @@ class AddFavorites():
         self.cur.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
         self.message = (1, ' '+_('Added "{}" in {}').format(pub, lng))
         return 1
-
-
-class DeleteItems():
-    def __init__(self, category=_('Notes'), items=[]):
-        self.category = category
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        self.cur = con.cursor()
-        self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF'; \
-                                BEGIN;")
-        self.aborted = False
-        try:
-            self.items = str(items).replace('[', '(').replace(']', ')')
-            self.result = self.delete_items()
-            self.cur.execute("PRAGMA foreign_keys = 'ON';")
-            con.commit()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
-        self.cur.close()
-        con.close()
-
-    def delete_items(self):
-        if self.category == _('Bookmarks'):
-            return self.delete('Bookmark', 'BookmarkId')
-        elif self.category == _('Favorites'):
-            return self.delete('TagMap', 'TagMapId')
-        elif self.category == _('Highlights'):
-            return self.delete('BlockRange', 'BlockRangeId')
-        elif self.category == _('Notes'):
-            return self.delete('Note', 'NoteId')
-        elif self.category == _('Annotations'):
-            return self.delete('InputField', 'LocationId')
-
-    def delete(self, table, field):
-        return self.cur.execute(f'DELETE FROM {table} WHERE {field} IN {self.items};').rowcount
 
 
 class ExportItems():
@@ -2144,84 +2133,6 @@ class PreviewItems():
             self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u><i>{item['PUB']}</i> {item['ISSUE']}&nbsp;&mdash;&nbsp;{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</u></b></tt><br>{item['VALUE']}</div><hr>".replace('\n', '<br>')
             self.txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
-
-# class ObscureItems():
-#     def __init__(self):
-#         con = sqlite3.connect(f'{tmp_path}/{db_name}')
-#         self.cur = con.cursor()
-#         self.cur.executescript("PRAGMA temp_store = 2; \
-#                                 PRAGMA journal_mode = 'OFF'; \
-#                                 BEGIN;")
-#         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
-#         self.m = regex.compile(r'\p{L}')
-#         self.aborted = False
-#         try:
-#             self.obscure_annotations()
-#             self.obscure_bookmarks()
-#             self.obscure_notes()
-#             self.obscure_locations()
-#             con.commit()
-#         except Exception as ex:
-#             DebugInfo(ex)
-#             self.aborted = True
-#         self.cur.close()
-#         con.close()
-
-#     def obscure_text(self, str):
-#         lst = list(self.words[randint(0,len(self.words)-1)])
-#         l = len(lst)
-#         i = 0
-#         s = ''
-#         for c in str:
-#             if self.m.match(c):
-#                 if c.isupper():
-#                     s += self.m.sub(lst[i].upper(), c)
-#                 else:
-#                     s += self.m.sub(lst[i], c)
-#                 i += 1
-#                 if i == l:
-#                     i = 0
-#             else:
-#                 s += c
-#         return s
-
-#     def obscure_locations(self):
-#         rows = self.cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
-#         for row in rows:
-#             title, item = row
-#             if title:
-#                 title = self.obscure_text(title)
-#                 self.cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
-
-#     def obscure_annotations(self):
-#         rows = self.cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
-#         for row in rows:
-#             content, item = row
-#             if content:
-#                 content = self.obscure_text(content)
-#                 self.cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
-
-#     def obscure_bookmarks(self):
-#         rows = self.cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
-#         for row in rows:
-#             title, content, item = row
-#             if title:
-#                 title = self.obscure_text(title)
-#             if content:
-#                 content = self.obscure_text(content)
-#                 self.cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
-#             else:
-#                 self.cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
-
-#     def obscure_notes(self):
-#         rows = self.cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
-#         for row in rows:
-#             title, content, item = row
-#             if title:
-#                 title = self.obscure_text(title)
-#             if content:
-#                 content = self.obscure_text(content)
-#             self.cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
 
 class DebugInfo():
     def __init__(self, ex):
