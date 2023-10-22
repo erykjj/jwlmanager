@@ -148,8 +148,8 @@ msgstr "NOT exported!"
 
 #: JWLManager.py:627
 #, fuzzy
-msgid "Items exported"
-msgstr "Items exported"
+msgid "items exported"
+msgstr "items exported"
 
 #: JWLManager.py:630
 #, fuzzy

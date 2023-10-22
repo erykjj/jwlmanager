@@ -129,8 +129,8 @@ msgid "NOT exported!"
 msgstr "NON esportato!"
 
 #: JWLManager.py:627
-msgid "Items exported"
-msgstr "Elementi esportati"
+msgid "items exported"
+msgstr "elementi esportati"
 
 #: JWLManager.py:630
 msgid "Import"
