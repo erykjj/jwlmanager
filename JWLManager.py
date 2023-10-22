@@ -719,15 +719,85 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def obscure(self):
+
+        def obscure_text(str):
+            lst = list(words[randint(0,len(words)-1)])
+            l = len(lst)
+            i = 0
+            s = ''
+            for c in str:
+                if m.match(c):
+                    if c.isupper():
+                        s += m.sub(lst[i].upper(), c)
+                    else:
+                        s += m.sub(lst[i], c)
+                    i += 1
+                    if i == l:
+                        i = 0
+                else:
+                    s += c
+            return s
+
+        def obscure_locations():
+            rows = cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
+            for row in rows:
+                title, item = row
+                if title:
+                    title = obscure_text(title)
+                    cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
+
+        def obscure_annotations():
+            rows = cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
+            for row in rows:
+                content, item = row
+                if content:
+                    content = obscure_text(content)
+                    cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
+
+        def obscure_bookmarks():
+            rows = cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
+            for row in rows:
+                title, content, item = row
+                if title:
+                    title = obscure_text(title)
+                if content:
+                    content = obscure_text(content)
+                    cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
+                else:
+                    cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
+
+        def obscure_notes():
+            rows = cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
+            for row in rows:
+                title, content, item = row
+                if title:
+                    title = obscure_text(title)
+                if content:
+                    content = obscure_text(content)
+                cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
+
         reply = QMessageBox.warning(self, _('Mask'), _('Are you sure you want to\nMASK all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Masking. Please wait…'))
         app.processEvents()
-        fn = ObscureItems()
-        if fn.aborted:
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
+        cur = con.cursor()
+        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
+        words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
+        m = regex.compile(r'\p{L}')
+        try:
+            obscure_annotations()
+            obscure_bookmarks()
+            obscure_notes()
+            obscure_locations()
+            con.commit()
+        except Exception as ex:
+            DebugInfo(ex)
             self.clean_up()
             sys.exit()
+        cur.close()
+        con.close()
         message = ' '+_('Data masked')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
@@ -797,10 +867,7 @@ class Window(QMainWindow, Ui_MainWindow):
         progress_dialog = init_progress()
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
-                                PRAGMA foreign_keys = 'OFF'; \
-                                BEGIN;")
+        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
         try:
             reindex_notes()
             reindex_highlights()
@@ -2078,83 +2145,83 @@ class PreviewItems():
             self.txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
 
-class ObscureItems():
-    def __init__(self):
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        self.cur = con.cursor()
-        self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF'; \
-                                BEGIN;")
-        self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
-        self.m = regex.compile(r'\p{L}')
-        self.aborted = False
-        try:
-            self.obscure_annotations()
-            self.obscure_bookmarks()
-            self.obscure_notes()
-            self.obscure_locations()
-            con.commit()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
-        self.cur.close()
-        con.close()
+# class ObscureItems():
+#     def __init__(self):
+#         con = sqlite3.connect(f'{tmp_path}/{db_name}')
+#         self.cur = con.cursor()
+#         self.cur.executescript("PRAGMA temp_store = 2; \
+#                                 PRAGMA journal_mode = 'OFF'; \
+#                                 BEGIN;")
+#         self.words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
+#         self.m = regex.compile(r'\p{L}')
+#         self.aborted = False
+#         try:
+#             self.obscure_annotations()
+#             self.obscure_bookmarks()
+#             self.obscure_notes()
+#             self.obscure_locations()
+#             con.commit()
+#         except Exception as ex:
+#             DebugInfo(ex)
+#             self.aborted = True
+#         self.cur.close()
+#         con.close()
 
-    def obscure_text(self, str):
-        lst = list(self.words[randint(0,len(self.words)-1)])
-        l = len(lst)
-        i = 0
-        s = ''
-        for c in str:
-            if self.m.match(c):
-                if c.isupper():
-                    s += self.m.sub(lst[i].upper(), c)
-                else:
-                    s += self.m.sub(lst[i], c)
-                i += 1
-                if i == l:
-                    i = 0
-            else:
-                s += c
-        return s
+#     def obscure_text(self, str):
+#         lst = list(self.words[randint(0,len(self.words)-1)])
+#         l = len(lst)
+#         i = 0
+#         s = ''
+#         for c in str:
+#             if self.m.match(c):
+#                 if c.isupper():
+#                     s += self.m.sub(lst[i].upper(), c)
+#                 else:
+#                     s += self.m.sub(lst[i], c)
+#                 i += 1
+#                 if i == l:
+#                     i = 0
+#             else:
+#                 s += c
+#         return s
 
-    def obscure_locations(self):
-        rows = self.cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
-        for row in rows:
-            title, item = row
-            if title:
-                title = self.obscure_text(title)
-                self.cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
+#     def obscure_locations(self):
+#         rows = self.cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
+#         for row in rows:
+#             title, item = row
+#             if title:
+#                 title = self.obscure_text(title)
+#                 self.cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
-    def obscure_annotations(self):
-        rows = self.cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
-        for row in rows:
-            content, item = row
-            if content:
-                content = self.obscure_text(content)
-                self.cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
+#     def obscure_annotations(self):
+#         rows = self.cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
+#         for row in rows:
+#             content, item = row
+#             if content:
+#                 content = self.obscure_text(content)
+#                 self.cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
-    def obscure_bookmarks(self):
-        rows = self.cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
-        for row in rows:
-            title, content, item = row
-            if title:
-                title = self.obscure_text(title)
-            if content:
-                content = self.obscure_text(content)
-                self.cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
-            else:
-                self.cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
+#     def obscure_bookmarks(self):
+#         rows = self.cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
+#         for row in rows:
+#             title, content, item = row
+#             if title:
+#                 title = self.obscure_text(title)
+#             if content:
+#                 content = self.obscure_text(content)
+#                 self.cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
+#             else:
+#                 self.cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
-    def obscure_notes(self):
-        rows = self.cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
-        for row in rows:
-            title, content, item = row
-            if title:
-                title = self.obscure_text(title)
-            if content:
-                content = self.obscure_text(content)
-            self.cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
+#     def obscure_notes(self):
+#         rows = self.cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
+#         for row in rows:
+#             title, content, item = row
+#             if title:
+#                 title = self.obscure_text(title)
+#             if content:
+#                 content = self.obscure_text(content)
+#             self.cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
 
 class DebugInfo():
     def __init__(self, ex):
