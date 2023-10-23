@@ -1931,12 +1931,35 @@ class ConstructTree():
             self.leaves = {}
             # tree.setUpdatesEnabled(False)
             self.tree.clear()
+            tree.repaint()
             self.build_tree()
             # tree.setUpdatesEnabled(True)
-            tree.repaint()
         except Exception as ex:
             self.crash_box(ex)
             self.aborted = True
+
+    def crash_box(self, ex):
+        tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
+        tb_text = ''.join(tb_lines)
+        dialog = QDialog()
+        dialog.setMinimumSize(650, 375)
+        dialog.setWindowTitle(_('Error!'))
+        label1 = QLabel()
+        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://github.com/erykjj/jwlmanager/issues'>"+_('inform the developer')+"</a>:</p>")
+        label1.setOpenExternalLinks(True)
+        text = QTextEdit()
+        text.setReadOnly(True)
+        text.setText(f'{APP} {VERSION}\n{platform()}\n\n{tb_text}')
+        label2 = QLabel()
+        label2.setText(_('The app will terminate.'))
+        button = QDialogButtonBox(QDialogButtonBox.Abort)
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(label1)
+        layout.addWidget(text)
+        layout.addWidget(label2)
+        layout.addWidget(button)
+        button.clicked.connect(dialog.close)
+        dialog.exec()
 
 
     def get_data(self):
