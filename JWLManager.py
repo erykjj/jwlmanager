@@ -31,6 +31,7 @@ VERSION = 'v3.1.0'
 
 
 import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
+from unicodedata import category
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -227,25 +228,26 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
                 self.help_window.finished.connect(self.help_window.hide())
 
-            def init_viewer():
-                self.viewer_window = QDialog(self)
-                self.viewer_window.setWindowFlags(Qt.Window)
-                self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-                self.viewer_window.setWindowTitle(_('Data Viewer'))
-                self.viewer_window.resize(640, 812)
-                self.viewer_window.move(50, 50)
-                self.viewer_window.setMinimumSize(500, 500)
-                self.viewer_text = QTextEdit(self.viewer_window)
-                toolbar = QToolBar()
-                self.button_TXT = QAction('TXT', toolbar)
-                toolbar.addAction(self.button_TXT)
-                layout = QVBoxLayout(self.viewer_window)
-                layout.addWidget(toolbar)
-                layout.addWidget(self.viewer_text)
+            # def init_viewer():
+            #     self.viewer_window = QDialog(self)
+            #     self.viewer_window.setWindowFlags(Qt.Window)
+            #     self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
+            #     self.viewer_window.setWindowTitle(_('Data Viewer'))
+            #     self.viewer_window.resize(640, 812)
+            #     self.viewer_window.move(50, 50)
+            #     self.viewer_window.setMinimumSize(500, 500)
+            #     self.viewer_text = QTextEdit(self.viewer_window)
+            #     toolbar = QToolBar()
+            #     self.button_TXT = QAction('TXT', toolbar)
+            #     toolbar.addAction(self.button_TXT)
+            #     layout = QVBoxLayout(self.viewer_window)
+            #     layout.addWidget(toolbar)
+            #     layout.addWidget(self.viewer_text)
 
             init_about()
             init_help()
-            init_viewer()
+            self.viewer_window = QDialog(self)
+            # init_viewer()
 
         def connect_signals():
             self.actionQuit.triggered.connect(self.close)
@@ -273,7 +275,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_add.clicked.connect(self.add_favorite)
             self.button_delete.clicked.connect(self.delete)
             self.button_view.clicked.connect(self.view)
-            self.button_TXT.triggered.connect(self.save_txt)
 
         super().__init__()
         init_ui()
@@ -1207,38 +1208,342 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def view(self):
+
+        def init_viewer():
+            window = QDialog(self)
+            window.setAttribute(Qt.WA_DeleteOnClose)
+            window.setWindowFlags(Qt.Window)
+            window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
+            window.setWindowTitle(_('Data viewer'))
+            window.resize(664, 846)
+            window.move(50, 50)
+            window.setMinimumSize(664, 846)
+            layout = QVBoxLayout(window)
+            toolbar = QToolBar(window)
+            self.button_TXT = QAction('TXT', toolbar)
+            self.button_TXT.triggered.connect(save_txt)
+            toolbar.addAction(self.button_TXT)
+            layout.addWidget(toolbar)
+
+            self.grid_layout = QGridLayout()
+            self.grid_layout.setAlignment(Qt.AlignTop)
+            grid_box = QFrame()
+            grid_box.setFrameShape(QFrame.NoFrame)
+            sp = grid_box.sizePolicy()
+            sp.setVerticalPolicy(QSizePolicy.MinimumExpanding)
+            grid_box.setLayout(self.grid_layout)
+            scroll_area = QScrollArea()
+            scroll_area.setWidget(grid_box)
+            scroll_area.setWidgetResizable(True)
+            layout.addWidget(scroll_area)
+
+            window.setWindowState((window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+            window.finished.connect(self.viewer_window.close)
+            window.show()
+            window.raise_()
+            window.activateWindow()
+            app.processEvents()
+            return window
+
+        def save_txt():
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
+            if fname == '':
+                self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+                return
+            with open(fname, 'w', encoding='utf-8') as txtfile:
+                txtfile.write(self.data_viewer_txt)
+                self.statusBar.showMessage(' '+_('Saved'), 3500)
+
+        def process_issue(i):
+            issue = str(i)
+            yr = issue[0:4]
+            m = issue[4:6]
+            d = issue[6:]
+            if d == '00':
+                d = ''
+            else:
+                d = '-' + d
+            return f'{yr}-{m}{d}'
+
+        def show_notes():
+
+            def get_notes():
+                sql = f'''
+                    SELECT n.BlockType Type,
+                        n.Title,
+                        n.Content,
+                        (
+                            SELECT GROUP_CONCAT(t.Name, ' | ') 
+                                FROM Note nt
+                                    LEFT JOIN
+                                    TagMap USING (
+                                        NoteId
+                                    )
+                                    JOIN
+                                    Tag t USING (
+                                        TagId
+                                    )
+                                WHERE nt.NoteId = n.NoteId
+                        ),
+                        l.MepsLanguage,
+                        l.BookNumber,
+                        l.ChapterNumber,
+                        n.BlockIdentifier,
+                        l.DocumentId,
+                        l.IssueTagNumber,
+                        l.KeySymbol,
+                        l.Title,
+                        n.LastModified Date,
+                        u.ColorIndex,
+                        b.StartToken,
+                        b.EndToken
+                    FROM Note n
+                        LEFT JOIN
+                        Location l USING (
+                            LocationId
+                        )
+                        LEFT JOIN
+                        UserMark u USING (
+                            UserMarkId
+                        )
+                        LEFT JOIN
+                        TagMap USING (
+                            NoteId
+                        )
+                        LEFT JOIN
+                        Tag t USING (
+                            TagId
+                        )
+                        LEFT JOIN
+                        BlockRange b USING (
+                            UserMarkId
+                        )
+                    WHERE n.NoteId IN {items} 
+                    GROUP BY n.NoteId
+                    ORDER BY Type, Date DESC;
+                    '''
+                for row in cur.execute(sql):
+                    item = {
+                        'TYPE': row[0],
+                        'TITLE': row[1] or '* '+_('NO TITLE')+' *',
+                        'NOTE': row[2].rstrip() or '',
+                        'TAGS': row[3],
+                        'BK': row[5],
+                        'CH': row[6],
+                        'VS': row[7],
+                        'BLOCK': row[7],
+                        'DOC': row[8],
+                        'ISSUE': row[9] or '',
+                        'PUB': row[10],
+                        'HEADING': row[11],
+                        'MODIFIED': row[12][:10],
+                        'COLOR': row[13] or 0
+                    }
+                    try:
+                        item['LANG'] = lang_name[row[4]]
+                    except:
+                        item['LANG'] = None
+                    if row[14]:
+                        item['RANGE'] = f'{row[14]}-{row[15]}'
+                    else:
+                        item['RANGE'] = None
+                    if item['TYPE'] == 1 and item['DOC']:
+                        if item['BLOCK']:
+                            par = f"&par={item['BLOCK']}"
+                            item['VS'] = None
+                        else:
+                            par = ''
+                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                        if row[9] > 10000000:
+                            item['ISSUE'] = process_issue(row[9])
+                    elif item['TYPE'] == 2:
+                        item['BLOCK'] = None
+                        if not item['HEADING']:
+                            item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}:{item['VS']}"
+                        elif ':' not in item['HEADING']:
+                            item['HEADING'] += f":{item['VS']}"
+                        script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
+                    else:
+                        item['Link'] = None
+                    item_list.append(item)
+
+            get_notes()
+            nonlocal txt
+            clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
+            counter = 1
+            for item in item_list:
+                note_box = QFrame()
+                note_box.setFixedHeight(250)
+                note_box.setMinimumWidth(310)
+                note_box.setFrameShape(QFrame.Panel)
+                note_box.setStyleSheet(f"background-color: {clrs[item['COLOR']]}")
+                # note_box.mousePressEvent = lambda event: print(note_box) # FIX: this only remembers the last item added
+
+                v_layout = QVBoxLayout(note_box)
+                v_layout.setSpacing(0)
+                v_layout.setContentsMargins(4, 3, 4, 2)
+
+                text_box = QLabel(note_box)
+                text_box.setWordWrap(True)
+                text_box.setAlignment(Qt.AlignTop)
+                text_box.setFrameShape(QFrame.NoFrame)
+                palette = text_box.palette()
+                palette.setColor(text_box.foregroundRole(), '#3d3d5c')
+                text_box.setPalette(palette)
+
+                meta_box = QLabel(note_box)
+                meta_box.setWordWrap(True)
+                meta_box.setFrameShape(QFrame.NoFrame)
+                palette = meta_box.palette()
+                palette.setColor(meta_box.foregroundRole(), '#7575a3')
+                meta_box.setPalette(palette)
+
+                html = f"<h3><b>{item['TITLE']}</b></h3>"
+                txt += item['TITLE']
+                if item['NOTE']:
+                    html += item['NOTE'].replace('\n', '<br>')
+                    txt += '\n' + item['NOTE']
+                text_box.setTextFormat(Qt.RichText)
+                text_box.setText(html)
+
+                html = ''
+                if item['TAGS'] or item['PUB'] or item['Link']:
+                    html += f"<hr><small><strong><tt>{item['MODIFIED']}"
+                    txt += '\n__________\n' + item['MODIFIED']
+                    if item['TAGS']:
+                        html += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
+                        txt += '\n{' + item['TAGS'] + '}'
+                    if item['PUB']:
+                        html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
+                        txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
+                    if item['HEADING']:
+                        html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}<br>"
+                        txt += ' — ' + item['HEADING']
+                    if item['Link']:
+                        lnk = item['Link']
+                        html += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
+                        txt += '\n' + lnk
+                    html += '</tt></strong></small>'
+                txt += '\n==========\n'
+                meta_box.setTextFormat(Qt.RichText)
+                meta_box.setText(html)
+
+                v_layout.addWidget(text_box)
+                v_layout.addStretch()
+                v_layout.addWidget(meta_box)
+                row = int((counter+1) / 2) - 1
+                col = (counter+1) % 2
+                try:
+                    self.grid_layout.setColumnStretch(col, 1)
+                    self.grid_layout.addWidget(note_box, row, col)
+                    app.processEvents()
+                except:
+                    return
+                counter += 1
+
+        def show_annotations():
+
+            def get_annotations():
+                sql = f'''
+                    SELECT TextTag,
+                        Value,
+                        l.DocumentId doc,
+                        l.IssueTagNumber,
+                        l.KeySymbol,
+                        CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+                    FROM InputField
+                        LEFT JOIN
+                        Location l USING (
+                            LocationId
+                        )
+                    WHERE LocationId IN {items}
+                    ORDER BY doc, i;
+                    '''
+                for row in cur.execute(sql):
+                    item = {
+                        'LABEL': row[0],
+                        'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                        'DOC': row[2],
+                        'PUB': row[4]
+                    }
+                    if row[3] > 10000000:
+                        item['ISSUE'] = process_issue(row[3])
+                    else:
+                        item['ISSUE'] = ''
+                    item_list.append(item)
+
+            get_annotations()
+            nonlocal txt
+            counter = 1
+            for item in item_list:
+                note_box = QFrame()
+                note_box.setFixedHeight(190)
+                note_box.setMinimumWidth(310)
+                note_box.setFrameShape(QFrame.Panel)
+                note_box.setStyleSheet(f"background-color: #f1f1f1;")
+                v_layout = QVBoxLayout(note_box)
+                v_layout.setSpacing(0)
+                v_layout.setContentsMargins(4, 3, 4, 3)
+
+                text_box = QLabel(note_box)
+                text_box.setWordWrap(True)
+                text_box.setAlignment(Qt.AlignTop)
+                text_box.setFrameShape(QFrame.NoFrame)
+                palette = text_box.palette()
+                palette.setColor(text_box.foregroundRole(), '#3d3d5c')
+                text_box.setPalette(palette)
+
+                html = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
+                text_box.setTextFormat(Qt.RichText)
+                text_box.setText(html)
+                v_layout.addWidget(text_box)
+                v_layout.addStretch()
+
+                row = int((counter+1) / 2) - 1
+                col = (counter+1) % 2
+                try:
+                    self.grid_layout.setColumnStretch(col, 1)
+                    self.grid_layout.addWidget(note_box, row, col)
+                    app.processEvents()
+                except:
+                    return
+                counter += 1
+                txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
+
         selected = self.list_selected()
-        if len(selected) > 2000:
+        if len(selected) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
-        fn = PreviewItems(self.combo_category.currentText(), selected, bible_books, lang_symbol)
-        if fn.aborted:
+        try:
+            self.viewer_window.close()
+        except:
+            pass
+        category = self.combo_category.currentText()
+        self.viewer_window = init_viewer()
+        con = sqlite3.connect(f'{tmp_path}/{db_name}')
+        cur = con.cursor()
+        txt = ''
+        item_list = []
+        try:
+            items = str(selected).replace('[', '(').replace(']', ')')
+            if category == _('Notes'):
+                show_notes()
+            else:
+                show_annotations()
+        except Exception as ex:
+            DebugInfo(ex)
             self.clean_up()
             sys.exit()
-        self.data_viewer_txt = fn.txt
-        self.data_viewer_dict = fn.item_list
-        self.viewer_text.setHtml(fn.html)
-        self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {self.combo_category.currentText()}')
-        self.viewer_window.setWindowState((self.viewer_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-        self.viewer_window.finished.connect(self.viewer_window.hide())
-        self.viewer_window.show()
-        self.viewer_window.raise_()
-        self.viewer_window.activateWindow()
-
-    def save_txt(self):
-
-        def export_file():
-            fname = ()
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{self.combo_category.currentText()}.txt', _('Text files')+' (*.txt)')
-            return fname[0]
-
-        fname = export_file()
-        if fname == '':
-            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-            return
-        with open(fname, 'w', encoding='utf-8') as txtfile:
-            txtfile.write(self.data_viewer_txt)
-            self.statusBar.showMessage(' '+_('Saved'), 3500)
+        cur.close()
+        con.close()
+        self.data_viewer_txt = txt
+        self.data_viewer_dict = item_list
+        try:
+            self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
+        except:
+            pass
+        app.processEvents()
 
 
     def add_favorite(self):
@@ -1842,213 +2147,6 @@ class ConstructTree():
         self.total = self.current.shape[0]
         filters = views[self.grouping]
         traverse(self.current, filters, self.tree)
-
-class PreviewItems():
-    def __init__(self, category, items, bible_books, languages):
-        self.category = category
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        self.cur = con.cursor()
-        self.bible_books = bible_books
-        self.languages = languages
-        self.aborted = False
-        self.html = ''
-        self.txt = ''
-        self.item_list = []
-        try:
-            self.items = str(items).replace('[', '(').replace(']', ')')
-            if self.category == _('Notes'):
-                self.get_notes()
-                self.show_notes()
-            else:
-                self.get_annotations()
-                self.show_annotations()
-        except Exception as ex:
-            DebugInfo(ex)
-            self.aborted = True
-        self.cur.close()
-        con.close()
-
-    def process_issue(self, i):
-        issue = str(i)
-        yr = issue[0:4]
-        m = issue[4:6]
-        d = issue[6:]
-        if d == '00':
-            d = ''
-        else:
-            d = '-' + d
-        return f'{yr}-{m}{d}'
-
-
-    def get_notes(self):
-        sql = f'''
-            SELECT n.BlockType Type,
-                n.Title,
-                n.Content,
-                (
-                    SELECT GROUP_CONCAT(t.Name, ' | ') 
-                        FROM Note nt
-                            LEFT JOIN
-                            TagMap USING (
-                                NoteId
-                            )
-                            JOIN
-                            Tag t USING (
-                                TagId
-                            )
-                        WHERE nt.NoteId = n.NoteId
-                ),
-                l.MepsLanguage,
-                l.BookNumber,
-                l.ChapterNumber,
-                n.BlockIdentifier,
-                l.DocumentId,
-                l.IssueTagNumber,
-                l.KeySymbol,
-                l.Title,
-                n.LastModified Date,
-                u.ColorIndex,
-                b.StartToken,
-                b.EndToken
-            FROM Note n
-                LEFT JOIN
-                Location l USING (
-                    LocationId
-                )
-                LEFT JOIN
-                UserMark u USING (
-                    UserMarkId
-                )
-                LEFT JOIN
-                TagMap USING (
-                    NoteId
-                )
-                LEFT JOIN
-                Tag t USING (
-                    TagId
-                )
-                LEFT JOIN
-                BlockRange b USING (
-                    UserMarkId
-                )
-            WHERE n.NoteId IN {self.items} 
-            GROUP BY n.NoteId
-            ORDER BY Type, Date DESC;
-            '''
-        for row in self.cur.execute(sql):
-            item = {
-                'TYPE': row[0],
-                'TITLE': row[1] or '* '+_('NO TITLE')+' *',
-                'NOTE': row[2] or '',
-                'TAGS': row[3],
-                'BK': row[5],
-                'CH': row[6],
-                'VS': row[7],
-                'BLOCK': row[7],
-                'DOC': row[8],
-                'ISSUE': row[9] or '',
-                'PUB': row[10],
-                'HEADING': row[11],
-                'MODIFIED': row[12][:10],
-                'COLOR': row[13] or 0
-            }
-            item['NOTE'] = item['NOTE'].rstrip()
-            try:
-                item['LANG'] = self.languages[row[4]]
-            except:
-                item['LANG'] = None
-            if row[14]:
-                item['RANGE'] = f'{row[14]}-{row[15]}'
-            else:
-                item['RANGE'] = None
-            if item['TYPE'] == 1 and item['DOC']:
-                if item['BLOCK']:
-                    par = f"&par={item['BLOCK']}"
-                    item['VS'] = None
-                else:
-                    par = ''
-                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
-                if row[9] > 10000000:
-                    item['ISSUE'] = self.process_issue(row[9])
-            elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
-                item['BLOCK'] = None
-                if not item['HEADING']:
-                    item['HEADING'] = f"{self.bible_books[item['BK']]} {item['CH']}"
-                if item['VS']:
-                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                    if ':' not in item['HEADING']:
-                        item['HEADING'] += f":{item['VS']}"
-                else:
-                    item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + '000'
-                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
-            else:
-                item['Link'] = None
-            self.item_list.append(item)
-
-    def show_notes(self):
-        clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
-        for item in self.item_list:
-            cl = f"style='background-color: {clrs[item['COLOR']]};'"
-            self.html += f"<div {cl}><b><u>{item['TITLE']}</u></b>"
-            self.txt += item['TITLE']
-            if item['NOTE']:
-                self.html += '<br>' + item['NOTE'].replace('\n', '<br>')
-                self.txt += '\n' + item['NOTE']
-            if item['TAGS'] or item['PUB'] or item['Link']:
-                self.html += f"<br><small><strong><tt>__________<br>{item['MODIFIED']}"
-                self.txt += '\n__________\n' + item['MODIFIED']
-                if item['TAGS']:
-                    self.html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #768fb8">{' + item['TAGS'] + '}</span>'
-                    self.txt += '\n{' + item['TAGS'] + '}'
-                if item['PUB']:
-                    self.html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
-                    self.txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
-                if item['HEADING']:
-                    self.html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
-                    self.txt += ' — ' + item['HEADING']
-                if item['Link']:
-                    lnk = item['Link']
-                    self.html += f"<br><a href='{lnk}'>{lnk}</a>"
-                    self.txt += '\n' + lnk
-                self.html += '</tt></strong></small>'
-            self.html += '</div><hr>'
-            self.txt += '\n==========\n'
-
-
-    def get_annotations(self):
-        sql = f'''
-            SELECT TextTag,
-                Value,
-                l.DocumentId doc,
-                l.IssueTagNumber,
-                l.KeySymbol,
-                CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
-            FROM InputField
-                LEFT JOIN
-                Location l USING (
-                    LocationId
-                )
-            WHERE LocationId IN {self.items}
-            ORDER BY doc, i;
-            '''
-        for row in self.cur.execute(sql):
-            item = {
-                'LABEL': row[0],
-                'VALUE': row[1] or '* '+_('NO TEXT')+' *',
-                'DOC': row[2],
-                'PUB': row[4]
-            }
-            item['VALUE'] = item['VALUE'].rstrip()
-            if row[3] > 10000000:
-                item['ISSUE'] = self.process_issue(row[3])
-            else:
-                item['ISSUE'] = ''
-            self.item_list.append(item)
-
-    def show_annotations(self):
-        for item in self.item_list:
-            self.html += f"<div style='background-color: #f1f1f1;'><tt><b><u><i>{item['PUB']}</i> {item['ISSUE']}&nbsp;&mdash;&nbsp;{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</u></b></tt><br>{item['VALUE']}</div><hr>".replace('\n', '<br>')
-            self.txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
 class DebugInfo():
     def __init__(self, ex):
