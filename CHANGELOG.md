@@ -7,7 +7,7 @@
 ### Changed
 
 - Updated app translations
-- Progressive code restructuring
+- Progressive code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
 - Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
