@@ -4,6 +4,9 @@
 
 ### Added
 
+- Added another level of detail (Bible chapter)
+  - A bit slower with many notes, but with real-time loading
+
 ### Changed
 
 - Updated app translations
