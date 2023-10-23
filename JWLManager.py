@@ -148,106 +148,53 @@ read_resources(lang)
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
 
-        def init_ui():
+        def center():
+            qr = self.frameGeometry()
+            cp = QWidget.screen(self).availableGeometry().center()
+            qr.moveCenter(cp)
+            self.move(qr.topLeft())
 
-            def center():
-                qr = self.frameGeometry()
-                cp = QWidget.screen(self).availableGeometry().center()
-                qr.moveCenter(cp)
-                self.move(qr.topLeft())
+        def init_about():
+                year = f'MIT ©{datetime.now().year}'
+                owner = 'Eryk J.'
+                web = 'https://github.com/erykjj/jwlmanager'
+                contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
+                text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
+                self.about_window = QDialog(self)
+                outer = QVBoxLayout(self.about_window)
+                top = QHBoxLayout()
+                icon = QLabel(self.about_window)
+                icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
+                icon.setGeometry(12,12,72,72)
+                icon.setAlignment(Qt.AlignTop)
+                top.addWidget(icon)
+                label = QLabel(self.about_window)
+                label.setText(text)
+                label.setOpenExternalLinks(True)
+                top.addWidget(label)
+                button = QDialogButtonBox(QDialogButtonBox.Ok)
+                button.accepted.connect(self.about_window.accept)
+                bottom = QHBoxLayout()
+                bottom.addWidget(button)
+                outer.addLayout(top)
+                outer.addLayout(bottom)
+                self.about_window.setWindowFlag(Qt.FramelessWindowHint)
 
-            self.setupUi(self)
-            self.setAcceptDrops(True)
-            self.status_label = QLabel()
-            self.statusBar.addPermanentWidget(self.status_label, 0)
-            self.treeWidget.setSortingEnabled(True)
-            self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
-            self.treeWidget.setExpandsOnDoubleClick(False)
-            self.treeWidget.setColumnWidth(0, 500)
-            self.treeWidget.setColumnWidth(1, 30)
-            self.button_add.setVisible(False)
-            center()
-
-        def set_vars():
-            self.total.setText('')
-            self.int_total = 0
-            self.modified = False
-            self.title_format = 'short'
-            self.save_filename = ''
-            self.current_archive = ''
-            self.working_dir = Path.home()
-            self.lang = lang
-            for item in self.menuLanguage.actions():
-                if item.toolTip() not in available_languages.keys():
-                    item.setVisible(False)
-                if item.toolTip() == self.lang:
-                    item.setChecked(True)
-            self.current_data = []
-
-        def init_windows():
-
-            def init_about():
-                    year = f'MIT ©{datetime.now().year}'
-                    owner = 'Eryk J.'
-                    web = 'https://github.com/erykjj/jwlmanager'
-                    contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
-                    text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
-                    self.about_window = QDialog(self)
-                    outer = QVBoxLayout(self.about_window)
-                    top = QHBoxLayout()
-                    icon = QLabel(self.about_window)
-                    icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
-                    icon.setGeometry(12,12,72,72)
-                    icon.setAlignment(Qt.AlignTop)
-                    top.addWidget(icon)
-                    label = QLabel(self.about_window)
-                    label.setText(text)
-                    label.setOpenExternalLinks(True)
-                    top.addWidget(label)
-                    button = QDialogButtonBox(QDialogButtonBox.Ok)
-                    button.accepted.connect(self.about_window.accept)
-                    bottom = QHBoxLayout()
-                    bottom.addWidget(button)
-                    outer.addLayout(top)
-                    outer.addLayout(bottom)
-                    self.about_window.setWindowFlag(Qt.FramelessWindowHint)
-
-            def init_help():
-                self.help_window = QDialog(self)
-                self.help_window.setWindowFlags(Qt.Window)
-                self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-                self.help_window.setWindowTitle(_('Help'))
-                self.help_window.resize(1020, 812)
-                self.help_window.move(50, 50)
-                self.help_window.setMinimumSize(300, 300)
-                text = QTextEdit(self.help_window)
-                text.setReadOnly(True)
-                text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
-                layout = QHBoxLayout(self.help_window)
-                layout.addWidget(text)
-                self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-                self.help_window.finished.connect(self.help_window.hide())
-
-            # def init_viewer():
-            #     self.viewer_window = QDialog(self)
-            #     self.viewer_window.setWindowFlags(Qt.Window)
-            #     self.viewer_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            #     self.viewer_window.setWindowTitle(_('Data Viewer'))
-            #     self.viewer_window.resize(640, 812)
-            #     self.viewer_window.move(50, 50)
-            #     self.viewer_window.setMinimumSize(500, 500)
-            #     self.viewer_text = QTextEdit(self.viewer_window)
-            #     toolbar = QToolBar()
-            #     self.button_TXT = QAction('TXT', toolbar)
-            #     toolbar.addAction(self.button_TXT)
-            #     layout = QVBoxLayout(self.viewer_window)
-            #     layout.addWidget(toolbar)
-            #     layout.addWidget(self.viewer_text)
-
-            init_about()
-            init_help()
-            self.viewer_window = QDialog(self)
-            # init_viewer()
+        def init_help():
+            self.help_window = QDialog(self)
+            self.help_window.setWindowFlags(Qt.Window)
+            self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
+            self.help_window.setWindowTitle(_('Help'))
+            self.help_window.resize(1020, 812)
+            self.help_window.move(50, 50)
+            self.help_window.setMinimumSize(300, 300)
+            text = QTextEdit(self.help_window)
+            text.setReadOnly(True)
+            text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
+            layout = QHBoxLayout(self.help_window)
+            layout.addWidget(text)
+            self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+            self.help_window.finished.connect(self.help_window.hide())
 
         def connect_signals():
             self.actionQuit.triggered.connect(self.close)
@@ -276,17 +223,96 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_delete.clicked.connect(self.delete)
             self.button_view.clicked.connect(self.view)
 
+        def set_vars():
+            self.total.setText('')
+            self.int_total = 0
+            self.modified = False
+            self.title_format = 'short'
+            self.save_filename = ''
+            self.current_archive = ''
+            self.working_dir = Path.home()
+            self.lang = lang
+            for item in self.menuLanguage.actions():
+                if item.toolTip() not in available_languages.keys():
+                    item.setVisible(False)
+                if item.toolTip() == self.lang:
+                    item.setChecked(True)
+            self.current_data = []
+
         super().__init__()
-        init_ui()
-        set_vars()
-        init_windows()
+        self.setupUi(self)
+        self.setAcceptDrops(True)
+        self.status_label = QLabel()
+        self.statusBar.addPermanentWidget(self.status_label, 0)
+        self.treeWidget.setSortingEnabled(True)
+        self.treeWidget.sortByColumn(1, Qt.DescendingOrder)
+        self.treeWidget.setExpandsOnDoubleClick(False)
+        self.treeWidget.setColumnWidth(0, 500)
+        self.treeWidget.setColumnWidth(1, 30)
+        self.button_add.setVisible(False)
+        center()
+        init_about()
+        init_help()
+        self.viewer_window = QDialog(self)
         connect_signals()
+        set_vars()
         self.new_file()
+
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
             self.retranslateUi(self)
         super().changeEvent(event)
+
+    def closeEvent(self, event):
+        if self.modified:
+            reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
+            if reply == QMessageBox.Yes:
+                if self.save_file() == False:
+                     event.ignore()
+                     return
+            elif reply == QMessageBox.Cancel:
+                event.ignore()
+                return
+        event.accept()
+        self.clean_up()
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        file = event.mimeData().urls()[0].toLocalFile()
+        suffix = Path(file).suffix
+        if suffix == '.jwlibrary' or suffix == '.jwlplaylist':
+            self.load_file(file)
+        elif not self.combo_category.isEnabled():
+            QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
+        elif suffix == '.txt':
+            with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
+                header = f.readline().strip()
+            if header == r'{ANNOTATIONS}':
+                self.import_items(file, _('Annotations'))
+            elif header == r'{HIGHLIGHTS}':
+                self.import_items(file, _('Highlights'))
+            elif regex.search('{NOTES=', header):
+                self.import_items(file, _('Notes'))
+            else:
+                QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
+        else:
+            QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
+
+
+    def help_box(self):
+        self.help_window.show()
+        self.help_window.raise_()
+        self.help_window.activateWindow()
+
+    def about_box(self):
+        self.about_window.exec()
+
 
     def change_language(self):
         changed = False
@@ -303,7 +329,6 @@ class Window(QMainWindow, Ui_MainWindow):
             translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
         app.installTranslator(translator[self.lang])
         app.processEvents()
-
 
     def change_title(self):
         changed = False
@@ -338,6 +363,23 @@ class Window(QMainWindow, Ui_MainWindow):
     def unselect_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
+
+    def tree_selection(self):
+        self.selected_items = len(self.list_selected())
+        self.selected.setText(f'**{self.selected_items:,}**')
+        self.button_delete.setEnabled(self.selected_items)
+        self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
+
+    def list_selected(self):
+        selected = []
+        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
+        for item in it:
+            index = item.value()
+            if index in self.leaves:
+                for i in self.leaves[index]:
+                    selected.append(i)
+        return selected
 
 
     def switchboard(self, selection):
@@ -394,32 +436,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText(f'**{tree.total:,}**')
         self.selected.setText('**0**')
 
-
-    def list_selected(self):
-        selected = []
-        it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
-        for item in it:
-            index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
-        return selected
-
-    def tree_selection(self):
-        self.selected_items = len(self.list_selected())
-        self.selected.setText(f'**{self.selected_items:,}**')
-        self.button_delete.setEnabled(self.selected_items)
-        self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
-
-
-    def help_box(self):
-        self.help_window.show()
-        self.help_window.raise_()
-        self.help_window.activateWindow()
-
-    def about_box(self):
-        self.about_window.exec()
 
 
     def check_save(self):
@@ -502,36 +518,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionUnselect_All.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
         self.selected.setText('**0**')
-        self.viewer_window.close()
+        try:
+            self.viewer_window.close()
+        except:
+            pass
         self.switchboard(self.combo_category.currentText())
-
-
-    def dragEnterEvent(self, event):
-        if event.mimeData().hasUrls():
-            event.accept()
-        else:
-            event.ignore()
-
-    def dropEvent(self, event):
-        file = event.mimeData().urls()[0].toLocalFile()
-        suffix = Path(file).suffix
-        if suffix == '.jwlibrary' or suffix == '.jwlplaylist':
-            self.load_file(file)
-        elif not self.combo_category.isEnabled():
-            QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
-        elif suffix == '.txt':
-            with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
-                header = f.readline().strip()
-            if header == r'{ANNOTATIONS}':
-                self.import_items(file, _('Annotations'))
-            elif header == r'{HIGHLIGHTS}':
-                self.import_items(file, _('Highlights'))
-            elif regex.search('{NOTES=', header):
-                self.import_items(file, _('Notes'))
-            else:
-                QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
-        else:
-            QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
 
 
     def save_file(self):
@@ -1891,19 +1882,6 @@ class Window(QMainWindow, Ui_MainWindow):
         con.close()
         self.archive_modified()
 
-
-    def closeEvent(self, event):
-        if self.modified:
-            reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
-            if reply == QMessageBox.Yes:
-                if self.save_file() == False:
-                     event.ignore()
-                     return
-            elif reply == QMessageBox.Cancel:
-                event.ignore()
-                return
-        event.accept()
-        self.clean_up()
 
     def clean_up(self):
        shutil.rmtree(tmp_path, ignore_errors=True)
