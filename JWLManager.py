@@ -261,7 +261,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
             self.retranslateUi(self)
-        super().changeEvent(event)
 
     def closeEvent(self, event):
         if self.modified:
@@ -338,6 +337,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def change_language(self):
         changed = False
+        self.combo_grouping.blockSignals(True)
         for item in self.langChoices.actions():
             if item.isChecked() and (self.lang != item.toolTip()):
                 app.removeTranslator(translator[self.lang])
@@ -351,6 +351,7 @@ class Window(QMainWindow, Ui_MainWindow):
             translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
         app.installTranslator(translator[self.lang])
         app.processEvents()
+        self.combo_grouping.blockSignals(False)
 
     def change_title(self):
         changed = False
@@ -405,32 +406,33 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def switchboard(self, selection):
-        if selection == _('Notes'):
-            self.disable_options([], False, True, True, True)
-        elif selection == _('Highlights'):
-            self.disable_options([4], False, True, True, False)
-        elif selection == _('Bookmarks'):
-            self.disable_options([4,5], False, False, False, False)
-        elif selection == _('Annotations'):
-            self.disable_options([2,4,5], False, True, True, True)
-        elif selection == _('Favorites'):
-            self.disable_options([4,5], True, False, False, False)
-        self.regroup()
 
-    def disable_options(self, lst=[], add=False, exp=False, imp=False, view=False):
-        self.button_add.setVisible(add)
-        self.button_view.setVisible(view)
-        self.button_export.setVisible(exp)
-        self.button_import.setEnabled(imp)
-        self.button_import.setVisible(imp)
-        self.combo_grouping.blockSignals(True)
-        for item in range(6):
-            self.combo_grouping.model().item(item).setEnabled(True)
-        for item in lst:
-            self.combo_grouping.model().item(item).setEnabled(False)
-            if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
-                self.combo_grouping.setCurrentText(_('Title'))
-        self.combo_grouping.blockSignals(False)
+        def disable_options(lst=[], add=False, exp=False, imp=False, view=False):
+            self.button_add.setVisible(add)
+            self.button_view.setVisible(view)
+            self.button_export.setVisible(exp)
+            self.button_import.setEnabled(imp)
+            self.button_import.setVisible(imp)
+            self.combo_grouping.blockSignals(True)
+            for item in range(6):
+                self.combo_grouping.model().item(item).setEnabled(True)
+            for item in lst:
+                self.combo_grouping.model().item(item).setEnabled(False)
+                if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
+                    self.combo_grouping.setCurrentText(_('Title'))
+            self.combo_grouping.blockSignals(False)
+
+        if selection == _('Notes'):
+            disable_options([], False, True, True, True)
+        elif selection == _('Highlights'):
+            disable_options([4], False, True, True, False)
+        elif selection == _('Bookmarks'):
+            disable_options([4,5], False, False, False, False)
+        elif selection == _('Annotations'):
+            disable_options([2,4,5], False, True, True, True)
+        elif selection == _('Favorites'):
+            disable_options([4,5], True, False, False, False)
+        self.regroup()
 
     def regroup(self, changed=False, message=''):
         if not changed:
