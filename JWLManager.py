@@ -442,6 +442,8 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             msg = ' '
         self.statusBar.showMessage(msg+_('Processing…'))
+        self.combo_grouping.setEnabled(False)
+        self.combo_category.setEnabled(False)
         app.processEvents()
         start = time()
         tree = ConstructTree(self, self.treeWidget, bible_books, publications, lang_name, self.combo_category.currentText(), self.combo_grouping.currentText(), self.title_format, self.current_data)
@@ -450,6 +452,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(msg, delta)
         else:
             self.statusBar.showMessage('')
+        self.combo_grouping.setEnabled(True)
+        self.combo_category.setEnabled(True)
         app.processEvents()
         if tree.aborted:
             self.clean_up()
@@ -2004,27 +2008,30 @@ class ConstructTree():
 
     def process_detail(self, symbol, book, chapter, issue, year):
         if symbol in ('Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'): # Bible appendix notes, etc.
-            detail = _('* OTHER *')
+            detail1 = _('* OTHER *')
         else:
-            detail = None
+            detail1 = None
         if issue > 19000000:
             y = str(issue)[0:4]
             m = str(issue)[4:6]
             d = str(issue)[6:]
             if d == '00':
-                detail = f'{y}-{m}'
+                detail1 = f'{y}-{m}'
             else:
-                detail = f'{y}-{m}-{d}'
+                detail1 = f'{y}-{m}-{d}'
             if not year:
                 year = y
         if book and chapter:
             bk = str(book).rjust(2, '0') + f': {self.bible_books[book]}'
-            detail = bk + ' ' + str(chapter).rjust(3, ' ')
-        if not detail and year:
-            detail = year
+            detail1 = bk + ' '# + str(chapter).rjust(3, ' ')
+            detail2 = str(chapter).rjust(3, ' ')
+        else:
+            detail2 = None
+        if not detail1 and year:
+            detail1 = year
         if not year:
             year = _('* YEAR UNCERTAIN *')
-        return detail, year
+        return detail1, year, detail2
 
 
     def merge_df(self, df):
@@ -2046,11 +2053,11 @@ class ConstructTree():
             else:
                 lng = _('* NO LANGUAGE *')
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
+            detail1, year, detail2 = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[0]
-            rec = [ item, lng, code, year, detail ]
+            rec = [ item, lng, code, year, detail1, detail2 ]
             lst.append(rec)
-        annotations = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
+        annotations = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2' ])
         self.current = self.merge_df(annotations)
 
     def get_bookmarks(self):
@@ -2061,11 +2068,11 @@ class ConstructTree():
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[1], row[5], row[6], row[3], year)
+            detail1, year, detail2 = self.process_detail(row[1], row[5], row[6], row[3], year)
             item = row[4]
-            rec = [ item, lng, code or _('* OTHER *'), year, detail ]
+            rec = [ item, lng, code or _('* OTHER *'), year, detail1, detail2 ]
             lst.append(rec)
-        bookmarks = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail' ])
+        bookmarks = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2' ])
         self.current = self.merge_df(bookmarks)
 
     def get_favorites(self):
@@ -2076,11 +2083,11 @@ class ConstructTree():
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[1], None, None, row[3], year)
+            detail1, year, detail2 = self.process_detail(row[1], None, None, row[3], year)
             item = row[4]
-            rec = [ item, lng, code, year, detail ]
+            rec = [ item, lng, code, year, detail1, detail2 ]
             lst.append(rec)
-        favorites = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol','Year', 'Detail' ])
+        favorites = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol','Year', 'Detail1', 'Detail2' ])
         self.current = self.merge_df(favorites)
 
     def get_highlights(self):
@@ -2091,12 +2098,12 @@ class ConstructTree():
             else:
                 lng = f'#{row[2]}'
             code, year = self.process_code(row[1], row[3])
-            detail, year = self.process_detail(row[1], row[7], row[8], row[3], year)
+            detail1, year, detail2 = self.process_detail(row[1], row[7], row[8], row[3], year)
             col = self.process_color(row[6] or 0)
             item = row[4]
-            rec = [ item, lng, code, col, year, detail ]
+            rec = [ item, lng, code, col, year, detail1, detail2 ]
             lst.append(rec)
-        highlights = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail' ])
+        highlights = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2' ])
         self.current = self.merge_df(highlights)
 
     def get_notes(self):
@@ -2108,7 +2115,7 @@ class ConstructTree():
                 yr = row[3][0:4]
                 note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), self.process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
                 lst.append(note)
-            return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail',  'Short', 'Full', 'Type'])
+            return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1',  'Short', 'Full', 'Type'])
 
         lst = []
         for row in self.cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;"):
@@ -2118,11 +2125,11 @@ class ConstructTree():
                 lng = f'#{row[1]}'
 
             code, year = self.process_code(row[2], row[3])
-            detail, year = self.process_detail(row[2], row[4], row[5], row[3], year)
+            detail1, year, detail2 = self.process_detail(row[2], row[4], row[5], row[3], year)
             col = self.process_color(row[6] or 0)
-            note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail ]
+            note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail1, detail2 ]
             lst.append(note)
-        notes = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail' ])
+        notes = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Detail2' ])
         notes = self.merge_df(notes)
         i_notes = load_independent()
         notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
@@ -2147,6 +2154,7 @@ class ConstructTree():
                 for i, df in df.groupby(filter):
                     app.processEvents()
                     self.leaves[parent] = []
+                    # if df.shape[0]:
                     child = add_node(parent, i, df.shape[0])
                     self.leaves[child] = df['Id'].to_list()
                     traverse(df, idx[1:], child)
@@ -2162,12 +2170,12 @@ class ConstructTree():
         self.current['Title'] = self.current[title]
 
         views = {
-            _('Type'): [ 'Type', 'Title', 'Language' ],
-            _('Title'): [ 'Title', 'Language', 'Detail' ],
-            _('Language'): [ 'Language', 'Title', 'Detail' ],
-            _('Year'): [ 'Year', 'Title', 'Language' ],
-            _('Tag'): [ 'Tags', 'Title', 'Language' ],
-            _('Color'): [ 'Color', 'Title', 'Language' ] }
+            _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
+            _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
+            _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
+            _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
+            _('Tag'): [ 'Tags', 'Title', 'Language', 'Detail1' ],
+            _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
 
         self.total = self.current.shape[0]
         filters = views[self.grouping]
