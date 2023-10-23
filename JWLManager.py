@@ -31,7 +31,6 @@ VERSION = 'v3.1.0'
 
 
 import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
-from unicodedata import category
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -435,7 +434,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.int_total = tree.total
         self.total.setText(f'**{tree.total:,}**')
         self.selected.setText('**0**')
-
 
 
     def check_save(self):
