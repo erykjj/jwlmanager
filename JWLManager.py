@@ -204,8 +204,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionQuit.triggered.connect(self.clean_up)
             self.actionSave.triggered.connect(self.save_file)
             self.actionSave_As.triggered.connect(self.save_as_file)
-            self.actionObscure.triggered.connect(self.obscure)
-            self.actionReindex.triggered.connect(self.reindex)
+            self.actionObscure.triggered.connect(self.obscure_items)
+            self.actionReindex.triggered.connect(self.reindex_db)
             self.actionExpand_All.triggered.connect(self.expand_all)
             self.actionCollapse_All.triggered.connect(self.collapse_all)
             self.actionSelect_All.triggered.connect(self.select_all)
@@ -216,11 +216,11 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
-            self.button_export.clicked.connect(self.export)
+            self.button_export.clicked.connect(self.export_items)
             self.button_import.clicked.connect(self.import_items)
             self.button_add.clicked.connect(self.add_favorite)
-            self.button_delete.clicked.connect(self.delete)
-            self.button_view.clicked.connect(self.view)
+            self.button_delete.clicked.connect(self.delete_items)
+            self.button_view.clicked.connect(self.data_viewer)
 
         def set_vars():
             self.total.setText('')
@@ -609,7 +609,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
-    def export(self):
+    def export_items(self):
 
         def export_file():
             now = datetime.now().strftime('%Y-%m-%d')
@@ -1219,7 +1219,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def view(self):
+    def data_viewer(self):
 
         def init_viewer():
             window = QDialog(self)
@@ -1646,7 +1646,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.archive_modified()
             self.regroup(False, message)
 
-    def delete(self):
+    def delete_items(self):
 
         def delete(table, field):
             return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
@@ -1689,7 +1689,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def obscure(self):
+    def obscure_items(self):
 
         def obscure_text(str):
             lst = list(words[randint(0,len(words)-1)])
@@ -1775,7 +1775,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def reindex(self):
+    def reindex_db(self):
 
         def init_progress():
             pd = QProgressDialog(_('Please wait…'), None, 0, 14)
