@@ -1927,10 +1927,10 @@ class ConstructTree():
                 self.current = pd.DataFrame()
                 self.get_data()
             self.leaves = {}
-            tree.setUpdatesEnabled(False)
+            # tree.setUpdatesEnabled(False)
             self.tree.clear()
             self.build_tree()
-            tree.setUpdatesEnabled(True)
+            # tree.setUpdatesEnabled(True)
             tree.repaint()
         except Exception as ex:
             self.crash_box(ex)
@@ -1940,8 +1940,7 @@ class ConstructTree():
     def get_data(self):
         con = sqlite3.connect(f'{tmp_path}/{db_name}')
         self.cur = con.cursor()
-        self.cur.executescript("PRAGMA temp_store = 2; \
-                                PRAGMA journal_mode = 'OFF';")
+        self.cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
         if self.category == _('Bookmarks'):
             self.get_bookmarks()
         elif self.category == _('Favorites'):
@@ -1995,7 +1994,7 @@ class ConstructTree():
                 year = y
         if book and chapter:
             bk = str(book).rjust(2, '0') + f': {self.bible_books[book]}'
-            detail = 'Bk. ' + bk
+            detail = bk + ' ' + str(chapter).rjust(3, ' ')
         if not detail and year:
             detail = year
         if not year:
@@ -2114,12 +2113,14 @@ class ConstructTree():
             child.setText(0, str(label))
             child.setData(1, Qt.DisplayRole, data)
             child.setTextAlignment(1, Qt.AlignCenter)
+            # app.processEvents()
             return child
 
         def traverse(df, idx, parent):
             if len(idx) > 0:
                 filter = idx[0]
                 for i, df in df.groupby(filter):
+                    app.processEvents()
                     self.leaves[parent] = []
                     child = add_node(parent, i, df.shape[0])
                     self.leaves[child] = df['Id'].to_list()
