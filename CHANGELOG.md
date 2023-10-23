@@ -14,6 +14,8 @@
 
 ### Fixed
 
+- Fixed double tree build on language change
+
 ### Removed
 
 ____
