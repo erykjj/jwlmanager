@@ -9,7 +9,7 @@
 - Updated app translations
 - Progressive code restructuring
   - Encapsulating in nested functions instead of classes
-- Testing branch: Data Viewer similar to JW Library, but with more meta-data
+- Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
 
 ### Fixed
