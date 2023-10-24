@@ -434,7 +434,7 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([4,5], True, False, False, False)
         self.regroup()
 
-    def regroup(self, changed=False, message=None):
+    def regroup(self, same_data=False, message=None):
 
         def get_data():
             if category == _('Bookmarks'):
@@ -697,7 +697,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
-            if not changed:
+            if not same_data:
                 self.current_data = []
                 get_data()
             self.leaves = {}
@@ -2175,6 +2175,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def clean_up(self):
        shutil.rmtree(tmp_path, ignore_errors=True)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
