@@ -1489,7 +1489,7 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setAttribute(Qt.WA_DeleteOnClose)
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            window.setWindowTitle(_('Data viewer'))
+            window.setWindowTitle(_('Data Viewer'))
             window.resize(664, 846)
             window.move(50, 50)
             window.setMinimumSize(664, 846)
