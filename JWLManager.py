@@ -2023,8 +2023,8 @@ class ConstructTree():
                 year = y
         if book and chapter:
             bk = str(book).rjust(2, '0') + f': {self.bible_books[book]}'
-            detail1 = bk + ' '# + str(chapter).rjust(3, ' ')
-            detail2 = str(chapter).rjust(3, ' ')
+            detail1 = bk
+            detail2 = _('Ch.') + str(chapter).rjust(4, ' ')
         else:
             detail2 = None
         if not detail1 and year:
