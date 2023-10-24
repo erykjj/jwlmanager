@@ -2159,6 +2159,41 @@ class ConstructTree():
                     self.leaves[child] = df['Id'].to_list()
                     traverse(df, idx[1:], child)
 
+        def define_views(category):
+            if category == _('Bookmarks'):
+                views = {
+                    _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
+                    _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
+                    _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
+                    _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ] }
+            elif category == _('Favorites'):
+                views = {
+                    _('Type'): [ 'Type', 'Title', 'Language' ],
+                    _('Title'): [ 'Title', 'Language' ],
+                    _('Language'): [ 'Language', 'Title' ],
+                    _('Year'): [ 'Year', 'Title', 'Language' ] }
+            elif category == _('Highlights'):
+                views = {
+                    _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
+                    _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
+                    _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
+                    _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
+                    _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
+            elif category == _('Notes'):
+                views = {
+                    _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
+                    _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
+                    _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
+                    _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
+                    _('Tag'): [ 'Tags', 'Title', 'Language', 'Detail1' ],
+                    _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
+            elif category == _('Annotations'):
+                views = {
+                    _('Type'): [ 'Type', 'Title', 'Detail1', 'Detail2' ],
+                    _('Title'): [ 'Title', 'Detail1', 'Detail2' ],
+                    _('Year'): [ 'Year', 'Title', 'Detail1', 'Detail2' ] }
+            return views
+
         if self.title_format == 'code':
             title = 'Symbol'
         elif self.title_format == 'short':
@@ -2168,15 +2203,7 @@ class ConstructTree():
         if self.current.shape[0] == 0:
             return
         self.current['Title'] = self.current[title]
-
-        views = {
-            _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
-            _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
-            _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
-            _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
-            _('Tag'): [ 'Tags', 'Title', 'Language', 'Detail1' ],
-            _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
-
+        views = define_views(self.category)
         self.total = self.current.shape[0]
         filters = views[self.grouping]
         traverse(self.current, filters, self.tree)
