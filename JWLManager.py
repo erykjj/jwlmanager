@@ -598,6 +598,17 @@ class Window(QMainWindow, Ui_MainWindow):
             notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
             self.current_data = notes
 
+        def enable_options(enabled):
+            self.combo_grouping.setEnabled(enabled)
+            self.combo_category.setEnabled(enabled)
+            self.actionReindex.setEnabled(enabled)
+            self.actionObscure.setEnabled(enabled)
+            self.actionExpand_All.setEnabled(enabled)
+            self.actionCollapse_All.setEnabled(enabled)
+            self.actionSelect_All.setEnabled(enabled)
+            self.actionUnselect_All.setEnabled(enabled)
+            self.menuTitle_View.setEnabled(enabled)
+            self.menuLanguage.setEnabled(enabled)
 
         def build_tree():
 
@@ -666,6 +677,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data['Title'] = self.current_data[title]
             views = define_views(category)
             self.int_total = self.current_data.shape[0]
+            self.total.setText(f'**{self.int_total:,}**')
             filters = views[grouping]
             traverse(self.current_data, filters, self.treeWidget)
 
@@ -674,8 +686,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             msg = ' '
         self.statusBar.showMessage(msg+_('Processing…'))
-        self.combo_grouping.setEnabled(False)
-        self.combo_category.setEnabled(False)
+        enable_options(False)
         app.processEvents()
         category = self.combo_category.currentText()
         grouping = self.combo_grouping.currentText()
@@ -704,9 +715,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(msg, delta)
         else:
             self.statusBar.showMessage('')
-        self.combo_grouping.setEnabled(True)
-        self.combo_category.setEnabled(True)
-        self.total.setText(f'**{self.int_total:,}**')
+        enable_options(True)
         self.selected.setText('**0**')
         app.processEvents()
 
