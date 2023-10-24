@@ -6,6 +6,7 @@
 
 - Added another level of detail (Bible chapter)
   - A bit slower with many notes, but with real-time loading
+  - Because of this, the 'default' (start-up) grouping is by Type
 
 ### Changed
 
