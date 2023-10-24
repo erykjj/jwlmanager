@@ -5,13 +5,13 @@
 ### Added
 
 - Added another level of detail (Bible chapter)
-  - A bit slower with many notes, but with real-time loading
+  - A bit slower with many notes/highlights, but with real-time loading
   - Because of this, the 'default' (start-up) grouping is by Type
 
 ### Changed
 
 - Updated app translations
-- Progressive code restructuring/reorganization
+- Code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
 - Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
