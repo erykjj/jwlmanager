@@ -488,7 +488,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if book and chapter:
                 bk = str(book).rjust(2, '0') + f': {bible_books[book]}'
                 detail1 = bk
-                detail2 = _('Ch.') + str(chapter).rjust(4, ' ')
+                detail2 = _('Chap.') + str(chapter).rjust(4, ' ')
             else:
                 detail2 = None
             if not detail1 and year:
@@ -1478,6 +1478,8 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         message = f' {count} '+_('items imported/updated')
         self.statusBar.showMessage(message, 3500)
+        # CHECK: check if count > 0
+        # self.archive_modified??
         self.trim_db()
         self.regroup(False, message)
 
@@ -1948,6 +1950,8 @@ class Window(QMainWindow, Ui_MainWindow):
         con.close()
         message = f' {result} '+_('items deleted')
         self.statusBar.showMessage(message, 3500)
+        # CHECK: check if result > 0
+        # self.archive_modified??
         self.trim_db()
         self.regroup(False, message)
 
@@ -2165,6 +2169,7 @@ class Window(QMainWindow, Ui_MainWindow):
         cur.close()
         con.close()
         self.archive_modified()
+        # CHECK: regroup??
 
 
     def clean_up(self):
