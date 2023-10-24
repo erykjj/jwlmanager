@@ -434,7 +434,7 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([4,5], True, False, False, False)
         self.regroup()
 
-    def regroup(self, changed=False, message=''):
+    def regroup(self, changed=False, message=None):
 
         def get_data():
             if category == _('Bookmarks'):
@@ -692,11 +692,11 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         grouping = self.combo_grouping.currentText()
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
         start = time()
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             if not changed:
                 self.current_data = []
                 get_data()
@@ -704,13 +704,13 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.clear()
             self.treeWidget.repaint()
             build_tree()
+            con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        con.commit()
-        cur.close()
-        con.close()
         delta = 3500 - (time()-start) * 1000
         if message:
             self.statusBar.showMessage(msg, delta)
@@ -1111,14 +1111,14 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
         current_archive = Path(fname).name
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
         item_list = []
         if Path(fname).suffix == '.xlsx':
             xlsx = True
         else:
             xlsx = False
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
                 export_highlights()
@@ -1126,12 +1126,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 export_notes()
             elif category == _('Annotations'):
                 export_annotations()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.close()
-        con.close()
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 3500)
 
     def import_items(self, file='', category = ''):
@@ -1454,32 +1454,30 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path(file).parent
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
-
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Annotations'):
                 count = import_annotations()
             elif category == _('Highlights'):
                 count = import_highlights()
             elif category == _('Notes'):
                 count = import_notes()
+            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        cur.close()
-        con.close()
         if not count:
             self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
             return
         message = f' {count} '+_('items imported/updated')
         self.statusBar.showMessage(message, 3500)
-        # CHECK: check if count > 0
-        # self.archive_modified??
+        self.archive_modified()
         self.trim_db()
         self.regroup(False, message)
 
@@ -1934,26 +1932,26 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Deleting. Please wait…'))
         app.processEvents()
         category = self.combo_category.currentText()
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             result = delete_items()
+            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        cur.close()
-        con.close()
-        message = f' {result} '+_('items deleted')
-        self.statusBar.showMessage(message, 3500)
-        # CHECK: check if result > 0
-        # self.archive_modified??
-        self.trim_db()
-        self.regroup(False, message)
+        if result > 0:
+            message = f' {result} '+_('items deleted')
+            self.statusBar.showMessage(message, 3500)
+            self.archive_modified()
+            self.trim_db()
+            self.regroup(False, message)
 
 
     def obscure_items(self):
@@ -2019,26 +2017,27 @@ class Window(QMainWindow, Ui_MainWindow):
             return
         self.statusBar.showMessage(' '+_('Masking. Please wait…'))
         app.processEvents()
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
         words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
         m = regex.compile(r'\p{L}')
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
             obscure_annotations()
             obscure_bookmarks()
             obscure_notes()
             obscure_locations()
             con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.close()
-        con.close()
         message = ' '+_('Data masked')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
+        self.trim_db()
         self.regroup(False, message)
 
 
@@ -2103,73 +2102,75 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
         app.processEvents()
         progress_dialog = init_progress()
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
             reindex_highlights()
             reindex_tags()
             reindex_ranges()
             reindex_locations()
-            cur.executescript("PRAGMA foreign_keys = 'ON'; \
-                                    VACUUM;")
+            cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.progress_dialog.close()
             self.clean_up()
             sys.exit()
-        cur.close()
-        con.close()
         message = ' '+_('Reindexed successfully')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
         self.regroup(False, message)
 
     def trim_db(self):
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        sql = """
-            PRAGMA temp_store = 2;
-            PRAGMA journal_mode = 'OFF';
-            PRAGMA foreign_keys = 'OFF';
+        try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            sql = """
+                PRAGMA temp_store = 2;
+                PRAGMA journal_mode = 'OFF';
+                PRAGMA foreign_keys = 'OFF';
 
-            DELETE FROM Note WHERE (Title IS NULL OR Title = '')
-              AND (Content IS NULL OR Content = '');
+                DELETE FROM Note WHERE (Title IS NULL OR Title = '')
+                AND (Content IS NULL OR Content = '');
 
-            DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
-              NOT IN (SELECT NoteId FROM Note);
-            DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+                DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
+                NOT IN (SELECT NoteId FROM Note);
+                DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
 
-            DELETE FROM BlockRange WHERE UserMarkId NOT IN
-              (SELECT UserMarkId FROM UserMark);
-            DELETE FROM UserMark WHERE UserMarkId NOT IN
-              (SELECT UserMarkId FROM BlockRange) AND UserMarkId NOT IN
-              (SELECT UserMarkId FROM Note WHERE UserMarkId NOT NULL);
+                DELETE FROM BlockRange WHERE UserMarkId NOT IN
+                (SELECT UserMarkId FROM UserMark);
+                DELETE FROM UserMark WHERE UserMarkId NOT IN
+                (SELECT UserMarkId FROM BlockRange) AND UserMarkId NOT IN
+                (SELECT UserMarkId FROM Note WHERE UserMarkId NOT NULL);
 
-            DELETE FROM Location WHERE LocationId NOT IN
-              (SELECT LocationId FROM UserMark) AND LocationId NOT IN
-              (SELECT LocationId FROM Note WHERE LocationId IS NOT NULL)
-              AND LocationId NOT IN (SELECT LocationId FROM TagMap
-              WHERE LocationId IS NOT NULL) AND LocationId NOT IN
-              (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
-              (SELECT PublicationLocationId FROM Bookmark)
-              AND LocationId NOT IN (SELECT LocationId FROM InputField)
-              AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
+                DELETE FROM Location WHERE LocationId NOT IN
+                (SELECT LocationId FROM UserMark) AND LocationId NOT IN
+                (SELECT LocationId FROM Note WHERE LocationId IS NOT NULL)
+                AND LocationId NOT IN (SELECT LocationId FROM TagMap
+                WHERE LocationId IS NOT NULL) AND LocationId NOT IN
+                (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
+                (SELECT PublicationLocationId FROM Bookmark)
+                AND LocationId NOT IN (SELECT LocationId FROM InputField)
+                AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
 
-            DELETE FROM UserMark WHERE LocationId NOT IN
-              (SELECT LocationId FROM Location);
+                DELETE FROM UserMark WHERE LocationId NOT IN
+                (SELECT LocationId FROM Location);
 
-            PRAGMA foreign_keys = 'ON';
-            VACUUM;
-            """
-        cur.executescript(sql)
-        con.commit()
-        cur.close()
-        con.close()
-        self.archive_modified()
-        # CHECK: regroup??
+                PRAGMA foreign_keys = 'ON';
+                VACUUM;
+                """
+            cur.executescript(sql)
+            con.commit()
+            cur.close()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
 
 
     def clean_up(self):
