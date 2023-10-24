@@ -240,6 +240,7 @@ class Window(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setAcceptDrops(True)
+        self.combo_grouping.setCurrentText(_('Type'))
         self.status_label = QLabel()
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.treeWidget.setSortingEnabled(True)
@@ -418,7 +419,7 @@ class Window(QMainWindow, Ui_MainWindow):
             for item in lst:
                 self.combo_grouping.model().item(item).setEnabled(False)
                 if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
-                    self.combo_grouping.setCurrentText(_('Title'))
+                    self.combo_grouping.setCurrentText(_('Type'))
             self.combo_grouping.blockSignals(False)
 
         if selection == _('Notes'):
@@ -717,6 +718,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage('')
         enable_options(True)
         self.selected.setText('**0**')
+        if self.combo_grouping.currentText() == _('Type'):
+            self.treeWidget.expandToDepth(0)
         app.processEvents()
 
     def check_save(self):
