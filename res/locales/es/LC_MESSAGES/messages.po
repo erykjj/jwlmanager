@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-10-24 16:51-0400\n"
-"PO-Revision-Date: 2023-10-24 22:50+0000\n"
-"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
+"PO-Revision-Date: 2023-10-25 13:28+0000\n"
+"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language-Team: es <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "Error"
 
 #: JWLManager.py:290
 msgid "No archive has been opened!"
-msgstr "¡Ningún archivo está abierto!"
+msgstr "¡No se ha abierto ningún archivo!"
 
 #: JWLManager.py:295 JWLManager.py:394 JWLManager.py:395 JWLManager.py:431
 #: JWLManager.py:448 JWLManager.py:663 JWLManager.py:1127 JWLManager.py:1462
@@ -73,19 +73,19 @@ msgstr "¡Error!"
 
 #: JWLManager.py:321
 msgid "Oops! Something went wrong…"
-msgstr "¡Oh-oh! Algo salió mal…"
+msgstr "¡Uy! Algo salió mal…"
 
 #: JWLManager.py:321
 msgid "Take note of what you were doing and"
-msgstr "Tome note de lo que está haciendo y"
+msgstr "Tome nota de lo que hacía y"
 
 #: JWLManager.py:321
 msgid "inform the developer"
-msgstr "avise al diseñador"
+msgstr "informe al desarrollador"
 
 #: JWLManager.py:327
 msgid "The app will terminate."
-msgstr "La aplicación se cerrará."
+msgstr "La aplicación finalizará."
 
 #: JWLManager.py:429 JWLManager.py:440 JWLManager.py:636 JWLManager.py:1920
 msgid "Bookmarks"
@@ -137,11 +137,11 @@ msgstr "* AÑO INCIERTO *"
 
 #: JWLManager.py:505
 msgid "Other"
-msgstr "Además"
+msgstr "Otros"
 
 #: JWLManager.py:506
 msgid "* NO YEAR *"
-msgstr "* SIN FECHA *"
+msgstr "* SIN AÑO *"
 
 #: JWLManager.py:518 JWLManager.py:580
 msgid "* NO LANGUAGE *"
@@ -188,11 +188,11 @@ msgstr "Guardar"
 
 #: JWLManager.py:726
 msgid "Save current archive?"
-msgstr "Guardar archivo?"
+msgstr "¿Guardar el archivo actual?"
 
 #: JWLManager.py:738
 msgid "NEW ARCHIVE"
-msgstr "ARCHIVO NUEVO"
+msgstr "NUEVO ARCHIVO"
 
 #: JWLManager.py:770
 msgid "Open archive"
@@ -204,11 +204,11 @@ msgstr "Archivos de JW Library"
 
 #: JWLManager.py:822 JWLManager.py:824
 msgid "Save archive"
-msgstr "Guardar archivo"
+msgstr "Guardar el archivo"
 
 #: JWLManager.py:826 JWLManager.py:1528
 msgid "NOT saved!"
-msgstr "¡NO se guardó!"
+msgstr "¡No guardado!"
 
 #: JWLManager.py:829
 msgid ""
@@ -224,7 +224,7 @@ msgstr "Guardado"
 
 #: JWLManager.py:880 JWLManager.py:882
 msgid "Export file"
-msgstr "Archivo de exportación"
+msgstr "Exportar el fichero"
 
 #: JWLManager.py:880 JWLManager.py:882 JWLManager.py:1447 JWLManager.py:1449
 #: JWLManager.py:1526
@@ -237,7 +237,7 @@ msgstr "Archivos MS Excel"
 
 #: JWLManager.py:887 JWLManager.py:903
 msgid "Exported from"
-msgstr "Exportado de"
+msgstr "Exportado desde"
 
 #: JWLManager.py:887 JWLManager.py:903
 msgid "by"
@@ -257,15 +257,15 @@ msgstr "¡NO se ha exportado!"
 
 #: JWLManager.py:1135
 msgid "items exported"
-msgstr "elementos exportados"
+msgstr "registros exportados"
 
 #: JWLManager.py:1146
 msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
-"Formato de importación incorrecto:\n"
-"Falta encabezado {ANNOTATIONS}"
+"Formato de archivo de importación incorrecto:\n"
+"Falta la etiqueta {ANNOTATIONS}"
 
 #: JWLManager.py:1168 JWLManager.py:1192 JWLManager.py:1263 JWLManager.py:1323
 #: JWLManager.py:1427
@@ -274,21 +274,21 @@ msgid ""
 "\n"
 "Faulting entry"
 msgstr ""
-"¡Error al importar!\n"
+"¡Error en la importación!\n"
 "\n"
-"Producido por"
+"Entrada defectuosa"
 
 #: JWLManager.py:1216
 msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
-"Formato de importación incorrecto:\n"
-"Falta encabezado {HIGHLIGHTS}"
+"Formato del archivo de importación incorrecto:\n"
+"Falta la etiqueta {HIGHLIGHTS}"
 
 #: JWLManager.py:1283 JWLManager.py:1793
 msgid "Warning"
-msgstr "Aviso"
+msgstr "Advertencia"
 
 #: JWLManager.py:1283
 msgid "notes starting with"
@@ -302,15 +302,15 @@ msgid ""
 msgstr ""
 "SERÁN ELIMINADAS antes de importar.\n"
 "\n"
-"¿Proceder con la eliminación? (NO para omitir)"
+"¿Proceder? (NO para omitir)"
 
 #: JWLManager.py:1292
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {NOTES=} attribute line"
 msgstr ""
-"Formato de importación incorrecto:\n"
-"Encabezado {NOTES=} faltante o malformado"
+"Formato del archivo de importación incorrecto:\n"
+"Etiqueta {NOTES=} ausente o malformada"
 
 #: JWLManager.py:1450
 msgid "Import file"
@@ -341,8 +341,8 @@ msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"Está intentando visualizar {} elementos.\n"
-"Favor seleccionar una cantidad menor."
+"Está intentando previsualizar {} elementos.\n"
+"Seleccione una cantidad menor."
 
 #: JWLManager.py:1820
 msgid "Data Viewer"
@@ -350,7 +350,7 @@ msgstr "Visor de datos"
 
 #: JWLManager.py:1836
 msgid "Add Favorite"
-msgstr "Añadir Favorito"
+msgstr "Añadir a favoritos"
 
 #: JWLManager.py:1838
 msgid "Select the language and Bible edition to add:"
@@ -381,12 +381,12 @@ msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
 msgstr ""
-"¿Está seguro que desea\n"
+"¿Está seguro de que desea\n"
 "ELIMINAR estos {} elementos?"
 
 #: JWLManager.py:1934
 msgid "Deleting. Please wait…"
-msgstr "Eliminando. Espere…"
+msgstr "Eliminando. Por favor, espere…"
 
 #: JWLManager.py:1951
 msgid "items deleted"
@@ -406,15 +406,15 @@ msgstr ""
 
 #: JWLManager.py:2020
 msgid "Masking. Please wait…"
-msgstr "Encubriendo. Espere…"
+msgstr "Enmascarando. Por favor, espere…"
 
 #: JWLManager.py:2039
 msgid "Data masked"
-msgstr "Datos encubiertos"
+msgstr "Datos enmascarados"
 
 #: JWLManager.py:2048
 msgid "Please wait…"
-msgstr "Tenga paciencia…"
+msgstr "Espere, por favor…"
 
 #: JWLManager.py:2099
 msgid "Reindex"
@@ -425,12 +425,12 @@ msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
 msgstr ""
-"Esto podría demorar.\n"
-"¿Proceder?"
+"Puede tardar unos segundos.\n"
+"¿Continuar?"
 
 #: JWLManager.py:2103
 msgid "Reindexing. Please wait…"
-msgstr "Reindexando. Espere…"
+msgstr "Reindexando. Por favor, espere…"
 
 #: JWLManager.py:2125
 msgid "Reindexed successfully"
