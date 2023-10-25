@@ -123,7 +123,7 @@
     <message>
         <location filename="main_window.ui" line="536"/>
         <source>Title display format</source>
-        <translation>Formato de presentación del título</translation>
+        <translation>Formato de presentación de títulos</translation>
     </message>
     <message>
         <source>Title View</source>
