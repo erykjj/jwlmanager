@@ -267,7 +267,7 @@
     <message>
         <location filename="main_window.ui" line="738"/>
         <source>Collapse all items</source>
-        <translation>Encoger todos los elementos</translation>
+        <translation>Contraer todos los elementos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="741"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="main_window.ui" line="852"/>
         <source>Mask text data</source>
-        <translation>Ocultar elementos de texto</translation>
+        <translation>Enmascarar el texto</translation>
     </message>
     <message>
         <source>&amp;Import…</source>
