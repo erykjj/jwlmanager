@@ -97,7 +97,7 @@
     <message>
         <location filename="main_window.ui" line="393"/>
         <source>Add</source>
-        <translation>Añadir</translation>
+        <translation>Agregar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="475"/>
@@ -123,7 +123,7 @@
     <message>
         <location filename="main_window.ui" line="536"/>
         <source>Title display format</source>
-        <translation>Formato de visualización del título</translation>
+        <translation>Formato de presentación de títulos</translation>
     </message>
     <message>
         <source>Title View</source>
@@ -262,12 +262,12 @@
     <message>
         <location filename="main_window.ui" line="735"/>
         <source>&amp;Collapse All</source>
-        <translation>En&amp;coger todo</translation>
+        <translation>&amp;Comprimir todo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="738"/>
         <source>Collapse all items</source>
-        <translation>Encoger todos los elementos</translation>
+        <translation>Contraer todos los elementos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="741"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="main_window.ui" line="852"/>
         <source>Mask text data</source>
-        <translation>Ocultar elementos de texto</translation>
+        <translation>Enmascarar el texto</translation>
     </message>
     <message>
         <source>&amp;Import…</source>
