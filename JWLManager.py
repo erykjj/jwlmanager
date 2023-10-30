@@ -145,6 +145,7 @@ read_resources(lang)
 #### Main app
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
+        super().__init__()
 
         def center():
             qr = self.frameGeometry()
@@ -237,7 +238,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     item.setChecked(True)
             self.current_data = []
 
-        super().__init__()
         self.setupUi(self)
         self.setAcceptDrops(True)
         self.combo_grouping.setCurrentText(_('Type'))
@@ -1481,6 +1481,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
+    def data_editor(self):
+        item = int(self.sender().text())
+        widget = self.viewer_items[item]
+        # print(widget.text) # testing
 
     def data_viewer(self):
 
@@ -1571,7 +1575,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         n.LastModified Date,
                         u.ColorIndex,
                         b.StartToken,
-                        b.EndToken
+                        b.EndToken,
+                        n.NoteId
                     FROM Note n
                         LEFT JOIN
                         Location l USING (
@@ -1612,10 +1617,11 @@ class Window(QMainWindow, Ui_MainWindow):
                         'PUB': row[10],
                         'HEADING': row[11],
                         'MODIFIED': row[12][:10],
-                        'COLOR': row[13] or 0
+                        'COLOR': row[13] or 0,
+                        'ID': row[16]
                     }
                     try:
-                        item['LANG'] = lang_name[row[4]]
+                        item['LANG'] = lang_symbol[row[4]]
                     except:
                         item['LANG'] = None
                     if row[14]:
@@ -1648,70 +1654,38 @@ class Window(QMainWindow, Ui_MainWindow):
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
             for item in item_list:
-                note_box = QFrame()
-                note_box.setFixedHeight(250)
-                note_box.setMinimumWidth(310)
-                note_box.setFrameShape(QFrame.Panel)
-                note_box.setStyleSheet(f"background-color: {clrs[item['COLOR']]}")
-                # note_box.mousePressEvent = lambda event: print(note_box) # FIX: this only remembers the last item added
-
-                v_layout = QVBoxLayout(note_box)
-                v_layout.setSpacing(0)
-                v_layout.setContentsMargins(4, 3, 4, 2)
-
-                text_box = QLabel(note_box)
-                text_box.setWordWrap(True)
-                text_box.setAlignment(Qt.AlignTop)
-                text_box.setFrameShape(QFrame.NoFrame)
-                palette = text_box.palette()
-                palette.setColor(text_box.foregroundRole(), '#3d3d5c')
-                text_box.setPalette(palette)
-
-                meta_box = QLabel(note_box)
-                meta_box.setWordWrap(True)
-                meta_box.setFrameShape(QFrame.NoFrame)
-                palette = meta_box.palette()
-                palette.setColor(meta_box.foregroundRole(), '#7575a3')
-                meta_box.setPalette(palette)
-
-                html = f"<h3><b>{item['TITLE']}</b></h3>"
+                note_text = f"<h3><b>{item['TITLE']}</b></h3>"
                 txt += item['TITLE']
                 if item['NOTE']:
-                    html += item['NOTE'].replace('\n', '<br>')
+                    note_text += item['NOTE'].replace('\n', '<br>')
                     txt += '\n' + item['NOTE']
-                text_box.setTextFormat(Qt.RichText)
-                text_box.setText(html)
-
-                html = ''
+                note_meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
-                    html += f"<hr><small><strong><tt>{item['MODIFIED']}"
+                    note_meta += f"<hr width='90%'><small><strong><tt>{item['MODIFIED']}"
                     txt += '\n__________\n' + item['MODIFIED']
                     if item['TAGS']:
-                        html += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
+                        note_meta += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
                         txt += '\n{' + item['TAGS'] + '}'
                     if item['PUB']:
-                        html += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
+                        note_meta += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
                         txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
                     if item['HEADING']:
-                        html += f"&nbsp;&mdash;&nbsp;{item['HEADING']}<br>"
+                        note_meta += f"&nbsp;&mdash;&nbsp;{item['HEADING']}<br>"
                         txt += ' — ' + item['HEADING']
                     if item['Link']:
                         lnk = item['Link']
-                        html += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
+                        note_meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                         txt += '\n' + lnk
-                    html += '</tt></strong></small>'
+                    note_meta += '</tt></strong></small>'
                 txt += '\n==========\n'
-                meta_box.setTextFormat(Qt.RichText)
-                meta_box.setText(html)
-
-                v_layout.addWidget(text_box)
-                v_layout.addStretch()
-                v_layout.addWidget(meta_box)
+                note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
+                self.viewer_items[counter] = note_box
+                note_box.overlay.clicked.connect(self.data_editor)
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
                     self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box, row, col)
+                    self.grid_layout.addWidget(note_box.item, row, col)
                     app.processEvents()
                 except:
                     return
@@ -1726,7 +1700,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         l.DocumentId doc,
                         l.IssueTagNumber,
                         l.KeySymbol,
-                        CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+                        CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i,
+                        l.LocationId
                     FROM InputField
                         LEFT JOIN
                         Location l USING (
@@ -1740,7 +1715,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         'LABEL': row[0],
                         'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
                         'DOC': row[2],
-                        'PUB': row[4]
+                        'PUB': row[4],
+                        'ID': row[6]
                     }
                     if row[3] > 10000000:
                         item['ISSUE'] = process_issue(row[3])
@@ -1752,34 +1728,16 @@ class Window(QMainWindow, Ui_MainWindow):
             nonlocal txt
             counter = 1
             for item in item_list:
-                note_box = QFrame()
-                note_box.setFixedHeight(190)
-                note_box.setMinimumWidth(310)
-                note_box.setFrameShape(QFrame.Panel)
-                note_box.setStyleSheet(f"background-color: #f1f1f1;")
-                v_layout = QVBoxLayout(note_box)
-                v_layout.setSpacing(0)
-                v_layout.setContentsMargins(4, 3, 4, 3)
-
-                text_box = QLabel(note_box)
-                text_box.setWordWrap(True)
-                text_box.setAlignment(Qt.AlignTop)
-                text_box.setFrameShape(QFrame.NoFrame)
-                palette = text_box.palette()
-                palette.setColor(text_box.foregroundRole(), '#3d3d5c')
-                text_box.setPalette(palette)
-
-                html = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
-                text_box.setTextFormat(Qt.RichText)
-                text_box.setText(html)
-                v_layout.addWidget(text_box)
-                v_layout.addStretch()
-
+                note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
+                note_meta = None
+                note_box = ViewerItem(counter, item['ID'], 0, note_text, note_meta)
+                self.viewer_items[counter] = note_box
+                note_box.overlay.clicked.connect(self.data_editor)
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
                     self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box, row, col)
+                    self.grid_layout.addWidget(note_box.item, row, col)
                     app.processEvents()
                 except:
                     return
@@ -1795,23 +1753,24 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         category = self.combo_category.currentText()
+        self.viewer_items = {}
         self.viewer_window = init_viewer()
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
         txt = ''
         item_list = []
         try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
             items = str(selected).replace('[', '(').replace(']', ')')
             if category == _('Notes'):
                 show_notes()
             else:
                 show_annotations()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.close()
-        con.close()
         self.data_viewer_txt = txt
         self.data_viewer_dict = item_list
         try:
@@ -2176,6 +2135,51 @@ class Window(QMainWindow, Ui_MainWindow):
     def clean_up(self):
        shutil.rmtree(tmp_path, ignore_errors=True)
 
+
+class ViewerItem(QWidget):
+    def __init__(self, i, idx, color, text, meta):
+        self.idx = idx
+        self.text = text
+        self.meta = meta
+
+        self.item = QFrame()
+        self.item.setFixedHeight(250)
+        self.item.setMinimumWidth(300)
+        self.item.setFrameShape(QFrame.Panel)
+        self.item.setStyleSheet(f"background-color: {color}")
+
+        text_box = QLabel(self.item)
+        text_box.setWordWrap(True)
+        text_box.setContentsMargins(1, 1, 1, 1)
+        text_box.setAlignment(Qt.AlignTop)
+        text_box.setFrameShape(QFrame.NoFrame)
+        palette = text_box.palette()
+        palette.setColor(text_box.foregroundRole(), '#3d3d5c')
+        text_box.setPalette(palette)
+        text_box.setTextFormat(Qt.RichText)
+        text_box.setText(text)
+
+        if self.meta:
+            meta_box = QLabel(self.item)
+            meta_box.setWordWrap(True)
+            meta_box.setContentsMargins(1, 1, 1, 1)
+            meta_box.setFrameShape(QFrame.NoFrame)
+            palette = meta_box.palette()
+            palette.setColor(meta_box.foregroundRole(), '#7575a3')
+            meta_box.setPalette(palette)
+            meta_box.setTextFormat(Qt.RichText)
+            meta_box.setText(meta)
+
+        self.overlay = QPushButton(text=str(i), parent=self.item)
+        self.overlay.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.overlay.setStyleSheet("QPushButton { background-color: transparent; border: 0px; color: transparent; }")
+
+        layout = QGridLayout(self.item)
+        layout.setSpacing(0)
+        layout.addWidget(text_box, 0 , 0)
+        if self.meta:
+            layout.addWidget(meta_box, 1, 0)
+        layout.addWidget(self.overlay, 0 , 0) # extend to include meta??
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
