@@ -7,6 +7,7 @@
 - Added another level of detail (Bible chapter)
   - A bit slower with many notes/highlights, but with real-time loading
   - Because of this, the 'default' (start-up) grouping is by Type
+- Added update check in About box
 
 ### Changed
 
