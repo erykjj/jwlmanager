@@ -30,7 +30,7 @@ APP = 'JWLManager'
 VERSION = 'v3.1.0'
 
 
-import argparse, gettext, glob, json, os, regex, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -158,8 +158,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 owner = 'Eryk J.'
                 web = 'https://github.com/erykjj/jwlmanager'
                 contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
-                text = f'<h2 style="text-align: center;"><span style="color: #800080;">{APP}</span></h2><h4 style="text-align: center;">{VERSION}</h4><p style="text-align: center;"><small>{year} {owner}</small></p><p style="text-align: center;"><a href="mail-to:{contact}"><em>{contact}</em></a></p><p style="text-align: center;"><span style="color: #666699;"><a style="color: #666699;" href="{web}"><small>{web}</small></a></span></p>'
+                url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
+                headers = { 'X-GitHub-Api-Version': '2022-11-28' }
+                latest = json.loads(requests.get(url, headers=headers).content.decode('utf-8'))['name']
+                if latest != VERSION:
+                    update = f'<p><a style="color:red; text-decoration:none;" href="{web}/releases/latest"><small><b>{latest} '+_('update available!')+'</b></small></a></p>'
+                text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{APP}</span></h2><p><small>{year} {owner}</small></p><h4>{VERSION}{update}</h4><p><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a></p><p><a style="color:#666699; text-decoration:none;" href="{web}"><small>{web}</small></a></p></div>'
                 self.about_window = QDialog(self)
+                self.about_window.setStyleSheet("QDialog {border:2px solid #5b3c88}")
                 outer = QVBoxLayout(self.about_window)
                 top = QHBoxLayout()
                 icon = QLabel(self.about_window)
@@ -250,11 +256,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
         center()
-        init_about()
-        init_help()
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
+        init_about()
+        init_help()
         self.new_file()
 
 
