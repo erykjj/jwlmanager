@@ -249,6 +249,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_archive = ''
             self.working_dir = Path.home()
             self.lang = lang
+            self.latest = None
             for item in self.menuLanguage.actions():
                 if item.toolTip() not in available_languages.keys():
                     item.setVisible(False)
@@ -327,16 +328,19 @@ class Window(QMainWindow, Ui_MainWindow):
         self.help_window.activateWindow()
 
     def about_box(self):
-        url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
-        headers = { 'X-GitHub-Api-Version': '2022-11-28' }
-        try:
-            r = requests.get(url, headers=headers, timeout=5)
-            latest = json.loads(r.content.decode('utf-8'))['name']
-            if latest != VERSION:
-                text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
-        except:
-            text = f'<div style="text-align:center;"><small><i>'+_('Error while checking for updates!')+'</u></small></div>'
-        self.update_label.setText(text)
+        if not self.latest:
+            url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
+            headers = { 'X-GitHub-Api-Version': '2022-11-28' }
+            try:
+                r = requests.get(url, headers=headers, timeout=5)
+                self.latest = json.loads(r.content.decode('utf-8'))['name']
+                if self.latest != VERSION:
+                    text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{self.latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
+                else:
+                    text = f'<div style="text-align:center;"><small>'+_('Latest version')+'</small></div>'
+            except:
+                text = f'<div style="text-align:center;"><small><i>'+_('Error while checking for updates!')+'</u></small></div>'
+            self.update_label.setText(text)
         self.about_window.exec()
 
     def crash_box(self, ex):
