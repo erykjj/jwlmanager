@@ -145,7 +145,7 @@ read_resources(lang)
 #### Main app
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        super().__init__()
+        super(Window, self).__init__()
 
         def center():
             qr = self.frameGeometry()
@@ -153,36 +153,48 @@ class Window(QMainWindow, Ui_MainWindow):
             qr.moveCenter(cp)
             self.move(qr.topLeft())
 
-        def init_about():
+        def init_about(): # TODO: move update check to signal handler
                 year = f'MIT ©{datetime.now().year}'
                 owner = 'Eryk J.'
                 web = 'https://github.com/erykjj/jwlmanager'
                 contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
-                url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
-                headers = { 'X-GitHub-Api-Version': '2022-11-28' }
-                latest = json.loads(requests.get(url, headers=headers).content.decode('utf-8'))['name']
-                if latest != VERSION:
-                    update = f'<p><a style="color:red; text-decoration:none;" href="{web}/releases/latest"><small><b>{latest} '+_('update available!')+'</b></small></a></p>'
-                text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{APP}</span></h2><p><small>{year} {owner}</small></p><h4>{VERSION}{update}</h4><p><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a></p><p><a style="color:#666699; text-decoration:none;" href="{web}"><small>{web}</small></a></p></div>'
+
                 self.about_window = QDialog(self)
                 self.about_window.setStyleSheet("QDialog {border:2px solid #5b3c88}")
-                outer = QVBoxLayout(self.about_window)
-                top = QHBoxLayout()
+                layout = QHBoxLayout(self.about_window)
+                left_layout = QVBoxLayout()
                 icon = QLabel(self.about_window)
                 icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
                 icon.setGeometry(12,12,72,72)
                 icon.setAlignment(Qt.AlignTop)
-                top.addWidget(icon)
-                label = QLabel(self.about_window)
-                label.setText(text)
-                label.setOpenExternalLinks(True)
-                top.addWidget(label)
+                left_layout.addWidget(icon)
+
+                right_layout = QVBoxLayout()
+                title_label = QLabel(self.about_window)
+                text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{APP}</span></h2><p><small>{year} {owner}</small></p><h4>{VERSION.lstrip("v")}</h4></div>'
+                title_label.setText(text)
+
+                self.update_label = QLabel(self.about_window)
+                text = '<div style="text-align:center;"><small><i>'+_('Checking for updates…') +'</i></small></div>'
+                self.update_label.setText(text)
+                self.update_label.setOpenExternalLinks(True)
+
+                contact_label = QLabel(self.about_window)
+                text = text = f'<div style="text-align:center;"><small><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a><br><a style="color:#666699; text-decoration:none;" href="{web}">{web}</small></a></div>'
+                contact_label.setText(text)
+                contact_label.setOpenExternalLinks(True)
+
+                right_layout.addWidget(title_label)
+                right_layout.addWidget(self.update_label)
+                right_layout.addWidget(contact_label)
+
                 button = QDialogButtonBox(QDialogButtonBox.Ok)
+                button.setFixedWidth(72)
                 button.accepted.connect(self.about_window.accept)
-                bottom = QHBoxLayout()
-                bottom.addWidget(button)
-                outer.addLayout(top)
-                outer.addLayout(bottom)
+
+                left_layout.addWidget(button)
+                layout.addLayout(left_layout)
+                layout.addLayout(right_layout)
                 self.about_window.setWindowFlag(Qt.FramelessWindowHint)
 
         def init_help():
@@ -315,6 +327,16 @@ class Window(QMainWindow, Ui_MainWindow):
         self.help_window.activateWindow()
 
     def about_box(self):
+        url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
+        headers = { 'X-GitHub-Api-Version': '2022-11-28' }
+        try:
+            r = requests.get(url, headers=headers, timeout=5)
+            latest = json.loads(r.content.decode('utf-8'))['name']
+            if latest != VERSION:
+                text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
+        except:
+            text = f'<div style="text-align:center;"><small><i>'+_('Error while checking for updates!')+'</u></small></div>'
+        self.update_label.setText(text)
         self.about_window.exec()
 
     def crash_box(self, ex):
@@ -2144,6 +2166,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 class ViewerItem(QWidget):
     def __init__(self, i, idx, color, text, meta):
+        super(ViewerItem, self).__init__()
         self.idx = idx
         self.text = text
         self.meta = meta
