@@ -145,7 +145,7 @@ read_resources(lang)
 #### Main app
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        super(Window, self).__init__()
+        super().__init__()
 
         def center():
             qr = self.frameGeometry()
@@ -153,7 +153,7 @@ class Window(QMainWindow, Ui_MainWindow):
             qr.moveCenter(cp)
             self.move(qr.topLeft())
 
-        def init_about(): # TODO: move update check to signal handler
+        def init_about():
                 year = f'MIT ©{datetime.now().year}'
                 owner = 'Eryk J.'
                 web = 'https://github.com/erykjj/jwlmanager'
@@ -2170,7 +2170,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
 class ViewerItem(QWidget):
     def __init__(self, i, idx, color, text, meta):
-        super(ViewerItem, self).__init__()
+        super().__init__()
         self.idx = idx
         self.text = text
         self.meta = meta
