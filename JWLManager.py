@@ -503,7 +503,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
         def process_detail(symbol, book, chapter, issue, year):
-            if symbol in ('Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'): # Bible appendix notes, etc.
+            if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}: # Bible appendix notes, etc.
                 detail1 = _('* OTHER *')
             else:
                 detail1 = None
