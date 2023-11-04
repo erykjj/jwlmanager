@@ -1319,13 +1319,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 line = import_file.readline()
                 m = regex.search('{NOTES=(.?)}', line)
                 if m:
-                    title_char = m.group(1)
+                    delete_notes(m.group(1))
+                    return True
                 else:
                     QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
                     return False
-                if title_char:
-                    delete_notes(title_char)
-                return True
 
             def read_text():
 
