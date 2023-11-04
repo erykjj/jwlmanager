@@ -544,10 +544,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def get_annotations():
             lst = []
             for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);'):
-                if row[2] in lang_name.keys():
-                    lng = lang_name[row[2]]
-                else:
-                    lng = _('* NO LANGUAGE *')
+                lng = lang_name.get(row[2], _('* NO LANGUAGE *'))
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
                 item = row[0]
@@ -559,10 +556,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def get_bookmarks():
             lst = []
             for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);'):
-                if row[2] in lang_name.keys():
-                    lng = lang_name[row[2]]
-                else:
-                    lng = f'#{row[2]}'
+                lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
                 item = row[4]
@@ -574,10 +568,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def get_favorites():
             lst = []
             for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
-                if row[2] in lang_name.keys():
-                    lng = lang_name[row[2]]
-                else:
-                    lng = f'#{row[2]}'
+                lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], None, None, row[3], year)
                 item = row[4]
@@ -589,10 +580,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def get_highlights():
             lst = []
             for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId);'):
-                if row[2] in lang_name.keys():
-                    lng = lang_name[row[2]]
-                else:
-                    lng = f'#{row[2]}'
+                lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[7], row[8], row[3], year)
                 col = process_color(row[6] or 0)
@@ -615,10 +603,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             lst = []
             for row in cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;"):
-                if row[1] in lang_name.keys():
-                    lng = lang_name[row[1]]
-                else:
-                    lng = f'#{row[1]}'
+                lng = lang_name.get(row[1], f'#{row[1]}')
 
                 code, year = process_code(row[2], row[3])
                 detail1, year, detail2 = process_detail(row[2], row[4], row[5], row[3], year)
