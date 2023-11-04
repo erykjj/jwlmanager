@@ -1964,25 +1964,19 @@ class Window(QMainWindow, Ui_MainWindow):
             return s
 
         def obscure_locations():
-            rows = cur.execute('SELECT Title, LocationId FROM Location;').fetchall()
-            for row in rows:
-                title, item = row
+            for title, item in cur.execute('SELECT Title, LocationId FROM Location;').fetchall():
                 if title:
                     title = obscure_text(title)
                     cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
         def obscure_annotations():
-            rows = cur.execute('SELECT Value, TextTag FROM InputField;').fetchall()
-            for row in rows:
-                content, item = row
+            for content, item in cur.execute('SELECT Value, TextTag FROM InputField;').fetchall():
                 if content:
                     content = obscure_text(content)
                     cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
         def obscure_bookmarks():
-            rows = cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall()
-            for row in rows:
-                title, content, item = row
+            for title, content, item  in cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall():
                 if title:
                     title = obscure_text(title)
                 if content:
@@ -1992,9 +1986,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
         def obscure_notes():
-            rows = cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall()
-            for row in rows:
-                title, content, item = row
+            for title, content, item in cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall():
                 if title:
                     title = obscure_text(title)
                 if content:
