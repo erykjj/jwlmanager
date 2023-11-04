@@ -207,7 +207,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.help_window.setMinimumSize(300, 300)
             text = QTextEdit(self.help_window)
             text.setReadOnly(True)
-            text.setMarkdown(open(self.resource_path('res/HELP.md'), encoding='utf-8').read())
+            with open(self.resource_path('res/HELP.md'), encoding='utf-8') as f:
+                text.setMarkdown(f.read())
             layout = QHBoxLayout(self.help_window)
             layout.addWidget(text)
             self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
@@ -971,24 +972,22 @@ class Window(QMainWindow, Ui_MainWindow):
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
             else:
-                file = open(fname, 'w', encoding='utf-8')
-                file.write(export_header('{ANNOTATIONS}'))
-                for row in item_list:
-                    iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                    txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
-                    file.write(txt)
-                file.write('\n==={END}===')
-                file.close()
+                with open(fname, 'w', encoding='utf-8') as file:
+                    file.write(export_header('{ANNOTATIONS}'))
+                    for row in item_list:
+                        iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
+                        txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
+                        file.write(txt)
+                    file.write('\n==={END}===')
 
         def export_highlights():
-            file = open(fname, 'w', encoding='utf-8')
-            file.write(export_header('{HIGHLIGHTS}'))
-            for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};'):
-                file.write(f'\n{row[0]}')
-                for item in range(1,13):
-                    file.write(f',{row[item]}')
-                item_list.append(None)
-            file.close()
+            with open(fname, 'w', encoding='utf-8') as file:
+                file.write(export_header('{HIGHLIGHTS}'))
+                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};'):
+                    file.write(f'\n{row[0]}')
+                    for item in range(1,13):
+                        file.write(f',{row[item]}')
+                    item_list.append(None)
 
         def export_notes():
 
@@ -1100,42 +1099,41 @@ class Window(QMainWindow, Ui_MainWindow):
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
                 create_xlsx(fields)
             else:
-                file = open(fname, 'w', encoding='utf-8')
-                file.write(export_header('{NOTES=}'))
-                for row in item_list:
-                    tags = row['TAGS'].replace(' | ', '|')
-                    col = str(row['COLOR']) or '0'
-                    rng = row['RANGE'] or ''
-                    hdg = ('{HEADING='+row['HEADING']+'}') if row['HEADING'] != '' else ''
-                    lng = str(row['LANG'])
-                    txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
-                    if row.get('BK'):
-                        bk = str(row['BK'])
-                        ch = str(row['CH'])
-                        if row.get('VS'):
-                            vs = '{VS='+str(row['VS'])+'}'
-                        else:
-                            vs = ''
-                        if row.get('BLOCK'):
-                            blk = '{BLOCK='+str(row['BLOCK'])+'}'
-                        else:
-                            blk = ''
-                        txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
-                        if row.get('RANGE'):
-                            txt += '{RANGE='+rng+'}'
-                        if row.get('DOC'):
-                            txt += '{DOC=0}'
-                    elif row.get('DOC'):
-                        doc = str(row['DOC']) or ''
-                        iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                        blk = str(row['BLOCK']) or ''
-                        txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}'+hdg+'{COLOR='+col+'}'
-                        if row.get('RANGE'):
-                            txt += '{RANGE='+rng+'}'
-                    txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
-                    file.write(txt)
-                file.write('\n==={END}===')
-                file.close
+                with open(fname, 'w', encoding='utf-8') as file:
+                    file.write(export_header('{NOTES=}'))
+                    for row in item_list:
+                        tags = row['TAGS'].replace(' | ', '|')
+                        col = str(row['COLOR']) or '0'
+                        rng = row['RANGE'] or ''
+                        hdg = ('{HEADING='+row['HEADING']+'}') if row['HEADING'] != '' else ''
+                        lng = str(row['LANG'])
+                        txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
+                        if row.get('BK'):
+                            bk = str(row['BK'])
+                            ch = str(row['CH'])
+                            if row.get('VS'):
+                                vs = '{VS='+str(row['VS'])+'}'
+                            else:
+                                vs = ''
+                            if row.get('BLOCK'):
+                                blk = '{BLOCK='+str(row['BLOCK'])+'}'
+                            else:
+                                blk = ''
+                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
+                            if row.get('RANGE'):
+                                txt += '{RANGE='+rng+'}'
+                            if row.get('DOC'):
+                                txt += '{DOC=0}'
+                        elif row.get('DOC'):
+                            doc = str(row['DOC']) or ''
+                            iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
+                            blk = str(row['BLOCK']) or ''
+                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}'+hdg+'{COLOR='+col+'}'
+                            if row.get('RANGE'):
+                                txt += '{RANGE='+rng+'}'
+                        txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
+                        file.write(txt)
+                    file.write('\n==={END}===')
 
         category = self.combo_category.currentText()
         fname = export_file()
