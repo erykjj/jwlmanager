@@ -432,9 +432,8 @@ class Window(QMainWindow, Ui_MainWindow):
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
             index = item.value()
-            if index in self.leaves:
-                for i in self.leaves[index]:
-                    selected.append(i)
+            for i in self.leaves.get(index):
+                selected.append(i)
         return selected
 
 
