@@ -14,6 +14,7 @@
 - Updated app translations
 - Code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
+- Code improvements for (slightly) better performance
 - Data Viewer similar to JW Library, but with more meta-data
   - Working on being able to edit/delete individual notes
 
