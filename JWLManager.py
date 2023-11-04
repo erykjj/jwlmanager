@@ -492,7 +492,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if dated:
                 prefix = dated.group(1)
                 suffix = dated.group(2)
-                if prefix not in ('bi', 'br', 'brg', 'kn', 'ks', 'pt', 'tp'):
+                if prefix not in {'bi', 'br', 'brg', 'kn', 'ks', 'pt', 'tp'}:
                     code = prefix
                     if int(suffix) >= 50:
                         yr = '19' + suffix
