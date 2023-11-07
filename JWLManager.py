@@ -1493,10 +1493,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
+
     def data_editor(self):
         item = int(self.sender().text())
         widget = self.viewer_items[item]
-        # print(widget.text) # testing
+        print(item, widget.text) # testing
 
     def data_viewer(self):
 
@@ -1673,7 +1674,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += '\n' + item['NOTE']
                 note_meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
-                    note_meta += f"<hr width='90%'><small><strong><tt>{item['MODIFIED']}"
+                    # note_meta += f"<hr width='90%'><small><strong><tt>{item['MODIFIED']}"
+                    note_meta += f"<br><small><strong><tt>{item['MODIFIED']}"
                     txt += '\n__________\n' + item['MODIFIED']
                     if item['TAGS']:
                         note_meta += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
@@ -1682,7 +1684,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         note_meta += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
                         txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
                     if item['HEADING']:
-                        note_meta += f"&nbsp;&mdash;&nbsp;{item['HEADING']}<br>"
+                        note_meta += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
                         txt += ' — ' + item['HEADING']
                     if item['Link']:
                         lnk = item['Link']
@@ -2153,21 +2155,21 @@ class ViewerItem(QWidget):
         self.item.setFrameShape(QFrame.Panel)
         self.item.setStyleSheet(f"background-color: {color}")
 
-        text_box = QLabel(self.item)
-        text_box.setWordWrap(True)
-        text_box.setContentsMargins(1, 1, 1, 1)
-        text_box.setAlignment(Qt.AlignTop)
+        text_box = QTextEdit(self.item)
+        text_box.setReadOnly(True)
+        text_box.setContentsMargins(1, 1, 1, 0)
         text_box.setFrameShape(QFrame.NoFrame)
         palette = text_box.palette()
         palette.setColor(text_box.foregroundRole(), '#3d3d5c')
         text_box.setPalette(palette)
-        text_box.setTextFormat(Qt.RichText)
+        sp = text_box.sizePolicy()
+        sp.setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         text_box.setText(text)
 
         if self.meta:
             meta_box = QLabel(self.item)
             meta_box.setWordWrap(True)
-            meta_box.setContentsMargins(1, 1, 1, 1)
+            meta_box.setContentsMargins(1, 0, 1, 1)
             meta_box.setFrameShape(QFrame.NoFrame)
             palette = meta_box.palette()
             palette.setColor(meta_box.foregroundRole(), '#7575a3')
@@ -2184,7 +2186,7 @@ class ViewerItem(QWidget):
         layout.addWidget(text_box, 0 , 0)
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
-        layout.addWidget(self.overlay, 0 , 0) # extend to include meta??
+        layout.addWidget(self.overlay, 1 , 0)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
