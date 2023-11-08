@@ -13,6 +13,7 @@
   - Currently-opened archive
   - Current language
   - Current category
+  - Current title format
 
 
 ### Changed
