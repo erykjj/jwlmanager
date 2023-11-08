@@ -12,6 +12,7 @@
   - Main interface window and Data Viewer window position and size
   - Currently-opened archive
   - Current language
+  - Current category
 
 
 ### Changed
