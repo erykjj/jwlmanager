@@ -151,7 +151,7 @@ class Window(QMainWindow, Ui_MainWindow):
             qr = self.frameGeometry()
             cp = QWidget.screen(self).availableGeometry().center()
             qr.moveCenter(cp)
-            self.move(qr.topLeft())
+            return qr.topLeft()
 
         def init_about():
                 year = f'MIT ©{datetime.now().year}'
@@ -259,6 +259,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = []
 
         self.setupUi(self)
+        self.settings = QSettings(f'{project_path}/settings', QSettings.Format.IniFormat)
+        self.viewer_pos = self.settings.value('Viewer/pos', QPoint(50, 50))
+        self.viewer_size = self.settings.value('Viewer/size', QSize(698, 846))
         self.setAcceptDrops(True)
         self.combo_grouping.setCurrentText(_('Type'))
         self.status_label = QLabel()
@@ -269,9 +272,9 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
-        center()
+        self.resize(self.settings.value('Main_Window/size', QSize(680, 641)))
+        self.move(self.settings.value('Main_Window/pos', center()))
         self.viewer_window = QDialog(self)
-        self.viewer_geometry = None
         connect_signals()
         set_vars()
         init_about()
@@ -1509,11 +1512,9 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
             window.setWindowTitle(_('Data Viewer'))
             window.setMinimumSize(698, 846)
-            if self.viewer_geometry:
-                window.setGeometry(self.viewer_geometry)
-            else:
-                window.resize(698, 846)
-                window.move(50, 50)
+            window.resize(self.viewer_size)
+            window.move(self.viewer_pos)
+
             layout = QVBoxLayout(window)
             toolbar = QToolBar(window)
             self.button_TXT = QAction('TXT', toolbar)
@@ -1541,7 +1542,8 @@ class Window(QMainWindow, Ui_MainWindow):
             return window
 
         def viewer_closed():
-            self.viewer_geometry = self.viewer_window.geometry()
+            self.viewer_pos = self.viewer_window.pos()
+            self.viewer_size = self.viewer_window.size()
             try:
                 self.viewer_window.close()
             except:
@@ -2149,7 +2151,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def clean_up(self):
-       shutil.rmtree(tmp_path, ignore_errors=True)
+        shutil.rmtree(tmp_path, ignore_errors=True)
+        self.settings.setValue('Main_Window/pos', self.pos())
+        self.settings.setValue('Main_Window/size', self.size())
+        self.settings.setValue('Viewer/pos', self.viewer_pos)
+        self.settings.setValue('Viewer/size', self.viewer_size)
 
 
 class ViewerItem(QWidget):
