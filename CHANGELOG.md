@@ -14,6 +14,7 @@
   - Current language
   - Current category
   - Current title format
+  - Column width and sorting direction
 
 ### Changed
 
