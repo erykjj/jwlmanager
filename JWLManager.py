@@ -271,6 +271,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_add.setVisible(False)
         center()
         self.viewer_window = QDialog(self)
+        self.viewer_geometry = None
         connect_signals()
         set_vars()
         init_about()
@@ -1507,9 +1508,12 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
             window.setWindowTitle(_('Data Viewer'))
-            window.resize(698, 846)
-            window.move(50, 50)
             window.setMinimumSize(698, 846)
+            if self.viewer_geometry:
+                window.setGeometry(self.viewer_geometry)
+            else:
+                window.resize(698, 846)
+                window.move(50, 50)
             layout = QVBoxLayout(window)
             toolbar = QToolBar(window)
             self.button_TXT = QAction('TXT', toolbar)
@@ -1529,12 +1533,19 @@ class Window(QMainWindow, Ui_MainWindow):
             layout.addWidget(scroll_area)
 
             window.setWindowState((window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-            window.finished.connect(self.viewer_window.close)
+            window.finished.connect(viewer_closed)
             window.show()
             window.raise_()
             window.activateWindow()
             app.processEvents()
             return window
+
+        def viewer_closed():
+            self.viewer_geometry = self.viewer_window.geometry()
+            try:
+                self.viewer_window.close()
+            except:
+                pass
 
         def save_txt():
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
