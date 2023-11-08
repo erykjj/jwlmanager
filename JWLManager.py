@@ -1704,7 +1704,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 txt += '\n==========\n'
                 note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
                 self.viewer_items[counter] = note_box
-                note_box.overlay.clicked.connect(self.data_editor)
+                note_box.expand_button.clicked.connect(self.data_editor)
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
@@ -1754,9 +1754,9 @@ class Window(QMainWindow, Ui_MainWindow):
             for item in item_list:
                 note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
                 note_meta = None
-                note_box = ViewerItem(counter, item['ID'], 0, note_text, note_meta)
+                note_box = ViewerItem(counter, item['ID'], '#f1f1f1', note_text, note_meta)
                 self.viewer_items[counter] = note_box
-                note_box.overlay.clicked.connect(self.data_editor)
+                note_box.expand_button.clicked.connect(self.data_editor)
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
@@ -2185,12 +2185,12 @@ class ViewerItem(QWidget):
             meta_box.setTextFormat(Qt.RichText)
             meta_box.setText(meta)
 
-        self.overlay = QPushButton(text=str(i), parent=self.item)
-        self.overlay.setFixedSize(30, 30)
-        self.overlay.setContentsMargins(0, 0, 0, 0)
-        self.overlay.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
-        self.overlay.setIconSize(QSize(24, 24))
-        self.overlay.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
+        self.expand_button = QPushButton(text=str(i), parent=self.item)
+        self.expand_button.setFixedSize(30, 30)
+        self.expand_button.setContentsMargins(0, 0, 0, 0)
+        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
+        self.expand_button.setIconSize(QSize(24, 24))
+        self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
 
         layout = QGridLayout(self.item)
@@ -2198,7 +2198,7 @@ class ViewerItem(QWidget):
         layout.addWidget(text_box, 0 , 0, 1, 0)
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
-        layout.addWidget(self.overlay, 1 , 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(self.expand_button, 1 , 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
