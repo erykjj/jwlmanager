@@ -1507,9 +1507,9 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
             window.setWindowTitle(_('Data Viewer'))
-            window.resize(664, 846)
+            window.resize(696, 846)
             window.move(50, 50)
-            window.setMinimumSize(664, 846)
+            window.setMinimumSize(696, 846)
             layout = QVBoxLayout(window)
             toolbar = QToolBar(window)
             self.button_TXT = QAction('TXT', toolbar)
@@ -1521,8 +1521,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.grid_layout.setAlignment(Qt.AlignTop)
             grid_box = QFrame()
             grid_box.setFrameShape(QFrame.NoFrame)
-            sp = grid_box.sizePolicy()
-            sp.setVerticalPolicy(QSizePolicy.MinimumExpanding)
+            grid_box.sizePolicy().setVerticalPolicy(QSizePolicy.MinimumExpanding)
             grid_box.setLayout(self.grid_layout)
             scroll_area = QScrollArea()
             scroll_area.setWidget(grid_box)
@@ -1675,7 +1674,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     # note_meta += f"<hr width='90%'><small><strong><tt>{item['MODIFIED']}"
-                    note_meta += f"<br><small><strong><tt>{item['MODIFIED']}"
+                    note_meta += f"<small><strong><tt>{item['MODIFIED']}"
                     txt += '\n__________\n' + item['MODIFIED']
                     if item['TAGS']:
                         note_meta += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
@@ -2151,26 +2150,24 @@ class ViewerItem(QWidget):
 
         self.item = QFrame()
         self.item.setFixedHeight(250)
-        self.item.setMinimumWidth(300)
         self.item.setFrameShape(QFrame.Panel)
         self.item.setStyleSheet(f"background-color: {color}")
 
         text_box = QTextEdit(self.item)
         text_box.setReadOnly(True)
-        text_box.setContentsMargins(1, 1, 1, 0)
+        text_box.setContentsMargins(1, 1, 1, 2)
         text_box.setFrameShape(QFrame.NoFrame)
         palette = text_box.palette()
         palette.setColor(text_box.foregroundRole(), '#3d3d5c')
         text_box.setPalette(palette)
-        sp = text_box.sizePolicy()
-        sp.setHorizontalPolicy(QSizePolicy.MinimumExpanding)
+        text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         text_box.setText(text)
 
         if self.meta:
             meta_box = QLabel(self.item)
             meta_box.setWordWrap(True)
-            meta_box.setContentsMargins(1, 0, 1, 1)
-            meta_box.setFrameShape(QFrame.NoFrame)
+            meta_box.setContentsMargins(1, 2, 1, 1)
+            meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             palette = meta_box.palette()
             palette.setColor(meta_box.foregroundRole(), '#7575a3')
             meta_box.setPalette(palette)
@@ -2178,15 +2175,17 @@ class ViewerItem(QWidget):
             meta_box.setText(meta)
 
         self.overlay = QPushButton(text=str(i), parent=self.item)
-        self.overlay.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.overlay.setStyleSheet("QPushButton { background-color: transparent; border: 0px; color: transparent; }")
+        self.overlay.setFixedSize(32, 32)
+        self.overlay.setIcon(QPixmap(resource_path('res/icons/icons8-expand-64.png')))
+        self.overlay.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
+        self.overlay.setIconSize(QSize(34, 34))
 
         layout = QGridLayout(self.item)
         layout.setSpacing(0)
-        layout.addWidget(text_box, 0 , 0)
+        layout.addWidget(text_box, 0 , 0, 1, 0)
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
-        layout.addWidget(self.overlay, 1 , 0)
+        layout.addWidget(self.overlay, 1 , 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
