@@ -8,6 +8,8 @@
   - A bit slower with many notes/highlights, but with real-time loading
   - Because of this, the 'default' (start-up) grouping is by Type
 - Added update check in About box
+- Main interface window and Data Viewer window position and size are saved to `settings` file
+
 
 ### Changed
 
