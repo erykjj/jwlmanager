@@ -77,7 +77,7 @@ def get_language():
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
 
-    lng = 'en'
+    lng = settings.value('JWLManager/language', 'en')
     for l in args.keys():
         if args[l]:
             lng = l
@@ -139,6 +139,7 @@ def read_resources(lng):
 project_path = Path(__file__).resolve().parent
 tmp_path = mkdtemp(prefix='JWLManager_')
 db_name = 'userData.db'
+settings = QSettings(f'{project_path}/settings', QSettings.Format.IniFormat)
 lang = get_language()
 read_resources(lang)
 
@@ -247,7 +248,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.modified = False
             self.title_format = 'short'
             self.save_filename = ''
-            self.current_archive = self.settings.value('JWLManager/archive', '')
+            self.current_archive = settings.value('JWLManager/archive', '')
             if not os.path.exists(self.current_archive):
                 self.current_archive = ''
             self.working_dir = Path.home()
@@ -261,9 +262,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = []
 
         self.setupUi(self)
-        self.settings = QSettings(f'{project_path}/settings', QSettings.Format.IniFormat)
-        self.viewer_pos = self.settings.value('Viewer/pos', QPoint(50, 50))
-        self.viewer_size = self.settings.value('Viewer/size', QSize(698, 846))
+        self.viewer_pos = settings.value('Viewer/position', QPoint(50, 50))
+        self.viewer_size = settings.value('Viewer/size', QSize(698, 846))
         self.setAcceptDrops(True)
         self.combo_grouping.setCurrentText(_('Type'))
         self.status_label = QLabel()
@@ -274,8 +274,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, 500)
         self.treeWidget.setColumnWidth(1, 30)
         self.button_add.setVisible(False)
-        self.resize(self.settings.value('Main_Window/size', QSize(680, 641)))
-        self.move(self.settings.value('Main_Window/pos', center()))
+        self.resize(settings.value('Main_Window/size', QSize(680, 641)))
+        self.move(settings.value('Main_Window/position', center()))
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
@@ -2154,11 +2154,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def clean_up(self):
         shutil.rmtree(tmp_path, ignore_errors=True)
-        self.settings.setValue('JWLManager/archive', self.current_archive)
-        self.settings.setValue('Main_Window/pos', self.pos())
-        self.settings.setValue('Main_Window/size', self.size())
-        self.settings.setValue('Viewer/pos', self.viewer_pos)
-        self.settings.setValue('Viewer/size', self.viewer_size)
+        settings.setValue('JWLManager/archive', self.current_archive)
+        settings.setValue('JWLManager/language', self.lang)
+        settings.setValue('Main_Window/position', self.pos())
+        settings.setValue('Main_Window/size', self.size())
+        settings.setValue('Viewer/position', self.viewer_pos)
+        settings.setValue('Viewer/size', self.viewer_size)
 
 
 class ViewerItem(QWidget):
