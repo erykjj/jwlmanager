@@ -247,7 +247,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.modified = False
             self.title_format = 'short'
             self.save_filename = ''
-            self.current_archive = ''
+            self.current_archive = self.settings.value('JWLManager/archive', '')
+            if not os.path.exists(self.current_archive):
+                self.current_archive = ''
             self.working_dir = Path.home()
             self.lang = lang
             self.latest = None
@@ -279,7 +281,7 @@ class Window(QMainWindow, Ui_MainWindow):
         set_vars()
         init_about()
         init_help()
-        self.new_file()
+        self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
 
     def changeEvent(self, event):
@@ -2152,6 +2154,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def clean_up(self):
         shutil.rmtree(tmp_path, ignore_errors=True)
+        self.settings.setValue('JWLManager/archive', self.current_archive)
         self.settings.setValue('Main_Window/pos', self.pos())
         self.settings.setValue('Main_Window/size', self.size())
         self.settings.setValue('Viewer/pos', self.viewer_pos)
