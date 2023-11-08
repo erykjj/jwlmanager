@@ -11,6 +11,7 @@
 - `settings` file in app directory to save session info
   - Main interface window and Data Viewer window position and size
   - Currently-opened archive
+  - Current language
 
 
 ### Changed
