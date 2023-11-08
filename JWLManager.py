@@ -246,7 +246,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.total.setText('')
             self.int_total = 0
             self.modified = False
-            self.title_format = 'short'
+            self.title_format = settings.value('JWLManager/title','short')
+            options = { 'code': 0, 'short': 1, 'full': 2 }
+            self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
             self.current_archive = settings.value('JWLManager/archive', '')
             if not os.path.exists(self.current_archive):
