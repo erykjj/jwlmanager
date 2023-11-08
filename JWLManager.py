@@ -262,6 +262,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = []
 
         self.setupUi(self)
+        self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 50))
         self.viewer_size = settings.value('Viewer/size', QSize(698, 846))
         self.setAcceptDrops(True)
@@ -2154,8 +2155,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def clean_up(self):
         shutil.rmtree(tmp_path, ignore_errors=True)
-        settings.setValue('JWLManager/archive', self.current_archive)
         settings.setValue('JWLManager/language', self.lang)
+        settings.setValue('JWLManager/category', self.combo_category.currentIndex())
+        settings.setValue('JWLManager/title', self.title_format)
+        settings.setValue('JWLManager/archive', self.current_archive)
         settings.setValue('Main_Window/position', self.pos())
         settings.setValue('Main_Window/size', self.size())
         settings.setValue('Viewer/position', self.viewer_pos)
