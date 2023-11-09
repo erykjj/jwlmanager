@@ -166,7 +166,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 left_layout = QVBoxLayout()
                 icon = QLabel(self.about_window)
                 icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
-                icon.setGeometry(12,12,72,72)
                 icon.setAlignment(Qt.AlignTop)
                 left_layout.addWidget(icon)
 
@@ -338,13 +337,25 @@ class Window(QMainWindow, Ui_MainWindow):
         self.help_window.activateWindow()
 
     def about_box(self):
+
+        def version_compare(version, release):
+            for r, v in zip(release.strip('v').split('.'), version.strip('v').split('.')):
+                if int(r) > int(v):
+                    return True
+                elif int(r) < int(v):
+                    return None
+            return False
+
         if not self.latest:
             url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
             headers = { 'X-GitHub-Api-Version': '2022-11-28' }
             try:
                 r = requests.get(url, headers=headers, timeout=5)
                 self.latest = json.loads(r.content.decode('utf-8'))['name']
-                if self.latest != VERSION:
+                comp = version_compare(VERSION, self.latest)
+                if comp is None:
+                    text = f'<div style="text-align:center;"><small>'+'Testing version'+'</small></div>'
+                elif comp:
                     text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{self.latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
                 else:
                     text = f'<div style="text-align:center;"><small>'+_('Latest version')+'</small></div>'
