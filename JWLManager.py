@@ -1504,26 +1504,68 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def data_editor(self):
-        item = int(self.sender().text())
-        widget = self.viewer_items[item]
+
+        def body_changed():
+            nonlocal body_modified
+            if body.toPlainText() == item.body:
+                body.setStyleSheet('font: normal; color: #3d3d5c;')
+                body_modified = False
+            else:
+                body.setStyleSheet('font: italic; color: #3d3d5c;')
+                body_modified = True
+            adjust_toolbar()
+
+        def title_changed():
+            nonlocal title_modified
+            if title.toPlainText() == item.title:
+                title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+                title_modified = False
+            else:
+                title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
+                title_modified = True
+            adjust_toolbar()
+
+        def adjust_toolbar():
+            if title_modified or body_modified:
+                notice.setText('Changed')
+            else:
+                notice.setText('Original')
+            app.processEvents()
+
+        def go_back():
+            layout.deleteLater()
+            self.viewer_layout.setCurrentIndex(0)
+            app.processEvents()
+
+        item = self.viewer_items[int(self.sender().text())]
+        title_modified = False
+        body_modified = False
 
         layout = QFormLayout(self.editor)
         toolbar = QToolBar(self.editor)
+        toolbar.setFixedHeight(50)
+        notice = QAction('Original', toolbar)
+        notice.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
+        notice.triggered.connect(go_back)
+        toolbar.addAction(notice)
+
         layout.addWidget(toolbar)
-        self.editor.setStyleSheet(f"background-color: {widget.color}")
+        self.editor.setStyleSheet(f"background-color: {item.color}")
         title = QPlainTextEdit(self.editor) # set read-only on Annotations
         title.setMaximumHeight(70)
-        title.setStyleSheet('font: bold; font-size: 20px;')
-        title.setPlainText(widget.title)
+        title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+        title.setPlainText(item.title)
+        title.textChanged.connect(title_changed)
 
         body = QPlainTextEdit(self.editor)
-        body.setStyleSheet('color: #3d3d5c;')
-        body.setPlainText(widget.body)
+        body.setStyleSheet('font: normal; color: #3d3d5c;')
+        body.setPlainText(item.body)
+        body.textChanged.connect(body_changed)
 
         meta = QLabel(self.editor)
         meta.setFixedHeight(80)
         meta.setStyleSheet('color: #7575a3;')
-        meta.setText(widget.meta)
+        meta.setText(item.meta)
 
         layout.addWidget(title)
         layout.addWidget(body)
