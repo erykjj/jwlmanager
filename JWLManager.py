@@ -354,7 +354,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.latest = json.loads(r.content.decode('utf-8'))['name']
                 comp = version_compare(VERSION, self.latest)
                 if comp is None:
-                    text = f'<div style="text-align:center;"><small>'+'Testing version'+'</small></div>'
+                    text = f'<div style="text-align:center;"><small>'+'Pre-release'+'</small></div>'
                 elif comp:
                     text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{self.latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
                 else:
@@ -1538,9 +1538,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def adjust_toolbar():
             if title_modified or body_modified:
-                notice.setText('Changed')
+                return_action.setText('Changed')
             else:
-                notice.setText('Original')
+                return_action.setText('Original')
             app.processEvents()
 
         def go_back():
@@ -1548,22 +1548,36 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_layout.setCurrentIndex(0)
             app.processEvents()
 
-        item = self.viewer_items[int(self.sender().text())]
+        def delete_record():
+            widget.hide()
+            widget.deleteLater()
+            return
+
+        widget = self.sender()
+        item = self.viewer_items[int(widget.text())]
+        widget = widget.parent()
         title_modified = False
         body_modified = False
 
-        layout = QFormLayout(self.editor)
         toolbar = QToolBar(self.editor)
         toolbar.setFixedHeight(30)
-        tool_button = QToolButton(toolbar)
-        tool_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        notice = QAction('Original')
-        notice.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
-        notice.triggered.connect(go_back)
-        tool_button.setDefaultAction(notice)
 
-        layout.addWidget(toolbar)
-        self.editor.setStyleSheet(f"background-color: {item.color}")
+        return_button = QToolButton(toolbar)
+        return_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        return_action = QAction('Original')
+        return_action.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
+        return_action.triggered.connect(go_back)
+        return_button.setDefaultAction(return_action)
+        toolbar.addWidget(return_button)
+
+        delete_button = QToolButton(toolbar)
+        delete_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        delete_action = QAction('Original')
+        delete_action.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
+        delete_action.triggered.connect(delete_record)
+        delete_button.setDefaultAction(delete_action)
+        toolbar.addWidget(delete_button)
+
         title = QPlainTextEdit(self.editor) # set read-only on Annotations
         title.setMaximumHeight(70)
         title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
@@ -1580,9 +1594,13 @@ class Window(QMainWindow, Ui_MainWindow):
         meta.setStyleSheet('color: #7575a3;')
         meta.setText(item.meta)
 
+        layout = QVBoxLayout(self.editor)
+        layout.addWidget(toolbar)
         layout.addWidget(title)
         layout.addWidget(body)
         layout.addWidget(meta)
+
+        self.editor.setStyleSheet(f"background-color: {item.color}")
         self.viewer_layout.setCurrentIndex(1)
         app.processEvents()
 
@@ -1593,7 +1611,7 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setAttribute(Qt.WA_DeleteOnClose)
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
-            window.setWindowTitle(_('Data Viewer'))
+            # window.setWindowTitle(_('Data Viewer'))
             window.setMinimumSize(698, 846)
             window.resize(self.viewer_size)
             window.move(self.viewer_pos)
@@ -1611,7 +1629,7 @@ class Window(QMainWindow, Ui_MainWindow):
             tool_button.setMaximumWidth(60)
             tool_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
             button_TXT = QAction('TXT')
-            button_TXT.setIcon(QPixmap(resource_path('res/icons/icons8-save-64.png')))
+            button_TXT.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
             button_TXT.triggered.connect(save_txt)
             tool_button.setDefaultAction(button_TXT)
             layout.addWidget(toolbar)
