@@ -1506,7 +1506,25 @@ class Window(QMainWindow, Ui_MainWindow):
     def data_editor(self):
         item = int(self.sender().text())
         widget = self.viewer_items[item]
-        print(item, widget.text) # testing
+
+        layout = QFormLayout(self.editor)
+        toolbar = QToolBar(self.editor)
+        layout.addWidget(toolbar)
+        self.editor.setStyleSheet(f"background-color: {widget.color}")
+        title = QPlainTextEdit(self.editor) # set read-only on Annotations
+        title.setMaximumHeight(70)
+        title.setStyleSheet('font: bold; font-size: 20px;')
+        title.setPlainText(widget.title)
+        body = QPlainTextEdit(self.editor)
+        body.setPlainText(widget.body)
+        meta = QLabel(self.editor)
+        meta.setFixedHeight(80)
+        meta.setText(widget.meta)
+        layout.addWidget(title)
+        layout.addWidget(body)
+        layout.addWidget(meta)
+        self.viewer_layout.setCurrentIndex(1)
+        app.processEvents()
 
     def data_viewer(self):
 
@@ -1520,7 +1538,13 @@ class Window(QMainWindow, Ui_MainWindow):
             window.resize(self.viewer_size)
             window.move(self.viewer_pos)
 
-            layout = QVBoxLayout(window)
+            self.viewer_layout = QStackedLayout(window)
+            viewer = QFrame()
+            self.editor = QFrame()
+            layout = QVBoxLayout(viewer)
+            self.viewer_layout.addWidget(viewer)
+            self.viewer_layout.addWidget(self.editor)
+
             toolbar = QToolBar(window)
             self.button_TXT = QAction('TXT', toolbar)
             self.button_TXT.triggered.connect(save_txt)
@@ -1538,6 +1562,8 @@ class Window(QMainWindow, Ui_MainWindow):
             scroll_area.setWidgetResizable(True)
             layout.addWidget(scroll_area)
 
+            self.viewer_layout.setCurrentIndex(0)
+            window.setLayout(self.viewer_layout)
             window.setWindowState((window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
             window.finished.connect(viewer_closed)
             window.show()
@@ -1691,7 +1717,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += '\n' + item['NOTE']
                 note_meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
-                    # note_meta += f"<hr width='90%'><small><strong><tt>{item['MODIFIED']}"
                     note_meta += f"<small><strong><tt>{item['MODIFIED']}"
                     txt += '\n__________\n' + item['MODIFIED']
                     if item['TAGS']:
@@ -1710,8 +1735,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     note_meta += '</tt></strong></small>'
                 txt += '\n==========\n'
                 note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
-                self.viewer_items[counter] = note_box
+                note_box.title = item['TITLE']
+                note_box.body = item['NOTE']
                 note_box.expand_button.clicked.connect(self.data_editor)
+                self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
@@ -1762,8 +1789,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
                 note_meta = None
                 note_box = ViewerItem(counter, item['ID'], '#f1f1f1', note_text, note_meta)
-                self.viewer_items[counter] = note_box
+                note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
+                note_box.body = item['VALUE']
                 note_box.expand_button.clicked.connect(self.data_editor)
+                self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
@@ -2175,8 +2204,11 @@ class ViewerItem(QWidget):
     def __init__(self, i, idx, color, text, meta):
         super().__init__()
         self.idx = idx
+        self.color = color
         self.text = text
         self.meta = meta
+        self.body = ''
+        self.title = ''
 
         self.item = QFrame()
         self.item.setFixedHeight(250)
@@ -2187,9 +2219,10 @@ class ViewerItem(QWidget):
         text_box.setReadOnly(True)
         text_box.setContentsMargins(1, 1, 1, 2)
         text_box.setFrameShape(QFrame.NoFrame)
-        palette = text_box.palette()
+        palette = text_box.palette() # CHECK: not changing text color!!
         palette.setColor(text_box.foregroundRole(), '#3d3d5c')
         text_box.setPalette(palette)
+        text_box.setTextColor('#7575a3') # alternative - doesn't work either
         text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         text_box.setText(text)
 
