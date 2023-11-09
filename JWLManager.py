@@ -1515,11 +1515,16 @@ class Window(QMainWindow, Ui_MainWindow):
         title.setMaximumHeight(70)
         title.setStyleSheet('font: bold; font-size: 20px;')
         title.setPlainText(widget.title)
+
         body = QPlainTextEdit(self.editor)
+        body.setStyleSheet('color: #3d3d5c;')
         body.setPlainText(widget.body)
+
         meta = QLabel(self.editor)
         meta.setFixedHeight(80)
+        meta.setStyleSheet('color: #7575a3;')
         meta.setText(widget.meta)
+
         layout.addWidget(title)
         layout.addWidget(body)
         layout.addWidget(meta)
@@ -2219,10 +2224,7 @@ class ViewerItem(QWidget):
         text_box.setReadOnly(True)
         text_box.setContentsMargins(1, 1, 1, 2)
         text_box.setFrameShape(QFrame.NoFrame)
-        palette = text_box.palette() # CHECK: not changing text color!!
-        palette.setColor(text_box.foregroundRole(), '#3d3d5c')
-        text_box.setPalette(palette)
-        text_box.setTextColor('#7575a3') # alternative - doesn't work either
+        text_box.setStyleSheet('color: #3d3d5c;')
         text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         text_box.setText(text)
 
@@ -2231,9 +2233,7 @@ class ViewerItem(QWidget):
             meta_box.setWordWrap(True)
             meta_box.setContentsMargins(1, 2, 1, 1)
             meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            palette = meta_box.palette()
-            palette.setColor(meta_box.foregroundRole(), '#7575a3')
-            meta_box.setPalette(palette)
+            meta_box.setStyleSheet('color: #7575a3;')
             meta_box.setTextFormat(Qt.RichText)
             meta_box.setText(meta)
 
