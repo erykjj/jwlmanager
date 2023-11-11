@@ -1514,6 +1514,31 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
+    def delete_single_item(self): # TODO: actual delete from db, remove from TXT export, udate window title with correct count
+
+        def return_previous(row, col):
+            col -= 1
+            if col < 0:
+                col = 1
+                row -= 1
+            return row, col
+
+        note_item = self.viewer_items[int(self.sender().text())]
+        current_item = note_item.note_widget
+        idx = self.grid_layout.indexOf(current_item)
+        for item in current_item.parent().children():
+            index = self.grid_layout.indexOf(item)
+            if index < idx:
+                continue
+            elif index == idx:
+                item.hide()
+            else:
+                row, col, _, _  = self.grid_layout.getItemPosition(index)
+                row, col = return_previous(row, col)
+                self.grid_layout.addWidget(item, row, col)
+        app.processEvents()
+        return
+
     def data_editor(self):
 
         def body_changed():
@@ -1548,31 +1573,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_layout.setCurrentIndex(0)
             app.processEvents()
 
-        def delete_record():
-
-            def return_previous(row, col):
-                col -= 1
-                if col < 0:
-                    col = 1
-                    row -= 1
-                return row, col
-
-            current_item = note_item.note_widget
-            idx = self.grid_layout.indexOf(current_item)
-            for item in current_item.parent().children():
-                index = self.grid_layout.indexOf(item)
-                if index < idx:
-                    continue
-                elif index == idx:
-                    item.hide()
-                else:
-                    row, col, _, _  = self.grid_layout.getItemPosition(index)
-                    row, col = return_previous(row, col)
-                    self.grid_layout.addWidget(item, row, col)
-            return
-
-        i = int(self.sender().text())
-        note_item = self.viewer_items[i]
+        note_item = self.viewer_items[int(self.sender().text())]
         title_modified = False
         body_modified = False
 
@@ -1591,7 +1592,7 @@ class Window(QMainWindow, Ui_MainWindow):
         delete_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         delete_action = QAction('Original')
         delete_action.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
-        delete_action.triggered.connect(delete_record)
+        # delete_action.triggered.connect(delete_record)
         delete_button.setDefaultAction(delete_action)
         toolbar.addWidget(delete_button)
 
@@ -1628,7 +1629,7 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setAttribute(Qt.WA_DeleteOnClose)
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
-            window.setMinimumSize(698, 846)
+            window.setMinimumSize(750, 846)
             window.resize(self.viewer_size)
             window.move(self.viewer_pos)
 
@@ -1837,6 +1838,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box.title = item['TITLE']
                 note_box.body = item['NOTE']
                 note_box.expand_button.clicked.connect(self.data_editor)
+                note_box.delete_button.clicked.connect(self.delete_single_item)
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
@@ -1891,6 +1893,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
                 note_box.expand_button.clicked.connect(self.data_editor)
+                note_box.delete_button.clicked.connect(self.delete_single_item)
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
@@ -2325,25 +2328,42 @@ class ViewerItem(QWidget):
         if self.meta:
             meta_box = QLabel(self.note_widget)
             meta_box.setWordWrap(True)
-            meta_box.setContentsMargins(1, 2, 1, 1)
+            meta_box.setContentsMargins(1, 2, 1, 0)
             meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             meta_box.setStyleSheet('color: #7575a3;')
             meta_box.setTextFormat(Qt.RichText)
             meta_box.setText(meta)
 
+        self.delete_button = QPushButton(text=str(i), parent=self.note_widget)
+        self.delete_button.setLayoutDirection(Qt.RightToLeft)
+        self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
+        self.delete_button.setIconSize(QSize(24, 24))
+        self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
+
         self.expand_button = QPushButton(text=str(i), parent=self.note_widget)
-        self.expand_button.setFixedSize(30, 30)
-        self.expand_button.setContentsMargins(0, 0, 0, 0)
+        self.expand_button.setLayoutDirection(Qt.RightToLeft)
         self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
-        self.expand_button.setIconSize(QSize(24, 24))
+        self.expand_button.setIconSize(QSize(22, 22))
         self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
         layout = QGridLayout(self.note_widget)
-        layout.setSpacing(0)
         layout.addWidget(text_box, 0 , 0, 1, 0)
+        
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
-        layout.addWidget(self.expand_button, 1 , 1, Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
+            button_layout = QVBoxLayout()
+            button_layout.addWidget(self.delete_button, Qt.AlignmentFlag.AlignRight)
+            button_layout.addWidget(self.expand_button, Qt.AlignmentFlag.AlignRight)
+            button_frame = QFrame()
+            button_frame.setLayout(button_layout)
+            layout.addWidget(button_frame, 1, 1, Qt.AlignmentFlag.AlignRight)
+        else:
+            button_layout = QHBoxLayout()
+            button_layout.addWidget(self.delete_button)
+            button_layout.addWidget(self.expand_button)
+            button_frame = QFrame()
+            button_frame.setLayout(button_layout)
+            layout.addWidget(button_frame, 1, 0)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
