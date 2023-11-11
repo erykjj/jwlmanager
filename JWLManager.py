@@ -1518,7 +1518,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def body_changed():
             nonlocal body_modified
-            if body.toPlainText() == item.body:
+            if body.toPlainText() == note_item.body:
                 body.setStyleSheet('font: normal; color: #3d3d5c;')
                 body_modified = False
             else:
@@ -1528,7 +1528,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def title_changed():
             nonlocal title_modified
-            if title.toPlainText() == item.title:
+            if title.toPlainText() == note_item.title:
                 title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
                 title_modified = False
             else:
@@ -1549,13 +1549,30 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
 
         def delete_record():
-            widget.hide()
-            widget.deleteLater()
+
+            def return_previous(row, col):
+                col -= 1
+                if col < 0:
+                    col = 1
+                    row -= 1
+                return row, col
+
+            current_item = note_item.note_widget
+            idx = self.grid_layout.indexOf(current_item)
+            for item in current_item.parent().children():
+                index = self.grid_layout.indexOf(item)
+                if index < idx:
+                    continue
+                elif index == idx:
+                    item.hide()
+                else:
+                    row, col, _, _  = self.grid_layout.getItemPosition(index)
+                    row, col = return_previous(row, col)
+                    self.grid_layout.addWidget(item, row, col)
             return
 
-        widget = self.sender()
-        item = self.viewer_items[int(widget.text())]
-        widget = widget.parent()
+        i = int(self.sender().text())
+        note_item = self.viewer_items[i]
         title_modified = False
         body_modified = False
 
@@ -1581,18 +1598,18 @@ class Window(QMainWindow, Ui_MainWindow):
         title = QPlainTextEdit(self.editor) # set read-only on Annotations
         title.setMaximumHeight(70)
         title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
-        title.setPlainText(item.title)
+        title.setPlainText(note_item.title)
         title.textChanged.connect(title_changed)
 
         body = QPlainTextEdit(self.editor)
         body.setStyleSheet('font: normal; color: #3d3d5c;')
-        body.setPlainText(item.body)
+        body.setPlainText(note_item.body)
         body.textChanged.connect(body_changed)
 
         meta = QLabel(self.editor)
         meta.setFixedHeight(80)
         meta.setStyleSheet('color: #7575a3;')
-        meta.setText(item.meta)
+        meta.setText(note_item.meta)
 
         layout = QVBoxLayout(self.editor)
         layout.addWidget(toolbar)
@@ -1600,7 +1617,7 @@ class Window(QMainWindow, Ui_MainWindow):
         layout.addWidget(body)
         layout.addWidget(meta)
 
-        self.editor.setStyleSheet(f"background-color: {item.color}")
+        self.editor.setStyleSheet(f"background-color: {note_item.color}")
         self.viewer_layout.setCurrentIndex(1)
         app.processEvents()
 
@@ -1611,7 +1628,6 @@ class Window(QMainWindow, Ui_MainWindow):
             window.setAttribute(Qt.WA_DeleteOnClose)
             window.setWindowFlags(Qt.Window)
             window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
-            # window.setWindowTitle(_('Data Viewer'))
             window.setMinimumSize(698, 846)
             window.resize(self.viewer_size)
             window.move(self.viewer_pos)
@@ -1826,7 +1842,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 col = (counter+1) % 2
                 try:
                     self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box.item, row, col)
+                    self.grid_layout.addWidget(note_box.note_widget, row, col)
                     app.processEvents()
                 except:
                     return
@@ -1880,7 +1896,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 col = (counter+1) % 2
                 try:
                     self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box.item, row, col)
+                    self.grid_layout.addWidget(note_box.note_widget, row, col)
                     app.processEvents()
                 except:
                     return
@@ -2293,12 +2309,12 @@ class ViewerItem(QWidget):
         self.body = ''
         self.title = ''
 
-        self.item = QFrame()
-        self.item.setFixedHeight(250)
-        self.item.setFrameShape(QFrame.Panel)
-        self.item.setStyleSheet(f"background-color: {color}")
+        self.note_widget = QFrame()
+        self.note_widget.setFixedHeight(250)
+        self.note_widget.setFrameShape(QFrame.Panel)
+        self.note_widget.setStyleSheet(f"background-color: {color}")
 
-        text_box = QTextEdit(self.item)
+        text_box = QTextEdit(self.note_widget)
         text_box.setReadOnly(True)
         text_box.setContentsMargins(1, 1, 1, 2)
         text_box.setFrameShape(QFrame.NoFrame)
@@ -2307,7 +2323,7 @@ class ViewerItem(QWidget):
         text_box.setText(text)
 
         if self.meta:
-            meta_box = QLabel(self.item)
+            meta_box = QLabel(self.note_widget)
             meta_box.setWordWrap(True)
             meta_box.setContentsMargins(1, 2, 1, 1)
             meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -2315,15 +2331,14 @@ class ViewerItem(QWidget):
             meta_box.setTextFormat(Qt.RichText)
             meta_box.setText(meta)
 
-        self.expand_button = QPushButton(text=str(i), parent=self.item)
+        self.expand_button = QPushButton(text=str(i), parent=self.note_widget)
         self.expand_button.setFixedSize(30, 30)
         self.expand_button.setContentsMargins(0, 0, 0, 0)
         self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
         self.expand_button.setIconSize(QSize(24, 24))
         self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
-
-        layout = QGridLayout(self.item)
+        layout = QGridLayout(self.note_widget)
         layout.setSpacing(0)
         layout.addWidget(text_box, 0 , 0, 1, 0)
         if self.meta:
