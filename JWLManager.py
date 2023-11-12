@@ -49,6 +49,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
+from res.ui_data_viewer import DataViewer, ViewerItem
 
 
 #### Initial language setting based on passed arguments
@@ -1525,152 +1526,68 @@ class Window(QMainWindow, Ui_MainWindow):
 
         note_item = self.viewer_items[int(self.sender().text())]
         current_item = note_item.note_widget
-        idx = self.grid_layout.indexOf(current_item)
+        idx = self.viewer_window.grid_layout.indexOf(current_item)
         for item in current_item.parent().children():
-            index = self.grid_layout.indexOf(item)
+            index = self.viewer_window.grid_layout.indexOf(item)
             if index < idx:
                 continue
             elif index == idx:
                 item.hide()
             else:
-                row, col, _, _  = self.grid_layout.getItemPosition(index)
+                row, col, _, _  = self.viewer_window.grid_layout.getItemPosition(index)
                 row, col = return_previous(row, col)
-                self.grid_layout.addWidget(item, row, col)
+                self.viewer_window.grid_layout.addWidget(item, row, col)
         app.processEvents()
         return
+
 
     def data_editor(self):
 
         def body_changed():
             nonlocal body_modified
-            if body.toPlainText() == note_item.body:
-                body.setStyleSheet('font: normal; color: #3d3d5c;')
+            if self.viewer_window.body.toPlainText() == note_item.body:
+                self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
                 body_modified = False
             else:
-                body.setStyleSheet('font: italic; color: #3d3d5c;')
+                self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
                 body_modified = True
             adjust_toolbar()
 
         def title_changed():
             nonlocal title_modified
-            if title.toPlainText() == note_item.title:
-                title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+            if self.viewer_window.title.toPlainText() == note_item.title:
+                self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
                 title_modified = False
             else:
-                title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
+                self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
                 title_modified = True
             adjust_toolbar()
 
         def adjust_toolbar():
             if title_modified or body_modified:
-                return_action.setText('Changed')
+                self.viewer_window.return_action.setText('Changed')
             else:
-                return_action.setText('Original')
+                self.viewer_window.return_action.setText('Original')
             app.processEvents()
 
         def go_back():
-            layout.deleteLater()
-            self.viewer_layout.setCurrentIndex(0)
+            self.viewer_window.viewer_layout.setCurrentIndex(0)
             app.processEvents()
 
         note_item = self.viewer_items[int(self.sender().text())]
         title_modified = False
         body_modified = False
-
-        toolbar = QToolBar(self.editor)
-        toolbar.setFixedHeight(30)
-
-        return_button = QToolButton(toolbar)
-        return_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        return_action = QAction('Original')
-        return_action.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
-        return_action.triggered.connect(go_back)
-        return_button.setDefaultAction(return_action)
-        toolbar.addWidget(return_button)
-
-        delete_button = QToolButton(toolbar)
-        delete_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        delete_action = QAction('Original')
-        delete_action.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
-        # delete_action.triggered.connect(delete_record)
-        delete_button.setDefaultAction(delete_action)
-        toolbar.addWidget(delete_button)
-
-        title = QPlainTextEdit(self.editor) # set read-only on Annotations
-        title.setMaximumHeight(70)
-        title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
-        title.setPlainText(note_item.title)
-        title.textChanged.connect(title_changed)
-
-        body = QPlainTextEdit(self.editor)
-        body.setStyleSheet('font: normal; color: #3d3d5c;')
-        body.setPlainText(note_item.body)
-        body.textChanged.connect(body_changed)
-
-        meta = QLabel(self.editor)
-        meta.setFixedHeight(80)
-        meta.setStyleSheet('color: #7575a3;')
-        meta.setText(note_item.meta)
-
-        layout = QVBoxLayout(self.editor)
-        layout.addWidget(toolbar)
-        layout.addWidget(title)
-        layout.addWidget(body)
-        layout.addWidget(meta)
-
-        self.editor.setStyleSheet(f"background-color: {note_item.color}")
-        self.viewer_layout.setCurrentIndex(1)
+        self.viewer_window.return_action.triggered.connect(go_back)
+        self.viewer_window.title.setPlainText(note_item.title)
+        self.viewer_window.title.textChanged.connect(title_changed)
+        self.viewer_window.body.setPlainText(note_item.body)
+        self.viewer_window.body.textChanged.connect(body_changed)
+        self.viewer_window.meta.setText(note_item.meta)
+        self.viewer_window.editor.setStyleSheet(f"background-color: {note_item.color}")
+        self.viewer_window.viewer_layout.setCurrentIndex(1)
         app.processEvents()
 
     def data_viewer(self):
-
-        def init_viewer():
-            window = QDialog(self)
-            window.setAttribute(Qt.WA_DeleteOnClose)
-            window.setWindowFlags(Qt.Window)
-            window.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
-            window.setMinimumSize(750, 846)
-            window.resize(self.viewer_size)
-            window.move(self.viewer_pos)
-
-            self.viewer_layout = QStackedLayout(window)
-            viewer = QFrame()
-            self.editor = QFrame()
-            layout = QVBoxLayout(viewer)
-            self.viewer_layout.addWidget(viewer)
-            self.viewer_layout.addWidget(self.editor)
-
-            toolbar = QToolBar(window)
-            toolbar.setFixedHeight(30)
-            tool_button = QToolButton(toolbar)
-            tool_button.setMaximumWidth(60)
-            tool_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-            button_TXT = QAction('TXT')
-            button_TXT.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
-            button_TXT.triggered.connect(save_txt)
-            tool_button.setDefaultAction(button_TXT)
-            layout.addWidget(toolbar)
-
-            self.grid_layout = QGridLayout()
-            self.grid_layout.setAlignment(Qt.AlignTop)
-            grid_box = QFrame()
-            grid_box.setFrameShape(QFrame.NoFrame)
-            grid_box.sizePolicy().setVerticalPolicy(QSizePolicy.MinimumExpanding)
-            grid_box.setLayout(self.grid_layout)
-            scroll_area = QScrollArea()
-            scroll_area.setWidget(grid_box)
-            scroll_area.setWidgetResizable(True)
-            layout.addWidget(scroll_area)
-
-            self.viewer_layout.setCurrentIndex(0)
-            window.setLayout(self.viewer_layout)
-            window.setWindowState((window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-            window.finished.connect(viewer_closed)
-            window.show()
-            window.raise_()
-            window.activateWindow()
-            app.processEvents()
-            return window
 
         def viewer_closed():
             self.viewer_pos = self.viewer_window.pos()
@@ -1843,8 +1760,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
-                    self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box.note_widget, row, col)
+                    self.viewer_window.grid_layout.setColumnStretch(col, 1)
+                    self.viewer_window.grid_layout.addWidget(note_box.note_widget, row, col)
                     app.processEvents()
                 except:
                     return
@@ -1898,8 +1815,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
                 try:
-                    self.grid_layout.setColumnStretch(col, 1)
-                    self.grid_layout.addWidget(note_box.note_widget, row, col)
+                    self.viewer_window.grid_layout.setColumnStretch(col, 1)
+                    self.viewer_window.grid_layout.addWidget(note_box.note_widget, row, col)
                     app.processEvents()
                 except:
                     return
@@ -1916,7 +1833,13 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         category = self.combo_category.currentText()
         self.viewer_items = {}
-        self.viewer_window = init_viewer()
+        self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
+        self.viewer_window.button_TXT.triggered.connect(save_txt)
+        self.viewer_window.finished.connect(viewer_closed)
+        self.viewer_window.show()
+        self.viewer_window.raise_()
+        self.viewer_window.activateWindow()
+        app.processEvents()
         txt = ''
         item_list = []
         try:
@@ -2301,69 +2224,6 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('Viewer/position', self.viewer_pos)
         settings.setValue('Viewer/size', self.viewer_size)
 
-
-class ViewerItem(QWidget):
-    def __init__(self, i, idx, color, text, meta):
-        super().__init__()
-        self.idx = idx
-        self.color = color
-        self.text = text
-        self.meta = meta
-        self.body = ''
-        self.title = ''
-
-        self.note_widget = QFrame()
-        self.note_widget.setFixedHeight(250)
-        self.note_widget.setFrameShape(QFrame.Panel)
-        self.note_widget.setStyleSheet(f"background-color: {color}")
-
-        text_box = QTextEdit(self.note_widget)
-        text_box.setReadOnly(True)
-        text_box.setContentsMargins(1, 1, 1, 2)
-        text_box.setFrameShape(QFrame.NoFrame)
-        text_box.setStyleSheet('color: #3d3d5c;')
-        text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
-        text_box.setText(text)
-
-        if self.meta:
-            meta_box = QLabel(self.note_widget)
-            meta_box.setWordWrap(True)
-            meta_box.setContentsMargins(1, 2, 1, 0)
-            meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            meta_box.setStyleSheet('color: #7575a3;')
-            meta_box.setTextFormat(Qt.RichText)
-            meta_box.setText(meta)
-
-        self.delete_button = QPushButton(text=str(i), parent=self.note_widget)
-        self.delete_button.setLayoutDirection(Qt.RightToLeft)
-        self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
-        self.delete_button.setIconSize(QSize(24, 24))
-        self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
-
-        self.expand_button = QPushButton(text=str(i), parent=self.note_widget)
-        self.expand_button.setLayoutDirection(Qt.RightToLeft)
-        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
-        self.expand_button.setIconSize(QSize(22, 22))
-        self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
-
-        layout = QGridLayout(self.note_widget)
-        layout.addWidget(text_box, 0 , 0, 1, 0)
-        
-        if self.meta:
-            layout.addWidget(meta_box, 1, 0)
-            button_layout = QVBoxLayout()
-            button_layout.addWidget(self.delete_button, Qt.AlignmentFlag.AlignRight)
-            button_layout.addWidget(self.expand_button, Qt.AlignmentFlag.AlignRight)
-            button_frame = QFrame()
-            button_frame.setLayout(button_layout)
-            layout.addWidget(button_frame, 1, 1, Qt.AlignmentFlag.AlignRight)
-        else:
-            button_layout = QHBoxLayout()
-            button_layout.addWidget(self.delete_button)
-            button_layout.addWidget(self.expand_button)
-            button_frame = QFrame()
-            button_frame.setLayout(button_layout)
-            layout.addWidget(button_frame, 1, 0)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
