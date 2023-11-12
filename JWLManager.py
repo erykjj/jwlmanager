@@ -1527,6 +1527,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.body.textChanged.connect(body_changed)
         self.viewer_window.meta.setText(note_item.meta)
         self.viewer_window.editor.setStyleSheet(f"background-color: {note_item.color}")
+        body_changed()
+        title_changed()
         self.viewer_window.viewer_layout.setCurrentIndex(1)
         app.processEvents()
 
