@@ -49,7 +49,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_data_viewer import DataViewer, ViewerItem
+from res.ui_data_viewer import AboutBox, DataViewer, ViewerItem
 
 
 #### Initial language setting based on passed arguments
@@ -155,49 +155,6 @@ class Window(QMainWindow, Ui_MainWindow):
             qr.moveCenter(cp)
             return qr.topLeft()
 
-        def init_about():
-                year = f'MIT ©{datetime.now().year}'
-                owner = 'Eryk J.'
-                web = 'https://github.com/erykjj/jwlmanager'
-                contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
-
-                self.about_window = QDialog(self)
-                self.about_window.setStyleSheet("QDialog {border:2px solid #5b3c88}")
-                layout = QHBoxLayout(self.about_window)
-                left_layout = QVBoxLayout()
-                icon = QLabel(self.about_window)
-                icon.setPixmap(QPixmap(self.resource_path('res/icons/project_72.png')))
-                icon.setAlignment(Qt.AlignTop)
-                left_layout.addWidget(icon)
-
-                right_layout = QVBoxLayout()
-                title_label = QLabel(self.about_window)
-                text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{APP}</span></h2><p><small>{year} {owner}</small></p><h4>{VERSION.lstrip("v")}</h4></div>'
-                title_label.setText(text)
-
-                self.update_label = QLabel(self.about_window)
-                text = '<div style="text-align:center;"><small><i>'+_('Checking for updates…') +'</i></small></div>'
-                self.update_label.setText(text)
-                self.update_label.setOpenExternalLinks(True)
-
-                contact_label = QLabel(self.about_window)
-                text = text = f'<div style="text-align:center;"><small><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a><br><a style="color:#666699; text-decoration:none;" href="{web}">{web}</small></a></div>'
-                contact_label.setText(text)
-                contact_label.setOpenExternalLinks(True)
-
-                right_layout.addWidget(title_label)
-                right_layout.addWidget(self.update_label)
-                right_layout.addWidget(contact_label)
-
-                button = QDialogButtonBox(QDialogButtonBox.Ok)
-                button.setFixedWidth(72)
-                button.accepted.connect(self.about_window.accept)
-
-                left_layout.addWidget(button)
-                layout.addLayout(left_layout)
-                layout.addLayout(right_layout)
-                self.about_window.setWindowFlag(Qt.FramelessWindowHint)
-
         def init_help():
             self.help_window = QDialog(self)
             self.help_window.setWindowFlags(Qt.Window)
@@ -282,7 +239,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        init_about()
+        self.about_window = AboutBox(APP, VERSION)
         init_help()
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
@@ -362,7 +319,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     text = f'<div style="text-align:center;"><small>'+_('Latest version')+'</small></div>'
             except:
                 text = f'<div style="text-align:center;"><small><i>'+_('Error while checking for updates!')+'</u></small></div>'
-            self.update_label.setText(text)
+            self.about_window.update_label.setText(text)
         self.about_window.exec()
 
     def crash_box(self, ex):

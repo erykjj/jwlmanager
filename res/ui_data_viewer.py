@@ -25,9 +25,11 @@
 """
 
 import os, sys
+from datetime import datetime
+
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QAction, QIcon, QPixmap
-from PySide6.QtWidgets import QDialog, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 
 def resource_path(relative_path):
@@ -36,6 +38,50 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
+
+
+class AboutBox(QDialog):
+    def __init__(self, app, version):
+        super().__init__()
+        year = f'MIT ©{datetime.now().year}'
+        owner = 'Eryk J.'
+        web = 'https://github.com/erykjj/jwlmanager'
+        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
+
+        self.setStyleSheet("QDialog {border:2px solid #5b3c88}")
+        layout = QHBoxLayout(self)
+        left_layout = QVBoxLayout()
+        icon = QLabel(self)
+        icon.setPixmap(QPixmap(resource_path('res/icons/project_72.png')))
+        icon.setAlignment(Qt.AlignTop)
+        left_layout.addWidget(icon)
+
+        right_layout = QVBoxLayout()
+        title_label = QLabel(self)
+        text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{app}</span></h2><p><small>{year} {owner}</small></p><h4>{version.lstrip("v")}</h4></div>'
+        title_label.setText(text)
+
+        self.update_label = QLabel(self)
+        self.update_label.setText(text)
+        self.update_label.setOpenExternalLinks(True)
+
+        contact_label = QLabel(self)
+        text = text = f'<div style="text-align:center;"><small><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a><br><a style="color:#666699; text-decoration:none;" href="{web}">{web}</small></a></div>'
+        contact_label.setText(text)
+        contact_label.setOpenExternalLinks(True)
+
+        right_layout.addWidget(title_label)
+        right_layout.addWidget(self.update_label)
+        right_layout.addWidget(contact_label)
+
+        button = QDialogButtonBox(QDialogButtonBox.Ok)
+        button.setFixedWidth(72)
+        button.accepted.connect(self.accept)
+
+        left_layout.addWidget(button)
+        layout.addLayout(left_layout)
+        layout.addLayout(right_layout)
+        self.setWindowFlag(Qt.FramelessWindowHint)
 
 
 class DataViewer(QDialog):
