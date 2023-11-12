@@ -227,13 +227,13 @@ class ViewerItem(QWidget):
 
         self.delete_button = QPushButton(text=str(i), parent=self.note_widget)
         self.delete_button.setLayoutDirection(Qt.RightToLeft)
-        self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
+        self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64red.png')))
         self.delete_button.setIconSize(QSize(24, 24))
         self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
         self.expand_button = QPushButton(text=str(i), parent=self.note_widget)
         self.expand_button.setLayoutDirection(Qt.RightToLeft)
-        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-expand-30.png')))
+        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-resize-64blue.png')))
         self.expand_button.setIconSize(QSize(22, 22))
         self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
