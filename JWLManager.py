@@ -1503,10 +1503,13 @@ class Window(QMainWindow, Ui_MainWindow):
             adjust_toolbar()
 
         def adjust_toolbar():
+            nonlocal title_modified, body_modified
             if title_modified or body_modified:
-                self.viewer_window.return_action.setText('Changed')
+                self.viewer_window.accept_action.setVisible(True)
+                # self.viewer_window.cancel_action.setVisible(True)
             else:
-                self.viewer_window.return_action.setText('Original')
+                self.viewer_window.accept_action.setVisible(False)
+                # self.viewer_window.cancel_action.setVisible(False)
             app.processEvents()
 
         def go_back():
@@ -1517,7 +1520,8 @@ class Window(QMainWindow, Ui_MainWindow):
         title_modified = False
         body_modified = False
         self.viewer_window.return_action.triggered.connect(go_back)
-        self.viewer_window.title.setPlainText(note_item.title)
+        self.viewer_window.accept_action.triggered.connect(go_back) # TODO: incomplete
+        self.viewer_window.title.setPlainText(note_item.title) # set read-only on Annotations
         self.viewer_window.title.textChanged.connect(title_changed)
         self.viewer_window.body.setPlainText(note_item.body)
         self.viewer_window.body.textChanged.connect(body_changed)
@@ -2149,6 +2153,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def clean_up(self):
+        try:
+            self.viewer_window.close()
+        except:
+            pass
         shutil.rmtree(tmp_path, ignore_errors=True)
         settings.setValue('JWLManager/language', self.lang)
         settings.setValue('JWLManager/category', self.combo_category.currentIndex())
