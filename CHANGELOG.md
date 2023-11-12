@@ -18,12 +18,13 @@
 
 ### Changed
 
-- Updated app translations
+- Improved Data Viewer (Note Viewer) functionality
 - Code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
+  - Moved some Qt-related UI code to `ui_extras.py` module
 - Code improvements for (slightly) better performance
-- Improved Data Viewer (Note Viewer) functionality
-  - Working on being able to edit/delete individual notes
+- Updated app translations
+
 
 ### Fixed
 
