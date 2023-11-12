@@ -157,25 +157,26 @@ class DataViewer(QDialog):
         layout.addWidget(scroll_area)
 
     def create_editor(self):
-        return_button = QToolButton()
-        return_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.return_action = QAction('Original')
+        self.return_button = QToolButton()
+        self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
+        self.return_action = QAction()
         self.return_action.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
-        return_button.setDefaultAction(self.return_action)
+        self.return_button.setDefaultAction(self.return_action)
 
-        delete_button = QToolButton()
-        delete_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.delete_action = QAction('Original')
-        self.delete_action.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64.png')))
-        delete_button.setDefaultAction(self.delete_action)
+        self.accept_button = QToolButton()
+        self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
+        self.accept_action = QAction()
+        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-ok-64green.png')))
+        self.accept_button.setDefaultAction(self.accept_action)
+        self.accept_action.setVisible(False)
 
         toolbar = QToolBar(self.editor)
         toolbar.setFixedHeight(30)
-        toolbar.addWidget(return_button)
-        toolbar.addWidget(delete_button)
+        toolbar.addWidget(self.return_button)
+        toolbar.addWidget(self.accept_button)
 
-        self.title = QPlainTextEdit(self.editor) # set read-only on Annotations
-        self.title.setMaximumHeight(70)
+        self.title = QPlainTextEdit(self.editor)
+        self.title.setMaximumHeight(60)
         self.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
 
         self.body = QPlainTextEdit(self.editor)
