@@ -49,7 +49,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_data_viewer import AboutBox, DataViewer, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem
 
 
 #### Initial language setting based on passed arguments
@@ -155,23 +155,6 @@ class Window(QMainWindow, Ui_MainWindow):
             qr.moveCenter(cp)
             return qr.topLeft()
 
-        def init_help():
-            self.help_window = QDialog(self)
-            self.help_window.setWindowFlags(Qt.Window)
-            self.help_window.setWindowIcon((QIcon(self.resource_path('res/icons/project_72.png'))))
-            self.help_window.setWindowTitle(_('Help'))
-            self.help_window.resize(1020, 812)
-            self.help_window.move(50, 50)
-            self.help_window.setMinimumSize(300, 300)
-            text = QTextEdit(self.help_window)
-            text.setReadOnly(True)
-            with open(self.resource_path('res/HELP.md'), encoding='utf-8') as f:
-                text.setMarkdown(f.read())
-            layout = QHBoxLayout(self.help_window)
-            layout.addWidget(text)
-            self.help_window.setWindowState((self.help_window.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-            self.help_window.finished.connect(self.help_window.hide())
-
         def connect_signals():
             self.actionQuit.triggered.connect(self.close)
             self.actionHelp.triggered.connect(self.help_box)
@@ -240,7 +223,7 @@ class Window(QMainWindow, Ui_MainWindow):
         connect_signals()
         set_vars()
         self.about_window = AboutBox(APP, VERSION)
-        init_help()
+        self.help_window = HelpBox(_('Help'))
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
 
@@ -741,7 +724,7 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         db_name = 'userData.db'
-        with ZipFile(self.resource_path('res/blank'),'r') as zipped:
+        with ZipFile(resource_path('res/blank'),'r') as zipped:
             zipped.extractall(tmp_path)
         m = {
             'name': APP,

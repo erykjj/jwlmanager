@@ -43,6 +43,7 @@ def resource_path(relative_path):
 class AboutBox(QDialog):
     def __init__(self, app, version):
         super().__init__()
+
         year = f'MIT ©{datetime.now().year}'
         owner = 'Eryk J.'
         web = 'https://github.com/erykjj/jwlmanager'
@@ -82,6 +83,26 @@ class AboutBox(QDialog):
         layout.addLayout(left_layout)
         layout.addLayout(right_layout)
         self.setWindowFlag(Qt.FramelessWindowHint)
+
+
+class HelpBox(QDialog):
+    def __init__(self, title):
+        super().__init__()
+
+        self.setWindowFlags(Qt.Window)
+        self.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
+        self.setWindowTitle(title)
+        self.resize(1020, 812)
+        self.move(50, 50)
+        self.setMinimumSize(300, 300)
+        text = QTextEdit(self)
+        text.setReadOnly(True)
+        with open(resource_path('res/HELP.md'), encoding='utf-8') as f:
+            text.setMarkdown(f.read())
+        layout = QHBoxLayout(self)
+        layout.addWidget(text)
+        self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
+        self.finished.connect(self.hide())
 
 
 class DataViewer(QDialog):
