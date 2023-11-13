@@ -208,13 +208,13 @@ class ViewerItem(QWidget):
         self.note_widget.setFrameShape(QFrame.Panel)
         self.note_widget.setStyleSheet(f"background-color: {color}")
 
-        text_box = QTextEdit(self.note_widget)
-        text_box.setReadOnly(True)
-        text_box.setContentsMargins(1, 1, 1, 2)
-        text_box.setFrameShape(QFrame.NoFrame)
-        text_box.setStyleSheet('color: #3d3d5c;')
-        text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
-        text_box.setText(text)
+        self.text_box = QTextEdit(self.note_widget)
+        self.text_box.setReadOnly(True)
+        self.text_box.setContentsMargins(1, 1, 1, 2)
+        self.text_box.setFrameShape(QFrame.NoFrame)
+        self.text_box.setStyleSheet('color: #3d3d5c;')
+        self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
+        self.text_box.setText(text)
 
         if self.meta:
             meta_box = QLabel(self.note_widget)
@@ -238,7 +238,7 @@ class ViewerItem(QWidget):
         self.edit_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
         layout = QGridLayout(self.note_widget)
-        layout.addWidget(text_box, 0 , 0, 1, 0)
+        layout.addWidget(self.text_box, 0 , 0, 1, 0)
         
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
