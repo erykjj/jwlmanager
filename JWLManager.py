@@ -1464,7 +1464,7 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
                 self.body_modified = True
-            adjust_toolbar()
+            update_editor_toolbar()
 
         def title_changed():
             if self.viewer_window.title.toPlainText() == self.note_item.title:
@@ -1473,9 +1473,9 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
                 self.title_modified = True
-            adjust_toolbar()
+            update_editor_toolbar()
 
-        def adjust_toolbar():
+        def update_editor_toolbar():
             if self.title_modified or self.body_modified:
                 self.viewer_window.accept_action.setVisible(True)
             else:
@@ -1493,6 +1493,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.note_item.title = self.viewer_window.title.toPlainText()
             note_text = f"<h3><b>{self.note_item.title}</b></h3>" + self.note_item.body.replace('\n', '<br>')
             self.note_item.text_box.setText(note_text)
+            update_viewer_toolbar()
             go_back()
 
         def data_editor(counter):
@@ -1508,6 +1509,11 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.viewer_layout.setCurrentIndex(1)
             app.processEvents()
 
+        def update_viewer_toolbar():
+            self.viewer_window.discard_action.setText(_('Discard changes and close'))
+            self.viewer_window.confirm_action.setText(_('Confirm changes and close'))
+            self.viewer_window.confirm_action.setEnabled(True)
+            self.viewer_window.discard_action.setEnabled(True)
 
         def delete_single_item(counter): # TODO: actual delete from db, remove from TXT export
 
@@ -1521,7 +1527,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.note_item = self.viewer_items[counter]
             current_item = self.note_item.note_widget
             self.delete_list.append(self.note_item.idx)
-            print(self.delete_list)
             idx = self.viewer_window.grid_layout.indexOf(current_item)
             for item in current_item.parent().children():
                 index = self.viewer_window.grid_layout.indexOf(item)
@@ -1534,8 +1539,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     row, col = return_previous(row, col)
                     self.viewer_window.grid_layout.addWidget(item, row, col)
             self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.delete_list)} {self.combo_category.currentText()}')
+            update_viewer_toolbar()
             app.processEvents()
-            return
 
 
         def viewer_closed():
@@ -1701,7 +1706,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt += '\n' + lnk
                     note_meta += '</tt></strong></small>'
                 txt += '\n==========\n'
-                note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], note_text, note_meta)
                 note_box.title = item['TITLE']
                 note_box.body = item['NOTE']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
@@ -1757,7 +1762,7 @@ class Window(QMainWindow, Ui_MainWindow):
             for item in get_annotations():
                 note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
                 note_meta = None
-                note_box = ViewerItem(counter, item['ID'], '#f1f1f1', note_text, note_meta)
+                note_box = ViewerItem(item['ID'], '#f1f1f1', note_text, note_meta)
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
