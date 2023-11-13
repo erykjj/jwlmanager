@@ -166,7 +166,7 @@ class DataViewer(QDialog):
         self.accept_button = QToolButton()
         self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.accept_action = QAction()
-        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-accept-64.png')))
+        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-accept-64green.png')))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
 
