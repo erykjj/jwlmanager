@@ -1506,10 +1506,8 @@ class Window(QMainWindow, Ui_MainWindow):
             nonlocal title_modified, body_modified
             if title_modified or body_modified:
                 self.viewer_window.accept_action.setVisible(True)
-                # self.viewer_window.cancel_action.setVisible(True)
             else:
                 self.viewer_window.accept_action.setVisible(False)
-                # self.viewer_window.cancel_action.setVisible(False)
             app.processEvents()
 
         def go_back():
@@ -1521,11 +1519,15 @@ class Window(QMainWindow, Ui_MainWindow):
         body_modified = False
         self.viewer_window.return_action.triggered.connect(go_back)
         self.viewer_window.accept_action.triggered.connect(go_back) # TODO: incomplete
-        self.viewer_window.title.setPlainText(note_item.title) # set read-only on Annotations
-        self.viewer_window.title.textChanged.connect(title_changed)
+        print(note_item.meta)
+        self.viewer_window.title.setPlainText(note_item.title)
+        if note_item.meta:
+            self.viewer_window.title.textChanged.connect(title_changed)
+            self.viewer_window.meta.setText(note_item.meta)
+        else:
+            self.viewer_window.title.setReadOnly(True)
         self.viewer_window.body.setPlainText(note_item.body)
         self.viewer_window.body.textChanged.connect(body_changed)
-        self.viewer_window.meta.setText(note_item.meta)
         self.viewer_window.editor.setStyleSheet(f"background-color: {note_item.color}")
         body_changed()
         title_changed()
