@@ -1465,6 +1465,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         note_item = self.viewer_items[int(self.sender().text())]
         current_item = note_item.note_widget
+        self.delete_list.append(note_item.idx)
         idx = self.viewer_window.grid_layout.indexOf(current_item)
         for item in current_item.parent().children():
             index = self.viewer_window.grid_layout.indexOf(item)
@@ -1478,7 +1479,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.grid_layout.addWidget(item, row, col)
         app.processEvents()
         return
-
 
     def data_editor(self):
 
@@ -1565,6 +1565,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def show_notes():
 
             def get_notes():
+                item_list = []
                 sql = f'''
                     SELECT n.BlockType Type,
                         n.Title,
@@ -1666,12 +1667,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['Link'] = None
                     item_list.append(item)
+                return item_list
 
-            get_notes()
             nonlocal txt
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
-            for item in item_list:
+            for item in get_notes():
                 note_text = f"<h3><b>{item['TITLE']}</b></h3>"
                 txt += item['TITLE']
                 if item['NOTE']:
@@ -1699,7 +1700,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
                 note_box.title = item['TITLE']
                 note_box.body = item['NOTE']
-                note_box.expand_button.clicked.connect(self.data_editor)
+                note_box.edit_button.clicked.connect(self.data_editor)
                 note_box.delete_button.clicked.connect(self.delete_single_item)
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
@@ -1715,6 +1716,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def show_annotations():
 
             def get_annotations():
+                item_list = []
                 sql = f'''
                     SELECT TextTag,
                         Value,
@@ -1744,17 +1746,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['ISSUE'] = ''
                     item_list.append(item)
+                return item_list
 
-            get_annotations()
             nonlocal txt
             counter = 1
-            for item in item_list:
+            for item in get_annotations():
                 note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
                 note_meta = None
                 note_box = ViewerItem(counter, item['ID'], '#f1f1f1', note_text, note_meta)
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
-                note_box.expand_button.clicked.connect(self.data_editor)
+                note_box.edit_button.clicked.connect(self.data_editor)
                 note_box.delete_button.clicked.connect(self.delete_single_item)
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
@@ -1778,6 +1780,7 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         category = self.combo_category.currentText()
         self.viewer_items = {}
+        self.delete_list = []
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         self.viewer_window.button_TXT.triggered.connect(save_txt)
         self.viewer_window.finished.connect(viewer_closed)
@@ -1786,7 +1789,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.activateWindow()
         app.processEvents()
         txt = ''
-        item_list = []
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
@@ -1802,7 +1804,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         self.data_viewer_txt = txt
-        self.data_viewer_dict = item_list
         try:
             self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
         except:
