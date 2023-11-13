@@ -1483,28 +1483,25 @@ class Window(QMainWindow, Ui_MainWindow):
     def data_editor(self):
 
         def body_changed():
-            nonlocal body_modified
             if self.viewer_window.body.toPlainText() == note_item.body:
                 self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
-                body_modified = False
+                self.body_modified = False
             else:
                 self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
-                body_modified = True
+                self.body_modified = True
             adjust_toolbar()
 
         def title_changed():
-            nonlocal title_modified
             if self.viewer_window.title.toPlainText() == note_item.title:
                 self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
-                title_modified = False
+                self.title_modified = False
             else:
                 self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
-                title_modified = True
+                self.title_modified = True
             adjust_toolbar()
 
         def adjust_toolbar():
-            nonlocal title_modified, body_modified
-            if title_modified or body_modified:
+            if self.title_modified or self.body_modified:
                 self.viewer_window.accept_action.setVisible(True)
             else:
                 self.viewer_window.accept_action.setVisible(False)
@@ -1513,13 +1510,14 @@ class Window(QMainWindow, Ui_MainWindow):
         def go_back():
             self.viewer_window.viewer_layout.setCurrentIndex(0)
             app.processEvents()
+            self.title_modified = False
+            self.body_modified = False
 
         note_item = self.viewer_items[int(self.sender().text())]
-        title_modified = False
-        body_modified = False
+        self.title_modified = False
+        self.body_modified = False
         self.viewer_window.return_action.triggered.connect(go_back)
         self.viewer_window.accept_action.triggered.connect(go_back) # TODO: incomplete
-        print(note_item.meta)
         self.viewer_window.title.setPlainText(note_item.title)
         if note_item.meta:
             self.viewer_window.title.textChanged.connect(title_changed)
