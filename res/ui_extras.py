@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 """
-  File:           JWLEditor module
+  JWLManager:   JWLEditor module - Qt classes for UI components
 
-  MIT License     Copyright (c) 2023 Eryk J.
+  MIT License:  Copyright (c) 2023 Eryk J.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
