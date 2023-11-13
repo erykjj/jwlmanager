@@ -160,18 +160,18 @@ class DataViewer(QDialog):
         self.return_button = QToolButton()
         self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.return_action = QAction()
-        self.return_action.setIcon(QPixmap(resource_path('res/icons/icons8-return-50.png')))
+        self.return_action.setIcon(QPixmap(resource_path('res/icons/icons8-left-return.png')))
         self.return_button.setDefaultAction(self.return_action)
 
         self.accept_button = QToolButton()
         self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.accept_action = QAction()
-        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-ok-64green.png')))
+        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-accept-64.png')))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
 
         toolbar = QToolBar(self.editor)
-        toolbar.setFixedHeight(30)
+        toolbar.setFixedHeight(32)
         toolbar.addWidget(self.return_button)
         toolbar.addWidget(self.accept_button)
 
@@ -233,7 +233,7 @@ class ViewerItem(QWidget):
 
         self.expand_button = QPushButton(text=str(i), parent=self.note_widget)
         self.expand_button.setLayoutDirection(Qt.RightToLeft)
-        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-resize-64blue.png')))
+        self.expand_button.setIcon(QPixmap(resource_path('res/icons/icons8-edit-64blue.png')))
         self.expand_button.setIconSize(QSize(22, 22))
         self.expand_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
