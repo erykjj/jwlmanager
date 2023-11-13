@@ -1454,7 +1454,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def delete_single_item(self): # TODO: actual delete from db, remove from TXT export, udate window title with correct count
+    def delete_single_item(self): # TODO: actual delete from db, remove from TXT export
 
         def return_previous(row, col):
             col -= 1
@@ -1474,9 +1474,10 @@ class Window(QMainWindow, Ui_MainWindow):
             elif index == idx:
                 item.hide()
             else:
-                row, col, _, _  = self.viewer_window.grid_layout.getItemPosition(index)
+                row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
                 row, col = return_previous(row, col)
                 self.viewer_window.grid_layout.addWidget(item, row, col)
+        self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.delete_list)} {self.combo_category.currentText()}')
         app.processEvents()
         return
 
@@ -1514,8 +1515,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.body_modified = False
 
         note_item = self.viewer_items[int(self.sender().text())]
-        self.title_modified = False
-        self.body_modified = False
+        
         self.viewer_window.return_action.triggered.connect(go_back)
         self.viewer_window.accept_action.triggered.connect(go_back) # TODO: incomplete
         self.viewer_window.title.setPlainText(note_item.title)
@@ -1527,6 +1527,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.body.setPlainText(note_item.body)
         self.viewer_window.body.textChanged.connect(body_changed)
         self.viewer_window.editor.setStyleSheet(f"background-color: {note_item.color}")
+        self.title_modified = False
+        self.body_modified = False
         body_changed()
         title_changed()
         self.viewer_window.viewer_layout.setCurrentIndex(1)
