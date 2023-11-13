@@ -38,6 +38,7 @@ from PySide6.QtWidgets import *
 
 from datetime import datetime, timezone
 from filehash import FileHash
+from functools import partial
 from pathlib import Path
 from platform import platform
 from random import randint
@@ -1454,37 +1455,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def delete_single_item(self): # TODO: actual delete from db, remove from TXT export
-
-        def return_previous(row, col):
-            col -= 1
-            if col < 0:
-                col = 1
-                row -= 1
-            return row, col
-
-        note_item = self.viewer_items[int(self.sender().text())]
-        current_item = note_item.note_widget
-        self.delete_list.append(note_item.idx)
-        idx = self.viewer_window.grid_layout.indexOf(current_item)
-        for item in current_item.parent().children():
-            index = self.viewer_window.grid_layout.indexOf(item)
-            if index < idx:
-                continue
-            elif index == idx:
-                item.hide()
-            else:
-                row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
-                row, col = return_previous(row, col)
-                self.viewer_window.grid_layout.addWidget(item, row, col)
-        self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.delete_list)} {self.combo_category.currentText()}')
-        app.processEvents()
-        return
-
-    def data_editor(self):
+    def data_viewer(self):
 
         def body_changed():
-            if self.viewer_window.body.toPlainText() == note_item.body:
+            if self.viewer_window.body.toPlainText() == self.note_item.body:
                 self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
                 self.body_modified = False
             else:
@@ -1493,7 +1467,7 @@ class Window(QMainWindow, Ui_MainWindow):
             adjust_toolbar()
 
         def title_changed():
-            if self.viewer_window.title.toPlainText() == note_item.title:
+            if self.viewer_window.title.toPlainText() == self.note_item.title:
                 self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
                 self.title_modified = False
             else:
@@ -1514,27 +1488,55 @@ class Window(QMainWindow, Ui_MainWindow):
             self.title_modified = False
             self.body_modified = False
 
-        note_item = self.viewer_items[int(self.sender().text())]
-        
-        self.viewer_window.return_action.triggered.connect(go_back)
-        self.viewer_window.accept_action.triggered.connect(go_back) # TODO: incomplete
-        self.viewer_window.title.setPlainText(note_item.title)
-        if note_item.meta:
-            self.viewer_window.title.textChanged.connect(title_changed)
-            self.viewer_window.meta.setText(note_item.meta)
-        else:
-            self.viewer_window.title.setReadOnly(True)
-        self.viewer_window.body.setPlainText(note_item.body)
-        self.viewer_window.body.textChanged.connect(body_changed)
-        self.viewer_window.editor.setStyleSheet(f"background-color: {note_item.color}")
-        self.title_modified = False
-        self.body_modified = False
-        body_changed()
-        title_changed()
-        self.viewer_window.viewer_layout.setCurrentIndex(1)
-        app.processEvents()
+        def accept_change():
+            self.note_item.body = self.viewer_window.body.toPlainText()
+            self.note_item.title = self.viewer_window.title.toPlainText()
+            note_text = f"<h3><b>{self.note_item.title}</b></h3>" + self.note_item.body.replace('\n', '<br>')
+            self.note_item.text_box.setText(note_text)
+            go_back()
 
-    def data_viewer(self):
+        def data_editor(counter):
+
+            self.note_item = self.viewer_items[counter]
+            self.viewer_window.title.setPlainText(self.note_item.title)
+            if self.note_item.meta:
+                self.viewer_window.meta.setText(self.note_item.meta)
+            else:
+                self.viewer_window.title.setReadOnly(True)
+            self.viewer_window.body.setPlainText(self.note_item.body)
+            self.viewer_window.editor.setStyleSheet(f"background-color: {self.note_item.color}")
+            self.viewer_window.viewer_layout.setCurrentIndex(1)
+            app.processEvents()
+
+
+        def delete_single_item(counter): # TODO: actual delete from db, remove from TXT export
+
+            def return_previous(row, col):
+                col -= 1
+                if col < 0:
+                    col = 1
+                    row -= 1
+                return row, col
+
+            self.note_item = self.viewer_items[counter]
+            current_item = self.note_item.note_widget
+            self.delete_list.append(self.note_item.idx)
+            print(self.delete_list)
+            idx = self.viewer_window.grid_layout.indexOf(current_item)
+            for item in current_item.parent().children():
+                index = self.viewer_window.grid_layout.indexOf(item)
+                if index < idx:
+                    continue
+                elif index == idx:
+                    item.hide()
+                else:
+                    row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
+                    row, col = return_previous(row, col)
+                    self.viewer_window.grid_layout.addWidget(item, row, col)
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.delete_list)} {self.combo_category.currentText()}')
+            app.processEvents()
+            return
+
 
         def viewer_closed():
             self.viewer_pos = self.viewer_window.pos()
@@ -1702,8 +1704,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box = ViewerItem(counter, item['ID'], clrs[item['COLOR']], note_text, note_meta)
                 note_box.title = item['TITLE']
                 note_box.body = item['NOTE']
-                note_box.edit_button.clicked.connect(self.data_editor)
-                note_box.delete_button.clicked.connect(self.delete_single_item)
+                note_box.edit_button.clicked.connect(partial(data_editor, counter))
+                note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
@@ -1758,8 +1760,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box = ViewerItem(counter, item['ID'], '#f1f1f1', note_text, note_meta)
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
-                note_box.edit_button.clicked.connect(self.data_editor)
-                note_box.delete_button.clicked.connect(self.delete_single_item)
+                note_box.edit_button.clicked.connect(partial(data_editor, counter))
+                note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
                 row = int((counter+1) / 2) - 1
                 col = (counter+1) % 2
@@ -1783,9 +1785,15 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         self.viewer_items = {}
         self.delete_list = []
+        self.title_modified = False
+        self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         self.viewer_window.button_TXT.triggered.connect(save_txt)
         self.viewer_window.finished.connect(viewer_closed)
+        self.viewer_window.return_action.triggered.connect(go_back)
+        self.viewer_window.accept_action.triggered.connect(accept_change)
+        self.viewer_window.title.textChanged.connect(title_changed)
+        self.viewer_window.body.textChanged.connect(body_changed)
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
