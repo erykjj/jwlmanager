@@ -138,9 +138,25 @@ class DataViewer(QDialog):
         self.button_TXT.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
         tool_button.setDefaultAction(self.button_TXT)
 
+        discard_button = QToolButton()
+        discard_button.setStyleSheet('color: #3f54aa;')
+        self.discard_action = QAction('')
+        self.discard_action.setToolTip('')
+        self.discard_action.setDisabled(True)
+        discard_button.setDefaultAction(self.discard_action)
+
+        confirm_button = QToolButton()
+        confirm_button.setStyleSheet('color: #c80b0b;')
+        self.confirm_action = QAction('')
+        self.confirm_action.setToolTip('')
+        self.confirm_action.setDisabled(True)
+        confirm_button.setDefaultAction(self.confirm_action)
+
         toolbar = QToolBar(self)
         toolbar.setFixedHeight(30)
-        toolbar.addWidget(tool_button)
+        # toolbar.addWidget(tool_button)
+        toolbar.addWidget(discard_button)
+        toolbar.addWidget(confirm_button)
 
         self.grid_layout = QGridLayout()
         self.grid_layout.setAlignment(Qt.AlignTop)
@@ -194,7 +210,7 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, i, idx, color, text, meta):
+    def __init__(self, idx, color, text, meta):
         super().__init__()
         self.idx = idx
         self.color = color
@@ -225,14 +241,12 @@ class ViewerItem(QWidget):
             meta_box.setTextFormat(Qt.RichText)
             meta_box.setText(meta)
 
-        self.delete_button = QPushButton(text=str(i), parent=self.note_widget)
-        self.delete_button.setLayoutDirection(Qt.RightToLeft)
+        self.delete_button = QPushButton()
         self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64red.png')))
         self.delete_button.setIconSize(QSize(24, 24))
         self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
-        self.edit_button = QPushButton(text=str(i), parent=self.note_widget)
-        self.edit_button.setLayoutDirection(Qt.RightToLeft)
+        self.edit_button = QPushButton()
         self.edit_button.setIcon(QPixmap(resource_path('res/icons/icons8-edit-64blue.png')))
         self.edit_button.setIconSize(QSize(22, 22))
         self.edit_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
@@ -243,8 +257,8 @@ class ViewerItem(QWidget):
         if self.meta:
             layout.addWidget(meta_box, 1, 0)
             button_layout = QVBoxLayout()
-            button_layout.addWidget(self.delete_button, Qt.AlignmentFlag.AlignRight)
-            button_layout.addWidget(self.edit_button, Qt.AlignmentFlag.AlignRight)
+            button_layout.addWidget(self.delete_button)
+            button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
             button_frame.setLayout(button_layout)
             layout.addWidget(button_frame, 1, 1, Qt.AlignmentFlag.AlignRight)
