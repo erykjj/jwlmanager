@@ -139,14 +139,14 @@ class DataViewer(QDialog):
         tool_button.setDefaultAction(self.button_TXT)
 
         discard_button = QToolButton()
-        discard_button.setStyleSheet('color: #3f54aa;')
+        discard_button.setStyleSheet('color: #3f54aa; font: bold;')
         self.discard_action = QAction('')
         self.discard_action.setToolTip('')
         self.discard_action.setDisabled(True)
         discard_button.setDefaultAction(self.discard_action)
 
         confirm_button = QToolButton()
-        confirm_button.setStyleSheet('color: #c80b0b;')
+        confirm_button.setStyleSheet('color: #c80b0b; font: bold;')
         self.confirm_action = QAction('')
         self.confirm_action.setToolTip('')
         self.confirm_action.setDisabled(True)
@@ -213,6 +213,7 @@ class ViewerItem(QWidget):
     def __init__(self, idx, color, text, meta):
         super().__init__()
         self.idx = idx
+        self.label = None
         self.color = color
         self.text = text
         self.meta = meta
