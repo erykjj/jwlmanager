@@ -11,7 +11,7 @@
   - A bit slower with many notes/highlights, but with real-time loading
   - Because of this, the 'default' (start-up) grouping is by Type
 - Added update check in About box
-- `settings` file in app directory to save session info (delete the file to start with defaults)
+- `JWLManager.conf` file in app directory to save session info (delete the file to start with defaults)
   - Main interface window and Data Viewer window position and size
   - Currently-opened archive
   - Current language
