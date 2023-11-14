@@ -27,7 +27,7 @@
 from os import path
 from datetime import datetime
 
-from PySide6.QtCore import QSize, Qt
+from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 
@@ -101,6 +101,8 @@ class HelpBox(QDialog):
 
 
 class DataViewer(QDialog):
+    escape_pressed = Signal()
+
     def __init__(self, size, pos):
         super().__init__()
 
@@ -203,6 +205,10 @@ class DataViewer(QDialog):
         layout.addWidget(self.body)
         layout.addWidget(self.meta)
         self.viewer_layout.addWidget(self.editor)
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Escape:
+            self.escape_pressed.emit()
 
 
 class ViewerItem(QWidget):
