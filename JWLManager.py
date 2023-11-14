@@ -1834,6 +1834,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     return
                 counter += 1
 
+        def escape_pressed():
+            if self.viewer_window.viewer_layout.currentIndex() == 1:
+                go_back()
+            else:
+                viewer_closed()
+
         selected = self.list_selected()
         if len(selected) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
@@ -1857,6 +1863,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.confirm_action.triggered.connect(update_db)
         self.viewer_window.title.textChanged.connect(title_changed)
         self.viewer_window.body.textChanged.connect(body_changed)
+        self.viewer_window.escape_pressed.connect(escape_pressed)
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
