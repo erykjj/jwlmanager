@@ -38,7 +38,6 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['../../res/icons/JWLManager.ico'],
-    contents_directory=['.'],
     embed_manifest=False,
 )
 coll = COLLECT(
