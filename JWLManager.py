@@ -1483,6 +1483,7 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
 
         def go_back():
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             self.viewer_window.viewer_layout.setCurrentIndex(0)
             app.processEvents()
             self.title_modified = False
@@ -1498,7 +1499,7 @@ class Window(QMainWindow, Ui_MainWindow):
             go_back()
 
         def data_editor(counter):
-
+            self.viewer_window.setWindowTitle(_('Data Editor'))
             self.note_item = self.viewer_items[counter]
             self.viewer_window.title.setPlainText(self.note_item.title)
             if self.note_item.meta:
@@ -1863,7 +1864,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        # app.processEvents()
 
 
     def add_favorite(self):
