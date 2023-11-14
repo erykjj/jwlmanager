@@ -224,16 +224,17 @@ class ViewerItem(QWidget):
 
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
-        self.text_box.setContentsMargins(1, 1, 1, 2)
-        self.text_box.setFrameShape(QFrame.NoFrame)
+        self.text_box.setContentsMargins(1, 1, 1, 0)
+        self.text_box.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.text_box.setStyleSheet('color: #3d3d5c;')
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         self.text_box.setText(text)
 
         if self.meta:
             meta_box = QLabel(self.note_widget)
+            meta_box.setFixedHeight(64)
             meta_box.setWordWrap(True)
-            meta_box.setContentsMargins(1, 2, 1, 0)
+            meta_box.setContentsMargins(1, 0, 0, 0)
             meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             meta_box.setStyleSheet('color: #7575a3;')
             meta_box.setTextFormat(Qt.RichText)
@@ -258,6 +259,7 @@ class ViewerItem(QWidget):
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
+            button_frame.setFixedHeight(64)
             button_frame.setLayout(button_layout)
             layout.addWidget(button_frame, 1, 1, Qt.AlignmentFlag.AlignRight)
         else:
