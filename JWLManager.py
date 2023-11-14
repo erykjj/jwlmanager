@@ -130,10 +130,23 @@ def read_resources(lng):
     cur.close()
     con.close()
 
+def set_settings_path():
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
+    else:
+        try:
+            app_full_path = os.path.realpath(__file__)
+            application_path = os.path.dirname(app_full_path)
+        except NameError:
+            application_path = os.getcwd()
+    print(application_path)
+    return QSettings(application_path+'/settings', QSettings.Format.IniFormat)
+    # config_full_path = os.path.join(application_path, config_name)
+
 project_path = Path(__file__).resolve().parent
 tmp_path = mkdtemp(prefix='JWLManager_')
 db_name = 'userData.db'
-settings = QSettings(f'{project_path}/settings', QSettings.Format.IniFormat)
+settings = set_settings_path()
 lang = get_language()
 read_resources(lang)
 
