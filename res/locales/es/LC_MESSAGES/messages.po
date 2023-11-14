@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-11-13 20:58-0500\n"
-"PO-Revision-Date: 2023-10-25 13:28+0000\n"
+"PO-Revision-Date: 2023-11-14 13:07+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: es\n"
 "Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.2-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
 #: JWLManager.py:208 JWLManager.py:415 JWLManager.py:616 JWLManager.py:622
@@ -66,15 +67,15 @@ msgstr "¡Archivo \"{}\" no reconocido!"
 
 #: JWLManager.py:300
 msgid "update available!"
-msgstr ""
+msgstr "actualización disponible"
 
 #: JWLManager.py:302
 msgid "Latest version"
-msgstr ""
+msgstr "Versión mas reciente"
 
 #: JWLManager.py:304
 msgid "Error while checking for updates!"
-msgstr ""
+msgstr "¡Error al buscar actualizaciones!"
 
 #: JWLManager.py:313 JWLManager.py:1121 JWLManager.py:1143 JWLManager.py:1167
 #: JWLManager.py:1191 JWLManager.py:1238 JWLManager.py:1268 JWLManager.py:1296
@@ -344,17 +345,16 @@ msgid "Data Viewer"
 msgstr "Visor de datos"
 
 #: JWLManager.py:1502
-#, fuzzy
 msgid "Data Editor"
-msgstr "Visor de datos"
+msgstr "Editor de datos"
 
 #: JWLManager.py:1515
 msgid "Discard changes and close"
-msgstr ""
+msgstr "Descartar cambios y cerrar"
 
 #: JWLManager.py:1516
 msgid "Confirm changes and close"
-msgstr ""
+msgstr "Confirmar cambios y cerrar"
 
 #: JWLManager.py:1579 JWLManager.py:2003
 msgid "items deleted"
@@ -640,4 +640,3 @@ msgstr "Reindexado exitosamente"
 
 #~ msgid "Data viewer"
 #~ msgstr "Visor de datos"
-
