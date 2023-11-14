@@ -1493,6 +1493,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.note_item.title = self.viewer_window.title.toPlainText()
             note_text = f"<h3><b>{self.note_item.title}</b></h3>" + self.note_item.body.replace('\n', '<br>')
             self.note_item.text_box.setText(note_text)
+            self.modified_list.append(self.note_item)
             update_viewer_toolbar()
             go_back()
 
@@ -1515,7 +1516,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
-        def delete_single_item(counter): # TODO: actual delete from db, remove from TXT export
+        def delete_single_item(counter): # TODO: remove from TXT export
 
             def return_previous(row, col):
                 col -= 1
@@ -1526,7 +1527,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             self.note_item = self.viewer_items[counter]
             current_item = self.note_item.note_widget
-            self.delete_list.append(self.note_item.idx)
+            self.deleted_list.append(self.note_item)
             idx = self.viewer_window.grid_layout.indexOf(current_item)
             for item in current_item.parent().children():
                 index = self.viewer_window.grid_layout.indexOf(item)
@@ -1538,10 +1539,48 @@ class Window(QMainWindow, Ui_MainWindow):
                     row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
                     row, col = return_previous(row, col)
                     self.viewer_window.grid_layout.addWidget(item, row, col)
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.delete_list)} {self.combo_category.currentText()}')
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             update_viewer_toolbar()
             app.processEvents()
 
+        def update_db():
+
+            def update_notes():
+                for item in self.modified_list:
+                    cur.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'), item.idx))
+                for item in self.deleted_list:
+                    cur.execute(f'DELETE FROM Note WHERE NoteId = {item.idx};')
+
+            def update_annotations():
+                for item in self.modified_list:
+                    cur.execute('UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (item.body, item.idx, item.label))
+                for item in self.deleted_list:
+                    cur.execute('DELETE FROM InputField WHERE LocationId = ? AND TextTag = ?;', (item.idx, item.label))
+
+            try:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                cur = con.cursor()
+                cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+                if category == _('Notes'):
+                    update_notes()
+                else:
+                    update_annotations()
+                cur.execute("PRAGMA foreign_keys = 'ON';")
+                con.commit()
+                cur.close()
+                con.close()
+            except Exception as ex:
+                self.crash_box(ex)
+                self.clean_up()
+                sys.exit()
+            viewer_closed()
+            if len(self.deleted_list) > 0:
+                message = f' {len(self.deleted_list)} '+_('items deleted')
+                self.statusBar.showMessage(message, 3500)
+            self.archive_modified()
+            self.trim_db()
+            self.regroup(False, message)
+            self.archive_modified()
 
         def viewer_closed():
             self.viewer_pos = self.viewer_window.pos()
@@ -1765,6 +1804,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box = ViewerItem(item['ID'], '#f1f1f1', note_text, note_meta)
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
+                note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -1789,7 +1829,8 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         category = self.combo_category.currentText()
         self.viewer_items = {}
-        self.delete_list = []
+        self.deleted_list = []
+        self.modified_list = []
         self.title_modified = False
         self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
@@ -1797,6 +1838,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.finished.connect(viewer_closed)
         self.viewer_window.return_action.triggered.connect(go_back)
         self.viewer_window.accept_action.triggered.connect(accept_change)
+        self.viewer_window.discard_action.triggered.connect(viewer_closed)
+        self.viewer_window.confirm_action.triggered.connect(update_db)
         self.viewer_window.title.textChanged.connect(title_changed)
         self.viewer_window.body.textChanged.connect(body_changed)
         self.viewer_window.show()
@@ -1812,18 +1855,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 show_notes()
             else:
                 show_annotations()
+            self.data_viewer_txt = txt
+            self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
             cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        self.data_viewer_txt = txt
-        try:
-            self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
-        except:
-            pass
-        app.processEvents()
+        # app.processEvents()
 
 
     def add_favorite(self):
