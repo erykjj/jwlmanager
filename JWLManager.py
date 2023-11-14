@@ -1578,9 +1578,8 @@ class Window(QMainWindow, Ui_MainWindow):
             if len(self.deleted_list) > 0:
                 message = f' {len(self.deleted_list)} '+_('items deleted')
                 self.statusBar.showMessage(message, 3500)
-            self.archive_modified()
-            self.trim_db()
-            self.regroup(False, message)
+                self.trim_db()
+                self.regroup(False, message)
             self.archive_modified()
 
         def viewer_closed():
