@@ -7,4 +7,5 @@ filehash
 openpyxl
 pandas
 regex
+requests
 XlsxWriter
