@@ -131,12 +131,13 @@ class DataViewer(QDialog):
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
 
     def create_viewer(self):
-        tool_button = QToolButton()
-        tool_button.setMaximumWidth(60)
-        tool_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        self.button_TXT = QAction('TXT')
-        self.button_TXT.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
-        tool_button.setDefaultAction(self.button_TXT)
+        txt_button = QToolButton()
+        txt_button.setMaximumWidth(60)
+        txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        txt_button.setStyleSheet('color: #177c26; font: bold;')
+        self.txt_action = QAction('TXT')
+        self.txt_action.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
+        txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
         discard_button.setStyleSheet('color: #3f54aa; font: bold;')
@@ -154,7 +155,7 @@ class DataViewer(QDialog):
 
         toolbar = QToolBar(self)
         toolbar.setFixedHeight(30)
-        # toolbar.addWidget(tool_button)
+        toolbar.addWidget(txt_button)
         toolbar.addWidget(discard_button)
         toolbar.addWidget(confirm_button)
 
@@ -219,6 +220,7 @@ class ViewerItem(QWidget):
         self.meta = meta
         self.body = ''
         self.title = ''
+        self.meta_text = ''
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
