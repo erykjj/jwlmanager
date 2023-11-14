@@ -8,7 +8,6 @@ a = Analysis(
     ['../../JWLManager.py'],
     pathex=[],
     binaries=[],
-    contents-directory=['.'],
     datas=[('../../res', 'res/'), ('../../CHANGELOG.md', '.'), ('../../LICENSE', '.'), ('../../README.md', '.') ],
     hiddenimports=[],
     hookspath=[],
@@ -39,6 +38,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['../../res/icons/JWLManager.ico'],
+    contents_directory=['.'],
     embed_manifest=False,
 )
 coll = COLLECT(
