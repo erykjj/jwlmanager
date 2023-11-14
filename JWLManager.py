@@ -84,14 +84,6 @@ def get_language():
             lng = l
     return lng
 
-def resource_path(relative_path):
-    base_path = project_path
-    # try:
-    #     base_path = sys._MEIPASS
-    # except Exception:
-    #     base_path = project_path 
-    return os.path.join(base_path, relative_path)
-
 def read_resources(lng):
 
     def load_bible_books(lng):
@@ -343,7 +335,7 @@ class Window(QMainWindow, Ui_MainWindow):
         read_resources(self.lang)
         if self.lang not in translator.keys():
             translator[self.lang] = QTranslator()
-            translator[self.lang].load(resource_path(f'res/locales/UI/qt_{self.lang}.qm'))
+            translator[self.lang].load(f'{project_path}/res/locales/UI/qt_{self.lang}.qm')
         app.installTranslator(translator[self.lang])
         app.processEvents()
         self.combo_grouping.blockSignals(False)
@@ -725,7 +717,7 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         db_name = 'userData.db'
-        with ZipFile(resource_path('res/blank'),'r') as zipped:
+        with ZipFile(project_path / 'res/blank','r') as zipped:
             zipped.extractall(tmp_path)
         m = {
             'name': APP,
@@ -2245,7 +2237,7 @@ if __name__ == "__main__":
     global translator
     translator = {}
     translator[lang] = QTranslator()
-    translator[lang].load(resource_path(f'res/locales/UI/qt_{lang}.qm'))
+    translator[lang].load(f'{project_path}/res/locales/UI/qt_{lang}.qm')
     app.installTranslator(translator[lang])
     font = QFont()
     font.setPixelSize(16)
