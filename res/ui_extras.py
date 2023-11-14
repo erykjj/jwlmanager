@@ -112,7 +112,7 @@ class DataViewer(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
         self.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
-        self.setMinimumSize(750, 846)
+        self.setMinimumSize(755, 845)
         self.resize(size)
         self.move(pos)
 
