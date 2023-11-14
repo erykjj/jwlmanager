@@ -23,6 +23,7 @@
 
 - Improved Data Viewer functionality
   - Delete individual Notes and Annotations
+- Updated resource DB with new publication (lmd)
 - Code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
   - Moved some Qt-related UI code to `ui_extras.py` module
