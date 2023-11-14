@@ -24,7 +24,7 @@
   SOFTWARE.
 """
 
-import os, sys
+from os import path
 from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt
@@ -32,12 +32,7 @@ from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    return os.path.join(base_path, relative_path)
+_base_path = path.dirname(__file__)
 
 
 class AboutBox(QDialog):
@@ -53,7 +48,7 @@ class AboutBox(QDialog):
         layout = QHBoxLayout(self)
         left_layout = QVBoxLayout()
         icon = QLabel(self)
-        icon.setPixmap(QPixmap(resource_path('res/icons/project_72.png')))
+        icon.setPixmap(QPixmap(_base_path+'/icons/project_72.png'))
         icon.setAlignment(Qt.AlignTop)
         left_layout.addWidget(icon)
 
@@ -90,14 +85,14 @@ class HelpBox(QDialog):
         super().__init__()
 
         self.setWindowFlags(Qt.Window)
-        self.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
+        self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
         self.setWindowTitle(title)
         self.resize(1020, 812)
         self.move(50, 50)
         self.setMinimumSize(300, 300)
         text = QTextEdit(self)
         text.setReadOnly(True)
-        with open(resource_path('res/HELP.md'), encoding='utf-8') as f:
+        with open(_base_path+'/HELP.md', encoding='utf-8') as f:
             text.setMarkdown(f.read())
         layout = QHBoxLayout(self)
         layout.addWidget(text)
@@ -111,7 +106,7 @@ class DataViewer(QDialog):
 
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
-        self.setWindowIcon((QIcon(resource_path('res/icons/project_72.png'))))
+        self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
         self.setMinimumSize(755, 845)
         self.resize(size)
         self.move(pos)
@@ -132,7 +127,7 @@ class DataViewer(QDialog):
         txt_button.setStyleSheet('color: #177c26; font: bold;')
         self.txt_action = QAction('TXT')
         self.txt_action.setToolTip('⇣')
-        self.txt_action.setIcon(QPixmap(resource_path('res/icons/icons8-save-64grey.png')))
+        self.txt_action.setIcon(QPixmap(_base_path+'/icons/icons8-save-64grey.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
@@ -176,13 +171,13 @@ class DataViewer(QDialog):
         self.return_button = QToolButton()
         self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.return_action = QAction()
-        self.return_action.setIcon(QPixmap(resource_path('res/icons/icons8-left-return.png')))
+        self.return_action.setIcon(QPixmap(_base_path+'/icons/icons8-left-return.png'))
         self.return_button.setDefaultAction(self.return_action)
 
         self.accept_button = QToolButton()
         self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.accept_action = QAction()
-        self.accept_action.setIcon(QPixmap(resource_path('res/icons/icons8-accept-64green.png')))
+        self.accept_action.setIcon(QPixmap(_base_path+'/icons/icons8-accept-64green.png'))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
 
@@ -245,12 +240,12 @@ class ViewerItem(QWidget):
             meta_box.setText(meta)
 
         self.delete_button = QPushButton()
-        self.delete_button.setIcon(QPixmap(resource_path('res/icons/icons8-delete-64red.png')))
+        self.delete_button.setIcon(QPixmap(_base_path+'/icons/icons8-delete-64red.png'))
         self.delete_button.setIconSize(QSize(24, 24))
         self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
         self.edit_button = QPushButton()
-        self.edit_button.setIcon(QPixmap(resource_path('res/icons/icons8-edit-64blue.png')))
+        self.edit_button.setIcon(QPixmap(_base_path+'/icons/icons8-edit-64blue.png'))
         self.edit_button.setIconSize(QSize(22, 22))
         self.edit_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
 
