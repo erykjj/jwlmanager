@@ -4,6 +4,9 @@
 
 ### Added
 
+- Data Editor (accessed via Data Viewer) for Notes and Annotations
+  - Edit Note titles and/or content
+  - Edit Annotation content
 - Added another level of detail (Bible chapter)
   - A bit slower with many notes/highlights, but with real-time loading
   - Because of this, the 'default' (start-up) grouping is by Type
@@ -18,13 +21,13 @@
 
 ### Changed
 
-- Improved Data Viewer (Note Viewer) functionality
+- Improved Data Viewer functionality
+  - Delete individual Notes and Annotations
 - Code restructuring/reorganization
   - Encapsulating in nested functions instead of classes
   - Moved some Qt-related UI code to `ui_extras.py` module
 - Code improvements for (slightly) better performance
 - Updated app translations
-
 
 ### Fixed
 
