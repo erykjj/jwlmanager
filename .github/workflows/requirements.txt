@@ -1,4 +1,4 @@
-pyinstaller
+pyinstaller == 5.13
 pyinstaller-hooks-contrib
 PySide6
 shiboken6
