@@ -1517,7 +1517,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
-        def delete_single_item(counter): # TODO: remove from TXT export
+        def delete_single_item(counter):
 
             def return_previous(row, col):
                 col -= 1
@@ -1602,10 +1602,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item in self.deleted_list:
                     continue
                 if category == _('Notes'):
-                    txt += item.title + '\n' + item.body
+                    txt += item.title + '\n' + item.body + item.meta_text
                 else:
-                    txt += ''
-                txt += item.meta_text + '\n==========\n'
+                    txt += item.meta_text + '\n' + item.body
+                txt += '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
                 self.statusBar.showMessage(' '+_('Saved'), 3500)
@@ -1813,7 +1813,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
                 note_box.label = item['LABEL']
-                note_box.meta_text = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}"
+                note_box.meta_text = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
