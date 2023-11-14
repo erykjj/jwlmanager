@@ -117,20 +117,15 @@ class DataViewer(QDialog):
         self.move(pos)
 
         self.viewer_layout = QStackedLayout(self)
-        self.viewer = QFrame()
-        self.editor = QFrame()
-        
-        self.viewer_layout.addWidget(self.viewer)
-        self.viewer_layout.addWidget(self.editor)
-
-        self.create_viewer()
-        self.create_editor()
-
+        self._create_viewer()
+        self._create_editor()
         self.viewer_layout.setCurrentIndex(0)
         self.setLayout(self.viewer_layout)
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
 
-    def create_viewer(self):
+    def _create_viewer(self):
+        viewer = QFrame()
+
         txt_button = QToolButton()
         txt_button.setMaximumWidth(60)
         txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
@@ -154,13 +149,13 @@ class DataViewer(QDialog):
         self.confirm_action.setDisabled(True)
         confirm_button.setDefaultAction(self.confirm_action)
 
-        toolbar = QToolBar(self)
+        toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
         toolbar.addWidget(txt_button)
         toolbar.addWidget(discard_button)
         toolbar.addWidget(confirm_button)
 
-        self.grid_layout = QGridLayout()
+        self.grid_layout = QGridLayout(viewer)
         self.grid_layout.setAlignment(Qt.AlignTop)
         grid_box = QFrame()
         grid_box.setFrameShape(QFrame.NoFrame)
@@ -170,11 +165,14 @@ class DataViewer(QDialog):
         scroll_area.setWidget(grid_box)
         scroll_area.setWidgetResizable(True)
 
-        layout = QVBoxLayout(self.viewer)
+        layout = QVBoxLayout(viewer)
         layout.addWidget(toolbar)
         layout.addWidget(scroll_area)
+        self.viewer_layout.addWidget(viewer)
 
-    def create_editor(self):
+    def _create_editor(self):
+        self.editor = QFrame()
+
         self.return_button = QToolButton()
         self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.return_action = QAction()
@@ -209,6 +207,7 @@ class DataViewer(QDialog):
         layout.addWidget(self.title)
         layout.addWidget(self.body)
         layout.addWidget(self.meta)
+        self.viewer_layout.addWidget(self.editor)
 
 
 class ViewerItem(QWidget):
