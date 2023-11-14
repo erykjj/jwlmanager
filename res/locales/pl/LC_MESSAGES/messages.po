@@ -7,236 +7,247 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2023-10-24 16:51-0400\n"
+"POT-Creation-Date: 2023-11-13 20:58-0500\n"
 "PO-Revision-Date: 2023-10-24 21:07+0000\n"
 "Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
-"Language-Team: pl <LL@li.org>\n"
 "Language: pl\n"
+"Language-Team: pl <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.1.1-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
-#: JWLManager.py:185
-msgid "Help"
-msgstr "Pomoc"
-
-#: JWLManager.py:243 JWLManager.py:422 JWLManager.py:638 JWLManager.py:644
-#: JWLManager.py:650 JWLManager.py:657 JWLManager.py:665 JWLManager.py:721
+#: JWLManager.py:208 JWLManager.py:415 JWLManager.py:616 JWLManager.py:622
+#: JWLManager.py:628 JWLManager.py:635 JWLManager.py:643 JWLManager.py:699
 #, fuzzy
 msgid "Type"
 msgstr "Type"
 
-#: JWLManager.py:267
+#: JWLManager.py:226
+msgid "Help"
+msgstr "Pomoc"
+
+#: JWLManager.py:236
 #, fuzzy
 msgid "Exit"
 msgstr "Exit"
 
-#: JWLManager.py:267
+#: JWLManager.py:236
 #, fuzzy
 msgid "Save before quitting?"
 msgstr "Save before quitting?"
 
-#: JWLManager.py:290 JWLManager.py:301 JWLManager.py:303
+#: JWLManager.py:259 JWLManager.py:270 JWLManager.py:272
 msgid "Error"
 msgstr "Błąd"
 
-#: JWLManager.py:290
+#: JWLManager.py:259
 msgid "No archive has been opened!"
 msgstr "Nie otworzono żadnego archiwum!"
 
-#: JWLManager.py:295 JWLManager.py:394 JWLManager.py:395 JWLManager.py:431
-#: JWLManager.py:448 JWLManager.py:663 JWLManager.py:1127 JWLManager.py:1462
-#: JWLManager.py:1928
+#: JWLManager.py:264 JWLManager.py:388 JWLManager.py:389 JWLManager.py:424
+#: JWLManager.py:441 JWLManager.py:641 JWLManager.py:1102 JWLManager.py:1434
+#: JWLManager.py:1979
 msgid "Annotations"
 msgstr "Adnotacje"
 
-#: JWLManager.py:297 JWLManager.py:395 JWLManager.py:427 JWLManager.py:444
-#: JWLManager.py:648 JWLManager.py:879 JWLManager.py:1123 JWLManager.py:1446
-#: JWLManager.py:1464 JWLManager.py:1924
+#: JWLManager.py:266 JWLManager.py:389 JWLManager.py:420 JWLManager.py:437
+#: JWLManager.py:626 JWLManager.py:857 JWLManager.py:1098 JWLManager.py:1419
+#: JWLManager.py:1436 JWLManager.py:1975
 msgid "Highlights"
 msgstr "Podkreślone"
 
-#: JWLManager.py:299 JWLManager.py:394 JWLManager.py:395 JWLManager.py:425
-#: JWLManager.py:446 JWLManager.py:655 JWLManager.py:1125 JWLManager.py:1466
-#: JWLManager.py:1807 JWLManager.py:1926
+#: JWLManager.py:268 JWLManager.py:388 JWLManager.py:389 JWLManager.py:418
+#: JWLManager.py:439 JWLManager.py:633 JWLManager.py:1100 JWLManager.py:1438
+#: JWLManager.py:1565 JWLManager.py:1604 JWLManager.py:1864 JWLManager.py:1977
 msgid "Notes"
 msgstr "Notatki"
 
-#: JWLManager.py:301 JWLManager.py:303
+#: JWLManager.py:270 JWLManager.py:272
 msgid "File \"{}\" not recognized!"
 msgstr "Nie wykryto pliku \"{}\"!"
 
-#: JWLManager.py:319 JWLManager.py:1146 JWLManager.py:1168 JWLManager.py:1192
-#: JWLManager.py:1216 JWLManager.py:1263 JWLManager.py:1292 JWLManager.py:1323
-#: JWLManager.py:1427
+#: JWLManager.py:300
+msgid "update available!"
+msgstr ""
+
+#: JWLManager.py:302
+msgid "Latest version"
+msgstr ""
+
+#: JWLManager.py:304
+msgid "Error while checking for updates!"
+msgstr ""
+
+#: JWLManager.py:313 JWLManager.py:1121 JWLManager.py:1143 JWLManager.py:1167
+#: JWLManager.py:1191 JWLManager.py:1238 JWLManager.py:1268 JWLManager.py:1296
+#: JWLManager.py:1400
 #, fuzzy
 msgid "Error!"
 msgstr "Error!"
 
-#: JWLManager.py:321
+#: JWLManager.py:315
 #, fuzzy
 msgid "Oops! Something went wrong…"
 msgstr "Oops! Something went wrong…"
 
-#: JWLManager.py:321
+#: JWLManager.py:315
 #, fuzzy
 msgid "Take note of what you were doing and"
 msgstr "Take note of what you were doing and"
 
-#: JWLManager.py:321
+#: JWLManager.py:315
 #, fuzzy
 msgid "inform the developer"
 msgstr "inform the developer"
 
-#: JWLManager.py:327
+#: JWLManager.py:321
 #, fuzzy
 msgid "The app will terminate."
 msgstr "The app will terminate."
 
-#: JWLManager.py:429 JWLManager.py:440 JWLManager.py:636 JWLManager.py:1920
+#: JWLManager.py:422 JWLManager.py:433 JWLManager.py:614 JWLManager.py:1971
 msgid "Bookmarks"
 msgstr "Zakładki"
 
-#: JWLManager.py:433 JWLManager.py:442 JWLManager.py:642 JWLManager.py:1922
+#: JWLManager.py:426 JWLManager.py:435 JWLManager.py:620 JWLManager.py:1973
 msgid "Favorites"
 msgstr "Ulubione"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Grey"
 msgstr "Grey"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Yellow"
 msgstr "Yellow"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Green"
 msgstr "Green"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Blue"
 msgstr "Blue"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Red"
 msgstr "Red"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Orange"
 msgstr "Orange"
 
-#: JWLManager.py:471
+#: JWLManager.py:464
 #, fuzzy
 msgid "Purple"
 msgstr "Purple"
 
-#: JWLManager.py:475 JWLManager.py:537 JWLManager.py:580 JWLManager.py:594
+#: JWLManager.py:468 JWLManager.py:524 JWLManager.py:561 JWLManager.py:572
 #, fuzzy
 msgid "* OTHER *"
 msgstr "* OTHER *"
 
-#: JWLManager.py:491
+#: JWLManager.py:484
 #, fuzzy
 msgid "Chap."
 msgstr "Chap."
 
-#: JWLManager.py:497
+#: JWLManager.py:490
 #, fuzzy
 msgid "* YEAR UNCERTAIN *"
 msgstr "* YEAR UNCERTAIN *"
 
-#: JWLManager.py:505
+#: JWLManager.py:498
 #, fuzzy
 msgid "Other"
 msgstr "Other"
 
-#: JWLManager.py:506
+#: JWLManager.py:499
 #, fuzzy
 msgid "* NO YEAR *"
 msgstr "* NO YEAR *"
 
-#: JWLManager.py:518 JWLManager.py:580
+#: JWLManager.py:508 JWLManager.py:561
 #, fuzzy
 msgid "* NO LANGUAGE *"
 msgstr "* NO LANGUAGE *"
 
-#: JWLManager.py:580 JWLManager.py:594
+#: JWLManager.py:561 JWLManager.py:572
 #, fuzzy
 msgid "* NO TAG *"
 msgstr "* NO TAG *"
 
-#: JWLManager.py:580
+#: JWLManager.py:561
 #, fuzzy
 msgid "* INDEPENDENT *"
 msgstr "* INDEPENDENT *"
 
-#: JWLManager.py:639 JWLManager.py:645 JWLManager.py:651 JWLManager.py:658
-#: JWLManager.py:666
+#: JWLManager.py:617 JWLManager.py:623 JWLManager.py:629 JWLManager.py:636
+#: JWLManager.py:644
 msgid "Title"
 msgstr "Tytuł"
 
-#: JWLManager.py:640 JWLManager.py:646 JWLManager.py:652 JWLManager.py:659
-#: JWLManager.py:1858
+#: JWLManager.py:618 JWLManager.py:624 JWLManager.py:630 JWLManager.py:637
+#: JWLManager.py:1909
 msgid "Language"
 msgstr "Język"
 
-#: JWLManager.py:641 JWLManager.py:647 JWLManager.py:653 JWLManager.py:660
-#: JWLManager.py:667
+#: JWLManager.py:619 JWLManager.py:625 JWLManager.py:631 JWLManager.py:638
+#: JWLManager.py:645
 msgid "Year"
 msgstr "Rok"
 
-#: JWLManager.py:654 JWLManager.py:662
+#: JWLManager.py:632 JWLManager.py:640
 msgid "Color"
 msgstr "Kolor"
 
-#: JWLManager.py:661
+#: JWLManager.py:639
 #, fuzzy
 msgid "Tag"
 msgstr "Tag"
 
-#: JWLManager.py:689
+#: JWLManager.py:667
 msgid "Processing…"
 msgstr "Przetwarzanie…"
 
-#: JWLManager.py:726 JWLManager.py:829 JWLManager.py:1526
+#: JWLManager.py:704 JWLManager.py:807 JWLManager.py:1595
 msgid "Save"
 msgstr "Zapisz"
 
-#: JWLManager.py:726
+#: JWLManager.py:704
 msgid "Save current archive?"
 msgstr "Zapisać obecne archiwum?"
 
-#: JWLManager.py:738
+#: JWLManager.py:716
 msgid "NEW ARCHIVE"
 msgstr "NOWE ARCHIWUM"
 
-#: JWLManager.py:770
+#: JWLManager.py:748
 msgid "Open archive"
 msgstr "Otwórz archiwum"
 
-#: JWLManager.py:770 JWLManager.py:822 JWLManager.py:824
+#: JWLManager.py:748 JWLManager.py:800 JWLManager.py:802
 msgid "JW Library archives"
 msgstr "Archiwa biblioteki JW"
 
-#: JWLManager.py:822 JWLManager.py:824
+#: JWLManager.py:800 JWLManager.py:802
 msgid "Save archive"
 msgstr "Zapisz archiwum"
 
-#: JWLManager.py:826 JWLManager.py:1528
+#: JWLManager.py:804 JWLManager.py:1597
 msgid "NOT saved!"
 msgstr "NIE zapisano!"
 
-#: JWLManager.py:829
+#: JWLManager.py:807
 #, fuzzy
 msgid ""
 "It's recommended to save under another name.\n"
@@ -245,53 +256,53 @@ msgstr ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
 
-#: JWLManager.py:872 JWLManager.py:1532
+#: JWLManager.py:850 JWLManager.py:1611
 msgid "Saved"
 msgstr "Zapisano"
 
-#: JWLManager.py:880 JWLManager.py:882
+#: JWLManager.py:858 JWLManager.py:860
 msgid "Export file"
 msgstr "Eksportuj plik"
 
-#: JWLManager.py:880 JWLManager.py:882 JWLManager.py:1447 JWLManager.py:1449
-#: JWLManager.py:1526
+#: JWLManager.py:858 JWLManager.py:860 JWLManager.py:1420 JWLManager.py:1422
+#: JWLManager.py:1595
 msgid "Text files"
 msgstr "Pliki tekstowe"
 
-#: JWLManager.py:882 JWLManager.py:1449
+#: JWLManager.py:860 JWLManager.py:1422
 msgid "MS Excel files"
 msgstr "Pliki MS Excel"
 
-#: JWLManager.py:887 JWLManager.py:903
+#: JWLManager.py:865 JWLManager.py:881
 #, fuzzy
 msgid "Exported from"
 msgstr "Exported from"
 
-#: JWLManager.py:887 JWLManager.py:903
+#: JWLManager.py:865 JWLManager.py:881
 #, fuzzy
 msgid "by"
 msgstr "by"
 
-#: JWLManager.py:887 JWLManager.py:903
+#: JWLManager.py:865 JWLManager.py:881
 #, fuzzy
 msgid "on"
 msgstr "on"
 
-#: JWLManager.py:926 JWLManager.py:1743
+#: JWLManager.py:904 JWLManager.py:1799
 #, fuzzy
 msgid "NO TEXT"
 msgstr "NO TEXT"
 
-#: JWLManager.py:1111
+#: JWLManager.py:1086
 msgid "NOT exported!"
 msgstr "NIE eksportowano!"
 
-#: JWLManager.py:1135
+#: JWLManager.py:1110
 #, fuzzy
 msgid "items exported"
 msgstr "items exported"
 
-#: JWLManager.py:1146
+#: JWLManager.py:1121
 #, fuzzy
 msgid ""
 "Wrong import file format:\n"
@@ -300,8 +311,8 @@ msgstr ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 
-#: JWLManager.py:1168 JWLManager.py:1192 JWLManager.py:1263 JWLManager.py:1323
-#: JWLManager.py:1427
+#: JWLManager.py:1143 JWLManager.py:1167 JWLManager.py:1238 JWLManager.py:1296
+#: JWLManager.py:1400
 #, fuzzy
 msgid ""
 "Error on import!\n"
@@ -312,7 +323,7 @@ msgstr ""
 "\n"
 "Faulting entry"
 
-#: JWLManager.py:1216
+#: JWLManager.py:1191
 #, fuzzy
 msgid ""
 "Wrong import file format:\n"
@@ -321,16 +332,16 @@ msgstr ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 
-#: JWLManager.py:1283 JWLManager.py:1793
+#: JWLManager.py:1258 JWLManager.py:1835
 msgid "Warning"
 msgstr "Ostrzeżenie"
 
-#: JWLManager.py:1283
+#: JWLManager.py:1258
 #, fuzzy
 msgid "notes starting with"
 msgstr "notes starting with"
 
-#: JWLManager.py:1283
+#: JWLManager.py:1258
 #, fuzzy
 msgid ""
 "WILL BE DELETED before importing.\n"
@@ -341,7 +352,7 @@ msgstr ""
 "\n"
 "Proceed with deletion? (NO to skip)"
 
-#: JWLManager.py:1292
+#: JWLManager.py:1268
 #, fuzzy
 msgid ""
 "Wrong import file format:\n"
@@ -350,36 +361,54 @@ msgstr ""
 "Wrong import file format:\n"
 "Missing or malformed {TITLE=} attribute line"
 
-#: JWLManager.py:1450
+#: JWLManager.py:1423
 #, fuzzy
 msgid "Import file"
 msgstr "Import file"
 
-#: JWLManager.py:1452 JWLManager.py:1477
+#: JWLManager.py:1425 JWLManager.py:1449
 #, fuzzy
 msgid "NOT imported!"
 msgstr "NOT imported!"
 
-#: JWLManager.py:1455
+#: JWLManager.py:1428
 #, fuzzy
 msgid "Importing. Please wait…"
 msgstr "Importing. Please wait…"
 
-#: JWLManager.py:1479
+#: JWLManager.py:1451
 #, fuzzy
 msgid "items imported/updated"
 msgstr "items imported/updated"
 
-#: JWLManager.py:1494
-msgid "Data viewer"
-msgstr "Przeglądarka Danych"
+#: JWLManager.py:1486 JWLManager.py:1543 JWLManager.py:1868
+msgid "Data Viewer"
+msgstr "Przeglądarka danych"
 
-#: JWLManager.py:1605
+#: JWLManager.py:1502
+#, fuzzy
+msgid "Data Editor"
+msgstr "Przeglądarka danych"
+
+#: JWLManager.py:1515
+msgid "Discard changes and close"
+msgstr ""
+
+#: JWLManager.py:1516
+msgid "Confirm changes and close"
+msgstr ""
+
+#: JWLManager.py:1579 JWLManager.py:2003
+#, fuzzy
+msgid "items deleted"
+msgstr "items deleted"
+
+#: JWLManager.py:1689
 #, fuzzy
 msgid "NO TITLE"
 msgstr "NO TITLE"
 
-#: JWLManager.py:1793
+#: JWLManager.py:1835
 msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
@@ -387,45 +416,41 @@ msgstr ""
 "Próbujesz wyświetlić podgląd {} elementów.\n"
 "Wybierz mniejszy podzbiór."
 
-#: JWLManager.py:1820
-msgid "Data Viewer"
-msgstr "Przeglądarka danych"
-
-#: JWLManager.py:1836
+#: JWLManager.py:1887
 #, fuzzy
 msgid "Add Favorite"
 msgstr "Add Favorite"
 
-#: JWLManager.py:1838
+#: JWLManager.py:1889
 #, fuzzy
 msgid "Select the language and Bible edition to add:"
 msgstr "Select the language and Bible edition to add:"
 
-#: JWLManager.py:1859
+#: JWLManager.py:1910
 msgid "Edition"
 msgstr "Edycja"
 
-#: JWLManager.py:1885
+#: JWLManager.py:1936
 #, fuzzy
 msgid "Nothing added!"
 msgstr "Nothing added!"
 
-#: JWLManager.py:1891
+#: JWLManager.py:1942
 #, fuzzy
 msgid "Favorite for \"{}\" in {} already exists."
 msgstr "Favorite for \"{}\" in {} already exists."
 
-#: JWLManager.py:1894
+#: JWLManager.py:1945
 #, fuzzy
 msgid "Added \"{}\" in {}"
 msgstr "Added \"{}\" in {}"
 
-#: JWLManager.py:1931
+#: JWLManager.py:1982
 #, fuzzy
 msgid "Delete"
 msgstr "Delete"
 
-#: JWLManager.py:1931
+#: JWLManager.py:1982
 #, fuzzy
 msgid ""
 "Are you sure you want to\n"
@@ -434,22 +459,17 @@ msgstr ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
 
-#: JWLManager.py:1934
+#: JWLManager.py:1985
 #, fuzzy
 msgid "Deleting. Please wait…"
 msgstr "Deleting. Please wait…"
 
-#: JWLManager.py:1951
-#, fuzzy
-msgid "items deleted"
-msgstr "items deleted"
-
-#: JWLManager.py:2017
+#: JWLManager.py:2060
 #, fuzzy
 msgid "Mask"
 msgstr "Mask"
 
-#: JWLManager.py:2017
+#: JWLManager.py:2060
 #, fuzzy
 msgid ""
 "Are you sure you want to\n"
@@ -458,27 +478,27 @@ msgstr ""
 "Are you sure you want to\n"
 "MASK all text fields?"
 
-#: JWLManager.py:2020
+#: JWLManager.py:2063
 #, fuzzy
 msgid "Masking. Please wait…"
 msgstr "Masking. Please wait…"
 
-#: JWLManager.py:2039
+#: JWLManager.py:2082
 #, fuzzy
 msgid "Data masked"
 msgstr "Data masked"
 
-#: JWLManager.py:2048
+#: JWLManager.py:2092
 #, fuzzy
 msgid "Please wait…"
 msgstr "Please wait…"
 
-#: JWLManager.py:2099
+#: JWLManager.py:2143
 #, fuzzy
 msgid "Reindex"
 msgstr "Reindex"
 
-#: JWLManager.py:2099
+#: JWLManager.py:2143
 #, fuzzy
 msgid ""
 "This may take a few seconds.\n"
@@ -487,12 +507,12 @@ msgstr ""
 "This may take a few seconds.\n"
 "Proceed?"
 
-#: JWLManager.py:2103
+#: JWLManager.py:2147
 #, fuzzy
 msgid "Reindexing. Please wait…"
 msgstr "Reindexing. Please wait…"
 
-#: JWLManager.py:2125
+#: JWLManager.py:2168
 #, fuzzy
 msgid "Reindexed successfully"
 msgstr "Reindexed successfully"
@@ -566,3 +586,7 @@ msgstr "Reindexed successfully"
 #~ "Make sure your import file is UTF-8 encoded and properly formatted.\n"
 #~ "\n"
 #~ "Importing will modify the archive. Proceed?"
+
+#~ msgid "Data viewer"
+#~ msgstr "Przeglądarka Danych"
+
