@@ -1685,7 +1685,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in cur.execute(sql):
                     item = {
                         'TYPE': row[0],
-                        'TITLE': row[1] or '* '+_('NO TITLE')+' *',
+                        'TITLE': row[1] or '',
                         'NOTE': row[2].rstrip() or '',
                         'TAGS': row[3],
                         'BK': row[5],
@@ -1795,7 +1795,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in cur.execute(sql):
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1].rstrip() or '* '+_('NO TEXT')+' *',
+                        'VALUE': row[1].rstrip() or '',
                         'DOC': row[2],
                         'PUB': row[4],
                         'ID': row[6]
