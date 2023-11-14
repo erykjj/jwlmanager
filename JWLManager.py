@@ -1589,6 +1589,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.close()
             except:
                 pass
+            self.activateWindow()
 
         def save_txt():
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
