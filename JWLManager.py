@@ -1596,8 +1596,18 @@ class Window(QMainWindow, Ui_MainWindow):
             if fname == '':
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                 return
+            txt = ''
+            for i in range(len(self.viewer_items)):
+                item = self.viewer_items[i+1]
+                if item in self.deleted_list:
+                    continue
+                if category == _('Notes'):
+                    txt += item.title + '\n' + item.body
+                else:
+                    txt += ''
+                txt += item.meta_text + '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
-                txtfile.write(self.data_viewer_txt)
+                txtfile.write(txt)
                 self.statusBar.showMessage(' '+_('Saved'), 3500)
 
         def process_issue(i):
@@ -1718,37 +1728,35 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            nonlocal txt
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
             for item in get_notes():
                 note_text = f"<h3><b>{item['TITLE']}</b></h3>"
-                txt += item['TITLE']
                 if item['NOTE']:
                     note_text += item['NOTE'].replace('\n', '<br>')
-                    txt += '\n' + item['NOTE']
                 note_meta = ''
+                meta_text = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     note_meta += f"<small><strong><tt>{item['MODIFIED']}"
-                    txt += '\n__________\n' + item['MODIFIED']
+                    meta_text += '\n__________\n' + item['MODIFIED']
                     if item['TAGS']:
                         note_meta += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
-                        txt += '\n{' + item['TAGS'] + '}'
+                        meta_text += '\n{' + item['TAGS'] + '}'
                     if item['PUB']:
                         note_meta += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
-                        txt += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
+                        meta_text += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
                     if item['HEADING']:
                         note_meta += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
-                        txt += ' — ' + item['HEADING']
+                        meta_text += ' — ' + item['HEADING']
                     if item['Link']:
                         lnk = item['Link']
                         note_meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
-                        txt += '\n' + lnk
+                        meta_text += '\n' + lnk
                     note_meta += '</tt></strong></small>'
-                txt += '\n==========\n'
                 note_box = ViewerItem(item['ID'], clrs[item['COLOR']], note_text, note_meta)
                 note_box.title = item['TITLE']
                 note_box.body = item['NOTE']
+                note_box.meta_text = meta_text
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -1797,7 +1805,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            nonlocal txt
             counter = 1
             for item in get_annotations():
                 note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
@@ -1806,6 +1813,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.body = item['VALUE']
                 note_box.label = item['LABEL']
+                note_box.meta_text = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}"
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -1818,7 +1826,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 except:
                     return
                 counter += 1
-                txt += f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}\n{item['VALUE']}\n==========\n"
 
         selected = self.list_selected()
         if len(selected) > 1500:
@@ -1835,7 +1842,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.title_modified = False
         self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
-        self.viewer_window.button_TXT.triggered.connect(save_txt)
+        self.viewer_window.txt_action.triggered.connect(save_txt)
         self.viewer_window.finished.connect(viewer_closed)
         self.viewer_window.return_action.triggered.connect(go_back)
         self.viewer_window.accept_action.triggered.connect(accept_change)
@@ -1847,7 +1854,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
         app.processEvents()
-        txt = ''
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
@@ -1856,7 +1862,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 show_notes()
             else:
                 show_annotations()
-            self.data_viewer_txt = txt
             self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
             cur.close()
             con.close()
