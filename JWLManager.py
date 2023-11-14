@@ -85,10 +85,11 @@ def get_language():
     return lng
 
 def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = project_path 
+    base_path = project_path
+    # try:
+    #     base_path = sys._MEIPASS
+    # except Exception:
+    #     base_path = project_path 
     return os.path.join(base_path, relative_path)
 
 def read_resources(lng):
@@ -1505,6 +1506,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if self.note_item.meta:
                 self.viewer_window.meta.setText(self.note_item.meta)
             else:
+                self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
             self.viewer_window.body.setPlainText(self.note_item.body)
             self.viewer_window.editor.setStyleSheet(f"background-color: {self.note_item.color}")
