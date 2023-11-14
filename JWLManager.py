@@ -1610,6 +1610,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 txtfile.write(txt)
                 self.statusBar.showMessage(' '+_('Saved'), 3500)
 
+        def clean_text(text):
+            return regex.sub(r'\p{Z}', ' ', text)
+
         def process_issue(i):
             issue = str(i)
             yr = issue[0:4]
@@ -1754,8 +1757,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         meta_text += '\n' + lnk
                     note_meta += '</tt></strong></small>'
                 note_box = ViewerItem(item['ID'], clrs[item['COLOR']], note_text, note_meta)
-                note_box.title = item['TITLE']
-                note_box.body = item['NOTE']
+                note_box.title = clean_text(item['TITLE'])
+                note_box.body = clean_text(item['NOTE'])
                 note_box.meta_text = meta_text
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
@@ -1811,7 +1814,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 note_meta = None
                 note_box = ViewerItem(item['ID'], '#f1f1f1', note_text, note_meta)
                 note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
-                note_box.body = item['VALUE']
+                note_box.body = clean_text(item['VALUE'])
                 note_box.label = item['LABEL']
                 note_box.meta_text = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
