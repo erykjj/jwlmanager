@@ -33,6 +33,7 @@
 ### Fixed
 
 - Fixed double tree build on language change
+- Fixed total from previous archive showing on new archive creation
 
 ### Removed
 
