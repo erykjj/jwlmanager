@@ -1493,10 +1493,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.body_modified = False
 
         def accept_change():
-            self.note_item.body = self.viewer_window.body.toPlainText()
-            self.note_item.title = self.viewer_window.title.toPlainText()
-            note_text = f"<h3><b>{self.note_item.title}</b></h3>" + self.note_item.body.replace('\n', '<br>')
-            self.note_item.text_box.setText(note_text)
+            self.note_item.title = self.viewer_window.title.toPlainText().strip()
+            self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
+            self.note_item.update_note()
             self.modified_list.append(self.note_item)
             update_viewer_toolbar()
             go_back()
@@ -1596,6 +1595,11 @@ class Window(QMainWindow, Ui_MainWindow):
             self.activateWindow()
 
         def save_txt():
+
+            def remove_html(html):
+                html = html.replace('<br>', '\n')
+                return regex.sub(r'<.*?>', '', html)
+
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
             if fname == '':
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
@@ -1606,9 +1610,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item in self.deleted_list:
                     continue
                 if category == _('Notes'):
-                    txt += item.title + '\n' + item.body + item.meta_text
+                    txt += item.title + '\n' + item.body + '\n----------\n' + remove_html(item.meta_box.text())
                 else:
-                    txt += item.meta_text + '\n' + item.body
+                    txt += item.title + '\n----------\n' + item.body
                 txt += '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
@@ -1738,32 +1742,20 @@ class Window(QMainWindow, Ui_MainWindow):
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
             for item in get_notes():
-                note_text = f"<h3><b>{item['TITLE']}</b></h3>"
-                if item['NOTE']:
-                    note_text += item['NOTE'].replace('\n', '<br>')
-                note_meta = ''
-                meta_text = ''
+                meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
-                    note_meta += f"<small><strong><tt>{item['MODIFIED']}"
-                    meta_text += '\n__________\n' + item['MODIFIED']
+                    meta += f"<small><strong><tt>{item['MODIFIED']}"
                     if item['TAGS']:
-                        note_meta += '&nbsp;&nbsp;&nbsp;{' + item['TAGS'] + '}'
-                        meta_text += '\n{' + item['TAGS'] + '}'
+                        meta += ' — {' + item['TAGS'] + '}'
                     if item['PUB']:
-                        note_meta += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
-                        meta_text += f"\n{item['PUB']}-{item['LANG']} {item['ISSUE']}".rstrip()
+                        meta += f"<br><i>{item['PUB']}</i>-{item['LANG']} {item['ISSUE']}".strip()
                     if item['HEADING']:
-                        note_meta += f"&nbsp;&mdash;&nbsp;{item['HEADING']}"
-                        meta_text += ' — ' + item['HEADING']
+                        meta += f" — {item['HEADING']}"
                     if item['Link']:
                         lnk = item['Link']
-                        note_meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
-                        meta_text += '\n' + lnk
-                    note_meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], note_text, note_meta)
-                note_box.title = clean_text(item['TITLE'])
-                note_box.body = clean_text(item['NOTE'])
-                note_box.meta_text = meta_text
+                        meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
+                    meta += '</tt></strong></small>'
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -1814,13 +1806,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
             counter = 1
             for item in get_annotations():
-                note_text = f"<h3><b><i>{item['PUB']}</i> {item['ISSUE']}</b></h3><h4>{item['DOC']}&nbsp;&mdash;&nbsp;{item['LABEL']}</h4>" + item['VALUE'].replace('\n', '<br>')
-                note_meta = None
-                note_box = ViewerItem(item['ID'], '#f1f1f1', note_text, note_meta)
-                note_box.title = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
-                note_box.body = clean_text(item['VALUE'])
+                title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
+                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None)
                 note_box.label = item['LABEL']
-                note_box.meta_text = f"{item['PUB']} {item['ISSUE']} — {item['DOC']} — {item['LABEL']}"
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
