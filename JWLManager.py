@@ -2,7 +2,7 @@
 
 """
   JWLManager:   Multi-platform GUI for managing JW Library (.jwlibrary) files:
-                view, delete, merge (via export/import), etc.
+                view, delete, edit, merge (via export/import), etc.
 
   MIT License:  Copyright (c) 2023 Eryk J.
 
