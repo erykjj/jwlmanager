@@ -224,18 +224,24 @@ class ViewerItem(QWidget):
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
         self.note_widget.setFrameShape(QFrame.Panel)
-        self.note_widget.setStyleSheet(f"background-color: {color}")
+        self.note_widget.setStyleSheet(f'background-color: {color}')
 
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
-        self.text_box.setFrameStyle(QFrame.Panel | QFrame.Sunken)
+        self.text_box.setFrameStyle(QFrame.NoFrame)
         self.text_box.setStyleSheet('color: #3d3d5c;')
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         self.update_note()
 
+        separator = QFrame()
+        separator.setContentsMargins(2, 0, 2, 0)
+        separator.setFrameShape(QFrame.HLine)
+        separator.setStyleSheet('color: #7575a3;')
+
         if self.meta:
             self.meta_box = QLabel(self.note_widget)
-            self.meta_box.setFixedHeight(75)
+            self.meta_box.setMargin(2)
+            self.meta_box.setFixedHeight(78)
             self.meta_box.setWordWrap(True)
             self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             self.meta_box.setStyleSheet('color: #7575a3;')
@@ -244,33 +250,36 @@ class ViewerItem(QWidget):
 
         self.delete_button = QPushButton()
         self.delete_button.setIcon(QPixmap(_base_path+'/icons/icons8-delete-64red.png'))
-        self.delete_button.setIconSize(QSize(24, 24))
-        self.delete_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
+        self.delete_button.setIconSize(QSize(28, 28))
+        self.delete_button.setStyleSheet('background-color: transparent; border: 0px;')
 
         self.edit_button = QPushButton()
         self.edit_button.setIcon(QPixmap(_base_path+'/icons/icons8-edit-64blue.png'))
-        self.edit_button.setIconSize(QSize(22, 22))
-        self.edit_button.setStyleSheet("QPushButton { background-color: transparent; font-size: 1px; border: 0px; color: transparent; }")
+        self.edit_button.setIconSize(QSize(24, 24))
+        self.edit_button.setStyleSheet('background-color: transparent; border: 0px;')
 
         layout = QGridLayout(self.note_widget)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.text_box, 0 , 0, 1, 0)
-        
+        layout.addWidget(separator, 1, 0, 1, 0)
+
         if self.meta:
-            layout.addWidget(self.meta_box, 1, 0)
+            layout.addWidget(self.meta_box, 2, 0)
             button_layout = QVBoxLayout()
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
             button_frame.setMaximumWidth(50)
             button_frame.setLayout(button_layout)
-            layout.addWidget(button_frame, 1, 1, Qt.AlignmentFlag.AlignRight)
+            layout.addWidget(button_frame, 2, 1, Qt.AlignmentFlag.AlignRight)
         else:
             button_layout = QHBoxLayout()
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
             button_frame.setLayout(button_layout)
-            layout.addWidget(button_frame, 1, 0)
+            layout.addWidget(button_frame, 2, 0)
 
     def update_note(self):
         txt = '<h3><b>' + self.title + '</b></h3>' + self.body
