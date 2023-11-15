@@ -2,6 +2,8 @@
 ######
 Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** also works.
 ######
+The state of the application (size, position, and various selection choices) are preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
+######
 Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* OTHER \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* NO TAG \**.
 ######
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
@@ -28,7 +30,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 ######
 ### View (button)
 ######
-Shows selected Notes and Annotations in a **Data Viewer** window, from where text can be copied (and pasted somewhere else) or saved to a text file.
+Shows selected Notes and Annotations in a **Data Viewer** window. There, you can delete and/or edit individual items. You have to confirm all edits within the **Data Editor** and *again* in the Data Viewer before they are written to the database (of course, you still have to save the archive as usual). You can go back via the buttons (or `Escape` key) without affecting the database.
 #####
 ######
 ### Add
