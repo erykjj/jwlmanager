@@ -782,6 +782,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSelect_All.setEnabled(True)
         self.actionUnselect_All.setEnabled(True)
         self.menuTitle_View.setEnabled(True)
+        self.total.setText('**0**')
         self.selected.setText('**0**')
         try:
             self.viewer_window.close()
