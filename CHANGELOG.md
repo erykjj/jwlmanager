@@ -4,15 +4,25 @@
 
 ### Added
 
-- Data Editor (accessed via Data Viewer) for Notes and Annotations
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [4.0.0] - 2023-11-15
+### Added
+
+- **Data Editor** (accessed via Data Viewer)
   - Edit Note titles and/or content
   - Edit Annotation content
 - Added another level of detail (Bible chapter)
   - A bit slower with many notes/highlights, but with real-time loading
-  - Because of this, the 'default' (start-up) grouping is by Type
-- Added update check in About box
-- `JWLManager.conf` file in app directory to save session info (delete the file to start with defaults)
-  - Main interface window and Data Viewer window position and size
+  - Because of this, the 'default' (start-up) grouping is by "Type"
+- Added **update check** in About box
+- `JWLManager.conf` file in app directory to **save session info** (delete the file to start with defaults)
+  - Main interface and Data Viewer window position and size
   - Currently-opened archive
   - Current language
   - Current category
@@ -21,13 +31,11 @@
 
 ### Changed
 
-- Improved Data Viewer functionality
+- Improved **Data Viewer** functionality
   - Delete individual Notes and Annotations
-- Updated resource DB with new publication (lmd)
-- Code restructuring/reorganization
-  - Encapsulating in nested functions instead of classes
+- Updated resource DB with new publication (*lmd*)
+- Code restructuring/reorganization and improvements for (slightly) better performance
   - Moved some Qt-related UI code to `ui_extras.py` module
-- Code improvements for (slightly) better performance
 - Updated app translations
 
 ### Fixed
@@ -35,9 +43,6 @@
 - Fixed double tree build on language change
 - Fixed total from previous archive showing on new archive creation
 
-### Removed
-
-____
 ## [3.0.3] - 2023-10-22
 ### Changed
 
@@ -538,6 +543,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.0
 [3.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.3
 [3.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.2
 [3.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.1
