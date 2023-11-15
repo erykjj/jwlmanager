@@ -1834,6 +1834,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     return
                 counter += 1
 
+        def connect_signals():
+            self.viewer_window.txt_action.triggered.connect(save_txt)
+            self.viewer_window.finished.connect(viewer_closed)
+            self.viewer_window.return_action.triggered.connect(go_back)
+            self.viewer_window.accept_action.triggered.connect(accept_change)
+            self.viewer_window.discard_action.triggered.connect(viewer_closed)
+            self.viewer_window.confirm_action.triggered.connect(update_db)
+            self.viewer_window.title.textChanged.connect(title_changed)
+            self.viewer_window.body.textChanged.connect(body_changed)
+            self.viewer_window.escape_pressed.connect(escape_pressed)
+
         def escape_pressed():
             if self.viewer_window.viewer_layout.currentIndex() == 1:
                 go_back()
@@ -1855,15 +1866,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.title_modified = False
         self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
-        self.viewer_window.txt_action.triggered.connect(save_txt)
-        self.viewer_window.finished.connect(viewer_closed)
-        self.viewer_window.return_action.triggered.connect(go_back)
-        self.viewer_window.accept_action.triggered.connect(accept_change)
-        self.viewer_window.discard_action.triggered.connect(viewer_closed)
-        self.viewer_window.confirm_action.triggered.connect(update_db)
-        self.viewer_window.title.textChanged.connect(title_changed)
-        self.viewer_window.body.textChanged.connect(body_changed)
-        self.viewer_window.escape_pressed.connect(escape_pressed)
+        connect_signals()
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
