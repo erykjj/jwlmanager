@@ -1,4 +1,4 @@
-name: 'Build Mac package v0.1.1'
+name: 'Build Mac package v0.1.2'
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
 jobs:
   macos:
     name: Build macOS APP
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - name: Checkout
       uses: actions/checkout@v4
