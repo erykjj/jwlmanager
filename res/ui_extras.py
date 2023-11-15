@@ -212,16 +212,14 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, idx, color, text, meta):
+    def __init__(self, idx, color, title, body, meta):
         super().__init__()
         self.idx = idx
         self.label = None
         self.color = color
-        self.text = text
+        self.body = body
+        self.title = title
         self.meta = meta
-        self.body = ''
-        self.title = ''
-        self.meta_text = ''
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
@@ -233,16 +231,16 @@ class ViewerItem(QWidget):
         self.text_box.setFrameStyle(QFrame.Panel | QFrame.Sunken)
         self.text_box.setStyleSheet('color: #3d3d5c;')
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
-        self.text_box.setText(text)
+        self.update_note()
 
         if self.meta:
-            meta_box = QLabel(self.note_widget)
-            meta_box.setFixedHeight(75)
-            meta_box.setWordWrap(True)
-            meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            meta_box.setStyleSheet('color: #7575a3;')
-            meta_box.setTextFormat(Qt.RichText)
-            meta_box.setText(meta)
+            self.meta_box = QLabel(self.note_widget)
+            self.meta_box.setFixedHeight(75)
+            self.meta_box.setWordWrap(True)
+            self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.meta_box.setStyleSheet('color: #7575a3;')
+            self.meta_box.setTextFormat(Qt.RichText)
+            self.meta_box.setText(meta)
 
         self.delete_button = QPushButton()
         self.delete_button.setIcon(QPixmap(_base_path+'/icons/icons8-delete-64red.png'))
@@ -258,7 +256,7 @@ class ViewerItem(QWidget):
         layout.addWidget(self.text_box, 0 , 0, 1, 0)
         
         if self.meta:
-            layout.addWidget(meta_box, 1, 0)
+            layout.addWidget(self.meta_box, 1, 0)
             button_layout = QVBoxLayout()
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
@@ -273,3 +271,7 @@ class ViewerItem(QWidget):
             button_frame = QFrame()
             button_frame.setLayout(button_layout)
             layout.addWidget(button_frame, 1, 0)
+
+    def update_note(self):
+        txt = '<h3><b>' + self.title + '</b></h3>' + self.body
+        self.text_box.setText(txt.replace('\n', '<br>'))
