@@ -9,20 +9,10 @@
 ################################################################################
 
 import os, sys
-from PySide6.QtGui import QActionGroup
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
-    QCursor, QFont, QFontDatabase, QGradient,
-    QIcon, QImage, QKeySequence, QLinearGradient,
-    QPainter, QPalette, QPixmap, QRadialGradient,
-    QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QFrame,
-    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QMainWindow, QMenu, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget,
-    QTreeWidgetItem, QVBoxLayout, QWidget)
+
+from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
+from PySide6.QtGui import QAction, QActionGroup, QFont, QIcon
+from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -316,6 +306,9 @@ class Ui_MainWindow(object):
         self.menuLanguage = QMenu(self.menuView)
         self.menuLanguage.setObjectName(u"menuLanguage")
         self.menuLanguage.setToolTipsVisible(True)
+        icon15 = QIcon()
+        icon15.addFile(self.resource_path('res/icons/icons8-language-64.png'), QSize(), QIcon.Normal, QIcon.On)
+        self.menuLanguage.setIcon(icon15)
         self.langChoices = QActionGroup(self.menuLanguage)
         self.langChoices.addAction(self.actionEN)
         self.langChoices.addAction(self.actionDE)
