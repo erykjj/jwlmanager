@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [4.0.1] - 2023-11-16
+### Fixed
+
+- Fixed occasional crash caused by attempting to modify an already-closed Viewer window in rare circumstances
+
 ## [4.0.0] - 2023-11-15
 ### Added
 
@@ -543,6 +548,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.1
 [4.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.0
 [3.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.3
 [3.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.2
