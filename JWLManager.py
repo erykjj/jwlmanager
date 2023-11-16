@@ -1592,7 +1592,8 @@ class Window(QMainWindow, Ui_MainWindow):
             try:
                 self.viewer_window.close()
             except:
-                self.viewer_window = QDialog(self)
+                pass
+            self.viewer_window = QDialog(self)
             self.activateWindow()
 
         def save_txt():
