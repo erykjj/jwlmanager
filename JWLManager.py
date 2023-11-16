@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.0.0'
+VERSION = 'v4.0.1'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -1592,7 +1592,7 @@ class Window(QMainWindow, Ui_MainWindow):
             try:
                 self.viewer_window.close()
             except:
-                pass
+                self.viewer_window = QDialog(self)
             self.activateWindow()
 
         def save_txt():
