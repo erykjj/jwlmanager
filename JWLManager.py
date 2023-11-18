@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.0.1'
+VERSION = 'v4.0.2'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -1266,7 +1266,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 line = import_file.readline()
                 m = regex.search('{NOTES=(.?)}', line)
                 if m:
-                    delete_notes(m.group(1))
+                    if m.group(1) != '':
+                        delete_notes(m.group(1))
                     return True
                 else:
                     QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
