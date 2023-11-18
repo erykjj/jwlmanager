@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed importing from custom text backup file with no Title character set
+
 ### Removed
 
 ____
