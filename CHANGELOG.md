@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Updated some icons
+
 ### Fixed
 
 - Fixed importing from custom text backup file with no Title character set
