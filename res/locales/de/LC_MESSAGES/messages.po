@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-11-13 20:58-0500\n"
-"PO-Revision-Date: 2023-11-20 07:02+0000\n"
+"PO-Revision-Date: 2023-11-20 13:22+0000\n"
 "Last-Translator: AtroX <david.wild2002@gmail.com>\n"
 "Language-Team: de <LL@li.org>\n"
 "Language: de\n"
@@ -29,7 +29,7 @@ msgstr "Hilfe"
 
 #: JWLManager.py:236
 msgid "Exit"
-msgstr "aussteigen"
+msgstr "Aussteigen"
 
 #: JWLManager.py:236
 msgid "Save before quitting?"
@@ -68,7 +68,7 @@ msgstr "Datei \"{}\" wurde nicht erkannt!"
 
 #: JWLManager.py:300
 msgid "update available!"
-msgstr "Update verfügbar!"
+msgstr "update verfügbar!"
 
 #: JWLManager.py:302
 msgid "Latest version"
@@ -76,7 +76,7 @@ msgstr "Letzte Version"
 
 #: JWLManager.py:304
 msgid "Error while checking for updates!"
-msgstr "Ein Fehler trat auf, während der Suche nach updates!"
+msgstr "Fehler überprüfend während für Updates!"
 
 #: JWLManager.py:313 JWLManager.py:1121 JWLManager.py:1143 JWLManager.py:1167
 #: JWLManager.py:1191 JWLManager.py:1238 JWLManager.py:1268 JWLManager.py:1296
@@ -95,7 +95,7 @@ msgstr "Take note of what you were doing and"
 
 #: JWLManager.py:315
 msgid "inform the developer"
-msgstr "Informiere den Entwickler"
+msgstr "den Entwickler informieren"
 
 #: JWLManager.py:321
 msgid "The app will terminate."
@@ -147,9 +147,8 @@ msgid "Chap."
 msgstr "Kap."
 
 #: JWLManager.py:490
-#, fuzzy
 msgid "* YEAR UNCERTAIN *"
-msgstr "* YEAR UNCERTAIN *"
+msgstr "* JAHR UNSICHER *"
 
 #: JWLManager.py:498
 msgid "Other"
@@ -196,32 +195,28 @@ msgid "Tag"
 msgstr "Etikett"
 
 #: JWLManager.py:667
-#, fuzzy
 msgid "Processing…"
-msgstr "Processing…"
+msgstr "Verarbeiten…"
 
 #: JWLManager.py:704 JWLManager.py:807 JWLManager.py:1595
 msgid "Save"
 msgstr "Speichern"
 
 #: JWLManager.py:704
-#, fuzzy
 msgid "Save current archive?"
-msgstr "Save current archive?"
+msgstr "Das Verzeichnis speichern?"
 
 #: JWLManager.py:716
-#, fuzzy
 msgid "NEW ARCHIVE"
-msgstr "NEW ARCHIVE"
+msgstr "NEUES VERZEICHNIS"
 
 #: JWLManager.py:748
-#, fuzzy
 msgid "Open archive"
-msgstr "Open archive"
+msgstr "Verzeichnis öffnen"
 
 #: JWLManager.py:748 JWLManager.py:800 JWLManager.py:802
 msgid "JW Library archives"
-msgstr "JW Bibliotheksverzeichnisse"
+msgstr "JW Library Dateien"
 
 #: JWLManager.py:800 JWLManager.py:802
 msgid "Save archive"
@@ -229,7 +224,7 @@ msgstr "Verzeichnis speichern"
 
 #: JWLManager.py:804 JWLManager.py:1597
 msgid "NOT saved!"
-msgstr "Nicht gespeichert!"
+msgstr "NICHT gespeichert!"
 
 #: JWLManager.py:807
 #, fuzzy
@@ -380,14 +375,12 @@ msgid "Data Editor"
 msgstr "Datenbetrachter"
 
 #: JWLManager.py:1515
-#, fuzzy
 msgid "Discard changes and close"
-msgstr "Discard changes and close"
+msgstr "Änderungen deaktivieren und schließen"
 
 #: JWLManager.py:1516
-#, fuzzy
 msgid "Confirm changes and close"
-msgstr "Confirm changes and close"
+msgstr "Änderungen bestätigen und schließen"
 
 #: JWLManager.py:1579 JWLManager.py:2003
 #, fuzzy
