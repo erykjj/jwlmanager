@@ -6,15 +6,20 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [4.0.2] - 2023-11-20
+### Changed
+
 - Updated some icons
 
 ### Fixed
 
 - Fixed importing from custom text backup file with no Title character set
 
-### Removed
-
-____
 ## [4.0.1] - 2023-11-16
 ### Fixed
 
@@ -552,6 +557,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.2
 [4.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.1
 [4.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.0
 [3.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v3.0.3
