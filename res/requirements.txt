@@ -1,7 +1,8 @@
+PySide6
 argparse
 filehash
 openpyxl
 pandas
-PySide6
 regex
+requests
 XlsxWriter
