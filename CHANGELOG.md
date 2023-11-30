@@ -4,8 +4,6 @@
 
 ### Added
 
-- Utility to restore all notes to their "natural" sort order (after they have been moved around in the Tag view of the JW Library app)
-
 ### Changed
 
 ### Fixed
@@ -13,6 +11,16 @@
 ### Removed
 
 ____
+## [4.1.0] - 2023-11-30
+
+### Added
+
+- Utility to restore all notes to their "natural" sort order (after they have been moved around in the Tag view of "Personal Study" section of the JW Library app)
+
+### Fixed
+
+- Added some missing menu icons
+
 ## [4.0.2] - 2023-11-20
 ### Changed
 
@@ -559,6 +567,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.1.0
 [4.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.2
 [4.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.1
 [4.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.0
