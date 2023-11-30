@@ -437,7 +437,8 @@ class Window(QMainWindow, Ui_MainWindow):
             if category == _('Bookmarks'):
                 get_bookmarks()
             elif category == _('Favorites'):
-                get_favorites()
+                # get_favorites()
+                get_playlists()
             elif category == _('Highlights'):
                 get_highlights()
             elif category == _('Notes'):
@@ -581,6 +582,31 @@ class Window(QMainWindow, Ui_MainWindow):
             notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
             self.current_data = notes
 
+        def get_playlists():
+            lst = []
+            sql = '''
+                SELECT PlaylistItemId,
+                    Name,
+                    Position,
+                    Label
+                FROM PlaylistItem
+                    JOIN
+                    TagMap USING (
+                        PlaylistItemId
+                    )
+                    JOIN
+                    Tag t USING (
+                        TagId
+                    )
+                WHERE t.Type = 2
+                ORDER BY Name,
+                    Position;'''
+            for row in cur.execute(sql):
+                rec = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), 0, row[1], '', '', row[3] ]
+                lst.append(rec)
+            playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1'])
+            self.current_data = merge_df(playlists)
+
         def enable_options(enabled):
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
@@ -623,11 +649,15 @@ class Window(QMainWindow, Ui_MainWindow):
                         _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
                         _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ] }
                 elif category == _('Favorites'):
+                #     views = {
+                #         _('Type'): [ 'Type', 'Title', 'Language' ],
+                #         _('Title'): [ 'Title', 'Language' ],
+                #         _('Language'): [ 'Language', 'Title' ],
+                #         _('Year'): [ 'Year', 'Title', 'Language' ] }
+                # elif category == _('Playlists'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Language' ],
-                        _('Title'): [ 'Title', 'Language' ],
-                        _('Language'): [ 'Language', 'Title' ],
-                        _('Year'): [ 'Year', 'Title', 'Language' ] }
+                        _('Type'): [ 'Tags', 'Detail1' ],
+                        _('Title'): [ 'Tags', 'Detail1' ] }
                 elif category == _('Highlights'):
                     views = {
                         _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
