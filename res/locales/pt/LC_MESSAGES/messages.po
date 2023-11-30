@@ -9,13 +9,12 @@ msgstr ""
 "POT-Creation-Date: 2023-11-13 20:58-0500\n"
 "PO-Revision-Date: 2023-11-14 11:06+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language-Team: pt <LL@li.org>\n"
 "Language: pt\n"
+"Language-Team: pt <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.2-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
 #: JWLManager.py:208 JWLManager.py:415 JWLManager.py:616 JWLManager.py:622
@@ -653,3 +652,4 @@ msgstr "Reindexado com sucesso"
 
 #~ msgid "Data viewer"
 #~ msgstr "Visualizador de Dados"
+
