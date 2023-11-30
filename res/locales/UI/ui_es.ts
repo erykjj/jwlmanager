@@ -360,7 +360,7 @@
     <message>
         <location filename="main_window.ui" line="959"/>
         <source>&amp;Sort</source>
-        <translation>&amp;Clasificar</translation>
+        <translation>&amp;Ordenar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="962"/>
