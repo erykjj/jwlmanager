@@ -342,12 +342,12 @@
     <message>
         <location filename="main_window.ui" line="959"/>
         <source>&amp;Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ordenar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="962"/>
         <source>Sort Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar as anotações</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
