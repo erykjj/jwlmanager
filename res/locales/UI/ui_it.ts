@@ -346,12 +346,12 @@
     <message>
         <location filename="main_window.ui" line="959"/>
         <source>&amp;Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Disporre</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="962"/>
         <source>Sort Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordinare le note</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
