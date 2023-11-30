@@ -437,15 +437,15 @@ class Window(QMainWindow, Ui_MainWindow):
             if category == _('Bookmarks'):
                 get_bookmarks()
             elif category == _('Favorites'):
-                # get_favorites()
-                get_playlists()
+                get_favorites()
             elif category == _('Highlights'):
                 get_highlights()
             elif category == _('Notes'):
                 get_notes()
             elif category == _('Annotations'):
                 get_annotations()
-
+            elif category == _('Playlists'):
+                get_playlists()
 
         def process_code(code, issue):
             if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
@@ -649,15 +649,13 @@ class Window(QMainWindow, Ui_MainWindow):
                         _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
                         _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ] }
                 elif category == _('Favorites'):
-                #     views = {
-                #         _('Type'): [ 'Type', 'Title', 'Language' ],
-                #         _('Title'): [ 'Title', 'Language' ],
-                #         _('Language'): [ 'Language', 'Title' ],
-                #         _('Year'): [ 'Year', 'Title', 'Language' ] }
-                # elif category == _('Playlists'):
                     views = {
-                        _('Type'): [ 'Tags', 'Detail1' ],
-                        _('Title'): [ 'Tags', 'Detail1' ] }
+                        _('Type'): [ 'Type', 'Title', 'Language' ],
+                        _('Title'): [ 'Title', 'Language' ],
+                        _('Language'): [ 'Language', 'Title' ],
+                        _('Year'): [ 'Year', 'Title', 'Language' ] }
+                elif category == _('Playlists'):
+                    views = { _('Title'): [ 'Tags', 'Detail1' ] }
                 elif category == _('Highlights'):
                     views = {
                         _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
