@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.0.2'
+VERSION = 'v4.1.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -2090,7 +2090,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
-
     def reindex_db(self):
 
         def init_progress():
@@ -2174,6 +2173,35 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
         self.regroup(False, message)
+
+    def reorder_notes(self):
+
+        def reorder():
+            return
+
+        reply = QMessageBox.warning(self, _('Reorder'), _('All notes will be REORDERED.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if reply == QMessageBox.No:
+            return
+        self.statusBar.showMessage(' '+_('Reordering. Please wait…'))
+        app.processEvents()
+        try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
+            reorder()
+            con.commit()
+            cur.close()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        message = ' '+_('Notes reordered')
+        self.statusBar.showMessage(message, 3500)
+        self.archive_modified()
+        self.trim_db()
+        self.regroup(False, message)
+
 
     def trim_db(self):
         try:
