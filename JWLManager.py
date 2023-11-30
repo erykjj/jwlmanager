@@ -2126,9 +2126,20 @@ class Window(QMainWindow, Ui_MainWindow):
             cur.execute('DROP TABLE CrossReference;')
 
         def reindex_tags():
+
+            def reorder():
+                for tag_id in cur.execute('SELECT TagId FROM Tag').fetchall():
+                    pos = 1
+                    for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
+                        cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
+                        pos += 1
+                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
+                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+
             make_table('TagMap')
             update_table('TagMap', 'TagMapId')
             cur.execute('DROP TABLE CrossReference;')
+            reorder()
 
         def reindex_ranges():
             make_table('BlockRange')
