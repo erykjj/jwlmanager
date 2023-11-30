@@ -137,3 +137,7 @@ If you need to share your complete archive but have some personal or confidentia
 ### Reindex
 ######
 This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take up to a minute, depending on the number of records the database contains. It does not need to be run more than once in a while.
+#####
+### Sort
+######
+When a specific tag is selected in the JW Library app's "Personal Study" (Notes and Tags) section, the displayed notes can be arranged manually. This function restores all notes to their "natural" order (based on `NoteId`, which basically corresponds to creation time - from oldest to most recent).
