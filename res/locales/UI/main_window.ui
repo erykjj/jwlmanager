@@ -540,8 +540,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normalon>icons/icons8-list-64.png</normalon>
-      </iconset>
+       <normaloff>../../icons/icons8-list-64.png</normaloff>../../icons/icons8-list-64.png</iconset>
      </property>
      <property name="toolTipsVisible">
       <bool>true</bool>
@@ -556,6 +555,10 @@
      </property>
      <property name="title">
       <string>&amp;Language</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../icons/icons8-language-64.png</normaloff>../../icons/icons8-language-64.png</iconset>
      </property>
      <property name="toolTipsVisible">
       <bool>true</bool>
@@ -588,6 +591,7 @@
     </property>
     <addaction name="actionObscure"/>
     <addaction name="actionReindex"/>
+    <addaction name="actionSort"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -602,7 +606,7 @@
   <action name="actionOpen">
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-opened-folder-64.png</normaloff>icons/icons8-opened-folder-64.png</iconset>
+     <normaloff>../../icons/icons8-opened-folder-64.png</normaloff>../../icons/icons8-opened-folder-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Open…</string>
@@ -620,8 +624,8 @@
    </property>
    <property name="icon">
     <iconset>
-     <normalon>icons/icons8-save-64.png</normalon>
-    </iconset>
+     <normaloff>../../icons/icons8-save-64.png</normaloff>
+     <normalon>icons/icons8-save-64.png</normalon>../../icons/icons8-save-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Save</string>
@@ -639,7 +643,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-database-administrator-64.png</normaloff>icons/icons8-database-administrator-64.png</iconset>
+     <normaloff>../../icons/icons8-database-administrator-64.png</normaloff>../../icons/icons8-database-administrator-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Reindex</string>
@@ -651,7 +655,7 @@
   <action name="actionQuit">
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-export-64.png</normaloff>icons/icons8-export-64.png</iconset>
+     <normaloff>../../icons/icons8-leave-64.png</normaloff>../../icons/icons8-leave-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -666,7 +670,7 @@
   <action name="actionAbout">
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-info-64.png</normaloff>icons/icons8-info-64.png</iconset>
+     <normaloff>../../icons/icons8-info-64.png</normaloff>../../icons/icons8-info-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About…</string>
@@ -681,7 +685,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-help-64.png</normaloff>icons/icons8-help-64.png</iconset>
+     <normaloff>../../icons/icons8-help-64.png</normaloff>../../icons/icons8-help-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Help</string>
@@ -693,7 +697,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-save-as-64.png</normaloff>icons/icons8-save-as-64.png</iconset>
+     <normaloff>../../icons/icons8-save-as-64.png</normaloff>../../icons/icons8-save-as-64.png</iconset>
    </property>
    <property name="text">
     <string>Save &amp;As…</string>
@@ -711,7 +715,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-expand-64.png</normaloff>icons/icons8-expand-64.png</iconset>
+     <normaloff>../../icons/icons8-expand-64.png</normaloff>../../icons/icons8-expand-64.png</iconset>
    </property>
    <property name="text">
     <string>E&amp;xpand All</string>
@@ -729,7 +733,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-collapse-64.png</normaloff>icons/icons8-collapse-64.png</iconset>
+     <normaloff>../../icons/icons8-collapse-64.png</normaloff>../../icons/icons8-collapse-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Collapse All</string>
@@ -747,7 +751,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-double-tick-64.png</normaloff>icons/icons8-double-tick-64.png</iconset>
+     <normaloff>../../icons/icons8-double-tick-64.png</normaloff>../../icons/icons8-double-tick-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Select All</string>
@@ -765,7 +769,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-unchecked-checkbox-64.png</normaloff>icons/icons8-unchecked-checkbox-64.png</iconset>
+     <normaloff>../../icons/icons8-unchecked-checkbox-64.png</normaloff>../../icons/icons8-unchecked-checkbox-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Unselect All</string>
@@ -825,7 +829,7 @@
   <action name="actionNew">
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-add-file-64.png</normaloff>icons/icons8-add-file-64.png</iconset>
+     <normaloff>../../icons/icons8-add-file-64.png</normaloff>../../icons/icons8-add-file-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;New</string>
@@ -843,7 +847,7 @@
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>icons/icons8-invisible-64.png</normaloff>icons/icons8-invisible-64.png</iconset>
+     <normaloff>../../icons/icons8-invisible-64.png</normaloff>../../icons/icons8-invisible-64.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Mask</string>
@@ -941,6 +945,21 @@
    </property>
    <property name="toolTip">
     <string>zh</string>
+   </property>
+  </action>
+  <action name="actionSort">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../../icons/icons8-ascending-sorting-64.png</normaloff>../../icons/icons8-ascending-sorting-64.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Sort</string>
+   </property>
+   <property name="toolTip">
+    <string>Sort Notes</string>
    </property>
   </action>
  </widget>
