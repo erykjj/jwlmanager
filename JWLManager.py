@@ -169,6 +169,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionSave_As.triggered.connect(self.save_as_file)
             self.actionObscure.triggered.connect(self.obscure_items)
             self.actionReindex.triggered.connect(self.reindex_db)
+            self.actionSort.triggered.connect(self.sort_notes)
             self.actionExpand_All.triggered.connect(self.expand_all)
             self.actionCollapse_All.triggered.connect(self.collapse_all)
             self.actionSelect_All.triggered.connect(self.select_all)
@@ -585,6 +586,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_category.setEnabled(enabled)
             self.actionReindex.setEnabled(enabled)
             self.actionObscure.setEnabled(enabled)
+            self.actionSort.setEnabled(enabled)
             self.actionExpand_All.setEnabled(enabled)
             self.actionCollapse_All.setEnabled(enabled)
             self.actionSelect_All.setEnabled(enabled)
@@ -773,6 +775,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def file_loaded(self):
         self.actionReindex.setEnabled(True)
         self.actionObscure.setEnabled(True)
+        self.actionSort.setEnabled(True)
         self.combo_grouping.setEnabled(True)
         self.combo_category.setEnabled(True)
         self.actionSave.setEnabled(False)
@@ -2090,7 +2093,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
-    def reindex_db_(self):
+    def reindex_db(self):
 
         def init_progress():
             pd = QProgressDialog(_('Please wait…'), None, 0, 14)
@@ -2174,7 +2177,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.archive_modified()
         self.regroup(False, message)
 
-    def reorder_notes(self):
+    def sort_notes(self):
 
         def reorder():
             for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;').fetchall():
