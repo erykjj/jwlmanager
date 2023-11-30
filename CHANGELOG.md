@@ -4,6 +4,8 @@
 
 ### Added
 
+- Utility to restore all notes to their "natural" sort order (after they have been moved around in the Tag view of the JW Library app)
+
 ### Changed
 
 ### Fixed
