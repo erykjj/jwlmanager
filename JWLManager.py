@@ -2090,7 +2090,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
-    def reindex_db(self):
+    def reindex_db_(self):
 
         def init_progress():
             pd = QProgressDialog(_('Please wait…'), None, 0, 14)
@@ -2177,7 +2177,14 @@ class Window(QMainWindow, Ui_MainWindow):
     def reorder_notes(self):
 
         def reorder():
-            return
+            for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;').fetchall():
+                pos = 1
+                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)).fetchall():
+                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
+                    pos += 1
+                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap WHERE TagId = ?', (tag_id[0],)).fetchall():
+                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+
 
         reply = QMessageBox.warning(self, _('Reorder'), _('All notes will be REORDERED.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
