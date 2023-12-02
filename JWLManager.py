@@ -429,6 +429,9 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([2,4,5], False, True, True, True)
         elif selection == _('Favorites'):
             disable_options([4,5], True, False, False, False)
+        elif selection == _('Playlists'):
+            self.combo_grouping.setCurrentText(_('Tags'))
+            disable_options([0,1,2,3,5], False, False, False, False)
         self.regroup()
 
     def regroup(self, same_data=False, message=None):
@@ -655,7 +658,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         _('Language'): [ 'Language', 'Title' ],
                         _('Year'): [ 'Year', 'Title', 'Language' ] }
                 elif category == _('Playlists'):
-                    views = { _('Title'): [ 'Tags', 'Detail1' ] }
+                    views = { _('Type'): [ 'Tags', 'Detail1' ], }
                 elif category == _('Highlights'):
                     views = {
                         _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
