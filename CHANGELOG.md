@@ -4,6 +4,8 @@
 
 ### Added
 
+- Playlists category to list (and delete) playlists and/or their content
+
 ### Changed
 
 ### Fixed
