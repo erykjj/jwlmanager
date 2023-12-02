@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.2.0-TESTING'
+VERSION = 'v4.2.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
