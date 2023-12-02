@@ -410,6 +410,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_export.setVisible(exp)
             self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
+            app.processEvents()
             self.combo_grouping.blockSignals(True)
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
@@ -420,8 +421,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.blockSignals(False)
 
         if selection == _('Notes'):
+            self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
+            self.combo_grouping.setCurrentText(_('Type'))
             disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
             disable_options([4,5], False, False, False, False)
@@ -430,8 +433,8 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Favorites'):
             disable_options([4,5], True, False, False, False)
         elif selection == _('Playlists'):
-            self.combo_grouping.setCurrentText(_('Tags'))
-            disable_options([0,1,2,3,5], False, False, False, False)
+            self.combo_grouping.setCurrentText(_('Title'))
+            disable_options([1,2,3,4,5], False, False, False, False)
         self.regroup()
 
     def regroup(self, same_data=False, message=None):
@@ -658,7 +661,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         _('Language'): [ 'Language', 'Title' ],
                         _('Year'): [ 'Year', 'Title', 'Language' ] }
                 elif category == _('Playlists'):
-                    views = { _('Type'): [ 'Tags', 'Detail1' ], }
+                    views = { _('Title'): [ 'Tags', 'Detail1' ], }
                 elif category == _('Highlights'):
                     views = {
                         _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
