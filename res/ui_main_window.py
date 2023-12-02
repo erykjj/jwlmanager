@@ -207,6 +207,7 @@ class Ui_MainWindow(object):
         self.combo_category.addItem("")
         self.combo_category.addItem("")
         self.combo_category.addItem("")
+        self.combo_category.addItem("")
         self.combo_category.setObjectName(u"combo_category")
         self.combo_category.setEnabled(False)
         self.combo_category.setGeometry(QRect(320, 0, 140, 28))
@@ -539,6 +540,7 @@ class Ui_MainWindow(object):
         self.combo_category.setItemText(2, QCoreApplication.translate("MainWindow", u"Favorites", None))
         self.combo_category.setItemText(3, QCoreApplication.translate("MainWindow", u"Bookmarks", None))
         self.combo_category.setItemText(4, QCoreApplication.translate("MainWindow", u"Annotations", None))
+        self.combo_category.setItemText(5, QCoreApplication.translate("MainWindow", u"Playlists", None))
 
 #if QT_CONFIG(tooltip)
         self.combo_category.setToolTip("")
@@ -564,6 +566,7 @@ class Ui_MainWindow(object):
         self.menuLanguage.setTitle(QCoreApplication.translate("MainWindow", u"&Language", None))
         self.menuUtilities.setTitle(QCoreApplication.translate("MainWindow", u"&Utilities", None))
     # retranslateUi
+
 
     def resource_path(self, relative_path):
         try:

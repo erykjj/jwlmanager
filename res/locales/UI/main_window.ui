@@ -275,6 +275,11 @@
             <string>Annotations</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Playlists</string>
+           </property>
+          </item>
          </widget>
          <widget class="QLabel" name="label_total">
           <property name="geometry">

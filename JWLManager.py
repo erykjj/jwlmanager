@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.1.0'
+VERSION = 'v4.2.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -410,6 +410,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_export.setVisible(exp)
             self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
+            app.processEvents()
             self.combo_grouping.blockSignals(True)
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
@@ -420,8 +421,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.blockSignals(False)
 
         if selection == _('Notes'):
+            self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
+            self.combo_grouping.setCurrentText(_('Type'))
             disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
             disable_options([4,5], False, False, False, False)
@@ -429,6 +432,9 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([2,4,5], False, True, True, True)
         elif selection == _('Favorites'):
             disable_options([4,5], True, False, False, False)
+        elif selection == _('Playlists'):
+            self.combo_grouping.setCurrentText(_('Title'))
+            disable_options([1,2,3,4,5], False, False, False, False)
         self.regroup()
 
     def regroup(self, same_data=False, message=None):
@@ -444,7 +450,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 get_notes()
             elif category == _('Annotations'):
                 get_annotations()
-
+            elif category == _('Playlists'):
+                get_playlists()
 
         def process_code(code, issue):
             if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
@@ -581,6 +588,31 @@ class Window(QMainWindow, Ui_MainWindow):
             notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
             self.current_data = notes
 
+        def get_playlists():
+            lst = []
+            sql = '''
+                SELECT PlaylistItemId,
+                    Name,
+                    Position,
+                    Label
+                FROM PlaylistItem
+                    JOIN
+                    TagMap USING (
+                        PlaylistItemId
+                    )
+                    JOIN
+                    Tag t USING (
+                        TagId
+                    )
+                WHERE t.Type = 2
+                ORDER BY Name,
+                    Position;'''
+            for row in cur.execute(sql):
+                rec = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), 0, row[1], '', '', row[3] ]
+                lst.append(rec)
+            playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1'])
+            self.current_data = merge_df(playlists)
+
         def enable_options(enabled):
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
@@ -628,6 +660,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         _('Title'): [ 'Title', 'Language' ],
                         _('Language'): [ 'Language', 'Title' ],
                         _('Year'): [ 'Year', 'Title', 'Language' ] }
+                elif category == _('Playlists'):
+                    views = { _('Title'): [ 'Tags', 'Detail1' ], }
                 elif category == _('Highlights'):
                     views = {
                         _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
