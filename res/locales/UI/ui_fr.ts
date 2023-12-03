@@ -76,7 +76,7 @@
     <message>
         <location filename="main_window.ui" line="280"/>
         <source>Playlists</source>
-        <translation>Listes de lectures</translation>
+        <translation>Playlists</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="294"/>
