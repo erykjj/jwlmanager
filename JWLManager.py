@@ -2154,7 +2154,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 14)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 16)
             pd.setWindowModality(Qt.WindowModal)
             pd.setWindowTitle('Reindexing')
             pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -2193,6 +2193,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         pos += 1
                 for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+                progress_dialog.setValue(progress_dialog.value() + 1)
 
             make_table('TagMap')
             update_table('TagMap', 'TagMapId')
@@ -2216,6 +2217,19 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemLocationMap', 'LocationId')
             cur.execute('DROP TABLE CrossReference;')
 
+        def clean_jpegs():
+            thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
+            ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
+            ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
+            for file in glob.glob(tmp_path + '/*'):
+                f = Path(file).name
+                if (f not in thumbs) and (f not in ind):
+                    try:
+                        os.remove(tmp_path + '/' + f)
+                    except:
+                        pass
+            progress_dialog.setValue(progress_dialog.value() + 1)
+
         reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
@@ -2227,6 +2241,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            clean_jpegs()
             reindex_notes()
             reindex_highlights()
             reindex_tags()
