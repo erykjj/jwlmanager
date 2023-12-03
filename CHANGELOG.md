@@ -10,6 +10,7 @@
 
 - More thourough reindexing/cleaning up of the archives
 - Updated resource db
+- Update translations
 
 ### Fixed
 
