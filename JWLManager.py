@@ -590,24 +590,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_playlists():
             lst = []
-            sql = '''
-                SELECT PlaylistItemId,
-                    Name,
-                    Position,
-                    Label
-                FROM PlaylistItem
-                    JOIN
-                    TagMap USING (
-                        PlaylistItemId
-                    )
-                    JOIN
-                    Tag t USING (
-                        TagId
-                    )
-                WHERE t.Type = 2
-                ORDER BY Name,
-                    Position;'''
-            for row in cur.execute(sql):
+            for row in cur.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;'):
                 rec = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), 0, row[1], '', '', row[3] ]
                 lst.append(rec)
             playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1'])
