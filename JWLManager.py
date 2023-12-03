@@ -2163,7 +2163,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return pd
 
         def make_table(table):
-            cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table};')
+            cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
 
         def update_table(table, field):
             app.processEvents()
