@@ -2154,7 +2154,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 20)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 27)
             pd.setWindowModality(Qt.WindowModal)
             pd.setWindowTitle('Reindexing')
             pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -2182,6 +2182,9 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('Note', 'UserMarkId')
             update_table('BlockRange', 'UserMarkId')
             cur.execute('DROP TABLE CrossReference;')
+            make_table('BlockRange')
+            update_table('BlockRange', 'BlockRangeId')
+            cur.execute('DROP TABLE CrossReference;')
 
         def reindex_playlists():
 
@@ -2204,6 +2207,15 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemLocationMap', 'PlaylistItemId')
             update_table('PlaylistItemMarker', 'PlaylistItemId')
             cur.execute('DROP TABLE CrossReference;')
+            make_table('IndependentMedia')
+            update_table('IndependentMedia', 'IndependentMediaId')
+            update_table('PlaylistItemIndependentMediaMap', 'IndependentMediaId')
+            cur.execute('DROP TABLE CrossReference;')
+            make_table('PlaylistItemMarker')
+            update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
+            update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
+            update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
+            cur.execute('DROP TABLE CrossReference;')
             clean_jpegs()
 
         def reindex_tags():
@@ -2221,12 +2233,11 @@ class Window(QMainWindow, Ui_MainWindow):
             make_table('TagMap')
             update_table('TagMap', 'TagMapId')
             cur.execute('DROP TABLE CrossReference;')
-            reorder()
-
-        def reindex_ranges():
-            make_table('BlockRange')
-            update_table('BlockRange', 'BlockRangeId')
+            make_table('Tag')
+            update_table('Tag', 'TagId')
+            update_table('TagMap', 'TagId')
             cur.execute('DROP TABLE CrossReference;')
+            reorder()
 
         def reindex_locations():
             make_table('Location')
@@ -2254,9 +2265,8 @@ class Window(QMainWindow, Ui_MainWindow):
             reindex_notes()
             reindex_highlights()
             reindex_tags()
-            reindex_ranges()
-            reindex_locations()
             reindex_playlists()
+            reindex_locations()
             cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
             cur.close()
