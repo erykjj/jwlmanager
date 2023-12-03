@@ -2013,10 +2013,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def delete_playlist_items():
             for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
-                os.remove(tmp_path + '/' + f[0])
+                try:
+                    os.remove(tmp_path + '/' + f[0])
+                except:
+                    pass
             for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
-                os.remove(tmp_path + '/' + f[0])
+                try:
+                    os.remove(tmp_path + '/' + f[0])
+                except:
+                    pass
             delete('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
             delete('PlaylistItemLocationMap', 'PlaylistItemId')
 
