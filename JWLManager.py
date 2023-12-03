@@ -673,8 +673,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 title = 'Short'
             else:
                 title = 'Full'
-            if self.current_data.shape[0] == 0:
-                return
             self.current_data['Title'] = self.current_data[title]
             views = define_views(category)
             self.int_total = self.current_data.shape[0]
