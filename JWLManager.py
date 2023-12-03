@@ -2154,7 +2154,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 16)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 20)
             pd.setWindowModality(Qt.WindowModal)
             pd.setWindowTitle('Reindexing')
             pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -2182,6 +2182,29 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('Note', 'UserMarkId')
             update_table('BlockRange', 'UserMarkId')
             cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_playlists():
+
+            def clean_jpegs():
+                thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
+                ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
+                ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
+                for file in glob.glob(tmp_path + '/*'):
+                    f = Path(file).name
+                    if (f not in thumbs) and (f not in ind):
+                        try:
+                            os.remove(tmp_path + '/' + f)
+                        except:
+                            pass
+                progress_dialog.setValue(progress_dialog.value() + 1)
+
+            make_table('PlaylistItem')
+            update_table('PlaylistItem', 'PlaylistItemId')
+            update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
+            update_table('PlaylistItemLocationMap', 'PlaylistItemId')
+            update_table('PlaylistItemMarker', 'PlaylistItemId')
+            cur.execute('DROP TABLE CrossReference;')
+            clean_jpegs()
 
         def reindex_tags():
 
@@ -2217,19 +2240,6 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemLocationMap', 'LocationId')
             cur.execute('DROP TABLE CrossReference;')
 
-        def clean_jpegs():
-            thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
-            ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
-            ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
-            for file in glob.glob(tmp_path + '/*'):
-                f = Path(file).name
-                if (f not in thumbs) and (f not in ind):
-                    try:
-                        os.remove(tmp_path + '/' + f)
-                    except:
-                        pass
-            progress_dialog.setValue(progress_dialog.value() + 1)
-
         reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
         if reply == QMessageBox.No:
             return
@@ -2241,12 +2251,12 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
-            clean_jpegs()
             reindex_notes()
             reindex_highlights()
             reindex_tags()
             reindex_ranges()
             reindex_locations()
+            reindex_playlists()
             cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
             cur.close()
