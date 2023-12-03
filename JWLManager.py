@@ -699,6 +699,8 @@ class Window(QMainWindow, Ui_MainWindow):
             filters = views[grouping]
             traverse(self.current_data, filters, self.treeWidget)
 
+        if same_data is not True:
+            same_data = False
         if message:
             msg = message + '… '
         else:
@@ -2009,6 +2011,20 @@ class Window(QMainWindow, Ui_MainWindow):
         def delete(table, field):
             return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
+        def delete_playlist_items():
+            for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
+                os.remove(tmp_path + '/' + f[0])
+            for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
+                cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
+                os.remove(tmp_path + '/' + f[0])
+            delete('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
+            delete('PlaylistItemLocationMap', 'PlaylistItemId')
+
+            cur.execute(f'DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
+            cur.execute(f'DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
+            delete('PlaylistItemMarker', 'PlaylistItemId')
+            return delete('PlaylistItem', 'PlaylistItemId')
+
         def delete_items():
             if category == _('Bookmarks'):
                 return delete('Bookmark', 'BookmarkId')
@@ -2020,6 +2036,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 return delete('Note', 'NoteId')
             elif category == _('Annotations'):
                 return delete('InputField', 'LocationId')
+            elif category == _('Playlists'):
+                return delete_playlist_items()
 
         reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
