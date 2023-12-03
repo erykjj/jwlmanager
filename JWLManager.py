@@ -2332,6 +2332,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 DELETE FROM UserMark WHERE LocationId NOT IN
                 (SELECT LocationId FROM Location);
 
+                DELETE FROM IndependentMedia WHERE IndependentMediaId NOT IN
+                (SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap);
+
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;
                 """
