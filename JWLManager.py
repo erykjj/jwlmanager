@@ -591,9 +591,9 @@ class Window(QMainWindow, Ui_MainWindow):
         def get_playlists():
             lst = []
             for row in cur.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;'):
-                rec = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), 0, row[1], '', '', row[3] ]
+                rec = [ row[0], None, _('* OTHER *'), row[1], '', row[3] ]
                 lst.append(rec)
-            playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1'])
+            playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol',  'Tags', 'Year', 'Detail1'])
             self.current_data = merge_df(playlists)
 
         def enable_options(enabled):
@@ -698,7 +698,6 @@ class Window(QMainWindow, Ui_MainWindow):
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             if not same_data:
-                self.current_data = []
                 get_data()
             self.leaves = {}
             self.treeWidget.clear()
