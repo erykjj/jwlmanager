@@ -2134,7 +2134,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 27)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 22)
             pd.setWindowModality(Qt.WindowModal)
             pd.setWindowTitle('Reindexing')
             pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -2186,15 +2186,6 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
             update_table('PlaylistItemLocationMap', 'PlaylistItemId')
             update_table('PlaylistItemMarker', 'PlaylistItemId')
-            cur.execute('DROP TABLE CrossReference;')
-            make_table('IndependentMedia')
-            update_table('IndependentMedia', 'IndependentMediaId')
-            update_table('PlaylistItemIndependentMediaMap', 'IndependentMediaId')
-            cur.execute('DROP TABLE CrossReference;')
-            make_table('PlaylistItemMarker')
-            update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
-            update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
-            update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
             cur.execute('DROP TABLE CrossReference;')
             clean_jpegs()
 
