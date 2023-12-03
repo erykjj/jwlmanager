@@ -8,6 +8,8 @@
 
 ### Changed
 
+- More thourough reindexing/cleaning up of the archives
+
 ### Fixed
 
 ### Removed
