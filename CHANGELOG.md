@@ -9,6 +9,7 @@
 ### Changed
 
 - More thourough reindexing/cleaning up of the archives
+- Updated resource db
 
 ### Fixed
 
