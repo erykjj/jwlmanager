@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-12-04 07:17-0500\n"
-"PO-Revision-Date: 2023-11-14 02:04+0000\n"
+"PO-Revision-Date: 2023-12-04 12:25+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.3-dev\n"
 "Generated-By: Babel 2.12.1\n"
 
 #: JWLManager.py:212 JWLManager.py:420 JWLManager.py:424 JWLManager.py:427
@@ -109,7 +110,7 @@ msgstr "Favorites"
 
 #: JWLManager.py:435 JWLManager.py:453 JWLManager.py:646 JWLManager.py:2025
 msgid "Playlists"
-msgstr ""
+msgstr "Playlists"
 
 #: JWLManager.py:436 JWLManager.py:637 JWLManager.py:643 JWLManager.py:647
 #: JWLManager.py:651 JWLManager.py:658 JWLManager.py:666
@@ -458,25 +459,24 @@ msgid "Reindexed successfully"
 msgstr "Reindexed successfully"
 
 #: JWLManager.py:2267
-#, fuzzy
 msgid "Reorder"
-msgstr "Red"
+msgstr "Reorder"
 
 #: JWLManager.py:2267
 msgid ""
 "All notes will be REORDERED.\n"
 "Proceed?"
 msgstr ""
+"All notes will be REORDERED.\n"
+"Proceed?"
 
 #: JWLManager.py:2270
-#, fuzzy
 msgid "Reordering. Please wait…"
-msgstr "Reindexing. Please wait…"
+msgstr "Reordering. Please wait…"
 
 #: JWLManager.py:2284
-#, fuzzy
 msgid "Notes reordered"
-msgstr "NOT exported!"
+msgstr "Notes reordered"
 
 #~ msgid "No archive selected"
 #~ msgstr "No archive selected"
@@ -668,4 +668,3 @@ msgstr "NOT exported!"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-
