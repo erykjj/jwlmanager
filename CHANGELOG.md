@@ -18,7 +18,7 @@ ____
 
 ### Changed
 
-- More thourough reindexing/cleaning up of the archives
+- More thourough database reindexing and cleaning up of the archives
 - Updated resource db
 - Updated translations
 - Slight UI adjustments
