@@ -1993,6 +1993,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def delete_playlist_items():
             for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
+                cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
                 except:
@@ -2322,9 +2323,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 DELETE FROM UserMark WHERE LocationId NOT IN
                 (SELECT LocationId FROM Location);
-
-                DELETE FROM IndependentMedia WHERE IndependentMediaId NOT IN
-                (SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap);
 
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;

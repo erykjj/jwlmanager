@@ -4,7 +4,17 @@
 
 ### Added
 
-- Playlists category to list (and delete) playlists and/or their content
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [4.2.0] - 2023-12-05
+### Added
+
+- **Playlists** category to list (and delete) playlists and/or their content
 
 ### Changed
 
@@ -14,9 +24,8 @@
 
 ### Fixed
 
-### Removed
+- Various minor fixes
 
-____
 ## [4.1.0] - 2023-11-30
 
 ### Added
@@ -573,6 +582,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.0
 [4.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.1.0
 [4.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.2
 [4.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.1
