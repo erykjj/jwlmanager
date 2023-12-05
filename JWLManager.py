@@ -2190,13 +2190,17 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemMarker', 'PlaylistItemId')
             cur.execute('DROP TABLE CrossReference;')
 
+            cur.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
             make_table('IndependentMedia')
             update_table('IndependentMedia', 'IndependentMediaId')
             update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
             cur.execute('DROP TABLE CrossReference;')
 
+            cur.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
+            cur.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
             make_table('PlaylistItemMarker')
             update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
+
             update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
             update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
             cur.execute('DROP TABLE CrossReference;')
