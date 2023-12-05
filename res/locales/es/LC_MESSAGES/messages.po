@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2023-12-04 07:17-0500\n"
-"PO-Revision-Date: 2023-12-04 12:45+0000\n"
+"PO-Revision-Date: 2023-12-05 20:44+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language-Team: es <LL@li.org>\n"
 "Language: es\n"
@@ -110,7 +110,7 @@ msgstr "Favoritos"
 
 #: JWLManager.py:435 JWLManager.py:453 JWLManager.py:646 JWLManager.py:2025
 msgid "Playlists"
-msgstr "Playlists"
+msgstr "Listas de reproducción"
 
 #: JWLManager.py:436 JWLManager.py:637 JWLManager.py:643 JWLManager.py:647
 #: JWLManager.py:651 JWLManager.py:658 JWLManager.py:666
