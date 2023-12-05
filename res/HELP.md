@@ -140,4 +140,4 @@ This function cleans up and re-orders the records in the archive database. It is
 #####
 ### Sort
 ######
-When a specific tag is selected in the JW Library app's "Personal Study" (Notes and Tags) section, the displayed notes can be arranged manually. This function restores all notes to their "natural" order (based on `NoteId`, which basically corresponds to creation time - from oldest to most recent).
+When a specific tag is selected in the JW Library app's "Personal Study" (Notes and Tags) section, the displayed notes can be arranged manually. This function restores all notes to their "natural" order (based on `NoteId`).
