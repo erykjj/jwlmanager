@@ -5,7 +5,7 @@
 
 These are due to the fact the the app is not signed with a valid certificate, which is too expensive for me to purchase just for this one (open-source) project. If you receive one of these alerts, you can safely choose "More info" and "Run anyway". *Apparently*, you only need to this once.
 
-As to **virus alerts**, have a look here. These are the virus scan results for one of my Windows executable packages (an older one, true, but feel free to scan any more recent one): https://www.virustotal.com/gui/file/f6931203e2eb31af3db5832507aaa2bd461eab2803db78e5cb10e2009c7d098a/detection
+As to **virus alerts**, have a look here. These are the virus scan results for one of my Windows executable packages (an older one, true, but feel free to scan any more recent one): https://www.virustotal.com/gui/file/10e87f2b31ccf1f0642e4d76df8770bf5f2d8a75cadc9406acb96c08e24e1b83/detection
 
 You'll notice the great majority of anti-virus products report is as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. So why do some report trojans and such? Well...
 
@@ -14,7 +14,7 @@ The app is basically a Python 3 script, and I use PyInstaller to package it up i
 
 ## **macOS** slow start
 
-Again, this is because the app package (code) isn't signed with an (expensive) Apple Developer certificate. [Some say](https://forums.macrumors.com/threads/big-sur-apps-slow-to-launch.2279325/post-29855622), the slow start (we're talking 10 to 20 seconds!) is due to the fact that the app is being sent to Apple for "verification". *Apparently*, the launch is much faster if the internet is disabled - someone please confirm that.
+Again, this is because the app package (code) isn't signed with an (expensive) Apple Developer certificate. [Some say](https://forums.macrumors.com/threads/big-sur-apps-slow-to-launch.2279325/post-29855622), the slow start (we're talking 10 to 20 seconds!) is due to the fact that the app is being sent to Apple for "verification". *Apparently*, the launch is much faster if the internet is disabled - **someone please confirm that**.
 
 You can try what is suggested in the *macOS User Guide*:
 ```
