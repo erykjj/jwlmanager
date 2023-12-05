@@ -3,7 +3,7 @@
 
 ## Purpose
 
-This is a **multi-platform application**[^#] for viewing and performing various operations on the *user* data stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
+This is a **multi-platform application**[^#] for viewing and performing various operations on the *user* data (Notes, Highlights, Favorites, Bookmarks, Annotations and Playlists) stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
 
 In addition to the main functions of **viewing, editing, exporting, importing, and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** by exporting the desired items and importing them into an existent archive or into a new one.
 
