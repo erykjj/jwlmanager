@@ -20,7 +20,8 @@ ____
 
 - More thourough reindexing/cleaning up of the archives
 - Updated resource db
-- Update translations
+- Updated translations
+- Slight UI adjustments
 
 ### Fixed
 
