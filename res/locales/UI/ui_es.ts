@@ -142,7 +142,7 @@
     <message>
         <location filename="main_window.ui" line="280"/>
         <source>Playlists</source>
-        <translation>Playlists</translation>
+        <translation>Listas de reproducción</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="414"/>
