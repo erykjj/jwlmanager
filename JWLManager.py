@@ -1989,6 +1989,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def delete_items(self):
 
+        def reorder_tags():
+            for tag_id in cur.execute('SELECT TagId FROM Tag').fetchall():
+                pos = 1
+                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
+                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
+                    pos += 1
+            for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
+                cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+            cur.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
+
         def delete(table, field):
             return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
@@ -2007,11 +2017,14 @@ class Window(QMainWindow, Ui_MainWindow):
                     pass
             delete('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
             delete('PlaylistItemLocationMap', 'PlaylistItemId')
+            delete('TagMap', 'PlaylistItemId')
 
             cur.execute(f'DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
             cur.execute(f'DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
             delete('PlaylistItemMarker', 'PlaylistItemId')
-            return delete('PlaylistItem', 'PlaylistItemId')
+            count = delete('PlaylistItem', 'PlaylistItemId')
+            reorder_tags()
+            return count
 
         def delete_items():
             if category == _('Bookmarks'):
@@ -2021,7 +2034,9 @@ class Window(QMainWindow, Ui_MainWindow):
             elif category == _('Highlights'):
                 return delete('BlockRange', 'BlockRangeId')
             elif category == _('Notes'):
-                return delete('Note', 'NoteId')
+                count = delete('Note', 'NoteId')
+                reorder_tags()
+                return count
             elif category == _('Annotations'):
                 return delete('InputField', 'LocationId')
             elif category == _('Playlists'):
@@ -2188,6 +2203,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
             update_table('PlaylistItemLocationMap', 'PlaylistItemId')
             update_table('PlaylistItemMarker', 'PlaylistItemId')
+            update_table('TagMap', 'PlaylistItemId')
             cur.execute('DROP TABLE CrossReference;')
 
             cur.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
@@ -2200,7 +2216,6 @@ class Window(QMainWindow, Ui_MainWindow):
             cur.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
             make_table('PlaylistItemMarker')
             update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
-
             update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
             update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
             cur.execute('DROP TABLE CrossReference;')
@@ -2208,17 +2223,6 @@ class Window(QMainWindow, Ui_MainWindow):
             clean_jpegs()
 
         def reindex_tags():
-
-            def reorder():
-                for tag_id in cur.execute('SELECT TagId FROM Tag').fetchall():
-                    pos = 1
-                    for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
-                        cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
-                        pos += 1
-                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
-                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
-                progress_dialog.setValue(progress_dialog.value() + 1)
-
             make_table('TagMap')
             update_table('TagMap', 'TagMapId')
             cur.execute('DROP TABLE CrossReference;')
@@ -2226,7 +2230,6 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('Tag', 'TagId')
             update_table('TagMap', 'TagId')
             cur.execute('DROP TABLE CrossReference;')
-            reorder()
 
         def reindex_locations():
             make_table('Location')
