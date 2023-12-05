@@ -776,8 +776,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setText(f'{Path(archive).stem}  ')
         global db_name
         try:
-            os.remove(f'{tmp_path}/manifest.json')
-            os.remove(f'{tmp_path}/{db_name}')
+            for f in glob.glob(f'{tmp_path}/*', recursive=True):
+                os.remove(f)
         except:
             pass
         with ZipFile(archive,'r') as zipped:
