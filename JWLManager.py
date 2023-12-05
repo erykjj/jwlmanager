@@ -411,15 +411,14 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
             app.processEvents()
-            self.combo_grouping.blockSignals(True)
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
             for item in lst:
                 self.combo_grouping.model().item(item).setEnabled(False)
                 if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
                     self.combo_grouping.setCurrentText(_('Type'))
-            self.combo_grouping.blockSignals(False)
 
+        self.combo_grouping.blockSignals(True)
         if selection == _('Notes'):
             self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
@@ -435,6 +434,7 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
             disable_options([1,2,3,4,5], False, False, False, False)
+        self.combo_grouping.blockSignals(False)
         self.regroup()
 
     def regroup(self, same_data=False, message=None):
