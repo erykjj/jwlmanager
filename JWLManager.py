@@ -434,8 +434,8 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
             disable_options([1,2,3,4,5], False, False, False, False)
-        self.combo_grouping.blockSignals(False)
         self.regroup()
+        self.combo_grouping.blockSignals(False)
 
     def regroup(self, same_data=False, message=None):
 
@@ -597,6 +597,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = merge_df(playlists)
 
         def enable_options(enabled):
+            self.button_import.setEnabled(enabled)
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
             self.actionReindex.setEnabled(enabled)
