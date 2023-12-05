@@ -312,7 +312,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def crash_box(self, ex):
         tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
-        dialog = QDialog()
+        dialog = QDialog(self)
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
@@ -2135,9 +2135,9 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 22)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 27, parent=self)
             pd.setWindowModality(Qt.WindowModal)
-            pd.setWindowTitle('Reindexing')
+            pd.setWindowTitle(_('Reindexing'))
             pd.setWindowFlag(Qt.FramelessWindowHint)
             pd.setModal(True)
             pd.setMinimumDuration(0)
@@ -2188,6 +2188,18 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemLocationMap', 'PlaylistItemId')
             update_table('PlaylistItemMarker', 'PlaylistItemId')
             cur.execute('DROP TABLE CrossReference;')
+
+            make_table('IndependentMedia')
+            update_table('IndependentMedia', 'IndependentMediaId')
+            update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
+            cur.execute('DROP TABLE CrossReference;')
+
+            make_table('PlaylistItemMarker')
+            update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
+            update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
+            update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
+            cur.execute('DROP TABLE CrossReference;')
+
             clean_jpegs()
 
         def reindex_tags():
@@ -2235,9 +2247,9 @@ class Window(QMainWindow, Ui_MainWindow):
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
-            reindex_highlights()
             reindex_tags()
             reindex_playlists()
+            reindex_highlights()
             reindex_locations()
             cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
