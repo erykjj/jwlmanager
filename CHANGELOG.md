@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [4.2.1] - 2023-12-06
+### Added
+
+- Added fix for buggy database tables
+
 ## [4.2.0] - 2023-12-05
 ### Added
 
@@ -583,6 +588,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.1
 [4.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.0
 [4.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.1.0
 [4.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.0.2
