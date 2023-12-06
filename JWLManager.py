@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.2.0'
+VERSION = 'v4.2.1'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -2198,6 +2198,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             pass
                 progress_dialog.setValue(progress_dialog.value() + 1)
 
+            cur.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
             make_table('PlaylistItem')
             update_table('PlaylistItem', 'PlaylistItemId')
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
