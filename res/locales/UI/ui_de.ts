@@ -20,7 +20,7 @@
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Year</source>
-        <translation>Yahr</translation>
+        <translation>Jahr</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
