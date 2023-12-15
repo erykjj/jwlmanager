@@ -29,7 +29,7 @@ from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QAction, QIcon, QPixmap
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 
 _base_path = path.dirname(__file__)
@@ -150,8 +150,10 @@ class DataViewer(QDialog):
         spacer.setFixedHeight(1)
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
-        self.filter_box = QPlainTextEdit()
-        self.filter_box.setFixedWidth(200)
+        self.filter_box = QLineEdit()
+        self.filter_box.setPlaceholderText('Filter')
+        self.filter_box.setClearButtonEnabled(True)
+        self.filter_box.setFixedSize(200, 25)
 
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
