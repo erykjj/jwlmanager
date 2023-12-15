@@ -1572,10 +1572,10 @@ class Window(QMainWindow, Ui_MainWindow):
         def filter_items():
             for item in self.viewer_items.values():
                 if item.note_widget.isVisible():
-                    if not self.viewer_window.filter_box.toPlainText().lower() in item.title.lower():
+                    if not self.viewer_window.filter_box.text().lower() in item.title.lower():
                         item.note_widget.setVisible(False)
                 else:
-                    if self.viewer_window.filter_box.toPlainText().lower() in item.title.lower():
+                    if self.viewer_window.filter_box.text().lower() in item.title.lower():
                         item.note_widget.setVisible(True)
                 app.processEvents()
 
