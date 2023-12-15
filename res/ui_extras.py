@@ -151,9 +151,9 @@ class DataViewer(QDialog):
         spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
         self.filter_box = QLineEdit()
-        self.filter_box.setPlaceholderText('Filter')
+        self.filter_box.sizePolicy().setHorizontalPolicy(QSizePolicy.Maximum)
         self.filter_box.setClearButtonEnabled(True)
-        self.filter_box.setFixedSize(200, 25)
+        self.filter_box.setMaximumWidth(200)
 
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
