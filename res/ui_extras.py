@@ -146,14 +146,19 @@ class DataViewer(QDialog):
         self.confirm_action.setDisabled(True)
         confirm_button.setDefaultAction(self.confirm_action)
 
-        self.filter_box = QPlainTextEdit()
+        spacer = QWidget()
+        spacer.setFixedHeight(1)
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
 
+        self.filter_box = QPlainTextEdit()
+        self.filter_box.setFixedWidth(200)
 
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
         toolbar.addWidget(txt_button)
         toolbar.addWidget(discard_button)
         toolbar.addWidget(confirm_button)
+        toolbar.addWidget(spacer)
         toolbar.addWidget(self.filter_box)
 
         self.grid_layout = QGridLayout(viewer)
