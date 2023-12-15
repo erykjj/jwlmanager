@@ -1574,10 +1574,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item in self.deleted_list:
                     continue
                 if item.note_widget.isVisible():
-                    if not self.viewer_window.filter_box.text().lower() in item.title.lower():
+                    if (self.viewer_window.filter_box.text().lower() not in item.title.lower()) and (self.viewer_window.filter_box.text().lower() not in item.body.lower()):
                         item.note_widget.setVisible(False)
                 else:
-                    if self.viewer_window.filter_box.text().lower() in item.title.lower():
+                    if (self.viewer_window.filter_box.text().lower() in item.title.lower()) or (self.viewer_window.filter_box.text().lower() in item.body.lower()):
                         item.note_widget.setVisible(True)
                 app.processEvents()
 
