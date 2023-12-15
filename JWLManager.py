@@ -1889,6 +1889,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         connect_signals()
+        self.viewer_window.filter_box.setPlaceholderText(_('Filter'))
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
