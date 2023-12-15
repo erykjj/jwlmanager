@@ -1892,6 +1892,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
+        self.viewer_window.filter_box.setFocus()
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
