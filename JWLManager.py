@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.2.1'
+VERSION = 'v4.3.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -1569,6 +1569,18 @@ class Window(QMainWindow, Ui_MainWindow):
             update_viewer_toolbar()
             app.processEvents()
 
+        def filter_items():
+            for item in self.viewer_items.values():
+                if item in self.deleted_list:
+                    continue
+                if item.note_widget.isVisible():
+                    if (self.viewer_window.filter_box.text().lower() not in item.title.lower()) and (self.viewer_window.filter_box.text().lower() not in item.body.lower()):
+                        item.note_widget.setVisible(False)
+                else:
+                    if (self.viewer_window.filter_box.text().lower() in item.title.lower()) or (self.viewer_window.filter_box.text().lower() in item.body.lower()):
+                        item.note_widget.setVisible(True)
+                app.processEvents()
+
         def update_db():
 
             def update_notes():
@@ -1855,6 +1867,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.title.textChanged.connect(title_changed)
             self.viewer_window.body.textChanged.connect(body_changed)
             self.viewer_window.escape_pressed.connect(escape_pressed)
+            self.viewer_window.filter_box.textChanged.connect(filter_items)
 
         def escape_pressed():
             if self.viewer_window.viewer_layout.currentIndex() == 1:
@@ -1878,9 +1891,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.body_modified = False
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         connect_signals()
+        self.viewer_window.filter_box.setPlaceholderText(_('Filter'))
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
+        self.viewer_window.filter_box.setFocus()
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')

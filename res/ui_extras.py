@@ -29,7 +29,7 @@ from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QAction, QIcon, QPixmap
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 
 _base_path = path.dirname(__file__)
@@ -146,11 +146,22 @@ class DataViewer(QDialog):
         self.confirm_action.setDisabled(True)
         confirm_button.setDefaultAction(self.confirm_action)
 
+        spacer = QWidget()
+        spacer.setFixedHeight(1)
+        spacer.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+
+        self.filter_box = QLineEdit()
+        self.filter_box.sizePolicy().setHorizontalPolicy(QSizePolicy.Maximum)
+        self.filter_box.setClearButtonEnabled(True)
+        self.filter_box.setMaximumWidth(150)
+
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
         toolbar.addWidget(txt_button)
         toolbar.addWidget(discard_button)
         toolbar.addWidget(confirm_button)
+        toolbar.addWidget(spacer)
+        toolbar.addWidget(self.filter_box)
 
         self.grid_layout = QGridLayout(viewer)
         self.grid_layout.setAlignment(Qt.AlignTop)
