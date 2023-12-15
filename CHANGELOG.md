@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added **filter box** in Data Viewer
+
 ### Changed
 
 ### Fixed
