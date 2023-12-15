@@ -1569,6 +1569,16 @@ class Window(QMainWindow, Ui_MainWindow):
             update_viewer_toolbar()
             app.processEvents()
 
+        def filter_items():
+            for item in self.viewer_items.values():
+                if item.note_widget.isVisible():
+                    if not self.viewer_window.filter_box.toPlainText().lower() in item.title.lower():
+                        item.note_widget.setVisible(False)
+                else:
+                    if self.viewer_window.filter_box.toPlainText().lower() in item.title.lower():
+                        item.note_widget.setVisible(True)
+                app.processEvents()
+
         def update_db():
 
             def update_notes():
@@ -1855,6 +1865,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.title.textChanged.connect(title_changed)
             self.viewer_window.body.textChanged.connect(body_changed)
             self.viewer_window.escape_pressed.connect(escape_pressed)
+            self.viewer_window.filter_box.textChanged.connect(filter_items)
 
         def escape_pressed():
             if self.viewer_window.viewer_layout.currentIndex() == 1:
