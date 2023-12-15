@@ -8,6 +8,9 @@
 
 ### Changed
 
+- Updated publications catalog
+- Updated translations
+
 ### Fixed
 
 ### Removed
