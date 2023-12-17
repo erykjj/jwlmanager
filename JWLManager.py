@@ -1106,6 +1106,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         category = self.combo_category.currentText()
         fname = export_file()
+        self.working_dir = Path(fname).parent
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
@@ -1645,6 +1646,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if fname == '':
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                 return
+            self.working_dir = Path(fname).parent
             txt = ''
             for item in self.viewer_items.values():
                 if not item.note_widget.isVisible():
@@ -1656,7 +1658,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 txt += '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
-                self.statusBar.showMessage(' '+_('Saved'), 3500)
+            self.statusBar.showMessage(' '+_('Saved'), 3500)
+            self.viewer_window.raise_()
 
         def clean_text(text):
             return regex.sub(r'\p{Z}', ' ', text)
