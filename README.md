@@ -22,6 +22,7 @@ You can launch the GUI in the desired language by appending the corresponding la
 - Linux terminal: `python3 JWLManager.py -es`
 - Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
 - macOS Terminal: `open -a JWLManager.app --args -es`
+The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
 Preferably, if you have Python 3 installed and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
 
@@ -65,7 +66,7 @@ See [here](res/HELP.md) for an explanation of how to use.
 ____
 ## Feedback
 
-Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and suggestions.
+Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and/or suggestions.
 
 [![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
