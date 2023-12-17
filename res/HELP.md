@@ -2,7 +2,7 @@
 ######
 Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** also works.
 ######
-The state of the application (size, position, and various selection choices) are preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
+The state of the application (size, position, language, and various selection choices) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 ######
 Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* OTHER \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* NO TAG \**.
 ######
