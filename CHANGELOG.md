@@ -6,6 +6,7 @@
 
 - Added **filter box** in Data Viewer
 - Added German translation - needs revision ;-)
+- Added Polish translation
 
 ### Changed
 
