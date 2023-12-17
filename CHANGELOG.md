@@ -5,6 +5,7 @@
 ### Added
 
 - Added **filter box** in Data Viewer
+- Added German translation - needs revision ;-)
 
 ### Changed
 
