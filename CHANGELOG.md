@@ -5,6 +5,7 @@
 ### Added
 
 - Added **filter box** in Data Viewer
+  - TXT save only saves visible (filtered) items
 - Added German translation - needs revision ;-)
 - Added Polish translation
 
