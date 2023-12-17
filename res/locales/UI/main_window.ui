@@ -573,6 +573,7 @@
      <addaction name="actionES"/>
      <addaction name="actionFR"/>
      <addaction name="actionIT"/>
+     <addaction name="actionPL"/>
      <addaction name="actionPT"/>
      <addaction name="actionRU"/>
      <addaction name="actionZH"/>
@@ -965,6 +966,14 @@
    </property>
    <property name="toolTip">
     <string>Sort Notes</string>
+   </property>
+  </action>
+  <action name="actionPL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Polski</string>
    </property>
   </action>
  </widget>

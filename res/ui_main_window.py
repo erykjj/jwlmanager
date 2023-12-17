@@ -14,7 +14,6 @@ from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
 from PySide6.QtGui import QAction, QActionGroup, QFont, QIcon
 from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -37,7 +36,6 @@ class Ui_MainWindow(object):
         self.actionSave.setEnabled(False)
         icon2 = QIcon()
         icon2.addFile(self.resource_path('res/icons/icons8-save-64.png'), QSize(), QIcon.Normal, QIcon.Off)
-        icon2.addFile(self.resource_path('res/icons/icons8-save-64.png'), QSize(), QIcon.Normal, QIcon.On)
         self.actionSave.setIcon(icon2)
         self.actionReindex = QAction(MainWindow)
         self.actionReindex.setObjectName(u"actionReindex")
@@ -144,6 +142,9 @@ class Ui_MainWindow(object):
         icon14 = QIcon()
         icon14.addFile(self.resource_path('res/icons/icons8-ascending-sorting-64.png'), QSize(), QIcon.Normal, QIcon.Off)
         self.actionSort.setIcon(icon14)
+        self.actionPL = QAction(MainWindow)
+        self.actionPL.setObjectName(u"actionPL")
+        self.actionPL.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
@@ -324,6 +325,7 @@ class Ui_MainWindow(object):
         self.langChoices.addAction(self.actionES)
         self.langChoices.addAction(self.actionFR)
         self.langChoices.addAction(self.actionIT)
+        self.langChoices.addAction(self.actionPL)
         self.langChoices.addAction(self.actionPT)
         self.menuUtilities = QMenu(self.menubar)
         self.menuUtilities.setObjectName(u"menuUtilities")
@@ -376,6 +378,7 @@ class Ui_MainWindow(object):
         self.menuLanguage.addAction(self.actionES)
         self.menuLanguage.addAction(self.actionFR)
         self.menuLanguage.addAction(self.actionIT)
+        self.menuLanguage.addAction(self.actionPL)
         self.menuLanguage.addAction(self.actionPT)
         self.menuLanguage.addAction(self.actionRU)
         self.menuLanguage.addAction(self.actionZH)
@@ -513,6 +516,10 @@ class Ui_MainWindow(object):
         self.actionSort.setText(QCoreApplication.translate("MainWindow", u"&Sort", None))
 #if QT_CONFIG(tooltip)
         self.actionSort.setToolTip(QCoreApplication.translate("MainWindow", u"Sort Notes", None))
+#endif // QT_CONFIG(tooltip)
+        self.actionPL.setText(QCoreApplication.translate("MainWindow", u"Polski", None))
+#if QT_CONFIG(tooltip)
+        self.actionPL.setToolTip(QCoreApplication.translate("MainWindow", u"pl", None))
 #endif // QT_CONFIG(tooltip)
         self.combo_grouping.setItemText(0, QCoreApplication.translate("MainWindow", u"Title", None))
         self.combo_grouping.setItemText(1, QCoreApplication.translate("MainWindow", u"Type", None))
