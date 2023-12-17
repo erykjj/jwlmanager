@@ -5,108 +5,108 @@
         "4": "Broschüren",
         "6": "Indexe",
         "7": "Zeitschriften",
-        "10": "",
+        "10": "Traktate",
         "12": "Programme",
-        "13": "",
-        "14": "",
-        "17": "",
-        "22": "",
-        "25": "",
-        "30": "",
-        "31": ""
+        "13": "Zeitschriften",
+        "14": "Zeitschriften",
+        "17": "Anderes",
+        "22": "Artikelserien",
+        "25": "Multimedia",
+        "30": "Zeitschriften",
+        "31": "Programme"
     },
     "extras": {
         "CO-invpw": {
-            "short": "",
-            "long": ""
+            "short": "Kongresseinladung",
+            "long": "Einladung zum Regionalkongress"
         },
         "S-196": {
-            "short": "",
-            "long": ""
+            "short": "Verwendung \"Glücklich – für immer\"",
+            "long": "Wie man \"Glücklich – für immer\" im Ministerium einsetzt"
         },
         "cj": {
-            "short": "",
-            "long": ""
+            "short": "Kommentar zum Jakobusbrief",
+            "long": "Kommentar zum Jakobusbrief"
         },
         "cn": {
-            "short": "",
-            "long": ""
+            "short": "Konkordanz",
+            "long": "Umfassende Konkordanz der Neuen Welt Übersetzung der Heiligen Schrift"
         },
         "co-r": {
-            "short": "",
-            "long": ""
+            "short": "Video der Kongresse",
+            "long": "Video der Kongresse"
         },
         "dx": {
-            "short": "",
-            "long": ""
+            "short": "Index",
+            "long": "Index der Wachtturm-Publikationen"
         },
         "igw": {
-            "short": "",
-            "long": ""
+            "short": "Einführung zu Gottes Wort",
+            "long": "Einführung zu Gottes Wort"
         },
         "jwb": {
-            "short": "",
-            "long": ""
+            "short": "JW Broadcasting",
+            "long": "Video der JW Broadcasting"
         },
         "jwb-": {
-            "short": "",
-            "long": ""
+            "short": "Morgenprogramm",
+            "long": "Video der Morgenprogramm"
         },
         "jwbcov": {
-            "short": "",
-            "long": ""
+            "short": "Musikvideo vom Kongress",
+            "long": "Musikvideo der Regionalkongress"
         },
         "ks10": {
-            "short": "",
-            "long": ""
+            "short": "Hüten (ks)",
+            "long": "\"die Versammlung Gottes zu hüten\" (ks)"
         },
         "mwbv": {
-            "short": "",
-            "long": ""
+            "short": "Video der Musikmachen",
+            "long": "Video der Musikmachen"
         },
         "om": {
-            "short": "",
-            "long": ""
+            "short": "Dienst-Buch",
+            "long": "Organisiert, unseren Dienst durchzuführen"
         },
         "or": {
-            "short": "",
-            "long": ""
+            "short": "Organisation",
+            "long": "Organisation zum Predigen des Königreiches und zum Jüngermachen"
         },
         "osg": {
-            "short": "",
-            "long": ""
+            "short": "Video zum Originallied",
+            "long": "Video zum Originallied"
         },
         "pk": {
-            "short": "",
-            "long": ""
+            "short": "Video der Werde Jehovas Freund",
+            "long": "Video der Werde Jehovas Freund"
         },
         "pkon": {
-            "short": "",
-            "long": ""
+            "short": "Video zum Kinderlied",
+            "long": "Video zum Kinderlied"
         },
         "pt14": {
-            "short": "",
-            "long": ""
+            "short": "Deinen Dienst durch",
+            "long": "\"Führe deinen Dienst gründlich durch\""
         },
         "qm": {
-            "short": "",
-            "long": ""
+            "short": "Befähigt",
+            "long": "Zum Predigtdienst befähigt"
         },
         "sfl": {
-            "short": "",
-            "long": ""
+            "short": "Hüten (sfl)",
+            "long": "\"Die Versammlung Gottes zu hüten\" (sfl)"
         },
         "sfla": {
-            "short": "",
-            "long": ""
+            "short": "Nachtrag",
+            "long": "Nachtrag zu \"Die Versammlung Gottes zu hüten\" (sfl)"
         },
         "sgd": {
-            "short": "",
-            "long": ""
+            "short": "Leitfaden zum Bibelstudium",
+            "long": "Leitfaden für das Studium von Gottes Wort"
         },
         "ws-": {
-            "short": "",
-            "long": ""
+            "short": "Sicherheits-Buch",
+            "long": "Weltweite Sicherheit unter dem „Fürsten des Friedens“"
         }
     }
 }
