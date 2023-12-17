@@ -70,6 +70,6 @@ Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and pos
 
 ____
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer
-[^*]: Chinese, German, Japanese, Polish and Russian; other volunteers also appreciated.
+[^*]: German and Polish need revision; Japanese needs to be completed; I would like to add Chinese and Russian, and other volunteers also appreciated.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: Install via `pip install -r requirements.txt`. The [requirements.txt](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt) file can be found in the `/res` forlder.
