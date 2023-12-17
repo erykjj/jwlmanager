@@ -61,7 +61,7 @@ def get_language():
         'es': 'Spanish (español)',
         'fr': 'French (français)',
         'it': 'Italian (italiano)',
-        # 'pl': 'Polish (Polski)',
+        'pl': 'Polish (Polski)',
         'pt': 'Portuguese (Português)',
         # 'ru': 'Russian (pусский)',
         # 'zh': 'Chinese (中文)',
