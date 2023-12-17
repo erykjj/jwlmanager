@@ -1646,9 +1646,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                 return
             txt = ''
-            for i in range(len(self.viewer_items)):
-                item = self.viewer_items[i+1]
-                if item in self.deleted_list:
+            for item in self.viewer_items.values():
+                if not item.note_widget.isVisible():
                     continue
                 if category == _('Notes'):
                     txt += item.title + '\n' + item.body + '\n----------\n' + remove_html(item.meta_box.text())
