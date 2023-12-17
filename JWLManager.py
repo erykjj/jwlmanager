@@ -56,7 +56,7 @@ from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem
 def get_language():
     global available_languages, tr
     available_languages = { # add/enable completed languages
-        # 'de': 'German (Deutsch)',
+        'de': 'German (Deutsch)',
         'en': 'English (default)',
         'es': 'Spanish (español)',
         'fr': 'French (français)',
