@@ -1,112 +1,112 @@
 {
     "types": {
-        "1": "",
-        "2": "",
-        "4": "",
-        "6": "",
-        "7": "",
-        "10": "",
-        "12": "",
-        "13": "",
-        "14": "",
-        "17": "",
-        "22": "",
-        "25": "",
-        "30": "",
-        "31": ""
+        "1": "Biblie",
+        "2": "Książki",
+        "4": "Broszury",
+        "6": "Skorowidze",
+        "7": "Czasopisma",
+        "10": "Traktaty",
+        "12": "Programy",
+        "13": "Czasopisma",
+        "14": "Czasopisma",
+        "17": "Inne",
+        "22": "Serie",
+        "25": "Multimedia",
+        "30": "Czasopisma",
+        "31": "Programy"
     },
     "extras": {
         "CO-invpw": {
-            "short": "",
-            "long": ""
+            "short": "Zaproszenie na kongres",
+            "long": "Zaproszenie na Kongres Regionalny"
         },
         "S-196": {
-            "short": "",
-            "long": ""
+            "short": "Używać \"Już zawsze ciesz się życiem!\"",
+            "long": "Stosować \"Już zawsze ciesz się życiem!\" w służbie"
         },
         "cj": {
-            "short": "",
-            "long": ""
+            "short": "Komentarz na Jakuba",
+            "long": "Komentarz do Listu Jakuba"
         },
         "cn": {
-            "short": "",
-            "long": ""
+            "short": "Konkordancja",
+            "long": "Kompleksowa konkordancja Pisma Świętego w Przekładzie Nowego Świata"
         },
         "co-r": {
-            "short": "",
-            "long": ""
+            "short": "Wideo z kongresu",
+            "long": "Wideo z kongresu"
         },
         "dx": {
-            "short": "",
-            "long": ""
+            "short": "Skorowidz",
+            "long": "Skorowidz do publikacji Towarzystwa Strażnica"
         },
         "igw": {
-            "short": "",
-            "long": ""
+            "short": "Poznaj Słowo Boże",
+            "long": "Poznaj Słowo Boże"
         },
         "jwb": {
-            "short": "",
-            "long": ""
+            "short": "JW Broadcasting",
+            "long": "Wideo z JW Broadcasting"
         },
         "jwb-": {
-            "short": "",
-            "long": ""
+            "short": "Poranny program duchowy",
+            "long": "Wideo z porannego programa"
         },
         "jwbcov": {
-            "short": "",
-            "long": ""
+            "short": "Wideoklip z kongresu",
+            "long": "Wideoklip z kongresu regionalnego"
         },
         "ks10": {
-            "short": "",
-            "long": ""
+            "short": "Paście (ks)",
+            "long": "Paście zbór Boga (ks)"
         },
         "mwbv": {
-            "short": "",
-            "long": ""
+            "short": "Wideo z \"Tworzenie muzyki\"",
+            "long": "Wideo z \"Tworzenie muzyki\""
         },
         "om": {
-            "short": "",
-            "long": ""
+            "short": "Zorganizowani",
+            "long": "Zorganizowani do pełnienia naszej służby"
         },
         "or": {
-            "short": "",
-            "long": ""
+            "short": "Organizacja",
+            "long": "Organizacja głoszenia Królestwa i pozyskiwania uczniów"
         },
         "osg": {
-            "short": "",
-            "long": ""
+            "short": "Wideo oryginalnej piosenki",
+            "long": "Wideo oryginalnej piosenki"
         },
         "pk": {
-            "short": "",
-            "long": ""
+            "short": "Wideo z \"Zostań przyjacielem Jehowy\"",
+            "long": "Wideo z \"Zostań przyjacielem Jehowy\""
         },
         "pkon": {
-            "short": "",
-            "long": ""
+            "short": "Wideo z piosenki dla dzieci",
+            "long": "Wideo z piosenki dla dzieci"
         },
         "pt14": {
-            "short": "",
-            "long": ""
+            "short": "Pełnij swoją służbę",
+            "long": "\"Dokładnie pełnij swoją służbę\""
         },
         "qm": {
-            "short": "",
-            "long": ""
+            "short": "Wykwalifikowani",
+            "long": "Wykwalifikowani do służby kaznodziejskiej"
         },
         "sfl": {
-            "short": "",
-            "long": ""
+            "short": "Paście (sfl)",
+            "long": "Paście zbór Boga (sfl)"
         },
         "sfla": {
-            "short": "",
-            "long": ""
+            "short": "Addendum",
+            "long": "Addendum do Paście zbór Boga"
         },
         "sgd": {
-            "short": "",
-            "long": ""
+            "short": "Pomoc do studium Słowa Bożego",
+            "long": "Pomoc do studium Słowa Bożego"
         },
         "ws-": {
-            "short": "",
-            "long": ""
+            "short": "Bezpieczeństwo na świecie",
+            "long": "Światowe bezpieczeństwo pod panowaniem \"Księcia Pokoju\""
         }
     }
 }
