@@ -1508,7 +1508,7 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
 
         def go_back():
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            update_viewer_title()
             self.viewer_window.viewer_layout.setCurrentIndex(0)
             app.processEvents()
             self.title_modified = False
@@ -1542,6 +1542,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
+        def update_viewer_title():
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+
         def delete_single_item(counter):
 
             def return_previous(row, col):
@@ -1565,7 +1568,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
                     row, col = return_previous(row, col)
                     self.viewer_window.grid_layout.addWidget(item, row, col)
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            update_viewer_title()
             update_viewer_toolbar()
             app.processEvents()
 
@@ -1582,7 +1585,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         item.note_widget.setVisible(True)
                         self.filtered += 1
                 app.processEvents()
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            update_viewer_title()
 
         def update_db():
 
@@ -1909,7 +1912,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 show_notes()
             else:
                 show_annotations()
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            update_viewer_title()
             cur.close()
             con.close()
         except Exception as ex:
