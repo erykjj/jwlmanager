@@ -91,12 +91,12 @@
     <message>
         <location filename="main_window.ui" line="350"/>
         <source>Import</source>
-        <translation>Importować</translation>
+        <translation>Import</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="366"/>
         <source>Export</source>
-        <translation>Eksportować</translation>
+        <translation>Eksport</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="382"/>
@@ -127,7 +127,7 @@
         <location filename="main_window.ui" line="523"/>
         <location filename="main_window.ui" line="696"/>
         <source>&amp;Help</source>
-        <translation>&amp;Pomoc</translation>
+        <translation>Po&amp;moc</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
@@ -142,7 +142,7 @@
     <message>
         <location filename="main_window.ui" line="544"/>
         <source>&amp;Title View</source>
-        <translation>Widok &amp;Tytułuw</translation>
+        <translation>Widok &amp;tytułuw</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
@@ -287,7 +287,7 @@
     <message>
         <location filename="main_window.ui" line="780"/>
         <source>&amp;Unselect All</source>
-        <translation>&amp;Odznaczyć wszystkie</translation>
+        <translation>Odz&amp;naczyć wszystkie</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="783"/>
