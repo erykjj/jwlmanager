@@ -178,7 +178,7 @@
     <message>
         <location filename="main_window.ui" line="639"/>
         <source>Save archive</source>
-        <translation>Speichern ein Archiv</translation>
+        <translation>Speichern das Archiv</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="642"/>
@@ -238,7 +238,7 @@
     <message>
         <location filename="main_window.ui" line="726"/>
         <source>E&amp;xpand All</source>
-        <translation>Alle &amp;erweitern</translation>
+        <translation>Alles &amp;erweitern</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="729"/>
@@ -253,12 +253,12 @@
     <message>
         <location filename="main_window.ui" line="744"/>
         <source>&amp;Collapse All</source>
-        <translation>Alle &amp;zusammenbrechen</translation>
+        <translation>Alles &amp;zusammenbrechen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="747"/>
         <source>Collapse all items</source>
-        <translation>Zusammenbruch alle Artikel</translation>
+        <translation>Alle Artikel zusammenbruch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="750"/>
@@ -273,7 +273,7 @@
     <message>
         <location filename="main_window.ui" line="765"/>
         <source>Select all items</source>
-        <translation>Auszuwählen alles Artikel</translation>
+        <translation>Alle Artikel auszuwählen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="768"/>
@@ -283,7 +283,7 @@
     <message>
         <location filename="main_window.ui" line="780"/>
         <source>&amp;Unselect All</source>
-        <translation>Alle abwählen</translation>
+        <translation>Alles a&amp;bwählen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="783"/>
@@ -326,7 +326,7 @@
     <message>
         <location filename="main_window.ui" line="858"/>
         <source>&amp;Mask</source>
-        <translation>Verschleiern</translation>
+        <translation>&amp;Verschleiern</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="938"/>
