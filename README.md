@@ -39,7 +39,7 @@ chmod +x JWLManager.py
 If you use the `-h` flag, you'll see the following options:
 
 ```
-usage: JWLManager.py [-h] [-v] [-en | -es | -fr | -it | -pt]
+usage: JWLManager.py [-h] [-v] [-de | -en | -es | -fr | -it | -pt]
 
 Manage .jwlibrary backup archives
 
@@ -50,6 +50,7 @@ options:
 interface language:
   English by default
 
+  -de            German (Deutsch)
   -en            English (default)
   -es            Spanish (español)
   -fr            French (français)
