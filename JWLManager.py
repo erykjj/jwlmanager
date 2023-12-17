@@ -1508,7 +1508,7 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
 
         def go_back():
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             self.viewer_window.viewer_layout.setCurrentIndex(0)
             app.processEvents()
             self.title_modified = False
@@ -1565,7 +1565,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
                     row, col = return_previous(row, col)
                     self.viewer_window.grid_layout.addWidget(item, row, col)
-            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             update_viewer_toolbar()
             app.processEvents()
 
@@ -1576,10 +1576,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item.note_widget.isVisible():
                     if (self.viewer_window.filter_box.text().lower() not in item.title.lower()) and (self.viewer_window.filter_box.text().lower() not in item.body.lower()):
                         item.note_widget.setVisible(False)
+                        self.filtered -= 1
                 else:
                     if (self.viewer_window.filter_box.text().lower() in item.title.lower()) or (self.viewer_window.filter_box.text().lower() in item.body.lower()):
                         item.note_widget.setVisible(True)
+                        self.filtered += 1
                 app.processEvents()
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
 
         def update_db():
 
@@ -1876,6 +1879,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 viewer_closed()
 
         selected = self.list_selected()
+        self.filtered = len(selected)
         if len(selected) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
@@ -1905,7 +1909,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 show_notes()
             else:
                 show_annotations()
-            self.viewer_window.setWindowTitle(_('Data Viewer')+f': {len(selected)} {category}')
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             cur.close()
             con.close()
         except Exception as ex:
