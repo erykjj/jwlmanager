@@ -24,7 +24,7 @@ You can launch the GUI in the desired language by appending the corresponding la
 - macOS Terminal: `open -a JWLManager.app --args -es`
 The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
-Preferably, if you have Python 3 installed and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
+If you have Python 3 installed on your system and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
 
 ```
 python3 JWLManager.py
