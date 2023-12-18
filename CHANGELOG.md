@@ -4,21 +4,28 @@
 
 ### Added
 
-- Added **filter box** in Data Viewer
-  - TXT save only saves visible (filtered) items
-- Added German translation - needs revision ;-)
-- Added Polish translation
-
 ### Changed
-
-- Updated publications catalog
-- Updated translations
 
 ### Fixed
 
 ### Removed
 
 ____
+## [4.3.0] - 2023-12-18
+
+### Added
+
+- Added **filter box** in Data Viewer
+  - TXT toolbar button only saves visible (filtered) items
+- New languages
+  - **German** - needs revision ;-)
+  - **Polish**
+
+### Changed
+
+- Updated publications catalog
+- Updated translations
+
 ## [4.2.1] - 2023-12-06
 ### Added
 
@@ -596,6 +603,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.0
 [4.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.1
 [4.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.0
 [4.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.1.0
