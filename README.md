@@ -65,13 +65,14 @@ ____
 See [here](res/HELP.md) for an explanation of how to use.
 
 ____
-## Feedback
+## Feedback, etc.
 
 Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and/or suggestions.
 
 [![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
-____
+My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib)
+
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer
 [^*]: German needs revision; Japanese needs to be completed; I would like to add Chinese and Russian, and other volunteers also appreciated.
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
