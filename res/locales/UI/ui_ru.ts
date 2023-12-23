@@ -355,7 +355,7 @@
     <message>
         <location filename="main_window.ui" line="976"/>
         <source>Polski</source>
-        <translation type="unfinished"></translation>
+        <translation>Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="832"/>
