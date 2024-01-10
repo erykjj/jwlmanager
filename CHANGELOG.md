@@ -4,6 +4,9 @@
 
 ### Added
 
+- Added German translations
+- Added Russian translation (thank you @korotkiyYurii)
+
 ### Changed
 
 ### Fixed
