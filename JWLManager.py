@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.3.0'
+VERSION = 'v4.3.1'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -63,7 +63,7 @@ def get_language():
         'it': 'Italian (italiano)',
         'pl': 'Polish (Polski)',
         'pt': 'Portuguese (Português)',
-        # 'ru': 'Russian (pусский)',
+        'ru': 'Russian (pусский)'
         # 'zh': 'Chinese (中文)',
         }
     tr = {}
