@@ -232,7 +232,7 @@
     <message>
         <location filename="main_window.ui" line="727"/>
         <source>E&amp;xpand All</source>
-        <translation>&amp;Развернуть ВСЕ</translation>
+        <translation>&amp;Развернуть всё</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="730"/>
@@ -262,7 +262,7 @@
     <message>
         <location filename="main_window.ui" line="763"/>
         <source>&amp;Select All</source>
-        <translation>&amp;Выбрать ВСЁ</translation>
+        <translation>&amp;Выбрать Всё</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="766"/>
@@ -345,7 +345,7 @@
     <message>
         <location filename="main_window.ui" line="965"/>
         <source>&amp;Sort</source>
-        <translation>&amp;Сортировать</translation>
+        <translation>С&amp;ортировать</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="968"/>
