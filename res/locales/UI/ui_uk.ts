@@ -6,7 +6,7 @@
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation type="unfinished"></translation>
+        <translation>JWLManager</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -172,7 +172,7 @@
     <message>
         <location filename="main_window.ui" line="624"/>
         <source>Ctrl+O</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="637"/>
@@ -187,7 +187,7 @@
     <message>
         <location filename="main_window.ui" line="643"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="655"/>
@@ -212,7 +212,7 @@
     <message>
         <location filename="main_window.ui" line="673"/>
         <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="682"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="main_window.ui" line="715"/>
         <source>Ctrl+Alt+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="727"/>
@@ -252,7 +252,7 @@
     <message>
         <location filename="main_window.ui" line="733"/>
         <source>Ctrl+E</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+E</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="745"/>
@@ -267,7 +267,7 @@
     <message>
         <location filename="main_window.ui" line="751"/>
         <source>Ctrl+C</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+C</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="763"/>
@@ -282,7 +282,7 @@
     <message>
         <location filename="main_window.ui" line="769"/>
         <source>Ctrl+A</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+A</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="781"/>
@@ -297,7 +297,7 @@
     <message>
         <location filename="main_window.ui" line="787"/>
         <source>Ctrl+Z</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+Z</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
@@ -344,7 +344,7 @@
     <message>
         <location filename="main_window.ui" line="847"/>
         <source>Ctrl+N</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+N</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="859"/>
@@ -359,82 +359,82 @@
     <message>
         <location filename="main_window.ui" line="873"/>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="876"/>
         <source>en</source>
-        <translation type="unfinished"></translation>
+        <translation>en</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="884"/>
         <source>Español</source>
-        <translation type="unfinished"></translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="887"/>
         <source>es</source>
-        <translation type="unfinished"></translation>
+        <translation>es</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="895"/>
         <source>Deutsch</source>
-        <translation type="unfinished"></translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="898"/>
         <source>de</source>
-        <translation type="unfinished"></translation>
+        <translation>de</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="906"/>
         <source>Français</source>
-        <translation type="unfinished"></translation>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="909"/>
         <source>fr</source>
-        <translation type="unfinished"></translation>
+        <translation>fr</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="917"/>
         <source>Português</source>
-        <translation type="unfinished"></translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="920"/>
         <source>pt</source>
-        <translation type="unfinished"></translation>
+        <translation>pt</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="928"/>
         <source>Italiano</source>
-        <translation type="unfinished"></translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="931"/>
         <source>it</source>
-        <translation type="unfinished"></translation>
+        <translation>it</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="939"/>
         <source>Pусский</source>
-        <translation type="unfinished"></translation>
+        <translation>Pусский</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="942"/>
         <source>ru</source>
-        <translation type="unfinished"></translation>
+        <translation>ru</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="950"/>
         <source>中文</source>
-        <translation type="unfinished"></translation>
+        <translation>中文</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="953"/>
         <source>zh</source>
-        <translation type="unfinished"></translation>
+        <translation>zh</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="965"/>
@@ -449,7 +449,7 @@
     <message>
         <location filename="main_window.ui" line="976"/>
         <source>Polski</source>
-        <translation type="unfinished"></translation>
+        <translation>Polski</translation>
     </message>
 </context>
 </TS>
