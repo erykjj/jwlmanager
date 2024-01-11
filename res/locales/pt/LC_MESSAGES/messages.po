@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.12.1\n"
+"Generated-By: Babel 2.14.0\n"
 
 #: JWLManager.py:212 JWLManager.py:419 JWLManager.py:423 JWLManager.py:426
 #: JWLManager.py:637 JWLManager.py:643 JWLManager.py:651 JWLManager.py:658
