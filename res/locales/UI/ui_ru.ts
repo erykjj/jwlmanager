@@ -232,7 +232,7 @@
     <message>
         <location filename="main_window.ui" line="727"/>
         <source>E&amp;xpand All</source>
-        <translation>&amp;Развернуть всё</translation>
+        <translation>&amp;Развернуть Всё</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="730"/>
@@ -247,7 +247,7 @@
     <message>
         <location filename="main_window.ui" line="745"/>
         <source>&amp;Collapse All</source>
-        <translation>&amp;Свернуть ВСЕ</translation>
+        <translation>&amp;Свернуть Всё</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="748"/>
