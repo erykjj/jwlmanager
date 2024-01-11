@@ -64,6 +64,7 @@ def get_language():
         'pl': 'Polish (Polski)',
         'pt': 'Portuguese (Português)',
         'ru': 'Russian (pусский)'
+        # 'uk': 'Ukrainian (українська)'
         # 'zh': 'Chinese (中文)',
         }
     tr = {}
