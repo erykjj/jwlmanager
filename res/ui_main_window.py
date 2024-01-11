@@ -327,6 +327,8 @@ class Ui_MainWindow(object):
         self.langChoices.addAction(self.actionIT)
         self.langChoices.addAction(self.actionPL)
         self.langChoices.addAction(self.actionPT)
+        self.langChoices.addAction(self.actionRU)
+        self.langChoices.addAction(self.actionZH)
         self.menuUtilities = QMenu(self.menubar)
         self.menuUtilities.setObjectName(u"menuUtilities")
         self.menuUtilities.setToolTipsVisible(True)
