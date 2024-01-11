@@ -232,7 +232,7 @@
     <message>
         <location filename="main_window.ui" line="727"/>
         <source>E&amp;xpand All</source>
-        <translation>&amp;Развернуть всё</translation>
+        <translation>&amp;Развернуть Всё</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="730"/>
