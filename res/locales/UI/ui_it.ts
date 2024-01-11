@@ -366,17 +366,17 @@
     <message>
         <location filename="main_window.ui" line="982"/>
         <source>pl</source>
-        <translation type="unfinished"></translation>
+        <translation>pl</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="990"/>
         <source>українська</source>
-        <translation type="unfinished"></translation>
+        <translation>українська</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="993"/>
         <source>uk</source>
-        <translation type="unfinished"></translation>
+        <translation>uk</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="835"/>
