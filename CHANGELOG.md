@@ -6,8 +6,11 @@
 
 - Added German translations
 - Added Russian translation (thank you @korotkiyYurii)
+- Added Ukrainian translation (thank you @korotkiyYurii)
 
 ### Changed
+
+- Updated publications catalog
 
 ### Fixed
 
