@@ -11,163 +11,163 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Заголовок</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Мова</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Рік</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Тег</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="145"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Колір</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
         <source>Grouping:</source>
-        <translation type="unfinished"></translation>
+        <translation>Групування:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
         <source>Selected:</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрано:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
         <source>Category:</source>
-        <translation type="unfinished"></translation>
+        <translation>Категорія:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Нотатки</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Огляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
         <source>Favorites</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибране</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="270"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Закладки</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="275"/>
         <source>Annotations</source>
-        <translation type="unfinished"></translation>
+        <translation>Примітки</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="280"/>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Плейлисти</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="294"/>
         <source>Total:</source>
-        <translation type="unfinished"></translation>
+        <translation>Усього:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="350"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Імпорт</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="366"/>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Експорт</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="382"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="398"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation type="unfinished"></translation>
+        <translation>Вигляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="481"/>
         <source>Count</source>
-        <translation type="unfinished"></translation>
+        <translation>Кількість</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="510"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Файл</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="525"/>
         <location filename="main_window.ui" line="700"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Допомога</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="533"/>
         <source>&amp;View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вигляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="543"/>
         <source>Title display format</source>
-        <translation type="unfinished"></translation>
+        <translation>Формат вигляду заголовка</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="546"/>
         <source>&amp;Title View</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Заголовок Вигляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="561"/>
         <source>Switch language</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити мову</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="564"/>
         <source>&amp;Language</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Мова</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="596"/>
         <source>&amp;Utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Утіліти</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="621"/>
         <source>&amp;Open…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Відкрити…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="624"/>
         <source>Open an archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити архів</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="627"/>
@@ -177,12 +177,12 @@
     <message>
         <location filename="main_window.ui" line="640"/>
         <source>&amp;Save</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Зберегти</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="643"/>
         <source>Save archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти архів</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="646"/>
@@ -192,22 +192,22 @@
     <message>
         <location filename="main_window.ui" line="658"/>
         <source>&amp;Reindex</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Переіндексувати</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="661"/>
         <source>Optimize database</source>
-        <translation type="unfinished"></translation>
+        <translation>Оптимізувати базу даних</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="670"/>
         <source>&amp;Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вихід</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="673"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>Вихід</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="676"/>
@@ -217,22 +217,22 @@
     <message>
         <location filename="main_window.ui" line="685"/>
         <source>&amp;About…</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Про…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="688"/>
         <source>About…</source>
-        <translation type="unfinished"></translation>
+        <translation>Про програму…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="712"/>
         <source>Save &amp;As…</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти &amp;Як…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="715"/>
         <source>Save archive as…</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти архів як…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="718"/>
@@ -242,12 +242,12 @@
     <message>
         <location filename="main_window.ui" line="730"/>
         <source>E&amp;xpand All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Розгорнути Все</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="733"/>
         <source>Expand all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Розгорнути всі елементи</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="736"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="main_window.ui" line="748"/>
         <source>&amp;Collapse All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Згорнути Все</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="751"/>
         <source>Collapse all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Згорнути всі елементи</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="754"/>
@@ -272,12 +272,12 @@
     <message>
         <location filename="main_window.ui" line="766"/>
         <source>&amp;Select All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вибрати Все</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="769"/>
         <source>Select all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрати усі елементи</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="772"/>
@@ -287,12 +287,12 @@
     <message>
         <location filename="main_window.ui" line="784"/>
         <source>&amp;Unselect All</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Зняти вибір</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="787"/>
         <source>Unselect all items</source>
-        <translation type="unfinished"></translation>
+        <translation>Зняти вибір з усіх</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="790"/>
@@ -302,44 +302,44 @@
     <message>
         <location filename="main_window.ui" line="801"/>
         <source>Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Код</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="804"/>
         <source>Use publication code as title</source>
-        <translation type="unfinished"></translation>
+        <translation>Код публікації як заголовок</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="815"/>
         <location filename="main_window.ui" line="818"/>
         <source>Short</source>
-        <translation type="unfinished"></translation>
+        <translation>Короткий</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="821"/>
         <source>Use short publication title</source>
-        <translation type="unfinished"></translation>
+        <translation>Коротке ім&apos;я піблікацій</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="829"/>
         <location filename="main_window.ui" line="832"/>
         <source>Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Повне</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="835"/>
         <source>Use full publication title</source>
-        <translation type="unfinished"></translation>
+        <translation>Повне ім&apos;я публікацій</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="844"/>
         <source>&amp;New</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Новий</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="847"/>
         <source>Create an empty archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Створити порожній архів</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="850"/>
@@ -349,12 +349,12 @@
     <message>
         <location filename="main_window.ui" line="862"/>
         <source>&amp;Mask</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Сховати</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="865"/>
         <source>Mask text data</source>
-        <translation type="unfinished"></translation>
+        <translation>Сховати текст</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="876"/>
@@ -439,12 +439,12 @@
     <message>
         <location filename="main_window.ui" line="968"/>
         <source>&amp;Sort</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Cортувати</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="971"/>
         <source>Sort Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортувати Нотатки</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="979"/>
