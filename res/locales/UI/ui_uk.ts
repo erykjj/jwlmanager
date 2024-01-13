@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk_UA" sourcelanguage="en_US">
+<TS version="2.1" language="uk_UA">
 <context>
     <name>MainWindow</name>
     <message>
@@ -313,7 +313,6 @@
         <location filename="main_window.ui" line="813"/>
         <location filename="main_window.ui" line="816"/>
         <source>Short</source>
-        <oldsource>Short Title</oldsource>
         <translation>Короткий</translation>
     </message>
     <message>
@@ -461,10 +460,6 @@
         <location filename="main_window.ui" line="991"/>
         <source>Українська</source>
         <translation>Українська</translation>
-    </message>
-    <message>
-        <source>українська</source>
-        <translation type="vanished">Українська</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="994"/>
