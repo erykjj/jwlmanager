@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="uk_UA">
+<TS version="2.1" language="uk_UA" sourcelanguage="en_US">
 <context>
     <name>MainWindow</name>
     <message>
@@ -313,6 +313,7 @@
         <location filename="main_window.ui" line="815"/>
         <location filename="main_window.ui" line="818"/>
         <source>Short</source>
+        <oldsource>Short Title</oldsource>
         <translation>Короткий</translation>
     </message>
     <message>

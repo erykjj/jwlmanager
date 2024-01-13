@@ -468,7 +468,6 @@
          </property>
          <property name="font">
           <font>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -482,7 +481,6 @@
          </property>
          <property name="font">
           <font>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -502,7 +500,7 @@
      <x>0</x>
      <y>0</y>
      <width>728</width>
-     <height>30</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -867,7 +865,7 @@
   </action>
   <action name="actionEN">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="checked">
     <bool>false</bool>
@@ -881,7 +879,7 @@
   </action>
   <action name="actionES">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Español</string>
@@ -892,7 +890,7 @@
   </action>
   <action name="actionDE">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Deutsch</string>
@@ -903,7 +901,7 @@
   </action>
   <action name="actionFR">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Français</string>
@@ -914,7 +912,7 @@
   </action>
   <action name="actionPT">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Português</string>
@@ -925,7 +923,7 @@
   </action>
   <action name="actionIT">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Italiano</string>
@@ -936,7 +934,7 @@
   </action>
   <action name="actionRU">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Pусский</string>
@@ -947,7 +945,7 @@
   </action>
   <action name="actionZH">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>中文</string>
@@ -973,7 +971,7 @@
   </action>
   <action name="actionPL">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Polski</string>
@@ -983,11 +981,14 @@
    </property>
   </action>
   <action name="actionUK">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>українська</string>
+    <string>Українська</string>
    </property>
    <property name="toolTip">
     <string>uk</string>
