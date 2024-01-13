@@ -367,7 +367,7 @@
     <message>
         <location filename="main_window.ui" line="991"/>
         <source>Українська</source>
-        <translation type="unfinished"></translation>
+        <translation>Українська</translation>
     </message>
     <message>
         <source>українська</source>
