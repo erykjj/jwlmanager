@@ -4,19 +4,23 @@
 
 ### Added
 
-- Added German translations
-- Added Russian translation (thank you @korotkiyYurii)
-- Added Ukrainian translation (thank you @korotkiyYurii)
-
 ### Changed
-
-- Updated publications catalog
 
 ### Fixed
 
 ### Removed
 
 ____
+## [4.3.1] - 2024-01-13
+### Added
+
+- Added German translation
+- Added Russian and Ukrainian translations (thank you @korotkiyYurii)
+
+### Changed
+
+- Updated publications catalog
+
 ## [4.3.0] - 2023-12-18
 
 ### Added
@@ -609,6 +613,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.1
 [4.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.0
 [4.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.1
 [4.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.0
