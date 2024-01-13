@@ -486,4 +486,3 @@ msgstr "Переорганізація. Почекайте…"
 #: JWLManager.py:2321
 msgid "Notes reordered"
 msgstr "Нотатки переорганізовані"
-
