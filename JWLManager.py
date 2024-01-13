@@ -340,7 +340,6 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in self.langChoices.actions():
             if item.isChecked() and (self.lang != item.toolTip()):
                 app.removeTranslator(translator[self.lang])
-                print(f'removing: {self.lang}')
                 self.lang = item.toolTip()
                 changed = True
         if not changed:
