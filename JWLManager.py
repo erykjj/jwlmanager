@@ -63,7 +63,7 @@ def get_language():
         'it': 'Italian (italiano)',
         'pl': 'Polish (Polski)',
         'pt': 'Portuguese (Português)',
-        'ru': 'Russian (pусский)',
+        'ru': 'Russian (Pусский)',
         'uk': 'Ukrainian (українська)'
         # 'zh': 'Chinese (中文)',
         }
