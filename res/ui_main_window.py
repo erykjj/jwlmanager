@@ -529,7 +529,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.actionPL.setToolTip(QCoreApplication.translate("MainWindow", u"pl", None))
 #endif // QT_CONFIG(tooltip)
-        self.actionUK.setText(QCoreApplication.translate("MainWindow", u"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430", None))
+        self.actionUK.setText(QCoreApplication.translate("MainWindow", u"\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430", None))
 #if QT_CONFIG(tooltip)
         self.actionUK.setToolTip(QCoreApplication.translate("MainWindow", u"uk", None))
 #endif // QT_CONFIG(tooltip)
