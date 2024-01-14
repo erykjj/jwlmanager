@@ -51,7 +51,7 @@
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Highlights</source>
-        <translation>Обзор</translation>
+        <translation>Подчёркивания</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
