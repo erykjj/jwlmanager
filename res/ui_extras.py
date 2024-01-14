@@ -87,7 +87,7 @@ class HelpBox(QDialog):
         self.setWindowFlags(Qt.Window)
         self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
         self.setWindowTitle(title)
-        self.resize(1020, 812)
+        self.resize(350, 400)
         self.move(50, 50)
         self.setMinimumSize(300, 300)
         text = QTextEdit(self)
@@ -109,7 +109,7 @@ class DataViewer(QDialog):
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
         self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
-        self.setMinimumSize(755, 845)
+        self.setMinimumSize(755, 500)
         self.resize(size)
         self.move(pos)
 
