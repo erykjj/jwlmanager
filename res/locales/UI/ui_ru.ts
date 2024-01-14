@@ -277,7 +277,7 @@
     <message>
         <location filename="main_window.ui" line="782"/>
         <source>&amp;Unselect All</source>
-        <translation>&amp;Убрать выбор</translation>
+        <translation>&amp;Убрать Выбор</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="785"/>
