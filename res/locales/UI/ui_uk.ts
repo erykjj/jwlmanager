@@ -142,7 +142,7 @@
     <message>
         <location filename="main_window.ui" line="544"/>
         <source>&amp;Title View</source>
-        <translation>&amp;Заголовок Вигляд</translation>
+        <translation>Заго&amp;ловок Вигляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
@@ -162,7 +162,7 @@
     <message>
         <location filename="main_window.ui" line="619"/>
         <source>&amp;Open…</source>
-        <translation>&amp;Відкрити…</translation>
+        <translation>Ві&amp;дкрити…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="622"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="main_window.ui" line="728"/>
         <source>E&amp;xpand All</source>
-        <translation>&amp;Розгорнути Все</translation>
+        <translation>Роз&amp;горнути Все</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="731"/>
@@ -257,7 +257,7 @@
     <message>
         <location filename="main_window.ui" line="746"/>
         <source>&amp;Collapse All</source>
-        <translation>&amp;Згорнути Все</translation>
+        <translation>Зго&amp;рнути Все</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="749"/>
@@ -287,7 +287,7 @@
     <message>
         <location filename="main_window.ui" line="782"/>
         <source>&amp;Unselect All</source>
-        <translation>&amp;Зняти вибір</translation>
+        <translation>&amp;Зняти Вибір</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="785"/>
@@ -439,7 +439,7 @@
     <message>
         <location filename="main_window.ui" line="966"/>
         <source>&amp;Sort</source>
-        <translation>&amp;Cортувати</translation>
+        <translation>Cо&amp;ртувати</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="969"/>
