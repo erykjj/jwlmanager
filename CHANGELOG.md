@@ -7,6 +7,7 @@
 ### Changed
 
 - Updated translations
+- Adjusted window sizing for greater flexibility
 
 ### Fixed
 
