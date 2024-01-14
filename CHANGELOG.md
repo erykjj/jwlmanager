@@ -6,14 +6,17 @@
 
 ### Changed
 
-- Updated translations
-- Adjusted window sizing for greater flexibility
-
 ### Fixed
 
 ### Removed
 
 ____
+## [4.3.2] - 2024-01-14
+### Changed
+
+- Updated translations
+- Adjusted window sizing for greater flexibility
+
 ## [4.3.1] - 2024-01-13
 ### Added
 
@@ -616,6 +619,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.2
 [4.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.1
 [4.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.0
 [4.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.2.1
