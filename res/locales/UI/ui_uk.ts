@@ -61,7 +61,7 @@
     <message>
         <location filename="main_window.ui" line="260"/>
         <source>Highlights</source>
-        <translation>Огляд</translation>
+        <translation>Підкреслення</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="265"/>
@@ -157,7 +157,7 @@
     <message>
         <location filename="main_window.ui" line="594"/>
         <source>&amp;Utilities</source>
-        <translation>&amp;Утіліти</translation>
+        <translation>&amp;Інструменти</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="619"/>
