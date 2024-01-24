@@ -14,7 +14,7 @@ ____
 ## [4.3.3] - 2024-01-24
 ### Fixed
 
-- Fixed crash when trying to open empty notes
+- Fixed crash when trying to view empty notes
 
 ## [4.3.2] - 2024-01-14
 ### Changed
