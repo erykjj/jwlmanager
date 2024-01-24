@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.3.2'
+VERSION = 'v4.3.3'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -926,11 +926,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in cur.execute(sql):
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1] or '* '+_('NO TEXT')+' *',
+                        'VALUE': row[1].rstrip() if row[1] else '* '+_('NO TEXT')+' *',
                         'DOC': row[2],
                         'PUB': row[4]
                     }
-                    item['VALUE'] = item['VALUE'].rstrip()
                     if row[3] > 10000000:
                         item['ISSUE'] = row[3]
                     else:
@@ -1013,7 +1012,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1],
-                        'NOTE': row[2] or '',
+                        'NOTE': row[2].rstrip() if row[2] else '',
                         'TAGS': row[3] or '',
                         'LANG': row[4],
                         'BK': row[5],
@@ -1027,7 +1026,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         'CREATED': row[13][:19],
                         'COLOR': row[14] or 0
                     }
-                    item['NOTE'] = item['NOTE'].rstrip()
                     if row[15]:
                         item['RANGE'] = f'{row[15]}-{row[16]}'
                     else:
@@ -1739,7 +1737,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1] or '',
-                        'NOTE': row[2].rstrip() or '',
+                        'NOTE': row[2].rstrip() if row[2] else '',
                         'TAGS': row[3],
                         'BK': row[5],
                         'CH': row[6],
@@ -1836,7 +1834,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in cur.execute(sql):
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1].rstrip() or '',
+                        'VALUE': row[1].rstrip() if row[1] else '',
                         'DOC': row[2],
                         'PUB': row[4],
                         'ID': row[6]
