@@ -1,4 +1,4 @@
-name: 'Build Windows packages v0.1.2'
+name: 'Build Windows packages v0.1.3'
 
 on:
   workflow_call:
@@ -22,7 +22,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     - name: Install dependencies
@@ -39,12 +39,12 @@ jobs:
         ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
         tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Upload EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: WindowsEXE
         path: dist/JWLManager_${{ inputs.TAG }}.exe
     - name: Upload ZIP
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: WindowsZIP
         path: dist/JWLManager_${{ inputs.TAG }}.zip
