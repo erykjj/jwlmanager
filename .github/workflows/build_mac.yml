@@ -1,4 +1,4 @@
-name: 'Build Mac package v0.1.2'
+name: 'Build Mac package v0.1.3'
 
 on:
   workflow_call:
@@ -22,7 +22,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     - name: Install dependencies
@@ -36,7 +36,7 @@ jobs:
         cd dist/
         zip -r9 JWLManager_${{ inputs.TAG }}.app.zip JWLManager.app/
     - name: Upload APP
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: MacAPP
         path: dist/JWLManager_${{ inputs.TAG }}.app.zip
