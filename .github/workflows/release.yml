@@ -1,4 +1,4 @@
-name: 'Draft Release v0.1.6'
+name: 'Draft Release v0.1.7'
 
 on:
   push:
@@ -28,19 +28,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Download LinuxBIN
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: LinuxBIN
     - name: Download WindowsEXE
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: WindowsEXE
     - name: Download WindowsZIP
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: WindowsZIP
     - name: Download MacAPP
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: MacAPP
     - name: Extract release notes
