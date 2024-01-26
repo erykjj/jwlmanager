@@ -56,7 +56,7 @@ jobs:
         body: |
           ${{ steps.extract-release-notes.outputs.release_notes }}
           ____
-          If unable to download the latest source script and execute it from the commandline, you can (alternatively) try these self-contained packages, which don't require the installation of Python or dependencies:
+          You can download the latest source script and execute it from the commandline, or (alternatively) try these self-contained packages, which don't require the installation of Python or dependencies:
           - Linux:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
