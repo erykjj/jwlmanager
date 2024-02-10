@@ -1409,22 +1409,24 @@ class Window(QMainWindow, Ui_MainWindow):
                 for i, row in df.iterrows():
                     try:
                         count += 1
-                        if pd.notna(row['BK']):
+                        if pd.notna(row['BK']): # Bible note
                             location_id = add_scripture_location(row)
                             usermark_id = add_usermark(row, location_id)
                             if pd.notna(row['BLOCK']): # Bible book title
+                                row['BLOCK'] = 1
                                 block_type = 1
-                            elif pd.notna(row['VS']):
+                            elif pd.notna(row['VS']): # regular note
                                 block_type = 2
                                 row['BLOCK'] = row['VS']
-                            else:
+                            else: # top of chapter note
                                 block_type = 0
                             update_note(row, location_id, block_type, usermark_id)
-                        elif pd.notna(row['DOC']):
+                        elif pd.notna(row['DOC']): # publication note
                             location_id = add_publication_location(row)
                             usermark_id = add_usermark(row, location_id)
-                            update_note(row, location_id, 1, usermark_id)
-                        else:
+                            block_type = 1 if pd.notna(row['BLOCK']) else 0
+                            update_note(row, location_id, block_type, usermark_id)
+                        else: # independent note
                             update_note(row, None, 0, None)
                     except:
                         QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
