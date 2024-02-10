@@ -6,16 +6,22 @@
 
 ### Changed
 
-- Importing document-level notes (not attached to a paragraph - {BLOCK=} attribute not provided)
-- Updated Document Viewer to link document-level notes
-
 ### Fixed
-
-- Exporting notes attached to top of document (no paragraph block)
 
 ### Removed
 
 ____
+## [4.4.0] - 2024-02-10
+### Changed
+
+- Importing document-level notes (not attached to a paragraph, {BLOCK=} attribute not provided)
+- Updated Document Viewer to include link for document-level notes
+
+### Fixed
+
+- Exporting notes attached to top of document (no paragraph block)
+  - thank you @jonharrell for helping catch and troubleshoot!
+
 ## [4.3.3] - 2024-01-24
 ### Fixed
 
