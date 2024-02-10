@@ -1046,6 +1046,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         if item.get('BK'): # Bible note
                             if item.get('VS'):
                                 vs = str(item['VS']).zfill(3)
+                                item['BLOCK'] = None
                             else:
                                 vs = '000'
                             item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
@@ -1055,6 +1056,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             elif item.get('VS') and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
+                            item['VS'] = None
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                     item_list.append(item)
