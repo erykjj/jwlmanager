@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.3.3'
+VERSION = 'v4.4.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -1034,31 +1034,39 @@ class Window(QMainWindow, Ui_MainWindow):
                         item['MODIFIED'] = item['MODIFIED'][:10] + 'T00:00:00'
                     if 'T' not in item['CREATED']:
                         item['CREATED'] = item['CREATED'][:10] + 'T00:00:00'
-                    if item['TYPE'] == 1 and item['DOC']:
-                        if item['BLOCK']:
+                    if row[9] and (row[9] > 10000000): # periodicals
+                        item['ISSUE'] = row[9]
+                    else:
+                        item['ISSUE'] = None
+                    if item['TYPE'] == 1: # publication note
+                        if item.get('BK'):  # note attached to Bible book title
+                            item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
+                        else:
                             par = f"&par={item['BLOCK']}"
-                            item['VS'] = None
-                        else:
-                            par = ''
-                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
-                        if row[9] > 10000000:
-                            item['ISSUE'] = row[9]
-                        else:
-                            item['ISSUE'] = None
-                    elif item['TYPE'] > 0 or (item['TYPE'] == 0 and item['PUB'] != None):
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                        item['VS'] = None
+                    elif item['TYPE'] == 2: # Bible note
+                        item['BLOCK'] = None
                         if not item['VS']:
                             item['VS'] = 0
                         item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                        if item['TYPE'] == 1: # Note in Bible book name
-                            item['VS'] = None
-                        else:
-                            item['BLOCK'] = None
                         if not item['HEADING']:
                             item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                         elif ':' in item['HEADING']:
                             item['HEADING'] = regex.match(r'(.*?):', item['HEADING']).group(1)
                         item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
-                    else:
+                    elif item.get('PUB'): # document header note (item['TYPE'] is 0)
+                        item['BLOCK'] = None
+                        item['VS'] = None
+                        if item.get('BK'): # Bible
+                            item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3)
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}000"
+                        else: # publication
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}"
+                    else: # Independent note (item['TYPE'] is 0)
+                        item['BLOCK'] = None
+                        item['VS'] = None
                         item['Link'] = None
                     item_list.append(item)
 
@@ -1073,30 +1081,27 @@ class Window(QMainWindow, Ui_MainWindow):
                         tags = row['TAGS'].replace(' | ', '|')
                         col = str(row['COLOR']) or '0'
                         rng = row['RANGE'] or ''
+                        blk = '{BLOCK='+str(row['BLOCK'])+'}' if row.get('BLOCK') else ''
                         hdg = ('{HEADING='+row['HEADING']+'}') if row['HEADING'] != '' else ''
                         lng = str(row['LANG'])
                         txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
                         if row.get('BK'):
                             bk = str(row['BK'])
                             ch = str(row['CH'])
+                            ref = '{Reference='+row['Reference']+'}' if row['Reference'] else ''
                             if row.get('VS'):
                                 vs = '{VS='+str(row['VS'])+'}'
                             else:
                                 vs = ''
-                            if row.get('BLOCK'):
-                                blk = '{BLOCK='+str(row['BLOCK'])+'}'
-                            else:
-                                blk = ''
-                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+'{Reference='+row['Reference']+'}'+hdg+'{COLOR='+col+'}'
+                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+ref+hdg+'{COLOR='+col+'}'
                             if row.get('RANGE'):
                                 txt += '{RANGE='+rng+'}'
                             if row.get('DOC'):
                                 txt += '{DOC=0}'
                         elif row.get('DOC'):
-                            doc = str(row['DOC']) or ''
+                            doc = '{DOC='+str(row['DOC'])+'}' if row['DOC'] else ''
                             iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                            blk = str(row['BLOCK']) or ''
-                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+'{DOC='+doc+'}{BLOCK='+blk+'}'+hdg+'{COLOR='+col+'}'
+                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+doc+blk+hdg+'{COLOR='+col+'}'
                             if row.get('RANGE'):
                                 txt += '{RANGE='+rng+'}'
                         txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
