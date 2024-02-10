@@ -1038,36 +1038,25 @@ class Window(QMainWindow, Ui_MainWindow):
                         item['ISSUE'] = row[9]
                     else:
                         item['ISSUE'] = None
-                    if item['TYPE'] == 1: # publication note
-                        if item.get('BK'):  # note attached to Bible book title
-                            item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
-                        else:
-                            par = f"&par={item['BLOCK']}"
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
-                        item['VS'] = None
-                    elif item['TYPE'] == 2: # Bible note
-                        item['BLOCK'] = None
-                        if not item['VS']:
-                            item['VS'] = 0
-                        item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                        if not item['HEADING']:
-                            item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
-                        elif ':' in item['HEADING']:
-                            item['HEADING'] = regex.match(r'(.*?):', item['HEADING']).group(1)
-                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
-                    elif item.get('PUB'): # document header note (item['TYPE'] is 0)
-                        item['BLOCK'] = None
-                        item['VS'] = None
-                        if item.get('BK'): # Bible
-                            item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3)
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}000"
-                        else: # publication
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}"
-                    else: # Independent note (item['TYPE'] is 0)
+                    if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')): # independent note
                         item['BLOCK'] = None
                         item['VS'] = None
                         item['Link'] = None
+                    else:
+                        if item.get('BK'): # Bible note
+                            if item.get('VS'):
+                                vs = str(item['VS']).zfill(3)
+                            else:
+                                vs = '000'
+                            item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
+                            if not item['HEADING']:
+                                item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
+                            elif item.get('VS') and (':' not in item['HEADING']):
+                                item['HEADING'] += f":{item['VS']}"
+                        else: # publication note
+                            par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                     item_list.append(item)
 
             get_notes()
