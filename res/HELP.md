@@ -106,8 +106,8 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - eg. `{VS=6}`
     - **special cases**:
       - `{VS=0}` - for Psalm headings
-      - attribute omitted - for note at top of chapter (before verse 1)
-      - attribute omitted *and* `{BLOCK=1}` - for note attached to Bible book title
+      - attribute omitted - for note at top of chapter
+      - attribute omitted *and* `{BLOCK=1}` - for note attached to Bible book title (before verse 1)
 ######
 ##### Attributes for publication notes:
   - **ISSUE**
@@ -117,8 +117,10 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - document - **required**
     - eg. `{DOC=202011126}`
   - **BLOCK**
-    - "paragraph" block - **required**
+    - "paragraph" block
     - eg. `{BLOCK=6}`
+    - **special cases**:
+      - attribute omitted - for note at top of document
 ######
 ##### Observations:
   - Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
