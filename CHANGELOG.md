@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Importing document-level notes (not attached to a paragraph - {BLOCK=} attribute not provided)
+
 ### Fixed
 
 - Exporting notes attached to top of document (no paragraph block)
