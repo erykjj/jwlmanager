@@ -1401,7 +1401,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     process_tags(note_id, attribs['TAGS'])
 
                 df['ISSUE'].fillna(0, inplace=True)
-                df['TAGS'].fillna('', inplace=True)
+                df['TAGS'].astype(str).fillna('', inplace=True)
                 df['TITLE'].fillna('', inplace=True)
                 df['NOTE'].fillna('', inplace=True)
                 df['COLOR'].fillna(0, inplace=True)
