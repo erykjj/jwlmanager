@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Exporting notes attached to top of document (no paragraph block)
+
 ### Removed
 
 ____
