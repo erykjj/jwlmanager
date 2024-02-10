@@ -635,6 +635,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.0
 [4.3.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.3
 [4.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.2
 [4.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.1
