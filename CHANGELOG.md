@@ -7,6 +7,7 @@
 ### Changed
 
 - Importing document-level notes (not attached to a paragraph - {BLOCK=} attribute not provided)
+- Updated Document Viewer to link document-level notes
 
 ### Fixed
 
