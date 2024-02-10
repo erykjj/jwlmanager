@@ -1766,25 +1766,25 @@ class Window(QMainWindow, Ui_MainWindow):
                         item['RANGE'] = f'{row[14]}-{row[15]}'
                     else:
                         item['RANGE'] = None
-                    if item['TYPE'] == 1 and item['DOC']:
-                        if item['BLOCK']:
-                            par = f"&par={item['BLOCK']}"
-                            item['VS'] = None
-                        else:
-                            par = ''
-                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
-                        if row[9] > 10000000:
-                            item['ISSUE'] = process_issue(row[9])
-                    elif item['TYPE'] == 2:
-                        item['BLOCK'] = None
-                        if not item['HEADING']:
-                            item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}:{item['VS']}"
-                        elif ':' not in item['HEADING']:
-                            item['HEADING'] += f":{item['VS']}"
-                        script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + str(item['VS']).zfill(3)
-                        item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
-                    else:
+                    if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')): # independent note
                         item['Link'] = None
+                    else: # attached note
+                        if item.get('BK'): # Bible note
+                            if item.get('VS'):
+                                vs = str(item['VS']).zfill(3)
+                            else:
+                                vs = '000'
+                            script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
+                            if not item['HEADING']:
+                                item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
+                            elif item.get('VS') and (':' not in item['HEADING']):
+                                item['HEADING'] += f":{item['VS']}"
+                        else: # publication note
+                            par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                        if row[9] and (row[9] > 10000000):
+                            item['ISSUE'] = process_issue(row[9])
                     item_list.append(item)
                 return item_list
 
