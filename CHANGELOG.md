@@ -11,6 +11,15 @@
 ### Removed
 
 ____
+## [4.4.1] - 2024-02-13
+### Changed
+
+- Adjust code for future upstream library changes (pandas)
+
+### Fixed
+
+- Fix for a 'nan' tag being added to untagged Notes on import
+
 ## [4.4.0] - 2024-02-10
 ### Changed
 
@@ -635,6 +644,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.1
 [4.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.0
 [4.3.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.3
 [4.3.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.2
