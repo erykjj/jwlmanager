@@ -1,19 +1,19 @@
 {
     "types": {
-        "1": "",
-        "2": "",
-        "4": "",
-        "6": "",
-        "7": "",
-        "10": "",
-        "12": "",
-        "13": "",
-        "14": "",
-        "17": "",
-        "22": "",
-        "25": "",
-        "30": "",
-        "31": ""
+        "1": "Bibliák",
+        "2": "Könyvek",
+        "4": "Füzetek",
+        "6": "Indexek",
+        "7": "Folyóiratok",
+        "10": "Tájékoztatólapok",
+        "12": "Programfüzetek",
+        "13": "Folyóiratok",
+        "14": "Folyóiratok",
+        "17": "Egyéb",
+        "22": "Cikksorozatok",
+        "25": "Média",
+        "30": "Folyóiratok",
+        "31": "Programfüzetek"
     },
     "extras": {
         "CO-invpw": {
