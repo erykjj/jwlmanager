@@ -1,0 +1,112 @@
+{
+    "types": {
+        "1": "Bibliák",
+        "2": "Könyvek",
+        "4": "Füzetek",
+        "6": "Indexek",
+        "7": "Folyóiratok",
+        "10": "Tájékoztatólapok",
+        "12": "Programfüzetek",
+        "13": "Folyóiratok",
+        "14": "Folyóiratok",
+        "17": "Egyéb",
+        "22": "Cikksorozatok",
+        "25": "Média",
+        "30": "Folyóiratok",
+        "31": "Programfüzetek"
+    },
+    "extras": {
+        "CO-invpw": {
+            "short": "",
+            "long": ""
+        },
+        "S-196": {
+            "short": "",
+            "long": ""
+        },
+        "cj": {
+            "short": "",
+            "long": ""
+        },
+        "cn": {
+            "short": "",
+            "long": ""
+        },
+        "co-r": {
+            "short": "",
+            "long": ""
+        },
+        "dx": {
+            "short": "",
+            "long": ""
+        },
+        "igw": {
+            "short": "",
+            "long": ""
+        },
+        "jwb": {
+            "short": "",
+            "long": ""
+        },
+        "jwb-": {
+            "short": "",
+            "long": ""
+        },
+        "jwbcov": {
+            "short": "",
+            "long": ""
+        },
+        "ks10": {
+            "short": "",
+            "long": ""
+        },
+        "mwbv": {
+            "short": "",
+            "long": ""
+        },
+        "om": {
+            "short": "",
+            "long": ""
+        },
+        "or": {
+            "short": "",
+            "long": ""
+        },
+        "osg": {
+            "short": "",
+            "long": ""
+        },
+        "pk": {
+            "short": "",
+            "long": ""
+        },
+        "pkon": {
+            "short": "",
+            "long": ""
+        },
+        "pt14": {
+            "short": "",
+            "long": ""
+        },
+        "qm": {
+            "short": "",
+            "long": ""
+        },
+        "sfl": {
+            "short": "",
+            "long": ""
+        },
+        "sfla": {
+            "short": "",
+            "long": ""
+        },
+        "sgd": {
+            "short": "",
+            "long": ""
+        },
+        "ws-": {
+            "short": "",
+            "long": ""
+        }
+    }
+}
