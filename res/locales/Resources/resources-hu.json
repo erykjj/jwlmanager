@@ -17,19 +17,19 @@
     },
     "extras": {
         "CO-invpw": {
-            "short": "",
-            "long": ""
+            "short": "Kongresszusi Meghívó",
+            "long": "Regionális kongresszus meghívó"
         },
         "S-196": {
-            "short": "",
-            "long": ""
+            "short": "Használd a \"Boldogan élhetsz örökké!\" kiadványokat",
+            "long": "Hogyan használd a szolgálatban a Boldogan élhetsz örökké! kiadványokat"
         },
         "cj": {
-            "short": "",
-            "long": ""
+            "short": "Kommentár Jakabon",
+            "long": "Kommentár Jakab levelén"
         },
         "cn": {
-            "short": "",
+            "short": "Összhang",
             "long": ""
         },
         "co-r": {
