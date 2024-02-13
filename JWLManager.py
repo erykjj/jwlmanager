@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.4.0'
+VERSION = 'v4.4.1'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -1173,7 +1173,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     result = cur.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
                     return result[0]
 
-                df['ISSUE'].fillna(0, inplace=True)
+                df.fillna({'ISSUE': 0}, inplace=True)
                 count = 0
                 for i, row in df.iterrows():
                     try:
@@ -1391,11 +1391,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     note_id = cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
 
-                df['ISSUE'].fillna(0, inplace=True)
-                df['TAGS'].astype(str).fillna('', inplace=True)
-                df['TITLE'].fillna('', inplace=True)
-                df['NOTE'].fillna('', inplace=True)
-                df['COLOR'].fillna(0, inplace=True)
+                df.fillna({'ISSUE': 0}, inplace=True)
+                df.fillna({'COLOR': 0}, inplace=True)
+                df.fillna({'TAGS': ''}, inplace=True)
+                df.fillna({'TITLE': ''}, inplace=True)
+                df.fillna({'NOTE': ''}, inplace=True)
                 count = 0
                 for i, row in df.iterrows():
                     try:
