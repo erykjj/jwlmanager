@@ -1,7 +1,7 @@
 # JWLManager
 **Looking for help with translation[^*] on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)**   ![Translation status](https://hosted.weblate.org/widgets/jwlmanager/-/qt-ui/88x31-black.png)
 
-**Please join the [discussion](https://github.com/erykjj/jwlmanager/discussions) and give your ideas**
+<span style="font-variant:small-caps;">**Please join the [discussion](https://github.com/erykjj/jwlmanager/discussions) and give your ideas**</span>
 
 ## Purpose
 
