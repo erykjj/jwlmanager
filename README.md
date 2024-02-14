@@ -1,6 +1,8 @@
 # JWLManager
 **Looking for help with translation[^*] on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)**   ![Translation status](https://hosted.weblate.org/widgets/jwlmanager/-/qt-ui/88x31-black.png)
 
+**Please join the [discussion](https://github.com/erykjj/jwlmanager/discussions) and give your ideas**
+
 ## Purpose
 
 This is a **multi-platform and multi-language application**[^#] for viewing and performing various operations on the *user* data (Notes, Highlights, Favorites, Bookmarks, Annotations and Playlists) stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
@@ -69,7 +71,7 @@ See [here](res/HELP.md) for an explanation of how to use.
 ____
 ## Feedback, etc.
 
-Feel free to [get in touch](https://github.com/erykjj/jwlmanager/issues) and post any issues and/or suggestions.
+Feel free to get in touch and post any [issues](https://github.com/erykjj/jwlmanager/issues) and/or [suggestions](https://github.com/erykjj/jwlmanager/discussions).
 
 [![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
 
