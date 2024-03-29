@@ -759,7 +759,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'deviceName': f'{APP}_{VERSION}',
                 'databaseName': 'userData.db',
                 'hash': '',
-                'schemaVersion': 13 } }
+                'schemaVersion': 14 } }
         with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
