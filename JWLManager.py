@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.4.1'
+VERSION = 'v4.5.0'
 
 
 import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
@@ -434,7 +434,7 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([4,5], True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], False, False, False, False)
+            disable_options([1,2,3,4,5], False, True, True, False)
         self.regroup()
         self.combo_grouping.blockSignals(False)
 
