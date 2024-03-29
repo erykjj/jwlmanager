@@ -768,7 +768,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.modified:
             self.check_save()
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary *.jwlplaylist)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
             if fname[0] == '':
                 return
             archive = fname[0]
@@ -1437,10 +1437,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
+        def import_playlist():
+            return 10
+
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
+            elif category == _('Playlists'):
+                flt = _('JW Library playlists')+' (*.jwlplaylist)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
@@ -1460,6 +1465,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = import_highlights()
             elif category == _('Notes'):
                 count = import_notes()
+            elif category == _('Playlists'):
+                count = import_playlist()
             cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             cur.close()
