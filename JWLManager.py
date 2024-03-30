@@ -785,7 +785,7 @@ class Window(QMainWindow, Ui_MainWindow):
         with ZipFile(archive,'r') as zipped:
             zipped.extractall(tmp_path)
         if os.path.exists(f'{tmp_path}/user_data.db'):
-            db_name = 'user_data.db' # iPhone & iPad backups
+            db_name = 'user_data.db' # iPhone & iPad backups # CHECK: this may need adjusting in NEW database used on iPhones??
         else:
             db_name = 'userData.db' # Windows & Android
         self.file_loaded()
@@ -1102,7 +1102,34 @@ class Window(QMainWindow, Ui_MainWindow):
                     file.write('\n==={END}===')
 
         def export_playlist():
-            return
+
+            playlist_path = mkdtemp(prefix='JWPlaylist_')
+            with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
+                zipped.extractall(playlist_path)
+            playlist_db = 'userData.db'
+
+            # create blank db
+            # copy selected items and referenced items
+            # copy images
+            sha256hash = FileHash('sha256')
+            m = {
+                'name': APP,
+                'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'version': 1,
+                'type': 1,
+                'userDataBackup': {
+                    'lastModifiedDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                    'deviceName': f'{APP}_{VERSION}',
+                    'databaseName': 'userData.db',
+                    'hash': sha256hash.hash_file(f'{playlist_path}/userData.db'),
+                    'schemaVersion': 14 } }
+            with open(f'{playlist_path}/manifest.json', 'w') as json_file:
+                    json.dump(m, json_file, indent=None, separators=(',', ':'))
+            with ZipFile(fname, 'w', compression=ZIP_DEFLATED) as newzip:
+                files = os.listdir(playlist_path)
+                for f in files:
+                    newzip.write(f'{playlist_path}/{f}', f)
+            shutil.rmtree(playlist_path, ignore_errors=True)
 
         category = self.combo_category.currentText()
         fname = export_file()
