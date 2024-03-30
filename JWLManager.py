@@ -391,7 +391,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations'), _('Playlists')))
 
     def list_selected(self):
         selected = []
@@ -881,6 +881,8 @@ class Window(QMainWindow, Ui_MainWindow):
             now = datetime.now().strftime('%Y-%m-%d')
             if self.combo_category.currentText() == _('Highlights'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
+            elif self.combo_category.currentText() == _('Playlists'):
+                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.playlist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
             else:
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')[0]
 
@@ -1099,6 +1101,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         file.write(txt)
                     file.write('\n==={END}===')
 
+        def export_playlist():
+            return
+
         category = self.combo_category.currentText()
         fname = export_file()
         self.working_dir = Path(fname).parent
@@ -1121,6 +1126,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 export_notes()
             elif category == _('Annotations'):
                 export_annotations()
+            elif category == _('Playlists'):
+                export_playlist()
             cur.close()
             con.close()
         except Exception as ex:
