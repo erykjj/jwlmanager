@@ -1106,11 +1106,14 @@ class Window(QMainWindow, Ui_MainWindow):
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
-            playlist_db = 'userData.db'
-
-            # create blank db
+            con1 = sqlite3.connect(f'{playlist_path}/userData.db')
+            cur1 = con1.cursor()
+            # connect to (both?) db
             # copy selected items and referenced items
             # copy images
+            cur1.close()
+            con1.commit()
+            con1.close()
             sha256hash = FileHash('sha256')
             m = {
                 'name': APP,
