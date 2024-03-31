@@ -1103,14 +1103,33 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_playlist():
 
+            def playlist_export():
+                cur1.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
+
+                i = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId in {items};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', i)
+
+                for rec in i:
+                    r = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath = ?;', (rec[6],)).fetchone()
+                    if r:
+                        shutil.copy2(tmp_path+'/'+rec[6], playlist_path+'/'+rec[6])
+                        cur1.execute('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', r)
+                        
+
+                i = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', i)
+
+                # copy selected items and referenced items
+
+                cur1.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
+                return
+
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             con1 = sqlite3.connect(f'{playlist_path}/userData.db')
             cur1 = con1.cursor()
-            # connect to (both?) db
-            # copy selected items and referenced items
-            # copy images
+            playlist_export()
             cur1.close()
             con1.commit()
             con1.close()
