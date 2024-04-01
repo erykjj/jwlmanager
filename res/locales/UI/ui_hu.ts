@@ -11,52 +11,52 @@
     <message>
         <location filename="main_window.ui" line="120"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Típus</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="130"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyelv</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="135"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Év</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Címke</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="145"/>
         <source>Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Szín</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
         <source>Grouping:</source>
-        <translation type="unfinished"></translation>
+        <translation>Csoportosítás:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
         <source>Selected:</source>
-        <translation type="unfinished"></translation>
+        <translation>Megjelölve:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
         <source>Category:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kategória:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Bejegyzések</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="260"/>
@@ -121,13 +121,13 @@
     <message>
         <location filename="main_window.ui" line="508"/>
         <source>&amp;File</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Fájl</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="523"/>
         <location filename="main_window.ui" line="698"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Súgó</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
