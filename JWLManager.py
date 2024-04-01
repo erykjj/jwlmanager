@@ -1106,23 +1106,59 @@ class Window(QMainWindow, Ui_MainWindow):
             def playlist_export():
                 cur1.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
 
+                cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 0, 'Favorite'))
+
                 i = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId in {items};').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', i)
 
                 for rec in i:
-                    r = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath = ?;', (rec[6],)).fetchone()
+                    item_list.append(rec)
+                    item_id = rec[0]
+                    r = cur.execute('SELECT * FROM IndependentMedia WHERE FilePath = ?;', (rec[6],)).fetchone()
                     if r:
                         shutil.copy2(tmp_path+'/'+rec[6], playlist_path+'/'+rec[6])
                         cur1.execute('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', r)
-                        
+
+                        s = cur.execute('SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId = ?;', (item_id,)).fetchall()
+                        cur1.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', s)
+
+
+                        s = cur.execute('SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId = ?;', (item_id,)).fetchall()
+                        cur1.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', s)
+                        for t in s:
+                            location = t[1]
+                            u = cur.execute('SELECT * FROM Location WHERE LocationId = ?;', (location,)).fetchone()
+                            cur1.execute('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', u)
+
+
+
+                    r = cur.execute('SELECT * FROM TagMap WHERE PlaylistItemId = ?;', (item_id,)).fetchone()
+                    if r:
+                        cur1.execute('INSERT INTO TagMap VALUES (?, ?, ?, ?, ?, ?);', r)
+                        s = cur.execute('SELECT * FROM Tag WHERE TagId = ?;', (r[4],)).fetchone()
+                        cur1.execute('INSERT INTO Tag (Type, Name) SELECT 2, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (s[2], s[2]))
+
+                    r = cur.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (item_id,)).fetchone()
+                    if r:
+                        cur1.execute('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', r)
+                        s = cur.execute('SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (item_id,)).fetchone()
+                        if s:
+                            cur1.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', s)
+                        s = cur.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (r[0],)).fetchall()
+                        if s:
+                            cur1.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', s)
+
+                i = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId in {items};').fetchall()
+                for rec in i:
+                    r = cur.execute(f'SELECT * FROM IndependentMedia WHERE IndependentMediaId = ?;', (rec[1],)).fetchone()
+                    shutil.copy2(tmp_path+'/'+r[2], playlist_path+'/'+r[2])
+                    cur1.execute('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', r)
 
                 i = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', i)
 
-                # copy selected items and referenced items
-
                 cur1.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
-                return
+                # TODO: reindex??
 
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
