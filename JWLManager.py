@@ -1110,7 +1110,6 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_playlist():
 
             def playlist_export():
-                cur1.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
                 cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 0, 'Favorite'))
                 rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
                 if rows:
@@ -1182,16 +1181,48 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM Tag WHERE TagId IN {tg};').fetchall()
                 cur1.executemany('INSERT INTO Tag VALUES (?, ?, ?);', rows)
 
-                cur1.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
-                cur1.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
-                # TODO: reindex??
+            def reindex():
+
+                def make_table(table):
+                    cur1.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
+
+                def update_table(table, field):
+                    cur1.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+
+                cur1.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
+                make_table('PlaylistItem')
+                update_table('PlaylistItem', 'PlaylistItemId')
+                update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
+                update_table('PlaylistItemLocationMap', 'PlaylistItemId')
+                update_table('PlaylistItemMarker', 'PlaylistItemId')
+                update_table('TagMap', 'PlaylistItemId')
+                cur1.execute('DROP TABLE CrossReference;')
+
+                cur1.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
+                make_table('IndependentMedia')
+                update_table('IndependentMedia', 'IndependentMediaId')
+                update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
+                cur1.execute('DROP TABLE CrossReference;')
+
+                cur1.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
+                cur1.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
+                make_table('PlaylistItemMarker')
+                update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
+                update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
+                update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
+                cur1.execute('DROP TABLE CrossReference;')
+
 
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             con1 = sqlite3.connect(f'{playlist_path}/userData.db')
             cur1 = con1.cursor()
+            cur1.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
             playlist_export()
+            # reindex()
+            cur1.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
+            cur1.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             cur1.close()
             con1.commit()
             con1.close()
@@ -2331,7 +2362,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def reindex_playlists():
 
-            def clean_jpegs():
+            def clean_media():
                 thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
                 ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
                 ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
@@ -2367,7 +2398,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
             cur.execute('DROP TABLE CrossReference;')
 
-            clean_jpegs()
+            clean_media()
 
         def reindex_tags():
             make_table('TagMap')
