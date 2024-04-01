@@ -1115,7 +1115,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
                 if rows:
                     lc = cur.execute('SELECT locale FROM android_metadata;').fetchone()
-                    cur1.execute('UPDATE android_metadata SET locale = ?;' (lc[0],))
+                    cur1.execute('UPDATE android_metadata SET locale = ?;', (lc[0],))
 
                 rows = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
@@ -1127,6 +1127,18 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 rows = cur.execute(f'SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId IN {items};').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
+
+                rows = cur1.execute(f'SELECT PlaylistItemMarkerId FROM PlaylistItemMarker;').fetchall()
+                pm = '('
+                for row in rows:
+                    pm += f'"{row[0]}", '
+                pm = pm.rstrip(', ') + ')'
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', rows)
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
 
                 rows = cur.execute(f'SELECT * FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
                 cur1.executemany('INSERT INTO TagMap VALUES (?, ?, ?, ?, ?, ?);', rows)
