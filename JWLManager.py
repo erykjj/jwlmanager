@@ -850,6 +850,12 @@ class Window(QMainWindow, Ui_MainWindow):
             sha256hash = FileHash('sha256')
             m['userDataBackup']['hash'] = sha256hash.hash_file(f'{tmp_path}/{db_name}')
             m['userDataBackup']['databaseName'] = db_name
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
+            cur.close()
+            con.commit()
+            con.close()
             with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
             return
@@ -1105,58 +1111,66 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def playlist_export():
                 cur1.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
-
                 cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 0, 'Favorite'))
+                rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
+                if rows:
+                    lc = cur.execute('SELECT locale FROM android_metadata;').fetchone()
+                    cur1.execute('UPDATE android_metadata SET locale = ?;' (lc[0],))
 
-                i = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId in {items};').fetchall()
-                cur1.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', i)
+                rows = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
+                for row in rows:
+                    item_list.append(row)
 
-                for rec in i:
-                    item_list.append(rec)
-                    item_id = rec[0]
-                    r = cur.execute('SELECT * FROM IndependentMedia WHERE FilePath = ?;', (rec[6],)).fetchone()
-                    if r:
-                        shutil.copy2(tmp_path+'/'+rec[6], playlist_path+'/'+rec[6])
-                        cur1.execute('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', r)
+                rows = cur.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
 
-                        s = cur.execute('SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId = ?;', (item_id,)).fetchall()
-                        cur1.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', s)
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId IN {items};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
 
+                rows = cur.execute(f'SELECT * FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
+                cur1.executemany('INSERT INTO TagMap VALUES (?, ?, ?, ?, ?, ?);', rows)
 
-                        s = cur.execute('SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId = ?;', (item_id,)).fetchall()
-                        cur1.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', s)
-                        for t in s:
-                            location = t[1]
-                            u = cur.execute('SELECT * FROM Location WHERE LocationId = ?;', (location,)).fetchone()
-                            cur1.execute('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', u)
+                rows = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', rows)
 
+                rows = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
+                cur1.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
 
+                rows = cur1.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()
+                fp = '('
+                for row in rows:
+                    fp += f'"{row[0]}", '
+                fp = fp.rstrip(', ') + ')'
 
-                    r = cur.execute('SELECT * FROM TagMap WHERE PlaylistItemId = ?;', (item_id,)).fetchone()
-                    if r:
-                        cur1.execute('INSERT INTO TagMap VALUES (?, ?, ?, ?, ?, ?);', r)
-                        s = cur.execute('SELECT * FROM Tag WHERE TagId = ?;', (r[4],)).fetchone()
-                        cur1.execute('INSERT INTO Tag (Type, Name) SELECT 2, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (s[2], s[2]))
+                rows = cur1.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
+                mi = '('
+                for row in rows:
+                    mi += f'{row[0]}, '
+                mi = mi.rstrip(', ') + ')'
 
-                    r = cur.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (item_id,)).fetchone()
-                    if r:
-                        cur1.execute('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', r)
-                        s = cur.execute('SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (item_id,)).fetchone()
-                        if s:
-                            cur1.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', s)
-                        s = cur.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (r[0],)).fetchall()
-                        if s:
-                            cur1.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', s)
+                rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
+                cur1.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
+                for f in rows:
+                    shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
 
-                i = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId in {items};').fetchall()
-                for rec in i:
-                    r = cur.execute(f'SELECT * FROM IndependentMedia WHERE IndependentMediaId = ?;', (rec[1],)).fetchone()
-                    shutil.copy2(tmp_path+'/'+r[2], playlist_path+'/'+r[2])
-                    cur1.execute('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', r)
+                rows = cur1.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
+                lo = '('
+                for row in rows:
+                    lo += f'{row[0]}, '
+                lo = lo.rstrip(', ') + ')'
+                rows = cur.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
+                cur1.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
 
-                i = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
-                cur1.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', i)
+                rows = cur1.execute(f'SELECT DISTINCT TagId FROM TagMap;').fetchall()
+                tg = '('
+                for row in rows:
+                    tg += f'{row[0]}, '
+                tg = tg.rstrip(', ') + ')'
+                rows = cur.execute(f'SELECT * FROM Tag WHERE TagId IN {tg};').fetchall()
+                cur1.executemany('INSERT INTO Tag VALUES (?, ?, ?);', rows)
 
+                cur1.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
                 cur1.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
                 # TODO: reindex??
 
