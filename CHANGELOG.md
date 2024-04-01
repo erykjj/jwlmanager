@@ -4,9 +4,13 @@
 
 ### Added
 
+- Exporting Playlists to .jwplaylist file
+
 ### Changed
 
 ### Fixed
+
+- Updating LastModified date in database (minor)
 
 ### Removed
 
