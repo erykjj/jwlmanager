@@ -888,7 +888,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if self.combo_category.currentText() == _('Highlights'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
             elif self.combo_category.currentText() == _('Playlists'):
-                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.playlist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
+                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
             else:
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')[0]
 
@@ -1211,7 +1211,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
                 update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
                 cur1.execute('DROP TABLE CrossReference;')
-
 
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
