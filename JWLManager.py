@@ -1181,37 +1181,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM Tag WHERE TagId IN {tg};').fetchall()
                 cur1.executemany('INSERT INTO Tag VALUES (?, ?, ?);', rows)
 
-            # def reindex():
-
-            #     def make_table(table):
-            #         cur1.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
-
-            #     def update_table(table, field):
-            #         cur1.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-
-            #     cur1.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
-            #     make_table('PlaylistItem')
-            #     update_table('PlaylistItem', 'PlaylistItemId')
-            #     update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
-            #     update_table('PlaylistItemLocationMap', 'PlaylistItemId')
-            #     update_table('PlaylistItemMarker', 'PlaylistItemId')
-            #     update_table('TagMap', 'PlaylistItemId')
-            #     cur1.execute('DROP TABLE CrossReference;')
-
-            #     cur1.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
-            #     make_table('IndependentMedia')
-            #     update_table('IndependentMedia', 'IndependentMediaId')
-            #     update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
-            #     cur1.execute('DROP TABLE CrossReference;')
-
-            #     cur1.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
-            #     cur1.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
-            #     make_table('PlaylistItemMarker')
-            #     update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
-            #     update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
-            #     update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
-            #     cur1.execute('DROP TABLE CrossReference;')
-
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
@@ -2431,7 +2400,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
             app.processEvents()
             progress_dialog = init_progress()
-        self.trim_db()
+            self.trim_db()
         try:
             if self.interactive:
                 con = sqlite3.connect(f'{tmp_path}/{db_name}')
@@ -2447,6 +2416,8 @@ class Window(QMainWindow, Ui_MainWindow):
             cur.close()
             if self.interactive:
                 con.close()
+            else:
+                self.trim_db(con)
         except Exception as ex:
             self.crash_box(ex)
             self.progress_dialog.close()
@@ -2494,9 +2465,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def trim_db(self):
+    def trim_db(self, connection=None):
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            if not connection:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            else:
+                con = connection
             cur = con.cursor()
             sql = """
                 PRAGMA temp_store = 2;
@@ -2508,7 +2482,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
                 NOT IN (SELECT NoteId FROM Note);
-                DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+                DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap);
 
                 DELETE FROM BlockRange WHERE UserMarkId NOT IN
                 (SELECT UserMarkId FROM UserMark);
@@ -2529,13 +2503,24 @@ class Window(QMainWindow, Ui_MainWindow):
                 DELETE FROM UserMark WHERE LocationId NOT IN
                 (SELECT LocationId FROM Location);
 
+                DELETE FROM PlaylistItem WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM TagMap
+                WHERE PlaylistItemId IS NOT NULL);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemLocationMap WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemMarker WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;
                 """
             cur.executescript(sql)
             con.commit()
             cur.close()
-            con.close()
+            if not con:
+                con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
