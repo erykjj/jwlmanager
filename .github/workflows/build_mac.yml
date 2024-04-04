@@ -17,7 +17,7 @@ on:
 jobs:
   macos:
     name: Build macOS APP
-    runs-on: macos-12
+    runs-on: macos-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4
