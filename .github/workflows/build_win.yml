@@ -1,4 +1,4 @@
-name: 'Build Windows packages v0.1.3'
+name: 'Build Windows packages v0.1.4'
 
 on:
   workflow_call:
@@ -37,7 +37,7 @@ jobs:
       run: |
         cd dist
         ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
-        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
+        tar.exe -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager_${{ inputs.TAG }}.exe
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
