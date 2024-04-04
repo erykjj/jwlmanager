@@ -4,7 +4,7 @@
 
 ### Added
 
-- Exporting Playlists to .jwplaylist file
+- Exporting Playlist items to .jwplaylist file
 
 ### Changed
 
