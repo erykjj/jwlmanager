@@ -1111,6 +1111,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def playlist_export():
                 cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 0, 'Favorite'))
+                cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (2, 2, Path(fname).stem))
+
                 rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
                 if rows:
                     lc = cur.execute('SELECT locale FROM android_metadata;').fetchone()
@@ -1139,8 +1141,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
 
-                rows = cur.execute(f'SELECT * FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
-                cur1.executemany('INSERT INTO TagMap VALUES (?, ?, ?, ?, ?, ?);', rows)
+                rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
+                pos = 0
+                for row in rows:
+                    cur1.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 2, pos))
+                    pos += 1
 
                 rows = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
                 cur1.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', rows)
@@ -1172,14 +1177,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 lo = lo.rstrip(', ') + ')'
                 rows = cur.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
                 cur1.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
-
-                rows = cur1.execute(f'SELECT DISTINCT TagId FROM TagMap;').fetchall()
-                tg = '('
-                for row in rows:
-                    tg += f'{row[0]}, '
-                tg = tg.rstrip(', ') + ')'
-                rows = cur.execute(f'SELECT * FROM Tag WHERE TagId IN {tg};').fetchall()
-                cur1.executemany('INSERT INTO Tag VALUES (?, ?, ?);', rows)
 
             playlist_path = mkdtemp(prefix='JWPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
@@ -2482,7 +2479,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
                 NOT IN (SELECT NoteId FROM Note);
-                DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap);
+                DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
                 DELETE FROM BlockRange WHERE UserMarkId NOT IN
                 (SELECT UserMarkId FROM UserMark);
