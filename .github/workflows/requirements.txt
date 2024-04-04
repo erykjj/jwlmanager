@@ -1,11 +1,11 @@
-pyinstaller == 5.13
+pyinstaller
 pyinstaller-hooks-contrib
 PySide6
 shiboken6
 argparse
 filehash
 openpyxl
-pandas == 2.2
+pandas
 regex
 requests
 XlsxWriter
