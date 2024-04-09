@@ -134,7 +134,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
 ######
 ### Mask
 ######
-If you need to share your complete archive but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm, view the notes in the Data Viewer. Only tags are not obscured.
+If you need to *share* your complete archive (for diagnostic purposes, etc.) but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm, view the notes in the Data Viewer. Only tags are not obscured. This is a **dangerous, destructive, one-way procedure**! Make sure you keep your 'official' backup!
 #####
 ### Reindex
 ######
