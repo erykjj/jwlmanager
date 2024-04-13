@@ -1571,6 +1571,7 @@ class Window(QMainWindow, Ui_MainWindow):
             count = update_db()
             cur1.close()
             con1.close()
+            shutil.rmtree(playlist_path, ignore_errors=True)
             return count
 
         if not file:
