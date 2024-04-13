@@ -1178,7 +1178,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
                 cur1.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
 
-            playlist_path = mkdtemp(prefix='JWPlaylist_')
+            playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             con1 = sqlite3.connect(f'{playlist_path}/userData.db')
@@ -1552,7 +1552,18 @@ class Window(QMainWindow, Ui_MainWindow):
             return count
 
         def import_playlist():
-            return 10
+            playlist_path = mkdtemp(prefix='JWLPlaylist_')
+            with ZipFile(file, 'r') as zipped:
+                zipped.extractall(playlist_path)
+            if os.path.exists(f'{playlist_path}/user_data.db'):
+                db = 'user_data.db' # iPhone & iPad backups
+            else:
+                db = 'userData.db' # Windows & Android
+            con1 = sqlite3.connect(f'{playlist_path}/{db}')
+            cur1 = con1.cursor()
+            cur1.close()
+            con1.close()
+            return 'NOT IMPLEMENTED'
 
         if not file:
             category = self.combo_category.currentText()
