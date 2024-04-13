@@ -1110,8 +1110,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_playlist():
 
             def playlist_export():
-                cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 0, 'Favorite'))
-                cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (2, 2, Path(fname).stem))
+                cur1.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 2, Path(fname).stem))
 
                 rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
                 if rows:
