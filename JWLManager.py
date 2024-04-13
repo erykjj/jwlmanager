@@ -1143,7 +1143,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
                 pos = 0
                 for row in rows:
-                    cur1.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 2, pos))
+                    cur1.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
                     pos += 1
 
                 rows = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
