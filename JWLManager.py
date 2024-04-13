@@ -1552,6 +1552,13 @@ class Window(QMainWindow, Ui_MainWindow):
             return count
 
         def import_playlist():
+
+            def update_db():
+                # TODO: update db
+                # copy thumbnail images - what if already exists?
+                # return result count and refresh tree
+                return 'NOT IMPLEMENTED'
+
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(file, 'r') as zipped:
                 zipped.extractall(playlist_path)
@@ -1561,9 +1568,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 db = 'userData.db' # Windows & Android
             con1 = sqlite3.connect(f'{playlist_path}/{db}')
             cur1 = con1.cursor()
+            count = update_db()
             cur1.close()
             con1.close()
-            return 'NOT IMPLEMENTED'
+            return count
 
         if not file:
             category = self.combo_category.currentText()
