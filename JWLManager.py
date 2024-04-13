@@ -1557,7 +1557,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 # TODO: update db
                 # copy thumbnail images - what if already exists?
                 # return result count and refresh tree
-                return 'NOT IMPLEMENTED'
+                return 0 # return number of imported items
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(file, 'r') as zipped:
