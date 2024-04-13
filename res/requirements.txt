@@ -1,8 +1,8 @@
-PySide6
+PySide6==6.6
 argparse
 filehash
 openpyxl
-pandas
+pandas==2.2
 regex
 requests
 XlsxWriter
