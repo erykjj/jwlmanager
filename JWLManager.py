@@ -1554,6 +1554,31 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db():
                 # TODO: update db
+                tag = cur1.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
+                cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 2 AND Name = ?);', (tag, tag))
+                tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                sql = f'''
+                    SELECT Label,
+                        StartTrimOffsetTicks,
+                        EndTrimOffsetTicks,
+                        Accuracy,
+                        FilePath,
+                        Hash
+                    FROM TagMap
+                        JOIN
+                        PlaylistItem pi USING (
+                        PlaylistItemId
+                        )
+                        JOIN
+                        IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) 
+                    WHERE TagId = {tag_id};'''
+                items = cur.execute(sql).fetchall()
+                for i in cur1.execute('SELECT Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, FilePath, Hash FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
+                    if i in items:
+                        print('skipping (already exists): ', i)
+                    else:
+                        print('adding: ', i)
+
                 # copy thumbnail images - what if already exists?
                 # return result count and refresh tree
                 return 0 # return number of imported items
