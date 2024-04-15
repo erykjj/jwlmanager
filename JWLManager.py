@@ -1553,33 +1553,52 @@ class Window(QMainWindow, Ui_MainWindow):
         def import_playlist():
 
             def update_db():
-                # TODO: update db
                 tag = cur1.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
-                cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 2 AND Name = ?);', (tag, tag))
-                tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
-                sql = f'''
-                    SELECT Label,
-                        StartTrimOffsetTicks,
-                        EndTrimOffsetTicks,
-                        Accuracy,
-                        FilePath,
-                        Hash
-                    FROM TagMap
-                        JOIN
-                        PlaylistItem pi USING (
-                        PlaylistItemId
-                        )
-                        JOIN
-                        IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) 
-                    WHERE TagId = {tag_id};'''
-                items = cur.execute(sql).fetchall()
-                for i in cur1.execute('SELECT Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, FilePath, Hash FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
-                    if i in items:
-                        print('skipping (already exists): ', i)
-                    else:
+                try: # TODO: playlist already exists - be more selective
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                    sql = f'''
+                        SELECT Label,
+                            StartTrimOffsetTicks,
+                            EndTrimOffsetTicks,
+                            Accuracy,
+                            Hash
+                        FROM TagMap
+                            JOIN
+                            PlaylistItem pi USING (
+                            PlaylistItemId
+                            )
+                            JOIN
+                            IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) 
+                        WHERE TagId = {tag_id};'''
+                    items = cur.execute(sql).fetchall()
+                    for i in cur1.execute('SELECT Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, Hash FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
+                        if i in items:
+                            print('skipping (already exists): ', i)
+                            continue
                         print('adding: ', i)
+                except: # no such playlist, insert all items
+                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                    media_items = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                    hashes = [x[4] for x in media_items]
+                    for i in cur1.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
+                        if i[11] in hashes:
+                            thumbnail = media_items[hashes.index(i[11])][1:5]
+                            print('skipping (already exists): ', i, thumbnail)
+                        else:
+                            print('adding: ', i)
+                            thumbnail = i[8:12]
+                            fn = thumbnail[1]
+                            ext = 0
+                            while os.path.isfile(tmp_path + '/' + fn):
+                                ext += 1
+                                fn = f'{thumbnail[1]}_{ext}'
+                            shutil.copy2(playlist_path + '/' + thumbnail[1], tmp_path + '/' + fn)
+                            thumbnail[1] = fn
+                            cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', thumbnail)
+                        item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (list(i[1:6]) + [thumbnail[1]])).lastrowid
 
-                # copy thumbnail images - what if already exists?
+                
                 # return result count and refresh tree
                 return 0 # return number of imported items
 
