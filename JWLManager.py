@@ -1557,7 +1557,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_media(rec):
                     fn = rec[1]
                     if rec[-1] in current_hashes and fn == current_media[current_hashes.index(rec[-1])][2] and rec[-1] == current_media[current_hashes.index(rec[-1])][4]: # exact same file (name and hash) already exists
-                        return fn
+                        return fn, current_media[current_hashes.index(rec[-1])][0]
                     ext = 0
                     while os.path.isfile(tmp_path + '/' + fn):
                         ext += 1
@@ -1578,6 +1578,14 @@ class Window(QMainWindow, Ui_MainWindow):
                             cur.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, i[0]))
                         for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
                             cur.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
+
+                def add_location(rec):
+                    return cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Title, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', (rec)).lastrowid
+
+                def add_locations(current_item):
+                    for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                        location_id = add_location(row[4:13])
+                        cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
                 tag = impdb.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
                 try:
@@ -1602,8 +1610,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, media_map[1]))
                     add_tag()
                     add_markers(row[0])
-                # return result count and refresh tree
-                return len(rows) # return number of imported items
+                    add_locations(row[0])
+                return len(rows)
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(file, 'r') as zipped:
