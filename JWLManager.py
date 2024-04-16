@@ -1553,6 +1553,20 @@ class Window(QMainWindow, Ui_MainWindow):
         def import_playlist():
 
             def update_db():
+
+                def add_media(rec):
+                    fn = rec[1]
+                    if fn == current_items[current_hashes.index(rec[-1])][2] and rec[-1] == current_items[current_hashes.index(rec[-1])][-1]: # exact same file (name and hash) already exists
+                        return fn
+                    ext = 0
+                    while os.path.isfile(tmp_path + '/' + fn):
+                        ext += 1
+                        fn = f'{rec[1]}_{ext}'
+                    shutil.copy2(playlist_path + '/' + rec[1], tmp_path + '/' + fn)
+                    rec[1] = fn
+                    cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec)
+                    return rec[1]
+
                 tag = impdb.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
                 try:
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
@@ -1561,28 +1575,15 @@ class Window(QMainWindow, Ui_MainWindow):
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                 current_items = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_hashes = [x[4] for x in current_items]
-                rows = impdb.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId);').fetchall()
-                for i in rows:
-                    if i[11] in current_hashes:
-                        thumbnail = current_items[current_hashes.index(i[11])][1:5]
-                        media_id = current_items[current_hashes.index(i[11])][0]
-                        print('skipping (already exists): ', i)
-                    else:
-                        print('adding: ', i)
-                        thumbnail = list(i[8:12])
-                        fn = thumbnail[1]
-                        ext = 0
-                        while os.path.isfile(tmp_path + '/' + fn):
-                            ext += 1
-                            fn = f'{thumbnail[1]}_{ext}'
-                        shutil.copy2(playlist_path + '/' + thumbnail[1], tmp_path + '/' + fn)
-                        thumbnail[1] = fn
-                        media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', thumbnail).lastrowid
-
-                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (list(i[1:6]) + [thumbnail[1]])).lastrowid
-                    if i[13]:
-                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[13]))
-                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (i[0],)).fetchall():
+                for row in impdb.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
+                    item_rec = list(row[1:7])
+                    item_rec[5] = add_media(list(row[8:12]))
+                    print(row, item_rec)
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
+                    continue
+                    if row[13]:
+                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, row[13]))
+                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
                         marker_id = cur.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StartTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', ([item_id] + list(row[2:6])))
                         for row in impdb.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
                             cur.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, row[1]))
