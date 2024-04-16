@@ -1607,11 +1607,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
                 for row in rows:
                     item_rec = list(row[1:7])
-                    print(item_rec)
                     item_rec[0] = check_name(item_rec[0])
-                    print(item_rec)
                     media_rec = list(row[8:12])
-                    # tag_map = list(row[12:17]) # only used for sorting
                     media_map = list(row[17:19])
                     item_rec[5], media_id = add_media(media_rec)
 
