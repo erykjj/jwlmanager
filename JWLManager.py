@@ -1554,6 +1554,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db():
 
+                def check_name(label):
+                    name = label
+                    ext = 0
+                    while name in current_labels:
+                        ext += 1
+                        name = f'{label} ({ext})'
+                    return name
+
                 def add_media(rec):
                     fn = rec[1]
                     if rec[-1] in current_hashes and fn == current_media[current_hashes.index(rec[-1])][2] and rec[-1] == current_media[current_hashes.index(rec[-1])][4]: # exact same file (name and hash) already exists
@@ -1579,12 +1587,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
                             cur.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
 
-                def add_location(rec):
-                    return cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Title, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', (rec)).lastrowid
-
                 def add_locations(current_item):
                     for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
-                        location_id = add_location(row[4:13])
+                        location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Title, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
                         cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
                 tag = impdb.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
@@ -1594,12 +1599,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
 
+                rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                current_labels  = [x[0] for x in rows]
                 current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_hashes = [x[4] for x in current_media]
 
                 rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
                 for row in rows:
                     item_rec = list(row[1:7])
+                    print(item_rec)
+                    item_rec[0] = check_name(item_rec[0])
+                    print(item_rec)
                     media_rec = list(row[8:12])
                     # tag_map = list(row[12:17]) # only used for sorting
                     media_map = list(row[17:19])
