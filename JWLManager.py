@@ -1560,12 +1560,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                 current_items = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
-                hashes = [x[4] for x in current_items]
+                current_hashes = [x[4] for x in current_items]
                 rows = impdb.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId);').fetchall()
                 for i in rows:
-                    if i[11] in hashes:
-                        thumbnail = current_items[hashes.index(i[11])][1:5]
-                        media_id = current_items[hashes.index(i[11])][0]
+                    if i[11] in current_hashes:
+                        thumbnail = current_items[current_hashes.index(i[11])][1:5]
+                        media_id = current_items[current_hashes.index(i[11])][0]
                         print('skipping (already exists): ', i)
                     else:
                         print('adding: ', i)
@@ -1619,14 +1619,14 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                     current_items = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
-                    hashes = [x[4] for x in current_items]
+                    current_hashes = [x[4] for x in current_items]
                     rows = impdb.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId);').fetchall()
                     # import_items = [x[0] for x in rows]
                     # print(f'Import items: {import_items}')
                     for i in rows:
-                        if i[11] in hashes:
-                            thumbnail = current_items[hashes.index(i[11])][1:5]
-                            media_id = current_items[hashes.index(i[11])][0]
+                        if i[11] in current_hashes:
+                            thumbnail = current_items[current_hashes.index(i[11])][1:5]
+                            media_id = current_items[current_hashes.index(i[11])][0]
                             print('skipping (already exists): ', i)
                         else:
                             print('adding: ', i)
