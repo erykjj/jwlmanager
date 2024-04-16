@@ -1589,7 +1589,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def add_locations(current_item):
                     for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
-                        location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Title, Type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
+                        location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
                         cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
                 tag = impdb.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
@@ -1604,17 +1604,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_hashes = [x[4] for x in current_media]
 
-                rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
+                rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
                 for row in rows:
                     item_rec = list(row[1:7])
                     item_rec[0] = check_name(item_rec[0])
-                    media_rec = list(row[8:12])
-                    media_map = list(row[17:19])
-                    item_rec[5], media_id = add_media(media_rec)
-
+                    item_rec[5], media_id = add_media(list(row[8:12]))
                     item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
-                    if media_map[1]:
-                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, media_map[1]))
+                    for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
+                        rec, media_id = add_media(list(i[3:7]))
+                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
                     add_tag()
                     add_markers(row[0])
                     add_locations(row[0])
