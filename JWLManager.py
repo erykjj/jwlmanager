@@ -1581,9 +1581,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                     media_items = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
                     hashes = [x[4] for x in media_items]
-                    for i in cur1.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath);').fetchall():
+                    for i in cur1.execute('SELECT * FROM PlaylistItem pi JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId);').fetchall():
                         if i[11] in hashes:
                             thumbnail = media_items[hashes.index(i[11])][1:5]
+                            media_id = media_items[hashes.index(i[11])][0]
                             print('skipping (already exists): ', i, thumbnail)
                         else:
                             print('adding: ', i)
@@ -1595,8 +1596,11 @@ class Window(QMainWindow, Ui_MainWindow):
                                 fn = f'{thumbnail[1]}_{ext}'
                             shutil.copy2(playlist_path + '/' + thumbnail[1], tmp_path + '/' + fn)
                             thumbnail[1] = fn
-                            cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', thumbnail)
+                            media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', thumbnail).lastrowid
+
                         item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (list(i[1:6]) + [thumbnail[1]])).lastrowid
+                        if i[13]:
+                            cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[13]))
 
                 
                 # return result count and refresh tree
