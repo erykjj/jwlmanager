@@ -1,4 +1,4 @@
-name: 'Draft Release v0.1.8'
+name: 'Draft Release v1.0.0'
 
 on:
   push:
