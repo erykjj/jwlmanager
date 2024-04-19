@@ -1,7 +1,5 @@
-pyinstaller
-pyinstaller-hooks-contrib
-PySide6
-shiboken6
+PySide6==6.6
+shiboken6==6.6
 argparse
 filehash
 openpyxl
