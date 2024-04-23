@@ -3,7 +3,7 @@ shiboken6==6.6
 argparse
 filehash
 openpyxl
-pandas == 2.2
+pandas == 2.2.2
 regex
 requests
 XlsxWriter
