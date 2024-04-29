@@ -29,7 +29,7 @@ APP = 'JWLManager'
 VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, magic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtCore import *
@@ -2192,7 +2192,53 @@ class Window(QMainWindow, Ui_MainWindow):
             return 1, ' '+_('Added "{}" in {}').format(pub, lng)
 
         def add_images():
-            return 0, ''
+
+            def add_dialog():
+
+                def select_files():
+                    dialog = QFileDialog(self, _('Select images'), f'{self.working_dir}/', _('Select images')+' (*)')
+                    dialog.setFileMode(QFileDialog.ExistingFiles)
+                    dialog.exec()
+                    files = ''
+                    for f in dialog.selectedFiles():
+                        if regex.match('image', magic.from_file(f, mime = True)):
+                            files += f + '\n'
+                    selected_files.setText(files.strip())
+
+                dialog = QDialog()
+                dialog.resize(500, 250)
+                dialog.setWindowTitle(_('Add Images'))
+                label = QLabel(dialog)
+                label.setText(_('Select existing playlist or type name of new one:'))
+                lists = list(map(lambda x: x[0], cur.execute('SELECT DISTINCT Name FROM Tag WHERE Type=2;').fetchall()))
+                playlist = QComboBox(dialog)
+                playlist.setEditable(True)
+                playlist.addItems(sorted(lists))
+                playlist.setMaxVisibleItems(20)
+                playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
+
+                get_files = QPushButton(dialog, text='...',)
+                get_files.clicked.connect(select_files)
+
+                selected_files = QTextEdit(dialog)
+                selected_files.setFontPointSize(8)
+                selected_files.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
+
+                buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                buttons.accepted.connect(dialog.accept)
+                buttons.rejected.connect(dialog.reject)
+
+                layout = QVBoxLayout(dialog)
+                layout.addWidget(label)
+                layout.addWidget(playlist)
+                layout.addWidget(get_files)
+                layout.addWidget(selected_files)
+                layout.addWidget(buttons)
+                dialog.setWindowFlag(Qt.FramelessWindowHint)
+                dialog.exec()
+                return 0, ' '
+
+            return add_dialog()
 
         category = self.combo_category.currentText()
         try:
