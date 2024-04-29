@@ -2194,19 +2194,29 @@ class Window(QMainWindow, Ui_MainWindow):
         def add_images():
 
             def add_dialog():
+                # TODO: implement drag-and-drop
 
                 def select_files():
+                    nonlocal files
                     dialog = QFileDialog(self, _('Select images'), f'{self.working_dir}/', _('Select images')+' (*)')
                     dialog.setFileMode(QFileDialog.ExistingFiles)
                     dialog.exec()
-                    files = ''
                     for f in dialog.selectedFiles():
-                        if regex.match('image', magic.from_file(f, mime = True)):
-                            files += f + '\n'
-                    selected_files.setText(files.strip())
+                        if regex.match('image', magic.from_file(f, mime = True))and f not in files:
+                            files.append(f)
+                    lst = ''
+                    for f in files:
+                        lst += f + '\n'
+                    selected_files.setText(lst.strip())
 
+                def remove_files():
+                    nonlocal files
+                    files = []
+                    selected_files.setText('')
+
+                files = []
                 dialog = QDialog()
-                dialog.resize(500, 250)
+                dialog.resize(400, 450)
                 dialog.setWindowTitle(_('Add Images'))
                 label = QLabel(dialog)
                 label.setText(_('Select existing playlist or type name of new one:'))
@@ -2215,10 +2225,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 playlist.setEditable(True)
                 playlist.addItems(sorted(lists))
                 playlist.setMaxVisibleItems(20)
-                playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
+                # playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
 
                 get_files = QPushButton(dialog, text='...',)
                 get_files.clicked.connect(select_files)
+                clear_files = QPushButton(dialog, text='X',)
+                clear_files.clicked.connect(remove_files)
 
                 selected_files = QTextEdit(dialog)
                 selected_files.setFontPointSize(8)
@@ -2228,13 +2240,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 buttons.accepted.connect(dialog.accept)
                 buttons.rejected.connect(dialog.reject)
 
-                layout = QVBoxLayout(dialog)
-                layout.addWidget(label)
-                layout.addWidget(playlist)
-                layout.addWidget(get_files)
-                layout.addWidget(selected_files)
-                layout.addWidget(buttons)
-                dialog.setWindowFlag(Qt.FramelessWindowHint)
+                layout = QGridLayout(dialog)
+                layout.addWidget(label, 0, 0, 1, 0)
+                layout.addWidget(playlist, 1, 0, 1, 0)
+                layout.addWidget(get_files, 2, 0)
+                layout.addWidget(clear_files, 2, 1)
+                layout.addWidget(selected_files, 3, 0, 1, 0)
+                layout.addWidget(buttons, 4, 0, 1, 0)
+                # dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
                 return 0, ' '
 
