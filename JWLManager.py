@@ -183,7 +183,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.doubleClicked.connect(self.double_clicked)
             self.button_export.clicked.connect(self.export_items)
             self.button_import.clicked.connect(self.import_items)
-            self.button_add.clicked.connect(self.add_favorite)
+            self.button_add.clicked.connect(self.add_items)
             self.button_delete.clicked.connect(self.delete_items)
             self.button_view.clicked.connect(self.data_viewer)
 
@@ -434,7 +434,7 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([4,5], True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], False, True, True, False)
+            disable_options([1,2,3,4,5], True, True, True, False)
         self.regroup()
         self.combo_grouping.blockSignals(False)
 
@@ -2120,63 +2120,64 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
 
 
-    def add_favorite(self):
-
-        def add_dialog():
-
-            def set_edition():
-                lng = language.currentText()
-                publication.clear()
-                publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
-
-            dialog = QDialog()
-            dialog.setWindowTitle(_('Add Favorite'))
-            label = QLabel(dialog)
-            label.setText(_('Select the language and Bible edition to add:'))
-
-            language = QComboBox(dialog)
-            language.addItem(' ')
-            language.addItems(sorted(favorites['Lang'].unique()))
-            language.setMaxVisibleItems(20)
-            language.setStyleSheet('QComboBox { combobox-popup: 0; }')
-            language.activated.connect(set_edition)
-            publication = QComboBox(dialog)
-            publication.setMinimumContentsLength(23)
-            publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-            publication.setStyleSheet('QComboBox { combobox-popup: 0; }')
-
-            buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-            buttons.accepted.connect(dialog.accept)
-            buttons.rejected.connect(dialog.reject)
-
-            layout = QVBoxLayout(dialog)
-            layout.addWidget(label)
-            form = QFormLayout()
-            form.addRow(_('Language')+':', language)
-            form.addRow(_('Edition')+':', publication)
-            layout.addLayout(form)
-            layout.addWidget(buttons)
-            dialog.setWindowFlag(Qt.FramelessWindowHint)
-            if dialog.exec():
-                return publication.currentText(), language.currentText()
-            else:
-                return ' ', ' '
-
-        def tag_positions():
-            cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
-            tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
-            position = cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
-            if position[0] != None:
-                return tag_id, position[0] + 1
-            else:
-                return tag_id, 0
-
-        def add_location(symbol, language):
-            cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
-            result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
-            return result[0]
+    def add_items(self):
 
         def add_favorite():
+
+            def add_dialog():
+
+                def set_edition():
+                    lng = language.currentText()
+                    publication.clear()
+                    publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
+
+                dialog = QDialog()
+                dialog.setWindowTitle(_('Add Favorite'))
+                label = QLabel(dialog)
+                label.setText(_('Select the language and Bible edition to add:'))
+
+                language = QComboBox(dialog)
+                language.addItem(' ')
+                language.addItems(sorted(favorites['Lang'].unique()))
+                language.setMaxVisibleItems(20)
+                language.setStyleSheet('QComboBox { combobox-popup: 0; }')
+                language.activated.connect(set_edition)
+                publication = QComboBox(dialog)
+                publication.setMinimumContentsLength(23)
+                publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+                publication.setStyleSheet('QComboBox { combobox-popup: 0; }')
+
+                buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                buttons.accepted.connect(dialog.accept)
+                buttons.rejected.connect(dialog.reject)
+
+                layout = QVBoxLayout(dialog)
+                layout.addWidget(label)
+                form = QFormLayout()
+                form.addRow(_('Language')+':', language)
+                form.addRow(_('Edition')+':', publication)
+                layout.addLayout(form)
+                layout.addWidget(buttons)
+                dialog.setWindowFlag(Qt.FramelessWindowHint)
+                if dialog.exec():
+                    return publication.currentText(), language.currentText()
+                else:
+                    return ' ', ' '
+
+            def tag_positions():
+                cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
+                tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                position = cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
+                if position[0] != None:
+                    return tag_id, position[0] + 1
+                else:
+                    return tag_id, 0
+
+            def add_location(symbol, language):
+                cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
+                result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
+                return result[0]
+
             pub, lng = add_dialog()
             if pub == ' ' or lng == ' ':
                 return False, ' '+_('Nothing added!')
@@ -2188,24 +2189,34 @@ class Window(QMainWindow, Ui_MainWindow):
                 return False, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng)
             tag_id, position = tag_positions()
             cur.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
-            return True, ' '+_('Added "{}" in {}').format(pub, lng)
+            return 1, ' '+_('Added "{}" in {}').format(pub, lng)
 
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+        def add_images():
+            return 0, ''
+
+        category = self.combo_category.currentText()
         try:
-            result, message = add_favorite()
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            if category == _('Favorites'):
+                result, message = add_favorite()
+            elif category == _('Playlists'):
+                result, message = add_images()
+            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        cur.close()
-        con.close()
         self.statusBar.showMessage(message, 3500)
-        if result:
+        if result > 0:
+            message = f' {result} '+_('items added')
+            self.statusBar.showMessage(message, 3500)
             self.archive_modified()
+            self.trim_db()
             self.regroup(False, message)
 
     def delete_items(self):
