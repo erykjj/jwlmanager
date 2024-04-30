@@ -4,6 +4,7 @@ argparse
 filehash
 openpyxl
 pandas == 2.2.2
+pillow
 regex
 requests
 XlsxWriter
