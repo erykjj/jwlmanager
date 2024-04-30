@@ -2220,6 +2220,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 dialog.setWindowTitle(_('Add Images'))
                 label = QLabel(dialog)
                 label.setText(_('Select existing playlist or type name of new one:'))
+
                 lists = list(map(lambda x: x[0], cur.execute('SELECT DISTINCT Name FROM Tag WHERE Type=2;').fetchall()))
                 playlist = QComboBox(dialog)
                 playlist.setEditable(True)
@@ -2255,9 +2256,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout.addWidget(buttons, 3, 2)
                 dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
-                return 0, ' '
+                return playlist.currentText(), files
 
-            return add_dialog()
+            playlist, files = add_dialog()
+            if len(files) == 0:
+                return 0, ' '
+            # TODO: add images to DB
+            return len(files), f' {len(files)} '+_('items added')
 
         category = self.combo_category.currentText()
         try:
@@ -2276,9 +2281,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(message, 3500)
         if result > 0:
-            message = f' {result} '+_('items added')
             self.statusBar.showMessage(message, 3500)
             self.archive_modified()
             self.trim_db()
