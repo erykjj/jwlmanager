@@ -2258,11 +2258,61 @@ class Window(QMainWindow, Ui_MainWindow):
                 dialog.exec()
                 return playlist.currentText(), files
 
+            def update_db(playlist, files):
+
+                def check_name(label):
+                    name = label
+                    ext = 0
+                    while name in current_names:
+                        ext += 1
+                        name = f'{label}_{ext}'
+                    return name
+
+                def check_label(label):
+                    name = label
+                    ext = 0
+                    while name in current_labels:
+                        ext += 1
+                        name = f'{label} ({ext})'
+                    return name
+
+                def add_tag():
+                    position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+
+                try:
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Name =? and Type = 2;', (playlist,)).fetchone()[0]
+                except:
+                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
+
+                rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                current_labels  = [x[0] for x in rows]
+                current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                current_names = [x[2] for x in current_media]
+
+                sha256hash = FileHash('sha256')
+                result = 0
+                for f in files:
+                    name = Path(f).name
+                    hash256 = sha256hash.hash_file(f)
+                    mime = magic.from_file(f, mime = True)
+                    try:
+                        new_name = cur.execute('SELECT FilePath FROM IndependentMedia WHERE FilePath = ? AND Hash = ?;', (name, hash256)).fetchone()[0]
+                    except:
+                        new_name = check_name(name)
+                        shutil.copy2(f, tmp_path+'/'+new_name)
+                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
+                        result += 1
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?);', (check_label(name), 1, 1, new_name)).lastrowid
+                    add_tag()
+                return result
+
             playlist, files = add_dialog()
             if len(files) == 0:
                 return 0, ' '
-            # TODO: add images to DB
-            return len(files), f' {len(files)} '+_('items added')
+            result = update_db(playlist, files)
+            return result, f' {result} '+_('items added')
 
         category = self.combo_category.currentText()
         try:
