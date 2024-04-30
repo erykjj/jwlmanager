@@ -71,7 +71,7 @@ class AboutBox(QDialog):
         right_layout.addWidget(contact_label)
 
         button = QDialogButtonBox(QDialogButtonBox.Ok)
-        button.setFixedWidth(72)
+        button.setFixedWidth(80)
         button.accepted.connect(self.accept)
 
         left_layout.addWidget(button)
