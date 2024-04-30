@@ -40,6 +40,7 @@ from datetime import datetime, timezone
 from filehash import FileHash
 from functools import partial
 from pathlib import Path
+from PIL import Image
 from platform import platform
 from random import randint
 from tempfile import mkdtemp
@@ -2207,6 +2208,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     lst = ''
                     for f in files:
                         lst += f + '\n'
+                        self.working_dir = Path(f).parent
                     selected_files.setText(lst.strip())
 
                 def remove_files():
@@ -2256,7 +2258,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout.addWidget(buttons, 3, 2)
                 dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
-                return playlist.currentText(), files
+                return playlist.currentText() or 'playlist', files
 
             def update_db(playlist, files):
 
@@ -2297,14 +2299,24 @@ class Window(QMainWindow, Ui_MainWindow):
                     name = Path(f).name
                     hash256 = sha256hash.hash_file(f)
                     mime = magic.from_file(f, mime = True)
+                    ext = mime.split('/')[1]
                     try:
                         new_name = cur.execute('SELECT FilePath FROM IndependentMedia WHERE FilePath = ? AND Hash = ?;', (name, hash256)).fetchone()[0]
                     except:
                         new_name = check_name(name)
-                        shutil.copy2(f, tmp_path+'/'+new_name)
-                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
+                        shutil.copy2(f, f'{tmp_path}/{new_name}')
+                        unique_id = str(uuid.uuid1())
+                        thumb = f'{tmp_path}/{unique_id}.{ext}'
+                        shutil.copy2(f, thumb)
+                        i = Image.open(thumb)
+                        i.thumbnail((250, 250))
+                        i.save(thumb)
+                        thash = sha256hash.hash_file(thumb)
+                        media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
+                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (new_name, f'{unique_id}.{ext}', mime, thash)).lastrowid
                         result += 1
-                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?);', (check_label(name), 1, 1, new_name)).lastrowid
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, f'{unique_id}.{ext}')).lastrowid
+                    cur.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000)).lastrowid
                     add_tag()
                 return result
 
