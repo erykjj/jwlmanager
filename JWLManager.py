@@ -2227,13 +2227,19 @@ class Window(QMainWindow, Ui_MainWindow):
                 playlist.setMaxVisibleItems(20)
                 # playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
 
-                get_files = QPushButton(dialog, text='...',)
+                get_files = QPushButton(dialog)
+                get_files.setFixedSize(26, 26)
+                get_files.setIcon(QPixmap(f'{project_path}/res/icons/icons8-add-file-64.png'))
                 get_files.clicked.connect(select_files)
-                clear_files = QPushButton(dialog, text='X',)
+
+                clear_files = QPushButton(dialog)
+                clear_files.setFixedSize(26, 26)
+                clear_files.setIcon(QPixmap(f'{project_path}/res/icons/icons8-delete-64.png'))
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = QTextEdit(dialog)
                 selected_files.setFontPointSize(8)
+                selected_files.setReadOnly(True)
                 selected_files.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
 
                 buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
@@ -2243,11 +2249,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout = QGridLayout(dialog)
                 layout.addWidget(label, 0, 0, 1, 0)
                 layout.addWidget(playlist, 1, 0, 1, 0)
-                layout.addWidget(get_files, 2, 0)
-                layout.addWidget(clear_files, 2, 1)
-                layout.addWidget(selected_files, 3, 0, 1, 0)
-                layout.addWidget(buttons, 4, 0, 1, 0)
-                # dialog.setWindowFlag(Qt.FramelessWindowHint)
+                layout.addWidget(get_files, 3, 0)
+                layout.addWidget(clear_files, 3, 1)
+                layout.addWidget(selected_files, 2, 0, 1, 0)
+                layout.addWidget(buttons, 3, 2)
+                dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
                 return 0, ' '
 
