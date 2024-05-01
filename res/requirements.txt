@@ -5,7 +5,7 @@ filehash
 openpyxl
 pandas==2.2.2
 pillow
-python-magic
+puremagic
 regex
 requests
 XlsxWriter
