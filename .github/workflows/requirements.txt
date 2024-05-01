@@ -1,9 +1,9 @@
-PySide6==6.6
-shiboken6==6.6
+PySide6
+shiboken6
 argparse
 filehash
 openpyxl
-pandas == 2.2.2
+pandas==2.2.2
 pillow
 python-magic
 regex
