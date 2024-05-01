@@ -4,21 +4,21 @@
 
 ### Added
 
-- Exporting Playlist items to .jwplaylist file
+- Playlist management
+  - Exporting Playlist items to .jwplaylist file
+  - Importing Playlist items from  .jwplaylist file
+  - Adding image files to playlist through file selection dialog and drag-and-drop
+  - Requires additional modules for image/file handling
 
 ### Changed
+
+- Various small changes
 
 ### Fixed
 
 - Updating LastModified date in database (minor)
 
 ### Removed
-
-____
-## [4.4.1] - 2024-02-13
-### Changed
-
-- Adjust code for future upstream library changes (pandas)
 
 ### Fixed
 
