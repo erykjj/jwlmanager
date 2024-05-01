@@ -13,6 +13,7 @@
 ### Changed
 
 - Various small changes
+- Updated publications catalog
 
 ### Fixed
 
