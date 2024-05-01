@@ -50,7 +50,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 
 #### Initial language setting based on passed arguments
@@ -1553,7 +1553,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_playlist():
 
-            def update_db():
+            def update_db(): # CHECK: same hash already present?
 
                 def check_name(label):
                     name = label
@@ -2195,7 +2195,6 @@ class Window(QMainWindow, Ui_MainWindow):
         def add_images():
 
             def add_dialog():
-                # TODO: implement drag-and-drop
 
                 def select_files():
                     nonlocal files
@@ -2203,20 +2202,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     dialog.setFileMode(QFileDialog.ExistingFiles)
                     dialog.exec()
                     for f in dialog.selectedFiles():
-                        if regex.match('image', magic.from_file(f, mime = True))and f not in files:
-                            files.append(f)
-                    lst = ''
-                    for f in files:
-                        lst += f + '\n'
                         self.working_dir = Path(f).parent
-                    selected_files.setText(lst.strip())
+                        selected_files.add_file(f)
 
                 def remove_files():
-                    nonlocal files
-                    files = []
-                    selected_files.setText('')
+                    selected_files.clear()
 
-                files = []
                 dialog = QDialog()
                 dialog.resize(400, 450)
                 dialog.setWindowTitle(_('Add Images'))
@@ -2240,10 +2231,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 clear_files.setIcon(QPixmap(f'{project_path}/res/icons/icons8-delete-64.png'))
                 clear_files.clicked.connect(remove_files)
 
-                selected_files = QTextEdit(dialog)
-                selected_files.setFontPointSize(8)
-                selected_files.setReadOnly(True)
-                selected_files.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
+                selected_files = DropList()
 
                 buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
                 buttons.accepted.connect(dialog.accept)
@@ -2256,8 +2244,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout.addWidget(clear_files, 3, 1)
                 layout.addWidget(selected_files, 2, 0, 1, 0)
                 layout.addWidget(buttons, 3, 2)
-                dialog.setWindowFlag(Qt.FramelessWindowHint)
+                # dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
+                files = []
+                for f in selected_files.files: # filter out unique image files
+                    if regex.match('image', magic.from_file(f, mime = True))and f not in files:
+                        files.append(f)
                 return playlist.currentText() or 'playlist', files
 
             def update_db(playlist, files):
@@ -2321,7 +2313,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
                     else: # file alread in archive
-                        # get id for file and thumbnail
                         media_id = cur.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()[0]
                         thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
 
