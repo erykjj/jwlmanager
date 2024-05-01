@@ -29,7 +29,7 @@ APP = 'JWLManager'
 VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, magic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtWidgets import *
@@ -2248,7 +2248,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 dialog.exec()
                 files = []
                 for f in selected_files.files: # filter out unique image files
-                    if regex.match('image', puremagic.magic_file(f)[0][3]) and f not in files:
+                    if regex.match('image', magic.from_file(f, mime = True))and f not in files:
                         files.append(f)
                 return playlist.currentText() or 'playlist', files
 
@@ -2293,7 +2293,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for f in files:
                     name = Path(f).name
                     hash256 = sha256hash.hash_file(f)
-                    mime = puremagic.magic_file(f)[0][3]
+                    mime = magic.from_file(f, mime = True)
                     ext = mime.split('/')[1]
                     if hash256 not in current_hashes: # new file to be added
                         # add original file with non-clashing file name
