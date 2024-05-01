@@ -2262,12 +2262,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db(playlist, files):
 
-                def check_name(label):
-                    name = label
+                def check_name(file_name):
+                    name = file_name
                     ext = 0
-                    while name in current_names:
+                    while name in current_files:
                         ext += 1
-                        name = f'{label}_{ext}'
+                        name = f'{file_name}_{ext}'
                     return name
 
                 def check_label(label):
@@ -2282,16 +2282,18 @@ class Window(QMainWindow, Ui_MainWindow):
                     position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                     cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
+                # get/create tag; get all labels associated with it
                 try:
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Name =? and Type = 2;', (playlist,)).fetchone()[0]
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Name = ? and Type = 2;', (playlist,)).fetchone()[0]
+                    rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                    current_labels  = [x[0] for x in rows]
                 except:
-                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
+                    tag_id = cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,)).lastrowid
+                    current_labels = []
 
-                rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
-                current_labels  = [x[0] for x in rows]
-                current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
-                current_names = [x[2] for x in current_media]
+                rows = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                current_files = [x[2] for x in rows]
+                current_hashes = [x[4] for x in rows]
 
                 sha256hash = FileHash('sha256')
                 result = 0
@@ -2300,23 +2302,34 @@ class Window(QMainWindow, Ui_MainWindow):
                     hash256 = sha256hash.hash_file(f)
                     mime = magic.from_file(f, mime = True)
                     ext = mime.split('/')[1]
-                    try:
-                        new_name = cur.execute('SELECT FilePath FROM IndependentMedia WHERE FilePath = ? AND Hash = ?;', (name, hash256)).fetchone()[0]
-                    except:
+                    if hash256 not in current_hashes: # new file to be added
+                        # add original file with non-clashing file name
+                        current_hashes.append(hash256)
                         new_name = check_name(name)
+                        current_files.append(new_name)
                         shutil.copy2(f, f'{tmp_path}/{new_name}')
-                        unique_id = str(uuid.uuid1())
-                        thumb = f'{tmp_path}/{unique_id}.{ext}'
-                        shutil.copy2(f, thumb)
-                        i = Image.open(thumb)
-                        i.thumbnail((250, 250))
-                        i.save(thumb)
-                        thash = sha256hash.hash_file(thumb)
                         media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
-                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (new_name, f'{unique_id}.{ext}', mime, thash)).lastrowid
-                        result += 1
-                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, f'{unique_id}.{ext}')).lastrowid
-                    cur.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000)).lastrowid
+
+                        # generate and add thumbnail file
+                        unique_id = str(uuid.uuid1())
+                        thumb_name = f'{unique_id}.{ext}'
+                        shutil.copy2(f, f'{tmp_path}/{thumb_name}')
+                        i = Image.open(f'{tmp_path}/{thumb_name}')
+                        i.thumbnail((250, 250))
+                        i.save(f'{tmp_path}/{thumb_name}')
+                        thash = sha256hash.hash_file(f'{tmp_path}/{thumb_name}')
+                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
+
+                    else: # file alread in archive
+                        # get id for file and thumbnail
+                        media_id = cur.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()[0]
+                        thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
+
+                    result += 1
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
+                    current_labels.append(name)
+                    cur.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000))
+
                     add_tag()
                 return result
 
