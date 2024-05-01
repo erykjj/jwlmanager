@@ -1555,7 +1555,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db(): # CHECK: same hash already present?
 
-                def check_name(label):
+                def check_label(label):
                     name = label
                     ext = 0
                     while name in current_labels:
@@ -1593,7 +1593,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
                         cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
-                tag = impdb.execute('SELECT * FROM Tag WHERE Type = 2;').fetchone()[2]
+                tag = impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchone()[0]
                 try:
                     tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                 except:
@@ -1608,7 +1608,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
                 for row in rows:
                     item_rec = list(row[1:7])
-                    item_rec[0] = check_name(item_rec[0])
+                    item_rec[0] = check_label(item_rec[0])
                     item_rec[5], media_id = add_media(list(row[8:12]))
                     item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
                     for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
@@ -2280,7 +2280,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
                     current_labels  = [x[0] for x in rows]
                 except:
-                    tag_id = cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,)).lastrowid
+                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
                     current_labels = []
 
                 rows = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
