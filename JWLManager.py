@@ -2378,13 +2378,21 @@ class Window(QMainWindow, Ui_MainWindow):
             return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
         def delete_playlist_items():
+            rows = cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
+            used_thumbs = [x[0] for x in rows]
             for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
+                if f[0] in used_thumbs: # used by other items; skip
+                    continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
                 except:
                     pass
+            rows = cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
+            used_files = [x[0] for x in rows]
             for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
+                if f[0] in used_files: # used by other items; skip
+                    continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
