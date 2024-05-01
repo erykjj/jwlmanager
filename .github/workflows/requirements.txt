@@ -2,10 +2,10 @@ PySide6==6.6
 shiboken6==6.6
 argparse
 filehash
-magic
 openpyxl
 pandas == 2.2.2
 pillow
+python-magic
 regex
 requests
 XlsxWriter
