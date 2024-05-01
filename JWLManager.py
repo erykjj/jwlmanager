@@ -1553,7 +1553,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_playlist():
 
-            def update_db(): # CHECK: same hash already present?
+            def update_db():
 
                 def check_label(label):
                     name = label
