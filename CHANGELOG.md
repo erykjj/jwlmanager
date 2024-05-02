@@ -5,8 +5,8 @@
 ### Added
 
 - Playlist management
-  - Exporting Playlist items to .jwplaylist file
-  - Importing Playlist items from  .jwplaylist file
+  - Exporting Playlist items to .jwlplaylist file
+  - Importing Playlist items from .jwlplaylist file
   - Adding image files to playlist through file selection dialog and drag-and-drop
   - Requires additional modules for image/file handling
 
@@ -14,6 +14,7 @@
 
 - Various small changes
 - Updated publications catalog
+- Updated requirements.txt
 
 ### Fixed
 
