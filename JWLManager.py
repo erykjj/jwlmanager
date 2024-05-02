@@ -785,10 +785,7 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         with ZipFile(archive,'r') as zipped:
             zipped.extractall(tmp_path)
-        if os.path.exists(f'{tmp_path}/user_data.db'):
-            db_name = 'user_data.db' # iPhone & iPad backups # CHECK: this may need adjusting in NEW database used on iPhones??
-        else:
-            db_name = 'userData.db' # Windows & Android
+        db_name = 'userData.db'
         self.file_loaded()
 
     def file_loaded(self):
@@ -1622,10 +1619,7 @@ class Window(QMainWindow, Ui_MainWindow):
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(file, 'r') as zipped:
                 zipped.extractall(playlist_path)
-            if os.path.exists(f'{playlist_path}/user_data.db'):
-                db = 'user_data.db' # iPhone & iPad backups
-            else:
-                db = 'userData.db' # Windows & Android
+            db = 'userData.db'
             impcon = sqlite3.connect(f'{playlist_path}/{db}')
             impdb = impcon.cursor()
             count = update_db()
@@ -2569,7 +2563,7 @@ class Window(QMainWindow, Ui_MainWindow):
             def clean_media():
                 thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
                 ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
-                ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
+                ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
                 for file in glob.glob(tmp_path + '/*'):
                     f = Path(file).name
                     if (f not in thumbs) and (f not in ind):
