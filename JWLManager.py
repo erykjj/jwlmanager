@@ -2248,8 +2248,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 dialog.exec()
                 files = []
                 for f in selected_files.files: # filter out unique image files
-                    if regex.match('image', magic.from_file(f, mime = True))and f not in files:
-                        files.append(f)
+                    try:
+                        file_type = regex.search('(image/\.?(\w+))', magic.from_file(f, mime = True))
+                        if file_type.group(2) in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp', 'tiff'] and f not in files:
+                            files.append((f, file_type.group(1), file_type.group(2)))
+                    except:
+                        pass
                 return playlist.currentText() or 'playlist', files
 
             def update_db(playlist, files):
@@ -2290,11 +2294,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 sha256hash = FileHash('sha256')
                 result = 0
-                for f in files:
+                for fl in files:
+                    f = fl[0]
+                    mime = fl[1]
+                    ext = fl[2]
                     name = Path(f).name
                     hash256 = sha256hash.hash_file(f)
-                    mime = magic.from_file(f, mime = True)
-                    ext = mime.split('/')[1]
                     if hash256 not in current_hashes: # new file to be added
                         # add original file with non-clashing file name
                         current_hashes.append(hash256)
