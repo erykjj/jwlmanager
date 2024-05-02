@@ -26,20 +26,21 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.4.1'
+VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
-from PySide6.QtCore import *
-from PySide6.QtGui import *
 from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from PySide6.QtCore import *
 
 from datetime import datetime, timezone
 from filehash import FileHash
 from functools import partial
 from pathlib import Path
+from PIL import Image
 from platform import platform
 from random import randint
 from tempfile import mkdtemp
@@ -49,7 +50,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 
 #### Initial language setting based on passed arguments
@@ -183,7 +184,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.doubleClicked.connect(self.double_clicked)
             self.button_export.clicked.connect(self.export_items)
             self.button_import.clicked.connect(self.import_items)
-            self.button_add.clicked.connect(self.add_favorite)
+            self.button_add.clicked.connect(self.add_items)
             self.button_delete.clicked.connect(self.delete_items)
             self.button_view.clicked.connect(self.data_viewer)
 
@@ -391,7 +392,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations')))
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations'), _('Playlists')))
 
     def list_selected(self):
         selected = []
@@ -434,7 +435,7 @@ class Window(QMainWindow, Ui_MainWindow):
             disable_options([4,5], True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], False, False, False, False)
+            disable_options([1,2,3,4,5], True, True, True, False)
         self.regroup()
         self.combo_grouping.blockSignals(False)
 
@@ -759,7 +760,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'deviceName': f'{APP}_{VERSION}',
                 'databaseName': 'userData.db',
                 'hash': '',
-                'schemaVersion': 13 } }
+                'schemaVersion': 14 } }
         with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
@@ -768,7 +769,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.modified:
             self.check_save()
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary *.jwlplaylist)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
             if fname[0] == '':
                 return
             archive = fname[0]
@@ -784,10 +785,7 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         with ZipFile(archive,'r') as zipped:
             zipped.extractall(tmp_path)
-        if os.path.exists(f'{tmp_path}/user_data.db'):
-            db_name = 'user_data.db' # iPhone & iPad backups
-        else:
-            db_name = 'userData.db' # Windows & Android
+        db_name = 'userData.db'
         self.file_loaded()
 
     def file_loaded(self):
@@ -850,6 +848,12 @@ class Window(QMainWindow, Ui_MainWindow):
             sha256hash = FileHash('sha256')
             m['userDataBackup']['hash'] = sha256hash.hash_file(f'{tmp_path}/{db_name}')
             m['userDataBackup']['databaseName'] = db_name
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
+            cur.close()
+            con.commit()
+            con.close()
             with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
             return
@@ -881,6 +885,8 @@ class Window(QMainWindow, Ui_MainWindow):
             now = datetime.now().strftime('%Y-%m-%d')
             if self.combo_category.currentText() == _('Highlights'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
+            elif self.combo_category.currentText() == _('Playlists'):
+                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
             else:
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')[0]
 
@@ -1099,6 +1105,109 @@ class Window(QMainWindow, Ui_MainWindow):
                         file.write(txt)
                     file.write('\n==={END}===')
 
+        def export_playlist():
+
+            def playlist_export():
+                expdb.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 2, Path(fname).stem))
+
+                rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
+                if rows:
+                    lc = cur.execute('SELECT locale FROM android_metadata;').fetchone()
+                    expdb.execute('UPDATE android_metadata SET locale = ?;', (lc[0],))
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
+                for row in rows:
+                    item_list.append(row)
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId IN {items};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
+
+                rows = expdb.execute(f'SELECT PlaylistItemMarkerId FROM PlaylistItemMarker;').fetchall()
+                pm = '('
+                for row in rows:
+                    pm += f'"{row[0]}", '
+                pm = pm.rstrip(', ') + ')'
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', rows)
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
+
+                rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
+                pos = 0
+                for row in rows:
+                    expdb.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
+                    pos += 1
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', rows)
+
+                rows = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
+                expdb.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
+
+                rows = expdb.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()
+                fp = '('
+                for row in rows:
+                    fp += f'"{row[0]}", '
+                fp = fp.rstrip(', ') + ')'
+
+                rows = expdb.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
+                mi = '('
+                for row in rows:
+                    mi += f'{row[0]}, '
+                mi = mi.rstrip(', ') + ')'
+
+                rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
+                expdb.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
+                for f in rows:
+                    shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
+
+                rows = expdb.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
+                lo = '('
+                for row in rows:
+                    lo += f'{row[0]}, '
+                lo = lo.rstrip(', ') + ')'
+                rows = cur.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
+                expdb.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
+
+            playlist_path = mkdtemp(prefix='JWLPlaylist_')
+            with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
+                zipped.extractall(playlist_path)
+            expcon = sqlite3.connect(f'{playlist_path}/userData.db')
+            expdb = expcon.cursor()
+            expdb.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
+            playlist_export()
+            self.reindex_db(expcon)
+            expdb.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
+            expdb.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
+            expdb.close()
+            expcon.commit()
+            expcon.close()
+            sha256hash = FileHash('sha256')
+            m = {
+                'name': APP,
+                'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                'version': 1,
+                'type': 1,
+                'userDataBackup': {
+                    'lastModifiedDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                    'deviceName': f'{APP}_{VERSION}',
+                    'databaseName': 'userData.db',
+                    'hash': sha256hash.hash_file(f'{playlist_path}/userData.db'),
+                    'schemaVersion': 14 } }
+            with open(f'{playlist_path}/manifest.json', 'w') as json_file:
+                    json.dump(m, json_file, indent=None, separators=(',', ':'))
+            with ZipFile(fname, 'w', compression=ZIP_DEFLATED) as newzip:
+                files = os.listdir(playlist_path)
+                for f in files:
+                    newzip.write(f'{playlist_path}/{f}', f)
+            shutil.rmtree(playlist_path, ignore_errors=True)
+
         category = self.combo_category.currentText()
         fname = export_file()
         self.working_dir = Path(fname).parent
@@ -1121,6 +1230,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 export_notes()
             elif category == _('Annotations'):
                 export_annotations()
+            elif category == _('Playlists'):
+                export_playlist()
             cur.close()
             con.close()
         except Exception as ex:
@@ -1437,10 +1548,92 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
+        def import_playlist():
+
+            def update_db():
+
+                def check_label(label):
+                    name = label
+                    ext = 0
+                    while name in current_labels:
+                        ext += 1
+                        name = f'{label} ({ext})'
+                    return name
+
+                def add_media(rec):
+                    fn = rec[1]
+                    if rec[-1] in current_hashes and fn == current_media[current_hashes.index(rec[-1])][2] and rec[-1] == current_media[current_hashes.index(rec[-1])][4]: # exact same file (name and hash) already exists
+                        return fn, current_media[current_hashes.index(rec[-1])][0]
+                    ext = 0
+                    while os.path.isfile(tmp_path + '/' + fn):
+                        ext += 1
+                        fn = f'{rec[1]}_{ext}'
+                    shutil.copy2(playlist_path + '/' + rec[1], tmp_path + '/' + fn)
+                    rec[1] = fn
+                    media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec).lastrowid
+                    return rec[1], media_id
+
+                def add_tag():
+                    position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+
+                def add_markers(current_item):
+                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                        marker_id = cur.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StartTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', ([item_id] + list(row[2:6]))).lastrowid
+                        for i in impdb.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                            cur.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, i[0]))
+                        for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                            cur.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
+
+                def add_locations(current_item):
+                    for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                        location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
+                        cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
+
+                tag = impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchone()[0]
+                try:
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                except:
+                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+
+                rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                current_labels  = [x[0] for x in rows]
+                current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                current_hashes = [x[4] for x in current_media]
+
+                rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
+                for row in rows:
+                    item_rec = list(row[1:7])
+                    item_rec[0] = check_label(item_rec[0])
+                    item_rec[5], media_id = add_media(list(row[8:12]))
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
+                    for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
+                        rec, media_id = add_media(list(i[3:7]))
+                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
+                    add_tag()
+                    add_markers(row[0])
+                    add_locations(row[0])
+                return len(rows)
+
+            playlist_path = mkdtemp(prefix='JWLPlaylist_')
+            with ZipFile(file, 'r') as zipped:
+                zipped.extractall(playlist_path)
+            db = 'userData.db'
+            impcon = sqlite3.connect(f'{playlist_path}/{db}')
+            impdb = impcon.cursor()
+            count = update_db()
+            impdb.close()
+            impcon.close()
+            shutil.rmtree(playlist_path, ignore_errors=True)
+            return count
+
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
+            elif category == _('Playlists'):
+                flt = _('JW Library playlists')+' (*.jwlplaylist)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
@@ -1460,6 +1653,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = import_highlights()
             elif category == _('Notes'):
                 count = import_notes()
+            elif category == _('Playlists'):
+                count = import_playlist()
             cur.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             cur.close()
@@ -1920,63 +2115,64 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
 
 
-    def add_favorite(self):
-
-        def add_dialog():
-
-            def set_edition():
-                lng = language.currentText()
-                publication.clear()
-                publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
-
-            dialog = QDialog()
-            dialog.setWindowTitle(_('Add Favorite'))
-            label = QLabel(dialog)
-            label.setText(_('Select the language and Bible edition to add:'))
-
-            language = QComboBox(dialog)
-            language.addItem(' ')
-            language.addItems(sorted(favorites['Lang'].unique()))
-            language.setMaxVisibleItems(20)
-            language.setStyleSheet('QComboBox { combobox-popup: 0; }')
-            language.activated.connect(set_edition)
-            publication = QComboBox(dialog)
-            publication.setMinimumContentsLength(23)
-            publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
-            publication.setStyleSheet('QComboBox { combobox-popup: 0; }')
-
-            buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-            buttons.accepted.connect(dialog.accept)
-            buttons.rejected.connect(dialog.reject)
-
-            layout = QVBoxLayout(dialog)
-            layout.addWidget(label)
-            form = QFormLayout()
-            form.addRow(_('Language')+':', language)
-            form.addRow(_('Edition')+':', publication)
-            layout.addLayout(form)
-            layout.addWidget(buttons)
-            dialog.setWindowFlag(Qt.FramelessWindowHint)
-            if dialog.exec():
-                return publication.currentText(), language.currentText()
-            else:
-                return ' ', ' '
-
-        def tag_positions():
-            cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
-            tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
-            position = cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
-            if position[0] != None:
-                return tag_id, position[0] + 1
-            else:
-                return tag_id, 0
-
-        def add_location(symbol, language):
-            cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
-            result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
-            return result[0]
+    def add_items(self):
 
         def add_favorite():
+
+            def add_dialog():
+
+                def set_edition():
+                    lng = language.currentText()
+                    publication.clear()
+                    publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
+
+                dialog = QDialog()
+                dialog.setWindowTitle(_('Add Favorite'))
+                label = QLabel(dialog)
+                label.setText(_('Select the language and Bible edition to add:'))
+
+                language = QComboBox(dialog)
+                language.addItem(' ')
+                language.addItems(sorted(favorites['Lang'].unique()))
+                language.setMaxVisibleItems(20)
+                language.setStyleSheet('QComboBox { combobox-popup: 0; }')
+                language.activated.connect(set_edition)
+                publication = QComboBox(dialog)
+                publication.setMinimumContentsLength(23)
+                publication.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon)
+                publication.setStyleSheet('QComboBox { combobox-popup: 0; }')
+
+                buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                buttons.accepted.connect(dialog.accept)
+                buttons.rejected.connect(dialog.reject)
+
+                layout = QVBoxLayout(dialog)
+                layout.addWidget(label)
+                form = QFormLayout()
+                form.addRow(_('Language')+':', language)
+                form.addRow(_('Edition')+':', publication)
+                layout.addLayout(form)
+                layout.addWidget(buttons)
+                dialog.setWindowFlag(Qt.FramelessWindowHint)
+                if dialog.exec():
+                    return publication.currentText(), language.currentText()
+                else:
+                    return ' ', ' '
+
+            def tag_positions():
+                cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
+                tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                position = cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
+                if position[0] != None:
+                    return tag_id, position[0] + 1
+                else:
+                    return tag_id, 0
+
+            def add_location(symbol, language):
+                cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
+                result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
+                return result[0]
+
             pub, lng = add_dialog()
             if pub == ' ' or lng == ' ':
                 return False, ' '+_('Nothing added!')
@@ -1988,24 +2184,176 @@ class Window(QMainWindow, Ui_MainWindow):
                 return False, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng)
             tag_id, position = tag_positions()
             cur.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
-            return True, ' '+_('Added "{}" in {}').format(pub, lng)
+            return 1, ' '+_('Added "{}" in {}').format(pub, lng)
 
-        con = sqlite3.connect(f'{tmp_path}/{db_name}')
-        cur = con.cursor()
-        cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+        def add_images():
+
+            def add_dialog():
+
+                def select_files():
+                    nonlocal files
+                    dialog = QFileDialog(self, _('Select images'), f'{self.working_dir}/', _('Select images')+' (*)')
+                    dialog.setFileMode(QFileDialog.ExistingFiles)
+                    dialog.exec()
+                    for f in dialog.selectedFiles():
+                        self.working_dir = Path(f).parent
+                        selected_files.add_file(f)
+
+                def remove_files():
+                    selected_files.clear()
+
+                dialog = QDialog()
+                dialog.resize(400, 450)
+                dialog.setWindowTitle(_('Add Images'))
+                label = QLabel(dialog)
+                label.setText(_('Select existing playlist or type name of new one:'))
+
+                lists = list(map(lambda x: x[0], cur.execute('SELECT DISTINCT Name FROM Tag WHERE Type=2;').fetchall()))
+                playlist = QComboBox(dialog)
+                playlist.setEditable(True)
+                playlist.addItems(sorted(lists))
+                playlist.setMaxVisibleItems(20)
+                # playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
+
+                get_files = QPushButton(dialog)
+                get_files.setFixedSize(26, 26)
+                get_files.setIcon(QPixmap(f'{project_path}/res/icons/icons8-add-file-64.png'))
+                get_files.clicked.connect(select_files)
+
+                clear_files = QPushButton(dialog)
+                clear_files.setFixedSize(26, 26)
+                clear_files.setIcon(QPixmap(f'{project_path}/res/icons/icons8-delete-64.png'))
+                clear_files.clicked.connect(remove_files)
+
+                selected_files = DropList()
+
+                buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                buttons.accepted.connect(dialog.accept)
+                buttons.rejected.connect(dialog.reject)
+
+                layout = QGridLayout(dialog)
+                layout.addWidget(label, 0, 0, 1, 0)
+                layout.addWidget(playlist, 1, 0, 1, 0)
+                layout.addWidget(get_files, 3, 0)
+                layout.addWidget(clear_files, 3, 1)
+                layout.addWidget(selected_files, 2, 0, 1, 0)
+                layout.addWidget(buttons, 3, 2)
+                # dialog.setWindowFlag(Qt.FramelessWindowHint)
+                dialog.exec()
+                files = []
+                for f in selected_files.files: # filter out unique image files
+                    try:
+                        file_type = regex.search(r"mime_type='(image/.*?(\w+))'", str(puremagic.magic_file(f)[0]))
+                        ext = Path(f).suffix.lstrip('.')
+                        if not ext:
+                            ext = file_type.group(2)
+                        if ext in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp', 'tiff', 'tif'] and f not in files:
+                            files.append((f, file_type.group(1), ext))
+                    except:
+                        pass
+                return playlist.currentText() or 'playlist', files
+
+            def update_db(playlist, files):
+
+                def check_name(file_name):
+                    name = file_name
+                    ext = 0
+                    while name in current_files:
+                        ext += 1
+                        name = f'{file_name}_{ext}'
+                    return name
+
+                def check_label(label):
+                    name = label
+                    ext = 0
+                    while name in current_labels:
+                        ext += 1
+                        name = f'{label} ({ext})'
+                    return name
+
+                def add_tag():
+                    position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+
+                # get/create tag; get all labels associated with it
+                try:
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Name = ? and Type = 2;', (playlist,)).fetchone()[0]
+                    rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                    current_labels  = [x[0] for x in rows]
+                except:
+                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
+                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
+                    current_labels = []
+
+                rows = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                current_files = [x[2] for x in rows]
+                current_hashes = [x[4] for x in rows]
+
+                sha256hash = FileHash('sha256')
+                result = 0
+                for fl in files:
+                    f = fl[0]
+                    mime = fl[1]
+                    ext = fl[2]
+                    name = Path(f).name
+                    hash256 = sha256hash.hash_file(f)
+                    if hash256 not in current_hashes: # new file to be added
+                        # add original file with non-clashing file name
+                        current_hashes.append(hash256)
+                        new_name = check_name(name)
+                        current_files.append(new_name)
+                        shutil.copy2(f, f'{tmp_path}/{new_name}')
+                        media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
+
+                        # generate and add thumbnail file
+                        unique_id = str(uuid.uuid1())
+                        thumb_name = f'{unique_id}.{ext}'
+                        shutil.copy2(f, f'{tmp_path}/{thumb_name}')
+                        i = Image.open(f'{tmp_path}/{thumb_name}')
+                        i.thumbnail((250, 250))
+                        i.save(f'{tmp_path}/{thumb_name}')
+                        thash = sha256hash.hash_file(f'{tmp_path}/{thumb_name}')
+                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
+
+                    else: # file alread in archive
+                        media_id = cur.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()[0]
+                        thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
+
+                    result += 1
+                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
+                    current_labels.append(name)
+                    cur.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000))
+
+                    add_tag()
+                return result
+
+            playlist, files = add_dialog()
+            if len(files) == 0:
+                return 0, ' '
+            result = update_db(playlist, files)
+            return result, f' {result} '+_('items added')
+
+        category = self.combo_category.currentText()
         try:
-            result, message = add_favorite()
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            cur = con.cursor()
+            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            if category == _('Favorites'):
+                result, message = add_favorite()
+            elif category == _('Playlists'):
+                result, message = add_images()
+            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            cur.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        cur.execute("PRAGMA foreign_keys = 'ON';")
-        con.commit()
-        cur.close()
-        con.close()
-        self.statusBar.showMessage(message, 3500)
-        if result:
+        if result > 0:
+            self.statusBar.showMessage(message, 3500)
             self.archive_modified()
+            self.trim_db()
             self.regroup(False, message)
 
     def delete_items(self):
@@ -2024,13 +2372,21 @@ class Window(QMainWindow, Ui_MainWindow):
             return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
         def delete_playlist_items():
+            rows = cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
+            used_thumbs = [x[0] for x in rows]
             for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
+                if f[0] in used_thumbs: # used by other items; skip
+                    continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
                 except:
                     pass
+            rows = cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
+            used_files = [x[0] for x in rows]
             for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
+                if f[0] in used_files: # used by other items; skip
+                    continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
@@ -2169,7 +2525,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
-    def reindex_db(self):
+    def reindex_db(self, con=None):
 
         def init_progress():
             pd = QProgressDialog(_('Please wait…'), None, 0, 27, parent=self)
@@ -2186,7 +2542,8 @@ class Window(QMainWindow, Ui_MainWindow):
         def update_table(table, field):
             app.processEvents()
             cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-            progress_dialog.setValue(progress_dialog.value() + 1)
+            if self.interactive:
+                progress_dialog.setValue(progress_dialog.value() + 1)
 
         def reindex_notes():
             make_table('Note')
@@ -2206,10 +2563,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def reindex_playlists():
 
-            def clean_jpegs():
+            def clean_media():
                 thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
                 ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
-                ind = ind + ['userData.db', 'user_data.db', 'manifest.json', 'default_thumbnail.png']
+                ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
                 for file in glob.glob(tmp_path + '/*'):
                     f = Path(file).name
                     if (f not in thumbs) and (f not in ind):
@@ -2217,7 +2574,8 @@ class Window(QMainWindow, Ui_MainWindow):
                             os.remove(tmp_path + '/' + f)
                         except:
                             pass
-                progress_dialog.setValue(progress_dialog.value() + 1)
+                if self.interactive:
+                    progress_dialog.setValue(progress_dialog.value() + 1)
 
             cur.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
             make_table('PlaylistItem')
@@ -2242,7 +2600,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
             cur.execute('DROP TABLE CrossReference;')
 
-            clean_jpegs()
+            clean_media()
 
         def reindex_tags():
             make_table('TagMap')
@@ -2265,15 +2623,19 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('PlaylistItemLocationMap', 'LocationId')
             cur.execute('DROP TABLE CrossReference;')
 
-        reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if reply == QMessageBox.No:
-            return
-        self.trim_db()
-        self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
-        app.processEvents()
-        progress_dialog = init_progress()
+        self.interactive = False
+        if not con:
+            self.interactive = True
+            reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            if reply == QMessageBox.No:
+                return
+            self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
+            app.processEvents()
+            progress_dialog = init_progress()
+            self.trim_db()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            if self.interactive:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
@@ -2284,16 +2646,20 @@ class Window(QMainWindow, Ui_MainWindow):
             cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
             cur.close()
-            con.close()
+            if self.interactive:
+                con.close()
+            else:
+                self.trim_db(con)
         except Exception as ex:
             self.crash_box(ex)
             self.progress_dialog.close()
             self.clean_up()
             sys.exit()
-        message = ' '+_('Reindexed successfully')
-        self.statusBar.showMessage(message, 3500)
-        self.archive_modified()
-        self.regroup(False, message)
+        if self.interactive:
+            message = ' '+_('Reindexed successfully')
+            self.statusBar.showMessage(message, 3500)
+            self.archive_modified()
+            self.regroup(False, message)
 
     def sort_notes(self):
 
@@ -2331,9 +2697,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def trim_db(self):
+    def trim_db(self, connection=None):
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            if not connection:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            else:
+                con = connection
             cur = con.cursor()
             sql = """
                 PRAGMA temp_store = 2;
@@ -2345,7 +2714,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
                 NOT IN (SELECT NoteId FROM Note);
-                DELETE FROM Tag WHERE TagId NOT IN (SELECT TagId FROM TagMap);
+                DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
                 DELETE FROM BlockRange WHERE UserMarkId NOT IN
                 (SELECT UserMarkId FROM UserMark);
@@ -2366,13 +2735,24 @@ class Window(QMainWindow, Ui_MainWindow):
                 DELETE FROM UserMark WHERE LocationId NOT IN
                 (SELECT LocationId FROM Location);
 
+                DELETE FROM PlaylistItem WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM TagMap
+                WHERE PlaylistItemId IS NOT NULL);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemLocationMap WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemMarker WHERE PlaylistItemId NOT IN
+                (SELECT PlaylistItemId FROM PlaylistItem);
+
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;
                 """
             cur.executescript(sql)
             con.commit()
             cur.close()
-            con.close()
+            if not con:
+                con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()

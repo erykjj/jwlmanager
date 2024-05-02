@@ -27,10 +27,9 @@
 from os import path
 from datetime import datetime
 
-from PySide6.QtCore import QSize, Qt, Signal
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
 from PySide6.QtGui import QAction, QIcon, QPixmap
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QToolBar, QToolButton, QVBoxLayout, QWidget
-
+from PySide6.QtCore import QSize, Qt, Signal
 
 _base_path = path.dirname(__file__)
 
@@ -71,7 +70,7 @@ class AboutBox(QDialog):
         right_layout.addWidget(contact_label)
 
         button = QDialogButtonBox(QDialogButtonBox.Ok)
-        button.setFixedWidth(72)
+        button.setFixedWidth(80)
         button.accepted.connect(self.accept)
 
         left_layout.addWidget(button)
@@ -99,6 +98,41 @@ class HelpBox(QDialog):
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.finished.connect(self.hide())
 
+
+class DropList(QListWidget):
+    def __init__(self):
+        super(DropList, self).__init__()
+        self.setAcceptDrops(True)
+        self.files = []
+
+    def add_file(self, f):
+        self.addItem(f)
+        self.files.append(f)
+
+    def clear_files(self):
+        self.files = []
+        self.clear()
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        if event.mimeData().hasUrls():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        md = event.mimeData()
+        if md.hasUrls():
+            for url in md.urls():
+                f = url.toLocalFile()
+                self.files.append(f)
+                self.addItem(f)
+            event.acceptProposedAction()
 
 class DataViewer(QDialog):
     escape_pressed = Signal()

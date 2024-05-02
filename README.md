@@ -1,9 +1,8 @@
 # JWLManager
-**Looking for help with translation[^*] on [Weblate](https://hosted.weblate.org/engage/jwlmanager/)**   ![Translation status](https://hosted.weblate.org/widgets/jwlmanager/-/qt-ui/88x31-black.png)
 
 ## Purpose
 
-This is a **multi-platform and multi-language application**[^#] for viewing and performing various operations on the *user* data (Notes, Highlights, Favorites, Bookmarks, Annotations and Playlists) stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
+This is a **multi-platform[^#] and multi-language[^*] application** for viewing and performing various operations on the *user* data (Notes, Highlights, Favorites, Bookmarks, Annotations and Playlists) stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
 
 In addition to the main functions of **viewing, editing, exporting, importing, and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** by exporting the desired items (to a MS Excel spreadsheet or a custom text file) and importing them into an existent archive or into a new one.
 
@@ -78,6 +77,6 @@ My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib
 ____
 #### Footnotes:
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer
-[^*]: German needs revision; Chinese and Japanese need to be completed; other languages also welcome.
+[^*]: German needs revision; Chinese and Japanese need to be completed; other languages also welcome: [Weblate](https://hosted.weblate.org/engage/jwlmanager/).
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
-[^2]: Install via `pip install -r requirements.txt`. The [requirements.txt](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt) file can be found in the `/res` forlder.
+[^2]: See [`/res/requirements.txt`](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt).
