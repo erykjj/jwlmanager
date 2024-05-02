@@ -29,7 +29,7 @@ APP = 'JWLManager'
 VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, magic, os, pylibmagic, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, magic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtWidgets import *
