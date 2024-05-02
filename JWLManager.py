@@ -29,7 +29,7 @@ APP = 'JWLManager'
 VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, magic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 from PySide6.QtWidgets import *
@@ -2243,9 +2243,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 files = []
                 for f in selected_files.files: # filter out unique image files
                     try:
-                        file_type = regex.search('(image/\.?(\w+))', magic.from_file(f, mime = True))
-                        if file_type.group(2) in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp', 'tiff'] and f not in files:
-                            files.append((f, file_type.group(1), file_type.group(2)))
+                        file_type = regex.search(r"mime_type='(image/.*?(\w+))'", str(puremagic.magic_file(f)[0]))
+                        ext = Path(f).suffix.lstrip('.')
+                        if not ext:
+                            ext = file_type.group(2)
+                        if ext in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp', 'tiff', 'tif'] and f not in files:
+                            files.append((f, file_type.group(1), ext))
                     except:
                         pass
                 return playlist.currentText() or 'playlist', files
