@@ -15,6 +15,7 @@
 - Various small changes
 - Updated publications catalog
 - Updated requirements.txt
+- Updated translations for new strings
 
 ### Fixed
 
