@@ -6,6 +6,7 @@ openpyxl
 pandas==2.2.2
 pillow
 python-magic
+python-magic-bin
 regex
 requests
 XlsxWriter
