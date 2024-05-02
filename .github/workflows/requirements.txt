@@ -5,7 +5,6 @@ filehash
 openpyxl
 pandas==2.2.2
 pillow
-pylibmagic
 python-magic
 regex
 requests
