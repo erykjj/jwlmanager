@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-05-01 18:25-0400\n"
-"PO-Revision-Date: 2024-01-14 17:59+0000\n"
+"PO-Revision-Date: 2024-05-02 19:11+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: ru\n"
 "Language-Team: ru <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.5.3-dev\n"
 "Generated-By: Babel 2.14.0\n"
 
 #: JWLManager.py:214 JWLManager.py:421 JWLManager.py:425 JWLManager.py:428
@@ -253,7 +254,6 @@ msgid "Text files"
 msgstr "Текстовые файлы"
 
 #: JWLManager.py:892 JWLManager.py:1642
-#, fuzzy
 msgid "JW Library playlists"
 msgstr "JW Library архивы"
 
@@ -412,20 +412,19 @@ msgstr "Добавлено \"{}\"в {}"
 
 #: JWLManager.py:2201
 msgid "Select images"
-msgstr ""
+msgstr "Выбрать изображения"
 
 #: JWLManager.py:2213
 msgid "Add Images"
-msgstr ""
+msgstr "Добавить изображения"
 
 #: JWLManager.py:2215
 msgid "Select existing playlist or type name of new one:"
-msgstr ""
+msgstr "Выберите существующий список воспроизведения или введите новое имя:"
 
 #: JWLManager.py:2332
-#, fuzzy
 msgid "items added"
-msgstr "Элементы удалены"
+msgstr "добавленные элементы"
 
 #: JWLManager.py:2420
 msgid "Delete"
@@ -709,4 +708,3 @@ msgstr "Заметки переупорядочены!"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-
