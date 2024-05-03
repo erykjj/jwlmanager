@@ -134,6 +134,7 @@ class DropList(QListWidget):
                 self.addItem(f)
             event.acceptProposedAction()
 
+
 class DataViewer(QDialog):
     escape_pressed = Signal()
 
