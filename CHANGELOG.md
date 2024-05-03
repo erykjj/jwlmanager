@@ -23,6 +23,12 @@
 
 ### Removed
 
+____
+## [4.4.1] - 2024-02-13
+### Changed
+
+- Adjust code for future upstream library changes (pandas)
+
 ### Fixed
 
 - Fix for a 'nan' tag being added to untagged Notes on import
