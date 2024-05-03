@@ -2200,7 +2200,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         selected_files.add_file(f)
 
                 def remove_files():
-                    selected_files.clear()
+                    selected_files.clear_files()
 
                 dialog = QDialog()
                 dialog.resize(400, 450)
@@ -2213,7 +2213,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 playlist.setEditable(True)
                 playlist.addItems(sorted(lists))
                 playlist.setMaxVisibleItems(20)
-                # playlist.setStyleSheet('QComboBox { combobox-popup: 0; }')
 
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(26, 26)
@@ -2238,7 +2237,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 layout.addWidget(clear_files, 3, 1)
                 layout.addWidget(selected_files, 2, 0, 1, 0)
                 layout.addWidget(buttons, 3, 2)
-                # dialog.setWindowFlag(Qt.FramelessWindowHint)
                 dialog.exec()
                 files = []
                 for f in selected_files.files: # filter out unique image files
