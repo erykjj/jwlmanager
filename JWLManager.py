@@ -259,10 +259,12 @@ class Window(QMainWindow, Ui_MainWindow):
     def dropEvent(self, event):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
-        if suffix == '.jwlibrary' or suffix == '.jwlplaylist':
+        if suffix == '.jwlibrary':
             self.load_file(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
+        elif suffix == '.jwlplaylist':
+            self.import_items(file, _('Playlists'))
         elif suffix == '.txt':
             with open(file, 'r', encoding='utf-8', errors='namereplace') as f:
                 header = f.readline().strip()
