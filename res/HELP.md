@@ -1,6 +1,6 @@
 ## Operation
 ######
-Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the newer publications), Bookmarks, Favorites, Highlights, and Notes (**Category**) that are stored within it. These will be organized in a tree view, which you can group (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** also works.
+Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** is implemented.
 ######
 The state of the application (size, position, language, and various selection choices) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 ######
@@ -8,7 +8,7 @@ Notes that are not associated with any publication (created directly in the Pers
 ######
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
 ######
-The items are initially **sorted** by decreasing count. Clicking on the column headers allows for sorting the tree as well; clicking the same header again reverses the sort.
+Clicking on the column headers allows for **sorting** the tree; clicking the same header again reverses the sort.
 #####
 ######
 ### View
@@ -35,7 +35,7 @@ Shows selected Notes and Annotations in a **Data Viewer** window, with a filter 
 ######
 ### Add
 ######
-For Favorites only. Used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself.
+In the case of Favorites, used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. And with Playlists you can add *images* to an existing playlist or create a new list.
 #####
 ######
 ### Delete
@@ -45,14 +45,18 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 ######
 ### Export
 ######
-This is to export Notes and Annotations from selected publications to an MS Excel (default) or a text file (use filetype dropdown to select) which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format. Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
+**Notes** and **Annotations** from selected publications can be exported to an MS Excel (default) or a text file (use filetype dropdown to select) which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format. Exporting of Highlights is also possible - not so much with a view of direct editing, but sharing/merging into another archive.
+######
+Items from differente **Playlists** can be exported to a `.jwlplaylist` archive containing one Playlist (with the name of the archive) which can be imported as a Playlist.
 #####
 ######
 ### Import
 ######
-You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the Notes, Highlights or Annotations to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line.
+**Playlists** are imported from `.jwlplaylist` archives.
 ######
-Editing or creating a Highlights import file is *not* recommended. Exported Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
+You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the **Notes**, **Highlights** or **Annotations** to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line.
+######
+Editing or creating a **Highlights** import file is *not* recommended. Exported Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
 #### Importing Notes
 The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the file are imported. Otherwise, *notes with the same title and at the same 'location' will be over-written*, but those where the title was modified even slightly will create an almost duplicate note.
 ######
