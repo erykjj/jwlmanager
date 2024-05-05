@@ -112,7 +112,7 @@ def read_resources(lng):
     pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
     extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
     publications = pd.concat([pubs, extras], ignore_index=True)
-    favorites = pd.read_sql_query("SELECT p.Language, p.Symbol, ShortTitle Short, Name Lang FROM Publications p JOIN Languages USING (Language) WHERE Favorite = 1;", con)
+    favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
     cur.close()
     con.close()
 
