@@ -100,25 +100,6 @@ def read_resources(lng):
                 ui_lang = row[0]
         return ui_lang
 
-    def load_pubs(lng):
-        types = {}
-        for row in cur.execute(f'SELECT Type, [Group] FROM Types WHERE Language = {lng};').fetchall():
-            types[row[0]] = row[1]
-        lst = []
-        for row in cur.execute("SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Publications;").fetchall():
-            note = [ int(row[0]), row[1], row[2], row[3], row[4], types[row[5]], row[6] ]
-            lst.append(note)
-        for row in cur.execute(f"SELECT Language, Symbol, ShortTitle Short, Title 'Full', Year, Type, Favorite FROM Extras WHERE Language = {lng};").fetchall():
-            note = [ int(row[0]), row[1], row[2], row[3], row[4], types[row[5]], row[6] ]
-            lst.append(note)
-        pubs = pd.DataFrame(lst, columns=['Language', 'Symbol', 'Short', 'Full', 'Year', 'Type', 'Favorite'])
-        favs = pubs[pubs['Favorite'] == 1]
-        favs = favs.drop(['Full', 'Year', 'Type', 'Favorite'], axis=1)
-        favs['Lang'] = favs['Language'].map(lang_name)
-        pubs = pubs[pubs['Language'] == lng]
-        pubs = pubs.drop(['Language', 'Favorite'], axis=1)
-        return favs, pubs
-
     global _, bible_books, favorites, lang_name, lang_symbol, publications
     _ = tr[lng].gettext
     lang_name = {}
@@ -128,7 +109,10 @@ def read_resources(lng):
     cur = con.cursor()
     ui_lang = load_languages()
     load_bible_books(ui_lang)
-    favorites, publications = load_pubs(ui_lang)
+    pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
+    extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
+    publications = pd.concat([pubs, extras], ignore_index=True)
+    favorites = pd.read_sql_query("SELECT p.Language, p.Symbol, ShortTitle Short, Name Lang FROM Publications p JOIN Languages USING (Language) WHERE Favorite = 1;", con)
     cur.close()
     con.close()
 
