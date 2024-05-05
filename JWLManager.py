@@ -584,6 +584,7 @@ class Window(QMainWindow, Ui_MainWindow):
             playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol',  'Tags', 'Year', 'Detail1'])
             self.current_data = merge_df(playlists)
 
+
         def enable_options(enabled):
             self.button_import.setEnabled(enabled)
             self.combo_grouping.setEnabled(enabled)
@@ -669,6 +670,7 @@ class Window(QMainWindow, Ui_MainWindow):
             filters = views[grouping]
             traverse(self.current_data, filters, self.treeWidget)
 
+
         if same_data is not True:
             same_data = False
         if message:
@@ -710,6 +712,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.expandToDepth(0)
         app.processEvents()
 
+
     def check_save(self):
         reply = QMessageBox.question(self, _('Save'), _('Save current archive?'), 
             QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, 
@@ -750,6 +753,7 @@ class Window(QMainWindow, Ui_MainWindow):
         with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
+
 
     def load_file(self, archive = ''):
         if self.modified:
