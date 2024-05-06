@@ -868,7 +868,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
-
+# FIX: something wrong with LocationId on export/import
     def export_items(self):
 
         def export_file():
@@ -1623,7 +1623,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if category == _('Highlights'):
                 flt = _('Text files')+' (*.txt)'
             elif category == _('Playlists'):
-                flt = _('JW Library playlists')+' (*.jwlplaylist)'
+                flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
