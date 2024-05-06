@@ -868,7 +868,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
-# FIX: something wrong with LocationId on export/import
     def export_items(self):
 
         def export_file():
@@ -1538,7 +1537,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist():
+        def import_playlist(): 
 
             def update_db():
 
@@ -1577,7 +1576,17 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def add_locations(current_item):
                     for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
-                        location_id = cur.execute('INSERT OR IGNORE INTO Location (BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', list(row[4:13])).lastrowid
+                        bk, ch, doc, tk, iss, key, ln, tp, ti = row[4:13]
+                        if bk:
+                            try:
+                                location_id = cur.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (bk, ch, key, ln, tp, ti)).lastrowid
+                            except:
+                                location_id = cur.execute('SELECT LocationId FROM Location WHERE BookNumber = ? AND ChapterNumber = ? AND KeySymbol = ? AND MepsLanguage = ?;', (bk, ch, key, ln)).fetchone()[0]
+                        else:
+                            try:
+                                location_id = cur.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (doc, tk, iss, key, ln, tp, ti)).lastrowid
+                            except:
+                                location_id = cur.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (tk, iss, key, ln, tp)).fetchone()[0]
                         cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
                 tag = impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchone()[0]
