@@ -1144,7 +1144,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
                 expdb.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
-                for f in rows: # FIX: crashes when exporting a second time!
+                for f in rows:
                     shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
 
                 rows = expdb.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
@@ -1162,7 +1162,7 @@ class Window(QMainWindow, Ui_MainWindow):
             expdb = expcon.cursor()
             expdb.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
             playlist_export()
-            self.reindex_db(expcon)
+            self.reindex_db(expcon, playlist_path)
             expdb.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
             expdb.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             expdb.close()
@@ -2517,7 +2517,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
-    def reindex_db(self, con=None):
+    def reindex_db(self, con=None, pth=None):
 
         def init_progress():
             pd = QProgressDialog(_('Please wait…'), None, 0, 27, parent=self)
@@ -2559,11 +2559,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
                 ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
                 ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
-                for file in glob.glob(tmp_path + '/*'):
+                for file in glob.glob(pth + '/*'):
                     f = Path(file).name
                     if (f not in thumbs) and (f not in ind):
                         try:
-                            os.remove(tmp_path + '/' + f)
+                            os.remove(pth + '/' + f)
                         except:
                             pass
                 if self.interactive:
@@ -2625,9 +2625,11 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
             progress_dialog = init_progress()
             self.trim_db()
+        if not pth:
+            pth = tmp_path
         try:
             if self.interactive:
-                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con = sqlite3.connect(f'{pth}/{db_name}')
             cur = con.cursor()
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
