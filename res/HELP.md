@@ -52,7 +52,7 @@ Items from differente **Playlists** can be exported to a `.jwlplaylist` archive 
 ######
 ### Import
 ######
-**Playlists** are imported from `.jwlplaylist` archives.
+**Playlists** are imported from `.jwlplaylist` archives (containing a single list) *and* `.jwlibrary` archives (using the `Import` button only; drag-and-drop will open the archive instead of importing all the playlists it contains).
 ######
 You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the **Notes**, **Highlights** or **Annotations** to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line.
 ######
