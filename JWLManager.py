@@ -1541,10 +1541,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db():
 
-                def check_label(label):
+                def check_label(tag_id, label):
                     name = label
                     ext = 0
-                    while name in current_labels:
+                    while name in current_labels[tag_id]:
                         ext += 1
                         name = f'{label} ({ext})'
                     return name
@@ -1562,7 +1562,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec).lastrowid
                     return rec[1], media_id
 
-                def add_tag():
+
+                def add_tag(tag_id, item_id):
                     position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                     cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
@@ -1589,28 +1590,31 @@ class Window(QMainWindow, Ui_MainWindow):
                                 location_id = cur.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (tk, iss, key, ln, tp)).fetchone()[0]
                         cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
-                tag = impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchone()[0]
-                try:
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
-                except:
-                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
-
-                rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
-                current_labels  = [x[0] for x in rows]
                 current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_hashes = [x[4] for x in current_media]
+                current_labels = {}
+                for t in impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchall():
+                    tag = t[0]
+                    try:
+                        tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                    except:
+                        cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
+                        tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+
+                    rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                    current_labels[tag_id] = [x[0] for x in rows]
 
                 rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) ORDER BY Position;').fetchall()
                 for row in rows:
+                    tag_id = row[15]
                     item_rec = list(row[1:7])
-                    item_rec[0] = check_label(item_rec[0])
+                    item_rec[0] = check_label(tag_id, item_rec[0])
                     item_rec[5], media_id = add_media(list(row[8:12]))
                     item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
                     for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
                         rec, media_id = add_media(list(i[3:7]))
                         cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
-                    add_tag()
+                    add_tag(tag_id, item_id)
                     add_markers(row[0])
                     add_locations(row[0])
                 return len(rows)
