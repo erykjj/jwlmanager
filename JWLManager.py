@@ -1116,10 +1116,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 expdb.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
 
                 rows = expdb.execute(f'SELECT PlaylistItemMarkerId FROM PlaylistItemMarker;').fetchall()
-                pm = '('
-                for row in rows:
-                    pm += f'"{row[0]}", '
-                pm = pm.rstrip(', ') + ')'
+                pm = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
                 rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
                 expdb.executemany('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', rows)
@@ -1127,7 +1124,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
                 expdb.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
 
-                rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId  IN {items};').fetchall()
+                rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId IN {items} ORDER BY TagId, Position;').fetchall()
                 pos = 0
                 for row in rows:
                     expdb.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
@@ -1140,20 +1137,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 expdb.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
 
                 rows = expdb.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()
-                fp = '('
-                for row in rows:
-                    fp += f'"{row[0]}", '
-                fp = fp.rstrip(', ') + ')'
+                fp = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
                 rows = expdb.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
-                mi = '('
-                for row in rows:
-                    mi += f'{row[0]}, '
-                mi = mi.rstrip(', ') + ')'
+                mi = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
                 rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
                 expdb.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
-                for f in rows:
+                for f in rows: # FIX: crashes when exporting a second time!
                     shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
 
                 rows = expdb.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
