@@ -868,6 +868,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
+
     def export_items(self):
 
         def export_file():
