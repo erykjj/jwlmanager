@@ -1,4 +1,4 @@
-[![Static Badge](https://img.shields.io/badge/mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)
+[![Static Badge](https://img.shields.io/badge/mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager) ![Weblate project translated](https://img.shields.io/weblate/progress/jwlmanager) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)
 # JWLManager
 
 ## Purpose
@@ -78,6 +78,6 @@ My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib
 ____
 #### Footnotes:
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 11 "Big Sur" and newer
-[^*]: German needs revision; Chinese and Japanese need to be completed; other languages also welcome: [https://img.shields.io/weblate/progress/jwlmanager?style=plastic&color=black](https://hosted.weblate.org/engage/jwlmanager/).
+[^*]: German needs revision; Chinese and Japanese need to be completed; other languages also welcome: [Weblate](https://hosted.weblate.org/engage/jwlmanager/).
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: See [`/res/requirements.txt`](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt).
