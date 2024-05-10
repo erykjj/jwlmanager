@@ -1,4 +1,4 @@
-[![Static Badge](https://img.shields.io/badge/Mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)
+[![Static Badge](https://img.shields.io/badge/mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)
 # JWLManager
 
 ## Purpose
