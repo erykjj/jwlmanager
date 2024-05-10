@@ -1,3 +1,4 @@
+[![Static Badge](https://img.shields.io/badge/Mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager)![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)
 # JWLManager
 
 ## Purpose
@@ -70,7 +71,7 @@ ____
 
 Feel free to get in touch and post any [issues](https://github.com/erykjj/jwlmanager/issues) and/or [suggestions](https://github.com/erykjj/jwlmanager/discussions).
 
-[![RSS of releases](res/icons/rss-36.png)](https://github.com/erykjj/jwlmanager/releases.atom)
+[![Static Badge](https://img.shields.io/badge/Releases-orange?style=plastic&logo=rss&logoColor=orange&color=black)](https://github.com/erykjj/jwlmanager/releases.atom)
 
 My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib)
 
