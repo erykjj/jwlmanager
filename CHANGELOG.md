@@ -12,6 +12,7 @@
 
 ### Changed
 
+- Using latest PySide 6.7
 - Various small changes
 - Updated publications catalog
 - Updated requirements.txt
