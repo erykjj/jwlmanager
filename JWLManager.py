@@ -33,8 +33,8 @@ from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QFileDialog, QGridLayout, QLabel, QMainWindow, QMessageBox, QProgressDialog, QPushButton, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
+from PySide6.QtGui import QFont, QPixmap
+from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
 
 from datetime import datetime, timezone
 from filehash import FileHash
