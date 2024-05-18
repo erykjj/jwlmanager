@@ -1,18 +1,28 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowYnjbJO.ui'
+## Form generated from reading UI file 'main_windowLZKlcL.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.1
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
 import os, sys
 
-from PySide6.QtCore import QCoreApplication, QMetaObject, QRect, QSize, Qt
-from PySide6.QtGui import QAction, QActionGroup, QFont, QIcon
-from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QFrame,
+    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget,
+    QTreeWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -149,7 +159,7 @@ class Ui_MainWindow(object):
 
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -158,7 +168,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.frame_info = QFrame(self.centralwidget)
         self.frame_info.setObjectName(u"frame_info")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.frame_info.sizePolicy().hasHeightForWidth())
@@ -166,8 +176,8 @@ class Ui_MainWindow(object):
         self.frame_info.setMinimumSize(QSize(710, 80))
         self.frame_info.setMaximumHeight(80)
         self.frame_info.setSizeIncrement(QSize(0, 0))
-        self.frame_info.setFrameShape(QFrame.StyledPanel)
-        self.frame_info.setFrameShadow(QFrame.Raised)
+        self.frame_info.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_info.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout = QHBoxLayout(self.frame_info)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.info = QWidget(self.frame_info)
@@ -187,16 +197,16 @@ class Ui_MainWindow(object):
         self.total = QLabel(self.info)
         self.total.setObjectName(u"total")
         self.total.setGeometry(QRect(110, 1, 60, 28))
-        self.total.setTextFormat(Qt.MarkdownText)
-        self.total.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.total.setTextFormat(Qt.TextFormat.MarkdownText)
+        self.total.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.label_grouping = QLabel(self.info)
         self.label_grouping.setObjectName(u"label_grouping")
         self.label_grouping.setGeometry(QRect(180, 30, 140, 28))
         self.selected = QLabel(self.info)
         self.selected.setObjectName(u"selected")
         self.selected.setGeometry(QRect(110, 31, 60, 28))
-        self.selected.setTextFormat(Qt.MarkdownText)
-        self.selected.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.selected.setTextFormat(Qt.TextFormat.MarkdownText)
+        self.selected.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.label_selected = QLabel(self.info)
         self.label_selected.setObjectName(u"label_selected")
         self.label_selected.setGeometry(QRect(0, 30, 110, 28))
@@ -227,7 +237,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.info)
 
-        self.horizontalSpacer = QSpacerItem(10, 20, QSizePolicy.MinimumExpanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(10, 20, QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
@@ -274,13 +284,13 @@ class Ui_MainWindow(object):
         __qtreewidgetitem.setFont(0, font);
         self.treeWidget.setHeaderItem(__qtreewidgetitem)
         self.treeWidget.setObjectName(u"treeWidget")
-        sizePolicy2 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Expanding)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.treeWidget.sizePolicy().hasHeightForWidth())
         self.treeWidget.setSizePolicy(sizePolicy2)
         self.treeWidget.setAlternatingRowColors(True)
-        self.treeWidget.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.treeWidget.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.treeWidget.setAllColumnsShowFocus(True)
         self.treeWidget.setColumnCount(2)
         self.treeWidget.header().setMinimumSectionSize(150)
