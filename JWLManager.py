@@ -29,8 +29,8 @@ APP = 'JWLManager'
 VERSION = 'v4.5.0'
 
 
-import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
-import pandas as pd
+from res.ui_main_window import Ui_MainWindow
+from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtWidgets import *
 from PySide6.QtGui import *
@@ -49,8 +49,8 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
-from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
+import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import pandas as pd
 
 
 #### Initial language setting based on passed arguments
