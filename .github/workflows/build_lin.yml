@@ -1,4 +1,4 @@
-name: 'Build Linux package v1.0.1'
+name: 'Build Linux package v1.0.2'
 
 on:
   workflow_call:
@@ -19,8 +19,6 @@ jobs:
     name: Build Linux BIN
     runs-on: ubuntu-latest
     steps:
-    - name: Update system
-      run: sudo apt-get install -y libopengl0 libegl1 libxkbcommon-x11* libxcb-icccm* libxcb-image* libxcb-keysyms* libxcb-randr* libxcb-render-util* libxcb-shape* libxcb-xkb*
     - name: Checkout
       uses: actions/checkout@v4
     - name: Set up Python
