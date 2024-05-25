@@ -2245,7 +2245,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         ext = Path(f).suffix.lstrip('.')
                         if not ext:
                             ext = file_type.group(2)
-                        if ext in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp', 'tiff', 'tif'] and f not in files:
+                        if ext in ['png', 'jpg', 'jpeg', 'heic', 'png', 'gif', 'bmp'] and f not in files:
                             files.append((f, file_type.group(1), ext))
                     except:
                         pass
