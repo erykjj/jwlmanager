@@ -1,5 +1,9 @@
-# Windows and macOS packages
+# Code scanning results
 
+* [CodeQL](https://github.com/erykjj/jwlmanager/security/code-scanning)
+____
+
+# Windows and macOS packages
 
 ## **Windows Defender** *unknown publisher* alerts
 
@@ -10,7 +14,6 @@ As to **virus alerts**, have a look here. These are the virus scan results for o
 You'll notice the great majority of anti-virus products report is as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. So why do some report trojans and such? Well...
 
 The app is basically a Python 3 script, and I use PyInstaller to package it up into a Windows executable. It's this process of packaging up a script that some over-zealous anti-virus products flag as dangerous, since the script could be malicious.
-
 
 ## **macOS** slow start
 
