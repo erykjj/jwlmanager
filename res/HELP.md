@@ -35,7 +35,7 @@ Shows selected Notes and Annotations in a **Data Viewer** window, with a filter 
 ######
 ### Add
 ######
-In the case of Favorites, used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. And with Playlists you can add *images* to an existing playlist or create a new list.
+In the case of Favorites, used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. And with Playlists you can add *images* ('bmp', 'gif', 'heic', 'jpg', 'png') to an existing playlist or create a new list.
 #####
 ######
 ### Delete
