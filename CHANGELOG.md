@@ -7,15 +7,15 @@
 - Playlist management
   - Exporting Playlist items to `.jwlplaylist` file
   - Importing Playlist items from `.jwlplaylist` or `.jwlibrary` files
-  - Adding image files to a playlist through file selection dialog and drag-and-drop
+  - Adding image files (`bmp`, `gif`, `heic`, `jpg`, `png`) to a playlist through file selection dialog and drag-and-drop
     - Requires additional modules for image/file handling
 
 ### Changed
 
 - Using latest PySide 6.7
+  - Updated requirements.txt
 - Various small changes
 - Updated publications catalog
-- Updated requirements.txt
 - Updated translations for new strings
 
 ### Fixed
