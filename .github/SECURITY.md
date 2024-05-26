@@ -1,8 +1,3 @@
-# Code scanning results
-
-* [CodeQL](https://github.com/erykjj/jwlmanager/security/code-scanning)
-____
-
 # Windows and macOS packages
 
 ## **Windows Defender** *unknown publisher* alerts
