@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [4.5.0] - 2024-05-26
+### Added
+
 - **Playlist management**
   - Exporting Playlist items to `.jwlplaylist` file
   - Importing Playlist items from `.jwlplaylist` or `.jwlibrary` files
@@ -22,9 +32,6 @@
 
 - Updating LastModified date in database (minor)
 
-### Removed
-
-____
 ## [4.4.1] - 2024-02-13
 ### Changed
 
@@ -658,6 +665,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.0
 [4.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.1
 [4.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.0
 [4.3.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.3.3
