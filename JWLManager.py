@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.5.0'
+VERSION = 'v4.5.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -2314,8 +2314,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
                     else: # file alread in archive
-                        media_id = cur.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()[0]
-                        thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
+                        media_id, thumb_name = cur.execute('SELECT IndependentMediaId, FilePath FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()
+                        if thumb_name != name:
+                            thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
 
                     result += 1
                     item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
