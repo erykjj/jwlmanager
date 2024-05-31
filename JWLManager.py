@@ -532,7 +532,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], None, None, row[3], year)
                 item = row[4]
-                rec = [ item, lng, code, year, detail1, detail2 ]
+                rec = [ item, lng, code or _('* OTHER *'), year, detail1, detail2 ]
                 lst.append(rec)
             favorites = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol','Year', 'Detail1', 'Detail2' ])
             self.current_data = merge_df(favorites)
