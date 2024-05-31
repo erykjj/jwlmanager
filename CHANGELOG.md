@@ -5,7 +5,7 @@
 ### Added
 
 ### Changed
-- Build macOS app as MacOS 11 instead of 'latest' (MacOS 14)
+- Build macOS app for MacOS >=12 instead of 'latest' (MacOS 14)
 - Corrected Polish translation
 - Updated publications catalog
 
