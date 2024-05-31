@@ -12,6 +12,7 @@
 ### Fixed
 - Fixed crash when adding an image that is already a thumbnail in an existing playlist
 - Fixed crash on Playlist export where there is no thumbnail
+- Added `* OTHER *` label for unrecognized Favorites
 
 ### Removed
 
