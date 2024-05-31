@@ -7,6 +7,7 @@
 ### Changed
 - Build macOS app as MacOS 11 instead of 'latest' (MacOS 14)
 - Corrected Polish translation
+- Updated publications catalog
 
 ### Fixed
 
