@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Build macOS app as MacOS 11 instead of 'latest' (MacOS 14)
 
 ### Fixed
 
