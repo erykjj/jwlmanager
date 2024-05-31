@@ -1137,12 +1137,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
                 expdb.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
 
-                rows = expdb.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()
+                rows = expdb.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE ThumbnailFilePath IS NOT NULL;').fetchall()
                 fp = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
                 rows = expdb.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
                 mi = '(' + str([row[0] for row in rows]).strip('][') + ')'
-
                 rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
                 expdb.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
                 for f in rows:
