@@ -5,6 +5,14 @@
 ### Added
 
 ### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [4.5.1] - 2024-06-01
+### Changed
 - Build macOS app for MacOS >=12 instead of 'latest' (MacOS 14)
 - Corrected Polish translation
 - Updated publications catalog
@@ -14,9 +22,6 @@
 - Fixed crash on Playlist export where there is no thumbnail
 - Added `* OTHER *` label for unrecognized Favorites
 
-### Removed
-
-____
 ## [4.5.0] - 2024-05-26
 ### Added
 
@@ -671,6 +676,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.1
 [4.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.0
 [4.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.1
 [4.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.0
