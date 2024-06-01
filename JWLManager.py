@@ -1265,13 +1265,14 @@ class Window(QMainWindow, Ui_MainWindow):
                     return result[0]
 
                 df.fillna({'ISSUE': 0}, inplace=True)
+                df.fillna({'VALUE': ''}, inplace=True)
                 count = 0
                 for i, row in df.iterrows():
                     try:
                         count += 1
                         location_id = add_location(row)
                         if cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
-                            cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
+                            cur.execute(f'UPDATE InputField SET Value = ? WHERE criticalLocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
                         else:
                             cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
                     except:
