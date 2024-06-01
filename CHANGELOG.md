@@ -7,19 +7,20 @@
 ### Changed
 
 ### Fixed
+- Fixed importing Annotations with Null value (thank you @jonharrell)
 
 ### Removed
 
 ____
 ## [4.5.1] - 2024-06-01
 ### Changed
-- Build macOS app for MacOS >=12 instead of 'latest' (MacOS 14)
+- Build macOS app for MacOS >=12 instead of 'latest' (MacOS 14) (thank you @stecchio66)
 - Corrected Polish translation
 - Updated publications catalog
 
 ### Fixed
 - Fixed crash when adding an image that is already a thumbnail in an existing playlist
-- Fixed crash on Playlist export where there is no thumbnail
+- Fixed crash on Playlist export where there is no thumbnail (thank you @xKamil01)
 - Added `* OTHER *` label for unrecognized Favorites
 
 ## [4.5.0] - 2024-05-26
