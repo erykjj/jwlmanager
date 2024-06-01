@@ -7,11 +7,14 @@
 ### Changed
 
 ### Fixed
-- Fixed importing Annotations with Null value (thank you @jonharrell)
 
 ### Removed
 
 ____
+## [4.5.2] - 2024-06-01
+### Fixed
+- Fixed importing Annotations with Null value (thank you @jonharrell)
+
 ## [4.5.1] - 2024-06-01
 ### Changed
 - Build macOS app for MacOS >=12 instead of 'latest' (MacOS 14) (thank you @stecchio66)
@@ -677,6 +680,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.5.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.2
 [4.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.1
 [4.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.0
 [4.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.4.1
