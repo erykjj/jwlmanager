@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.5.1'
+VERSION = 'v4.5.2'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1272,7 +1272,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         count += 1
                         location_id = add_location(row)
                         if cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
-                            cur.execute(f'UPDATE InputField SET Value = ? WHERE criticalLocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
+                            cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
                         else:
                             cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
                     except:
