@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Updated resources
+
 ### Fixed
 
 ### Removed
