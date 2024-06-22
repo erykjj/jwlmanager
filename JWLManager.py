@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.5.2'
+VERSION = 'v4.5.3'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1194,7 +1194,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
-        current_archive = Path(fname).name
+        current_archive = self.current_archive.name
         item_list = []
         if Path(fname).suffix == '.xlsx':
             xlsx = True
