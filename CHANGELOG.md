@@ -10,6 +10,8 @@
 
 ### Fixed
 
+- Fixed incorrect name of source archive used in exported files
+
 ### Removed
 
 ____
