@@ -6,15 +6,20 @@
 
 ### Changed
 
-- Updated resources
-
 ### Fixed
-
-- Fixed incorrect name of source archive used in exported files
 
 ### Removed
 
 ____
+## [4.5.3] - 2024-09-18
+### Changed
+
+- Updated resources
+
+### Fixed
+
+- Fixed incorrect name of source archive used in export file header (minor)
+
 ## [4.5.2] - 2024-06-01
 ### Fixed
 - Fixed importing Annotations with Null value (thank you @jonharrell)
@@ -684,6 +689,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[4.5.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.3
 [4.5.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.2
 [4.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.1
 [4.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.0
