@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v4.5.3'
+VERSION = 'v5.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -411,10 +411,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
-            self.combo_grouping.setCurrentText(_('Type'))
+            # self.combo_grouping.setCurrentText(_('Type'))
             disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
-            disable_options([4,5], False, False, False, False)
+            disable_options([4,5], False, True, True, False)
         elif selection == _('Annotations'):
             disable_options([2,4,5], False, True, True, True)
         elif selection == _('Favorites'):
@@ -873,7 +873,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_file():
             now = datetime.now().strftime('%Y-%m-%d')
-            if self.combo_category.currentText() == _('Highlights'):
+            if self.combo_category.currentText() == _('Highlights') or self.combo_category.currentText() == _('Bookmarks'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
             elif self.combo_category.currentText() == _('Playlists'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
@@ -944,6 +944,46 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
                         file.write(txt)
                     file.write('\n==={END}===')
+
+        def export_bookmarks():
+
+            def get_bookmarks(): # TODO: needs modification
+                sql = f'''
+                    SELECT TextTag,
+                        Value,
+                        l.DocumentId doc,
+                        l.IssueTagNumber,
+                        l.KeySymbol,
+                        CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
+                    FROM InputField
+                        LEFT JOIN
+                        Location l USING (
+                            LocationId
+                        )
+                    WHERE LocationId IN {items}
+                    ORDER BY doc, i;
+                    '''
+                for row in cur.execute(sql):
+                    item = {
+                        'LABEL': row[0],
+                        'VALUE': row[1].rstrip() if row[1] else '* '+_('NO TEXT')+' *',
+                        'DOC': row[2],
+                        'PUB': row[4]
+                    }
+                    if row[3] > 10000000:
+                        item['ISSUE'] = row[3]
+                    else:
+                        item['ISSUE'] = None
+                    item_list.append(item)
+
+            get_bookmarks()
+            with open(fname, 'w', encoding='utf-8') as file:
+                file.write(export_header('{BOOKMARKS}'))
+                for row in item_list: # TODO: needs modification
+                    iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
+                    txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
+                    file.write(txt)
+                file.write('\n==={END}===')
 
         def export_highlights():
             with open(fname, 'w', encoding='utf-8') as file:
@@ -1210,6 +1250,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 export_notes()
             elif category == _('Annotations'):
                 export_annotations()
+            elif category == _('Bookmarks'):
+                export_bookmarks()
             elif category == _('Playlists'):
                 export_playlist()
             cur.close()
