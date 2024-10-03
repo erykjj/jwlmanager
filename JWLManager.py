@@ -89,11 +89,11 @@ def get_language():
 def read_resources(lng):
 
     def load_bible_books(lng):
-        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
+        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};'):
             bible_books[row[0]] = row[1]
 
     def load_languages():
-        for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
+        for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;'):
             lang_name[row[0]] = row[1]
             lang_symbol[row[0]] = row[3]
             if row[2] == lng:
@@ -378,7 +378,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations'), _('Playlists')))
+        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations'), _('Playlists'), _('Bookmarks')))
 
     def list_selected(self):
         selected = []
@@ -946,49 +946,18 @@ class Window(QMainWindow, Ui_MainWindow):
                     file.write('\n==={END}===')
 
         def export_bookmarks():
-
-            def get_bookmarks(): # TODO: needs modification
-                sql = f'''
-                    SELECT TextTag,
-                        Value,
-                        l.DocumentId doc,
-                        l.IssueTagNumber,
-                        l.KeySymbol,
-                        CAST (TRIM(TextTag, 'abcdefghijklmnopqrstuvwxyz') AS INT) i
-                    FROM InputField
-                        LEFT JOIN
-                        Location l USING (
-                            LocationId
-                        )
-                    WHERE LocationId IN {items}
-                    ORDER BY doc, i;
-                    '''
-                for row in cur.execute(sql):
-                    item = {
-                        'LABEL': row[0],
-                        'VALUE': row[1].rstrip() if row[1] else '* '+_('NO TEXT')+' *',
-                        'DOC': row[2],
-                        'PUB': row[4]
-                    }
-                    if row[3] > 10000000:
-                        item['ISSUE'] = row[3]
-                    else:
-                        item['ISSUE'] = None
-                    item_list.append(item)
-
-            get_bookmarks()
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{BOOKMARKS}'))
-                for row in item_list: # TODO: needs modification
-                    iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                    txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
-                    file.write(txt)
-                file.write('\n==={END}===')
+                for row in cur.execute(f'SELECT l.KeySymbol, l.DocumentId doc, l.IssueTagNumber, BlockIdentifier, BlockType, Slot, b.Title, Snippet FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items} ORDER BY doc;').fetchall():
+                    file.write(f'\n{row[0]}')
+                    for item in range(1,8):
+                        file.write(f'|{row[item]}')
+                    item_list.append(None)
 
         def export_highlights():
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{HIGHLIGHTS}'))
-                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};'):
+                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
                     file.write(f'\n{row[0]}')
                     for item in range(1,13):
                         file.write(f',{row[item]}')
@@ -2400,12 +2369,12 @@ class Window(QMainWindow, Ui_MainWindow):
     def delete_items(self):
 
         def reorder_tags():
-            for tag_id in cur.execute('SELECT TagId FROM Tag').fetchall():
+            for tag_id in cur.execute('SELECT TagId FROM Tag'):
                 pos = 1
                 for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
                     pos += 1
-            for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
+            for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;'):
                 cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
             cur.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
 
@@ -2415,7 +2384,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def delete_playlist_items():
             rows = cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
             used_thumbs = [x[0] for x in rows]
-            for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
+            for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};'):
                 if f[0] in used_thumbs: # used by other items; skip
                     continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
@@ -2509,19 +2478,19 @@ class Window(QMainWindow, Ui_MainWindow):
             return s
 
         def obscure_locations():
-            for title, item in cur.execute('SELECT Title, LocationId FROM Location;').fetchall():
+            for title, item in cur.execute('SELECT Title, LocationId FROM Location;'):
                 if title:
                     title = obscure_text(title)
                     cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
         def obscure_annotations():
-            for content, item in cur.execute('SELECT Value, TextTag FROM InputField;').fetchall():
+            for content, item in cur.execute('SELECT Value, TextTag FROM InputField;'):
                 if content:
                     content = obscure_text(content)
                     cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
         def obscure_bookmarks():
-            for title, content, item  in cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall():
+            for title, content, item  in cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;'):
                 if title:
                     title = obscure_text(title)
                 if content:
@@ -2531,7 +2500,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
         def obscure_notes():
-            for title, content, item in cur.execute('SELECT Title, Content, NoteId FROM Note;').fetchall():
+            for title, content, item in cur.execute('SELECT Title, Content, NoteId FROM Note;'):
                 if title:
                     title = obscure_text(title)
                 if content:
@@ -2707,7 +2676,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def sort_notes(self):
 
         def reorder():
-            for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;').fetchall():
+            for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;'):
                 pos = 1
                 for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)).fetchall():
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
