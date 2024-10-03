@@ -4,6 +4,8 @@
 
 ### Added
 
+- Bookmark export
+
 ### Changed
 
 ### Fixed
