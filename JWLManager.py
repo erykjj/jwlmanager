@@ -719,8 +719,8 @@ class Window(QMainWindow, Ui_MainWindow):
             QMessageBox.Yes)
         if reply == QMessageBox.Yes:
             self.save_file()
-        elif reply == QMessageBox.Cancel:
-            return
+        # elif reply == QMessageBox.Cancel:
+        #     return
 
     def new_file(self):
         if self.modified:
@@ -846,7 +846,6 @@ class Window(QMainWindow, Ui_MainWindow):
             con.close()
             with open(f'{tmp_path}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
-            return
 
         update_manifest()
         with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
@@ -948,16 +947,16 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_bookmarks():
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{BOOKMARKS}'))
-                for row in cur.execute(f'SELECT l.KeySymbol, l.DocumentId doc, l.IssueTagNumber, BlockIdentifier, BlockType, Slot, b.Title, Snippet FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items} ORDER BY doc;').fetchall():
+                for row in cur.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};'):
                     file.write(f'\n{row[0]}')
-                    for item in range(1,8):
+                    for item in range(1,12):
                         file.write(f'|{row[item]}')
                     item_list.append(None)
 
         def export_highlights():
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{HIGHLIGHTS}'))
-                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
+                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};'):
                     file.write(f'\n{row[0]}')
                     for item in range(1,13):
                         file.write(f',{row[item]}')
@@ -1304,6 +1303,58 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
+        def import_bookmarks():
+
+            def pre_import():
+                line = import_file.readline()
+                if regex.search('{BOOKMARKS}', line):
+                    return True
+                else:
+                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort) # TODO: translate!!
+                    return False
+
+            def update_db():
+
+                def add_scripture_location(attribs):
+                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
+                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
+                    return result[0]
+
+                def add_publication_location(attribs):
+                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
+                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
+                    return result[0]
+
+                def add_bookmark(attribs, pub_id, location_id):
+                    return
+                    cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
+
+                count = 0
+                for line in import_file:
+                    if '|' in line:
+                        try:
+                            count += 1
+                            attribs = regex.split(',', line.rstrip().replace('None', ''))
+                            print(attribs)
+                            continue
+                            if attribs[5] == 2:
+                                location_id = add_scripture_location(attribs)
+                            else:
+                                location_id = add_publication_location(attribs)
+                            add_bookmark(attribs, location_id)
+                        except:
+                            QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                            cur.execute('ROLLBACK;')
+                            return 0
+                return count
+
+            with open(file, 'r') as import_file:
+                if pre_import():
+                    count = update_db()
+                else:
+                    count = 0
+            return count
+
         def import_highlights():
 
             def pre_import():
@@ -1344,7 +1395,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     block = str(blocks).replace('[', '(').replace(']', ')')
                     cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
                     cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (attribs[0], attribs[1], ns, ne, usermark_id))
-                    return
 
                 count = 0
                 for line in import_file:
@@ -1573,15 +1623,15 @@ class Window(QMainWindow, Ui_MainWindow):
                     cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
                 def add_markers(current_item):
-                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (current_item,)):
                         marker_id = cur.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StartTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', ([item_id] + list(row[2:6]))).lastrowid
-                        for i in impdb.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                        for i in impdb.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)):
                             cur.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, i[0]))
-                        for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                        for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)):
                             cur.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
 
                 def add_locations(current_item):
-                    for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                    for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)):
                         bk, ch, doc, tk, iss, key, ln, tp, ti = row[4:13]
                         if bk:
                             try:
@@ -1599,7 +1649,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 current_hashes = [x[4] for x in current_media]
                 current_labels = {}
                 tags = {}
-                for t in impdb.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchall():
+                for t in impdb.execute('SELECT Name FROM Tag WHERE Type = 2;'):
                     tag = t[0]
                     try:
                         tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
@@ -1619,7 +1669,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_rec[0] = check_label(tag, item_rec[0])
                     item_rec[5], media_id = add_media(list(row[8:12]))
                     item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
-                    for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
+                    for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)):
                         rec, media_id = add_media(list(i[3:7]))
                         cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
                     add_tag(tag_id, item_id)
@@ -1641,7 +1691,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if not file:
             category = self.combo_category.currentText()
-            if category == _('Highlights'):
+            if category == _('Highlights') or category == _('Bookmarks'):
                 flt = _('Text files')+' (*.txt)'
             elif category == _('Playlists'):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
@@ -1660,6 +1710,8 @@ class Window(QMainWindow, Ui_MainWindow):
             cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Annotations'):
                 count = import_annotations()
+            elif category == _('Bookmarks'):
+                count = import_bookmarks()
             elif category == _('Highlights'):
                 count = import_highlights()
             elif category == _('Notes'):
@@ -2371,7 +2423,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def reorder_tags():
             for tag_id in cur.execute('SELECT TagId FROM Tag'):
                 pos = 1
-                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
+                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)):
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
                     pos += 1
             for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;'):
@@ -2394,7 +2446,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     pass
             rows = cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
             used_files = [x[0] for x in rows]
-            for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
+            for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};'):
                 if f[0] in used_files: # used by other items; skip
                     continue
                 cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
@@ -2678,10 +2730,10 @@ class Window(QMainWindow, Ui_MainWindow):
         def reorder():
             for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;'):
                 pos = 1
-                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)).fetchall():
+                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)):
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
                     pos += 1
-                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap WHERE TagId = ?', (tag_id[0],)).fetchall():
+                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap WHERE TagId = ?', (tag_id[0],)):
                     cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
 
 
