@@ -12,6 +12,8 @@
 
 ### Fixed
 
+- Fixed error on exporting from new (unsaved) archive
+
 ### Removed
 
 ____
