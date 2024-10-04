@@ -8,6 +8,8 @@
 
 ### Changed
 
+- Streamline/clean-up code
+
 ### Fixed
 
 ### Removed
