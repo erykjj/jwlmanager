@@ -1202,7 +1202,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
-        current_archive = self.current_archive.name
+        current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
         item_list = []
         if Path(fname).suffix == '.xlsx':
             xlsx = True
@@ -1316,28 +1316,33 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def add_scripture_location(attribs):
-                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
+                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[4], attribs[5], attribs[0], attribs[1], attribs[6], attribs[4], attribs[5], attribs[0], attribs[1]))
+                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
                     return result[0]
 
                 def add_publication_location(attribs):
-                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
+                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[3], attribs[4], attribs[5], attribs[2], attribs[6], attribs[4], attribs[5], attribs[3], attribs[2], attribs[6]))
+                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[4], attribs[5], attribs[3], attribs[2], attribs[6])).fetchone()
                     return result[0]
 
-                def add_bookmark(attribs, pub_id, location_id):
-                    return
-                    cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
+                def add_bookmark(attribs, location_id):
+                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage,Type) SELECT ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentId IS NULL);', (attribs[4], attribs[5], attribs[4], attribs[5]))
+                    publication_id = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentID IS NULL;', (attribs[4], attribs[5])).fetchone()[0]
+                    try:
+                        cur.execute(f'INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?);', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
+                    except:
+                        cur.execute(f"UPDATE Bookmark SET LocationId = ?, Title = ?, Snippet = ?, BlockType = ?, BlockIdentifier = ? WHERE PublicationLocationId = ? AND Slot = ?;", (location_id, attribs[8], attribs[9], attribs[10], attribs[11], publication_id, attribs[7]))
 
                 count = 0
                 for line in import_file:
                     if '|' in line:
                         try:
                             count += 1
-                            attribs = regex.split(',', line.rstrip().replace('None', ''))
-                            print(attribs)
-                            continue
-                            if attribs[5] == 2:
+                            attribs = regex.split('\|', line.rstrip())
+                            for i in [0,1,2,9,11]:
+                                if attribs[i] == 'None':
+                                    attribs[i] = None
+                            if attribs[0]:
                                 location_id = add_scripture_location(attribs)
                             else:
                                 location_id = add_publication_location(attribs)
