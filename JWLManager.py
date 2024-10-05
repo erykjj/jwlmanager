@@ -1740,7 +1740,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if not count:
             self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
             return
-        message = f' {count} {category} '+_('items imported/updated')
+        message = f' {category}: {count} '+_('items imported/updated')
         self.statusBar.showMessage(message, 3500)
         self.archive_modified()
         self.trim_db()
