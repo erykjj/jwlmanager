@@ -6,6 +6,7 @@
 
 - **Bookmark export and import**
 - Save and restore Help window geometry
+- Added Bookmarks table to reindexing process
 
 ### Changed
 
