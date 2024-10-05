@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-10-05 18:03-0400\n"
-"PO-Revision-Date: 2024-05-02 16:45+0000\n"
+"PO-Revision-Date: 2024-10-05 22:13+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: pt\n"
 "Language-Team: pt <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-dev\n"
 "Generated-By: Babel 2.15.0\n"
 
 #: JWLManager.py:198 JWLManager.py:413 JWLManager.py:417 JWLManager.py:632
@@ -305,13 +306,12 @@ msgstr ""
 "Entrada com falha"
 
 #: JWLManager.py:1319
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {BOOKMARKS} tag line"
 msgstr ""
 "Formato de arquivo de importação incorreto:\n"
-"Faltando linha com atributo {ANNOTATIONS}"
+"Faltando linha com atributo {BOOKMARKS}"
 
 #: JWLManager.py:1376
 msgid ""
@@ -719,4 +719,3 @@ msgstr "Notas ordenadas"
 
 #~ msgid "NO TITLE"
 #~ msgstr "SEM TÍTULO"
-
