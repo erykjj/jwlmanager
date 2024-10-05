@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-  JWLManager:   JWLEditor module - Qt classes for UI components
+  JWLManager module with Qt classes for UI components
 
   MIT License:  Copyright (c) 2024 Eryk J.
 
@@ -80,15 +80,15 @@ class AboutBox(QDialog):
 
 
 class HelpBox(QDialog):
-    def __init__(self, title):
+    def __init__(self, title, size, pos):
         super().__init__()
 
         self.setWindowFlags(Qt.Window)
         self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
         self.setWindowTitle(title)
-        self.resize(350, 400)
-        self.move(50, 50)
         self.setMinimumSize(300, 300)
+        self.resize(size)
+        self.move(pos)
         text = QTextEdit(self)
         text.setReadOnly(True)
         with open(_base_path+'/HELP.md', encoding='utf-8') as f:
