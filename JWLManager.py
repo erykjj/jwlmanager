@@ -2601,7 +2601,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self, con=None, pth=None):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 27, parent=self)
+            pd = QProgressDialog(_('Please wait…'), None, 0, 28, parent=self)
             pd.setWindowModality(Qt.WindowModal)
             pd.setWindowTitle(_('Reindexing'))
             pd.setWindowFlag(Qt.FramelessWindowHint)
@@ -2622,6 +2622,11 @@ class Window(QMainWindow, Ui_MainWindow):
             make_table('Note')
             update_table('Note', 'NoteId')
             update_table('TagMap', 'NoteId')
+            cur.execute('DROP TABLE CrossReference;')
+
+        def reindex_bookmarks(): # TODO: needs implementation
+            make_table('Bookmark')
+            update_table('Bookmark', 'BookmarkId')
             cur.execute('DROP TABLE CrossReference;')
 
         def reindex_highlights():
@@ -2717,6 +2722,7 @@ class Window(QMainWindow, Ui_MainWindow):
             reindex_tags()
             reindex_playlists()
             reindex_highlights()
+            reindex_bookmarks()
             reindex_locations()
             cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
