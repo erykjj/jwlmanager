@@ -4,11 +4,12 @@
 
 ### Added
 
-- Bookmark export
+- **Bookmark export and import**
 
 ### Changed
 
-- Streamline/clean-up code
+- Streamlined/cleaned-up code
+- Added item type on status bar on import
 
 ### Fixed
 
