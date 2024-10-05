@@ -2837,6 +2837,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def clean_up(self):
         try:
             self.viewer_window.close()
+            self.help_window.close()
         except:
             pass
         shutil.rmtree(tmp_path, ignore_errors=True)
