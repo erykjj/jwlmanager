@@ -1316,7 +1316,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if regex.search('{BOOKMARKS}', line):
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort) # TODO: translate!!
+                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort)
                     return False
 
             def update_db():
@@ -2624,7 +2624,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('TagMap', 'NoteId')
             cur.execute('DROP TABLE CrossReference;')
 
-        def reindex_bookmarks(): # TODO: needs implementation
+        def reindex_bookmarks():
             make_table('Bookmark')
             update_table('Bookmark', 'BookmarkId')
             cur.execute('DROP TABLE CrossReference;')
