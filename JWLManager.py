@@ -198,6 +198,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.combo_grouping.setCurrentText(_('Type'))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
         self.viewer_size = settings.value('Viewer/size', QSize(755, 500))
+        self.help_pos = settings.value('Help/position', QPoint(50, 50))
+        self.help_size = settings.value('Help/size', QSize(350, 400))
         self.setAcceptDrops(True)
         self.status_label = QLabel()
         self.statusBar.addPermanentWidget(self.status_label, 0)
@@ -213,7 +215,7 @@ class Window(QMainWindow, Ui_MainWindow):
         connect_signals()
         set_vars()
         self.about_window = AboutBox(APP, VERSION)
-        self.help_window = HelpBox(_('Help'))
+        self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
 
@@ -270,6 +272,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
+        self.help_pos = self.help_window.pos()
+        self.help_size = self.help_window.size()
 
     def about_box(self):
 
@@ -2848,7 +2852,8 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('Main_Window/size', self.size())
         settings.setValue('Viewer/position', self.viewer_pos)
         settings.setValue('Viewer/size', self.viewer_size)
-
+        settings.setValue('Help/position', self.help_pos)
+        settings.setValue('Help/size', self.help_size)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
