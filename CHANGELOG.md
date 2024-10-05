@@ -5,6 +5,7 @@
 ### Added
 
 - **Bookmark export and import**
+- Save and restore Help window geometry
 
 ### Changed
 
@@ -14,6 +15,7 @@
 ### Fixed
 
 - Fixed error on exporting from new (unsaved) archive
+- Close Help window on application exit
 
 ### Removed
 
