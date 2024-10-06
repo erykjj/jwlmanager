@@ -89,11 +89,11 @@ def get_language():
 def read_resources(lng):
 
     def load_bible_books(lng):
-        for row in cur.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};'):
+        for row in con.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
             bible_books[row[0]] = row[1]
 
     def load_languages():
-        for row in cur.execute('SELECT Language, Name, Code, Symbol FROM Languages;'):
+        for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
             lang_name[row[0]] = row[1]
             lang_symbol[row[0]] = row[3]
             if row[2] == lng:
@@ -106,14 +106,12 @@ def read_resources(lng):
     lang_symbol = {}
     bible_books = {}
     con = sqlite3.connect(project_path / 'res/resources.db')
-    cur = con.cursor()
     ui_lang = load_languages()
     load_bible_books(ui_lang)
     pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
     extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
     publications = pd.concat([pubs, extras], ignore_index=True)
     favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
-    cur.close()
     con.close()
 
 def set_settings_path():
@@ -509,7 +507,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_annotations():
             lst = []
-            for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);'):
+            for row in con.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TextTag, l.BookNumber, l.ChapterNumber, l.Title FROM InputField JOIN Location l USING (LocationId);').fetchall():
                 lng = lang_name.get(row[2], _('* NO LANGUAGE *'))
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
@@ -521,7 +519,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_bookmarks():
             lst = []
-            for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);'):
+            for row in con.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, BookmarkId, l.BookNumber, l.ChapterNumber, l.Title FROM Bookmark b JOIN Location l USING (LocationId);').fetchall():
                 lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
@@ -533,7 +531,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_favorites():
             lst = []
-            for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL ORDER BY tm.Position;'):
+            for row in con.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, TagMapId FROM TagMap tm JOIN Location l USING (LocationId) WHERE tm.NoteId IS NULL ORDER BY tm.Position;').fetchall():
                 lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], None, None, row[3], year)
@@ -545,7 +543,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_highlights():
             lst = []
-            for row in cur.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId);'):
+            for row in con.execute('SELECT LocationId, l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, b.BlockRangeId, u.UserMarkId, u.ColorIndex, l.BookNumber, l.ChapterNumber FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId);').fetchall():
                 lng = lang_name.get(row[2], f'#{row[2]}')
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[7], row[8], row[3], year)
@@ -560,7 +558,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def load_independent():
                 lst = []
-                for row in cur.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;"):
+                for row in con.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;").fetchall():
                     col = row[1] or 0
                     yr = row[3][0:4]
                     note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
@@ -568,7 +566,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1',  'Short', 'Full', 'Type'])
 
             lst = []
-            for row in cur.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;"):
+            for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
 
                 code, year = process_code(row[2], row[3])
@@ -584,7 +582,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def get_playlists():
             lst = []
-            for row in cur.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;'):
+            for row in con.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;').fetchall():
                 rec = [ row[0], None, _('* OTHER *'), row[1], '', row[3] ]
                 lst.append(rec)
             playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol',  'Tags', 'Year', 'Detail1'])
@@ -692,8 +690,7 @@ class Window(QMainWindow, Ui_MainWindow):
         start = time()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             if not same_data:
                 get_data()
             self.leaves = {}
@@ -701,7 +698,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.repaint()
             build_tree()
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -845,9 +841,7 @@ class Window(QMainWindow, Ui_MainWindow):
             m['userDataBackup']['hash'] = sha256hash.hash_file(f'{tmp_path}/{db_name}')
             m['userDataBackup']['databaseName'] = db_name
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
-            cur.close()
+            con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
             con.commit()
             con.close()
             with open(f'{tmp_path}/manifest.json', 'w') as json_file:
@@ -924,7 +918,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     WHERE LocationId IN {items}
                     ORDER BY doc, i;
                     '''
-                for row in cur.execute(sql):
+                for row in con.execute(sql).fetchall():
                     item = {
                         'LABEL': row[0],
                         'VALUE': row[1].rstrip() if row[1] else '* '+_('NO TEXT')+' *',
@@ -953,7 +947,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_bookmarks():
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{BOOKMARKS}'))
-                for row in cur.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};'):
+                for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};').fetchall():
                     file.write(f'\n{row[0]}')
                     for item in range(1,12):
                         file.write(f'|{row[item]}')
@@ -962,7 +956,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_highlights():
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{HIGHLIGHTS}'))
-                for row in cur.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};'):
+                for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
                     file.write(f'\n{row[0]}')
                     for item in range(1,13):
                         file.write(f',{row[item]}')
@@ -1018,7 +1012,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     GROUP BY n.NoteId
                     ORDER BY Type, Date DESC;
                     '''
-                for row in cur.execute(sql):
+                for row in con.execute(sql).fetchall():
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1],
@@ -1112,74 +1106,72 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_playlist():
 
             def playlist_export():
-                expdb.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 2, Path(fname).stem))
+                expcon.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 2, Path(fname).stem))
 
-                rows = cur.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
+                rows = con.execute('SELECT name FROM sqlite_master WHERE type="table" AND name="android_metadata";').fetchone()
                 if rows:
-                    lc = cur.execute('SELECT locale FROM android_metadata;').fetchone()
-                    expdb.execute('UPDATE android_metadata SET locale = ?;', (lc[0],))
+                    lc = con.execute('SELECT locale FROM android_metadata;').fetchone()
+                    expcon.execute('UPDATE android_metadata SET locale = ?;', (lc[0],))
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
                 for row in rows:
                     item_list.append(row)
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId IN {items};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId IN {items};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemMarker VALUES (?, ?, ?, ?, ?, ?);', rows)
 
-                rows = expdb.execute(f'SELECT PlaylistItemMarkerId FROM PlaylistItemMarker;').fetchall()
+                rows = expcon.execute(f'SELECT PlaylistItemMarkerId FROM PlaylistItemMarker;').fetchall()
                 pm = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemMarkerBibleVerseMap VALUES (?, ?);', rows)
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN {pm};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemMarkerParagraphMap VALUES (?, ?, ?, ?);', rows)
 
-                rows = cur.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId IN {items} ORDER BY TagId, Position;').fetchall()
+                rows = con.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId IN {items} ORDER BY TagId, Position;').fetchall()
                 pos = 0
                 for row in rows:
-                    expdb.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
+                    expcon.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
                     pos += 1
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemIndependentMediaMap VALUES (?, ?, ?);', rows)
 
-                rows = cur.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
-                expdb.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM PlaylistItemAccuracy;').fetchall()
+                expcon.executemany('INSERT INTO PlaylistItemAccuracy VALUES (?, ?);', rows)
 
-                rows = expdb.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE ThumbnailFilePath IS NOT NULL;').fetchall()
+                rows = expcon.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE ThumbnailFilePath IS NOT NULL;').fetchall()
                 fp = '(' + str([row[0] for row in rows]).strip('][') + ')'
 
-                rows = expdb.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
+                rows = expcon.execute(f'SELECT IndependentMediaId FROM PlaylistItemIndependentMediaMap;').fetchall()
                 mi = '(' + str([row[0] for row in rows]).strip('][') + ')'
-                rows = cur.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
-                expdb.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
+                expcon.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
                 for f in rows:
                     shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
 
-                rows = expdb.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
+                rows = expcon.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
                 lo = '('
                 for row in rows:
                     lo += f'{row[0]}, '
                 lo = lo.rstrip(', ') + ')'
-                rows = cur.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
-                expdb.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
+                rows = con.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
+                expcon.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
-            expdb = expcon.cursor()
-            expdb.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
+            expcon.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
             playlist_export()
             self.reindex_db(expcon, playlist_path)
-            expdb.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
-            expdb.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
-            expdb.close()
+            expcon.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
+            expcon.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             expcon.commit()
             expcon.close()
             sha256hash = FileHash('sha256')
@@ -1216,7 +1208,6 @@ class Window(QMainWindow, Ui_MainWindow):
             xlsx = False
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
                 export_highlights()
@@ -1228,7 +1219,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 export_bookmarks()
             elif category == _('Playlists'):
                 export_playlist()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -1268,7 +1258,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         items.append(attribs)
                     except:
                         QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
-                        cur.execute('ROLLBACK;')
+                        con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return df
@@ -1276,8 +1266,8 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db(df):
 
                 def add_location(attribs):
-                    cur.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
-                    result = cur.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
+                    con.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
+                    result = con.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
                     return result[0]
 
                 df.fillna({'ISSUE': 0}, inplace=True)
@@ -1287,13 +1277,13 @@ class Window(QMainWindow, Ui_MainWindow):
                     try:
                         count += 1
                         location_id = add_location(row)
-                        if cur.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
-                            cur.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
+                        if con.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
+                            con.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
                         else:
-                            cur.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
+                            con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
                     except:
                         QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
-                        cur.execute('ROLLBACK;')
+                        con.execute('ROLLBACK;')
                         return 0
                 return count
 
@@ -1322,22 +1312,22 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def add_scripture_location(attribs):
-                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[4], attribs[5], attribs[0], attribs[1], attribs[6], attribs[4], attribs[5], attribs[0], attribs[1]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[4], attribs[5], attribs[0], attribs[1], attribs[6], attribs[4], attribs[5], attribs[0], attribs[1]))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
                     return result[0]
 
                 def add_publication_location(attribs):
-                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[3], attribs[4], attribs[5], attribs[2], attribs[6], attribs[4], attribs[5], attribs[3], attribs[2], attribs[6]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[4], attribs[5], attribs[3], attribs[2], attribs[6])).fetchone()
+                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[3], attribs[4], attribs[5], attribs[2], attribs[6], attribs[4], attribs[5], attribs[3], attribs[2], attribs[6]))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[4], attribs[5], attribs[3], attribs[2], attribs[6])).fetchone()
                     return result[0]
 
                 def add_bookmark(attribs, location_id):
-                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage,Type) SELECT ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentId IS NULL);', (attribs[4], attribs[5], attribs[4], attribs[5]))
-                    publication_id = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentID IS NULL;', (attribs[4], attribs[5])).fetchone()[0]
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage,Type) SELECT ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentId IS NULL);', (attribs[4], attribs[5], attribs[4], attribs[5]))
+                    publication_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentID IS NULL;', (attribs[4], attribs[5])).fetchone()[0]
                     try:
-                        cur.execute(f'INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?);', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
+                        con.execute(f'INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?);', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
                     except:
-                        cur.execute(f"UPDATE Bookmark SET LocationId = ?, Title = ?, Snippet = ?, BlockType = ?, BlockIdentifier = ? WHERE PublicationLocationId = ? AND Slot = ?;", (location_id, attribs[8], attribs[9], attribs[10], attribs[11], publication_id, attribs[7]))
+                        con.execute(f"UPDATE Bookmark SET LocationId = ?, Title = ?, Snippet = ?, BlockType = ?, BlockIdentifier = ? WHERE PublicationLocationId = ? AND Slot = ?;", (location_id, attribs[8], attribs[9], attribs[10], attribs[11], publication_id, attribs[7]))
 
                 count = 0
                 for line in import_file:
@@ -1355,7 +1345,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             add_bookmark(attribs, location_id)
                         except:
                             QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                            cur.execute('ROLLBACK;')
+                            con.execute('ROLLBACK;')
                             return 0
                 return count
 
@@ -1379,20 +1369,20 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def add_scripture_location(attribs):
-                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
                     return result[0]
 
                 def add_publication_location(attribs):
-                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
+                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
                     return result[0]
 
                 def add_usermark(attribs, location_id):
                     unique_id = uuid.uuid1()
-                    cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
-                    usermark_id = cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-                    result = cur.execute(f'SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};')
+                    con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
+                    usermark_id = con.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
+                    result = con.execute(f'SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};')
                     ns = int(attribs[2])
                     ne = int(attribs[3])
                     blocks = []
@@ -1404,8 +1394,8 @@ class Window(QMainWindow, Ui_MainWindow):
                             ne = max(ce, ne)
                             blocks.append(row[0])
                     block = str(blocks).replace('[', '(').replace(']', ')')
-                    cur.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
-                    cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (attribs[0], attribs[1], ns, ne, usermark_id))
+                    con.execute(f'DELETE FROM BlockRange WHERE BlockRangeId IN {block};')
+                    con.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (attribs[0], attribs[1], ns, ne, usermark_id))
 
                 count = 0
                 for line in import_file:
@@ -1420,7 +1410,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             add_usermark(attribs, location_id)
                         except:
                             QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                            cur.execute('ROLLBACK;')
+                            con.execute('ROLLBACK;')
                             return 0
                 return count
 
@@ -1436,12 +1426,12 @@ class Window(QMainWindow, Ui_MainWindow):
             def pre_import():
 
                 def delete_notes(title_char):
-                    results = len(cur.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
+                    results = len(con.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
                     if results < 1:
                         return
                     answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     if answer == QMessageBox.Yes:
-                        cur.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
+                        con.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
 
                 line = import_file.readline()
                 m = regex.search('{NOTES=(.?)}', line)
@@ -1479,7 +1469,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         items.append(attribs)
                     except:
                         QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
-                        cur.execute('ROLLBACK;')
+                        con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return df
@@ -1487,15 +1477,15 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db(df):
 
                 def add_scripture_location(attribs):
-                    cur.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
-                    result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
                     if attribs['HEADING']:
-                        cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
+                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
                     return result
 
                 def add_publication_location(attribs):
-                    cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
-                    result = cur.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
+                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
+                    result = con.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
                     return result[0]
 
                 def add_usermark(attribs, location_id):
@@ -1512,15 +1502,15 @@ class Window(QMainWindow, Ui_MainWindow):
                         fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
                     else:
                         fields = ''
-                    result = cur.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
+                    result = con.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
                     if result:
                         usermark_id = result[0]
                     else:
                         unique_id = uuid.uuid1()
-                        cur.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id))
-                        usermark_id = cur.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
+                        con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id))
+                        usermark_id = con.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
                     try:
-                        cur.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
+                        con.execute(f'INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
                     except:
                         pass
                     return usermark_id
@@ -1528,31 +1518,31 @@ class Window(QMainWindow, Ui_MainWindow):
                 def update_note(attribs, location_id, block_type, usermark_id):
 
                     def process_tags(note_id, tags):
-                        cur.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
+                        con.execute(f'DELETE FROM TagMap WHERE NoteId = {note_id};')
                         for tag in str(tags).split('|'):
                             tag = tag.strip()
                             if not tag:
                                 continue
-                            cur.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
-                            tag_id = cur.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
-                            position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
-                            cur.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
+                            con.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
+                            tag_id = con.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
+                            position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                            con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
                     if location_id:
-                        result = cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
+                        result = con.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
                     else:
-                        result = cur.execute('SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND BlockType = 0;', (attribs['TITLE'],)).fetchone()
+                        result = con.execute('SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND BlockType = 0;', (attribs['TITLE'],)).fetchone()
                     if result:
                         unique_id = result[0]
                         modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
                         created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
-                        cur.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
+                        con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
                     else:
                         unique_id = uuid.uuid1()
                         created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'))
                         modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
-                        cur.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
-                    note_id = cur.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+                        con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
+                    note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
 
                 df.fillna({'ISSUE': 0}, inplace=True)
@@ -1585,7 +1575,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             update_note(row, None, 0, None)
                     except:
                         QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
-                        cur.execute('ROLLBACK;')
+                        con.execute('ROLLBACK;')
                         return 0
                 return count
 
@@ -1626,63 +1616,63 @@ class Window(QMainWindow, Ui_MainWindow):
                     rec[1] = fn
                     current_media.append(fn)
                     current_hashes.append(rec[-1])
-                    media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec).lastrowid
+                    media_id = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec).lastrowid
                     return rec[1], media_id
 
                 def add_tag(tag_id, item_id):
-                    position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
-                    cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+                    position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
                 def add_markers(current_item):
-                    for row in impdb.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (current_item,)):
-                        marker_id = cur.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StartTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', ([item_id] + list(row[2:6]))).lastrowid
-                        for i in impdb.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)):
-                            cur.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, i[0]))
-                        for i in impdb.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)):
-                            cur.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
+                    for row in impcon.execute('SELECT * FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
+                        marker_id = con.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StartTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', ([item_id] + list(row[2:6]))).lastrowid
+                        for i in impcon.execute('SELECT VerseId FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                            con.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, i[0]))
+                        for i in impcon.execute('SELECT * FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId = ?;', (row[0],)).fetchall():
+                            con.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', ([marker_id] + list(i[1:4])))
 
                 def add_locations(current_item):
-                    for row in impdb.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)):
+                    for row in impcon.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (current_item,)).fetchall():
                         bk, ch, doc, tk, iss, key, ln, tp, ti = row[4:13]
                         if bk:
                             try:
-                                location_id = cur.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (bk, ch, key, ln, tp, ti)).lastrowid
+                                location_id = con.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (bk, ch, key, ln, tp, ti)).lastrowid
                             except:
-                                location_id = cur.execute('SELECT LocationId FROM Location WHERE BookNumber = ? AND ChapterNumber = ? AND KeySymbol = ? AND MepsLanguage = ?;', (bk, ch, key, ln)).fetchone()[0]
+                                location_id = con.execute('SELECT LocationId FROM Location WHERE BookNumber = ? AND ChapterNumber = ? AND KeySymbol = ? AND MepsLanguage = ?;', (bk, ch, key, ln)).fetchone()[0]
                         else:
                             try:
-                                location_id = cur.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (doc, tk, iss, key, ln, tp, ti)).lastrowid
+                                location_id = con.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (doc, tk, iss, key, ln, tp, ti)).lastrowid
                             except:
-                                location_id = cur.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (tk, iss, key, ln, tp)).fetchone()[0]
-                        cur.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
+                                location_id = con.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (tk, iss, key, ln, tp)).fetchone()[0]
+                        con.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
 
-                current_media = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                current_media = con.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_hashes = [x[4] for x in current_media]
                 current_labels = {}
                 tags = {}
-                for t in impdb.execute('SELECT Name FROM Tag WHERE Type = 2;'):
+                for t in impcon.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchall():
                     tag = t[0]
                     try:
-                        tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
-                        rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                        tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                        rows = con.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
                         current_labels[tag] = [x[0] for x in rows]
                     except:
-                        cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
-                        tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
+                        con.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (tag,))
+                        tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (tag,)).fetchone()[0]
                         current_labels[tag] = []
                     tags[tag] = tag_id
 
-                rows = impdb.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) ORDER BY Position;').fetchall()
+                rows = impcon.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) ORDER BY Position;').fetchall()
                 for row in rows:
                     tag = row[18]
                     tag_id = tags[tag]
                     item_rec = list(row[1:7])
                     item_rec[0] = check_label(tag, item_rec[0])
                     item_rec[5], media_id = add_media(list(row[8:12]))
-                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
-                    for i in impdb.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)):
+                    item_id = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
+                    for i in impcon.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
                         rec, media_id = add_media(list(i[3:7]))
-                        cur.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
+                        con.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
                     add_tag(tag_id, item_id)
                     add_markers(row[0])
                     add_locations(row[0])
@@ -1693,9 +1683,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 zipped.extractall(playlist_path)
             db = 'userData.db'
             impcon = sqlite3.connect(f'{playlist_path}/{db}')
-            impdb = impcon.cursor()
             count = update_db()
-            impdb.close()
             impcon.close()
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
@@ -1717,8 +1705,7 @@ class Window(QMainWindow, Ui_MainWindow):
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Annotations'):
                 count = import_annotations()
             elif category == _('Bookmarks'):
@@ -1729,9 +1716,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = import_notes()
             elif category == _('Playlists'):
                 count = import_playlist()
-            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -1858,27 +1844,25 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_notes():
                 for item in self.modified_list:
-                    cur.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'), item.idx))
+                    con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'), item.idx))
                 for item in self.deleted_list:
-                    cur.execute(f'DELETE FROM Note WHERE NoteId = {item.idx};')
+                    con.execute(f'DELETE FROM Note WHERE NoteId = {item.idx};')
 
             def update_annotations():
                 for item in self.modified_list:
-                    cur.execute('UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (item.body, item.idx, item.label))
+                    con.execute('UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (item.body, item.idx, item.label))
                 for item in self.deleted_list:
-                    cur.execute('DELETE FROM InputField WHERE LocationId = ? AND TextTag = ?;', (item.idx, item.label))
+                    con.execute('DELETE FROM InputField WHERE LocationId = ? AND TextTag = ?;', (item.idx, item.label))
 
             try:
                 con = sqlite3.connect(f'{tmp_path}/{db_name}')
-                cur = con.cursor()
-                cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+                con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
                 if category == _('Notes'):
                     update_notes()
                 else:
                     update_annotations()
-                cur.execute("PRAGMA foreign_keys = 'ON';")
+                con.execute("PRAGMA foreign_keys = 'ON';")
                 con.commit()
-                cur.close()
                 con.close()
             except Exception as ex:
                 self.crash_box(ex)
@@ -1995,7 +1979,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     GROUP BY n.NoteId
                     ORDER BY Type, Date DESC;
                     '''
-                for row in cur.execute(sql):
+                for row in con.execute(sql).fetchall():
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1] or '',
@@ -2106,7 +2090,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     WHERE LocationId IN {items}
                     ORDER BY doc, i;
                     '''
-                for row in cur.execute(sql):
+                for row in con.execute(sql).fetchall():
                     item = {
                         'LABEL': row[0],
                         'VALUE': row[1].rstrip() if row[1] else '',
@@ -2185,14 +2169,12 @@ class Window(QMainWindow, Ui_MainWindow):
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
             items = str(selected).replace('[', '(').replace(']', ')')
             if category == _('Notes'):
                 show_notes()
             else:
                 show_annotations()
             update_viewer_title()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -2245,17 +2227,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     return ' ', ' '
 
             def tag_positions():
-                cur.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
-                tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
-                position = cur.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
+                con.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
+                tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                position = con.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
                 if position[0] != None:
                     return tag_id, position[0] + 1
                 else:
                     return tag_id, 0
 
             def add_location(symbol, language):
-                cur.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
-                result = cur.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
+                con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
+                result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
                 return result[0]
 
             pub, lng = add_dialog()
@@ -2264,11 +2246,11 @@ class Window(QMainWindow, Ui_MainWindow):
             language = int(favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0])
             publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Symbol'].values[0]
             location = add_location(publication, language)
-            result = cur.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
+            result = con.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
             if result:
                 return False, ' '+_('Favorite for "{}" in {} already exists.').format(pub, lng)
             tag_id, position = tag_positions()
-            cur.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
+            con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location, tag_id, position))
             return 1, ' '+_('Added "{}" in {}').format(pub, lng)
 
         def add_images():
@@ -2293,7 +2275,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 label = QLabel(dialog)
                 label.setText(_('Select existing playlist or type name of new one:'))
 
-                lists = list(map(lambda x: x[0], cur.execute('SELECT DISTINCT Name FROM Tag WHERE Type=2;').fetchall()))
+                lists = list(map(lambda x: x[0], con.execute('SELECT DISTINCT Name FROM Tag WHERE Type=2;').fetchall()))
                 playlist = QComboBox(dialog)
                 playlist.setEditable(True)
                 playlist.addItems(sorted(lists))
@@ -2355,20 +2337,20 @@ class Window(QMainWindow, Ui_MainWindow):
                     return name
 
                 def add_tag():
-                    position = cur.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
-                    cur.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+                    position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
+                    con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
                 # get/create tag; get all labels associated with it
                 try:
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Name = ? and Type = 2;', (playlist,)).fetchone()[0]
-                    rows = cur.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
+                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Name = ? and Type = 2;', (playlist,)).fetchone()[0]
+                    rows = con.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
                     current_labels  = [x[0] for x in rows]
                 except:
-                    cur.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
-                    tag_id = cur.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
+                    con.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
+                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
                     current_labels = []
 
-                rows = cur.execute('SELECT * FROM IndependentMedia;').fetchall()
+                rows = con.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_files = [x[2] for x in rows]
                 current_hashes = [x[4] for x in rows]
 
@@ -2386,7 +2368,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         new_name = check_name(name)
                         current_files.append(new_name)
                         shutil.copy2(f, f'{tmp_path}/{new_name}')
-                        media_id = cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
+                        media_id = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
 
                         # generate and add thumbnail file
                         unique_id = str(uuid.uuid1())
@@ -2396,17 +2378,17 @@ class Window(QMainWindow, Ui_MainWindow):
                         i.thumbnail((250, 250))
                         i.save(f'{tmp_path}/{thumb_name}')
                         thash = sha256hash.hash_file(f'{tmp_path}/{thumb_name}')
-                        cur.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
+                        con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
                     else: # file alread in archive
-                        media_id, thumb_name = cur.execute('SELECT IndependentMediaId, FilePath FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()
+                        media_id, thumb_name = con.execute('SELECT IndependentMediaId, FilePath FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()
                         if thumb_name != name:
-                            thumb_name = cur.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
+                            thumb_name = con.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
 
                     result += 1
-                    item_id = cur.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
+                    item_id = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
                     current_labels.append(name)
-                    cur.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000))
+                    con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000))
 
                     add_tag()
                 return result
@@ -2420,15 +2402,13 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Favorites'):
                 result, message = add_favorite()
             elif category == _('Playlists'):
                 result, message = add_images()
-            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -2443,35 +2423,35 @@ class Window(QMainWindow, Ui_MainWindow):
     def delete_items(self):
 
         def reorder_tags():
-            for tag_id in cur.execute('SELECT TagId FROM Tag'):
+            for tag_id in con.execute('SELECT TagId FROM Tag').fetchall():
                 pos = 1
-                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)):
-                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
+                for tag_map in con.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
+                    con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
                     pos += 1
-            for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap;'):
-                cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
-            cur.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
+            for tag_map in con.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
+                con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+            con.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
 
         def delete(table, field):
-            return cur.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
+            return con.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
         def delete_playlist_items():
-            rows = cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
+            rows = con.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
             used_thumbs = [x[0] for x in rows]
-            for f in cur.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};'):
+            for f in con.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall():
                 if f[0] in used_thumbs: # used by other items; skip
                     continue
-                cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
+                con.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
                 except:
                     pass
-            rows = cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
+            rows = con.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
             used_files = [x[0] for x in rows]
-            for f in cur.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};'):
+            for f in con.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId IN {items};').fetchall():
                 if f[0] in used_files: # used by other items; skip
                     continue
-                cur.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
+                con.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
                     os.remove(tmp_path + '/' + f[0])
                 except:
@@ -2480,8 +2460,8 @@ class Window(QMainWindow, Ui_MainWindow):
             delete('PlaylistItemLocationMap', 'PlaylistItemId')
             delete('TagMap', 'PlaylistItemId')
 
-            cur.execute(f'DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
-            cur.execute(f'DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
+            con.execute(f'DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
+            con.execute(f'DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
             delete('PlaylistItemMarker', 'PlaylistItemId')
             count = delete('PlaylistItem', 'PlaylistItemId')
             reorder_tags()
@@ -2511,13 +2491,11 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             result = delete_items()
-            cur.execute("PRAGMA foreign_keys = 'ON';")
+            con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -2552,34 +2530,34 @@ class Window(QMainWindow, Ui_MainWindow):
             return s
 
         def obscure_locations():
-            for title, item in cur.execute('SELECT Title, LocationId FROM Location;'):
+            for title, item in con.execute('SELECT Title, LocationId FROM Location;').fetchall():
                 if title:
                     title = obscure_text(title)
-                    cur.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
+                    con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (title, item))
 
         def obscure_annotations():
-            for content, item in cur.execute('SELECT Value, TextTag FROM InputField;'):
+            for content, item in con.execute('SELECT Value, TextTag FROM InputField;').fetchall():
                 if content:
                     content = obscure_text(content)
-                    cur.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
+                    con.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (content, item))
 
         def obscure_bookmarks():
-            for title, content, item  in cur.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;'):
+            for title, content, item  in con.execute('SELECT Title, Snippet, BookmarkId FROM Bookmark;').fetchall():
                 if title:
                     title = obscure_text(title)
                 if content:
                     content = obscure_text(content)
-                    cur.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
+                    con.execute('UPDATE Bookmark SET Title = ?, Snippet = ? WHERE BookmarkId = ?;', (title, content, item))
                 else:
-                    cur.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
+                    con.execute('UPDATE Bookmark SET Title = ? WHERE BookmarkId = ?;', (title, item))
 
         def obscure_notes():
-            for title, content, item in cur.execute('SELECT Title, Content, NoteId FROM Note;'):
+            for title, content, item in con.execute('SELECT Title, Content, NoteId FROM Note;').fetchall():
                 if title:
                     title = obscure_text(title)
                 if content:
                     content = obscure_text(content)
-                cur.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
+                con.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
 
         reply = QMessageBox.warning(self, _('Mask'), _('Are you sure you want to\nMASK all text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
@@ -2590,14 +2568,12 @@ class Window(QMainWindow, Ui_MainWindow):
         m = regex.compile(r'\p{L}')
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
             obscure_annotations()
             obscure_bookmarks()
             obscure_notes()
             obscure_locations()
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -2621,11 +2597,11 @@ class Window(QMainWindow, Ui_MainWindow):
             return pd
 
         def make_table(table):
-            cur.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
+            con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
 
         def update_table(table, field):
             app.processEvents()
-            cur.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+            con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
             if self.interactive:
                 progress_dialog.setValue(progress_dialog.value() + 1)
 
@@ -2633,28 +2609,28 @@ class Window(QMainWindow, Ui_MainWindow):
             make_table('Note')
             update_table('Note', 'NoteId')
             update_table('TagMap', 'NoteId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
         def reindex_bookmarks():
             make_table('Bookmark')
             update_table('Bookmark', 'BookmarkId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
         def reindex_highlights():
             make_table('UserMark')
             update_table('UserMark', 'UserMarkId')
             update_table('Note', 'UserMarkId')
             update_table('BlockRange', 'UserMarkId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
             make_table('BlockRange')
             update_table('BlockRange', 'BlockRangeId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
         def reindex_playlists():
 
             def clean_media():
-                thumbs = list(map(lambda x: x[0], cur.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
-                ind = list(map(lambda x: x[0], cur.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
+                thumbs = list(map(lambda x: x[0], con.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
+                ind = list(map(lambda x: x[0], con.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
                 ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
                 for file in glob.glob(pth + '/*'):
                     f = Path(file).name
@@ -2666,39 +2642,39 @@ class Window(QMainWindow, Ui_MainWindow):
                 if self.interactive:
                     progress_dialog.setValue(progress_dialog.value() + 1)
 
-            cur.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
+            con.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
             make_table('PlaylistItem')
             update_table('PlaylistItem', 'PlaylistItemId')
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
             update_table('PlaylistItemLocationMap', 'PlaylistItemId')
             update_table('PlaylistItemMarker', 'PlaylistItemId')
             update_table('TagMap', 'PlaylistItemId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
-            cur.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
+            con.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
             make_table('IndependentMedia')
             update_table('IndependentMedia', 'IndependentMediaId')
             update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
-            cur.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
-            cur.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
+            con.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
+            con.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
             make_table('PlaylistItemMarker')
             update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
             update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
             update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
             clean_media()
 
         def reindex_tags():
             make_table('TagMap')
             update_table('TagMap', 'TagMapId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
             make_table('Tag')
             update_table('Tag', 'TagId')
             update_table('TagMap', 'TagId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
         def reindex_locations():
             make_table('Location')
@@ -2710,7 +2686,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('Bookmark', 'PublicationLocationId')
             update_table('TagMap', 'LocationId')
             update_table('PlaylistItemLocationMap', 'LocationId')
-            cur.execute('DROP TABLE CrossReference;')
+            con.execute('DROP TABLE CrossReference;')
 
         self.interactive = False
         if not con:
@@ -2727,17 +2703,15 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             if self.interactive:
                 con = sqlite3.connect(f'{pth}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
             reindex_tags()
             reindex_playlists()
             reindex_highlights()
             reindex_bookmarks()
             reindex_locations()
-            cur.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
+            con.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
             con.commit()
-            cur.close()
             if self.interactive:
                 con.close()
             else:
@@ -2756,13 +2730,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def sort_notes(self):
 
         def reorder():
-            for tag_id in cur.execute('SELECT TagId FROM Tag WHERE Type = 1;'):
+            for tag_id in con.execute('SELECT TagId FROM Tag WHERE Type = 1;').fetchall():
                 pos = 1
-                for tag_map in cur.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)):
-                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
+                for tag_map in con.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY NoteId;', (tag_id[0],)).fetchall():
+                    con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
                     pos += 1
-                for tag_map in cur.execute('SELECT TagMapId, Position FROM TagMap WHERE TagId = ?', (tag_id[0],)):
-                    cur.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
+                for tag_map in con.execute('SELECT TagMapId, Position FROM TagMap WHERE TagId = ?', (tag_id[0],)).fetchall():
+                    con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
 
 
         reply = QMessageBox.warning(self, _('Reorder'), _('All notes will be REORDERED.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
@@ -2772,11 +2746,9 @@ class Window(QMainWindow, Ui_MainWindow):
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            cur = con.cursor()
-            cur.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
             reorder()
             con.commit()
-            cur.close()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -2795,7 +2767,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 con = sqlite3.connect(f'{tmp_path}/{db_name}')
             else:
                 con = connection
-            cur = con.cursor()
             sql = """
                 PRAGMA temp_store = 2;
                 PRAGMA journal_mode = 'OFF';
@@ -2840,9 +2811,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;
                 """
-            cur.executescript(sql)
+            con.executescript(sql)
             con.commit()
-            cur.close()
             if not con:
                 con.close()
         except Exception as ex:
