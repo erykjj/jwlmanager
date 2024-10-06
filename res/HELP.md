@@ -30,7 +30,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 ######
 ### View (button)
 ######
-Shows selected Notes and Annotations in a **Data Viewer** window, with a filter that searches within the title and body, and an option to save the results to a text file. You can delete and/or edit individual items. You have to confirm all edits within the **Data Editor** and *again* in the Data Viewer before they are written to the database (of course, you still have to save the archive as usual). You can go back via the buttons (or `Escape` key) without affecting the database.
+Shows selected Notes and Annotations in a **Data Viewer** window, with a filter that searches within the title and body, and an option to save the results to a text file (with a meta-data header for each note listing its properties). You can delete and/or edit individual items. You have to confirm all edits within the **Data Editor** and *again* in the Data Viewer before they are written to the database (of course, you still have to save the archive as usual). You can go back via the buttons (or `Escape` key) without affecting the database.
 #####
 ######
 ### Add
