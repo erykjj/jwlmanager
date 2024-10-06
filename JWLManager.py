@@ -1915,7 +1915,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if category == _('Notes'):
                     txt += '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body
                 else:
-                    txt += item.title + '\n----------\n' + item.body
+                    txt += '---\n' + item.metadata + '\n---\n' + item.body
                 txt += '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
@@ -2049,7 +2049,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata = f"title: {clean_text(item['TITLE'])}\n"
                 metadata += f"date: {item['MODIFIED']}\n"
                 if item['PUB']:
-                    metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE'].strip()}\n"
+                    metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE']}".strip() + '\n'
                 if item['HEADING']:
                     metadata += f"document: {item['HEADING']}\n"
                 if item['Link']:
@@ -2123,8 +2123,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
             counter = 1
             for item in get_annotations():
+                metadata = f"publication: {item['PUB']} {item['ISSUE']}".strip()
+                metadata += f"\ndocument: {item['DOC']}\n"
+                metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None)
+                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None, metadata)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
