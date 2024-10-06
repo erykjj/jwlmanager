@@ -1903,11 +1903,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.activateWindow()
 
         def save_txt():
-
-            def remove_html(html):
-                html = html.replace('<br>', '\n')
-                return regex.sub(r'<.*?>', '', html)
-
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
             if fname == '':
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
@@ -1918,7 +1913,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if not item.note_widget.isVisible():
                     continue
                 if category == _('Notes'):
-                    txt += item.title + '\n' + item.body + '\n----------\n' + remove_html(item.meta_box.text())
+                    txt += '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body
                 else:
                     txt += item.title + '\n----------\n' + item.body
                 txt += '\n==========\n'
@@ -2051,6 +2046,19 @@ class Window(QMainWindow, Ui_MainWindow):
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
             for item in get_notes():
+                metadata = f"title: {clean_text(item['TITLE'])}\n"
+                metadata += f"date: {item['MODIFIED']}\n"
+                if item['PUB']:
+                    metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE'].strip()}\n"
+                if item['HEADING']:
+                    metadata += f"document: {item['HEADING']}\n"
+                if item['Link']:
+                    metadata += f"link: [[{item['Link']}]]\n"
+                if item['TAGS']:
+                    metadata += 'tags:\n'
+                    for t in item['TAGS'].split(' | '):
+                        metadata += f'  - {t}\n'
+                metadata += f"color: {item['COLOR']}"
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     meta += f"<small><strong><tt>{item['MODIFIED']}"
@@ -2064,7 +2072,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta)
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
