@@ -11,7 +11,6 @@
 ### Changed
 
 - **Changed structure of meta properties in TXT save from Note Viewer**
-- Streamlined/cleaned-up code
 - Added item type on status bar on import
 - Updated translations
 - Updated publications catalog
