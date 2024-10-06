@@ -14,6 +14,7 @@
 - Streamlined/cleaned-up code
 - Added item type on status bar on import
 - Updated translations
+- Updated publications catalog
 
 ### Fixed
 
