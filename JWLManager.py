@@ -1888,7 +1888,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def save_txt():
             if category == _('Notes'):
-                dirname = QFileDialog.getExistingDirectory(self, _('Save') + ' TXT', f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
+                dirname = QFileDialog.getExistingDirectory(self, _('Save'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
                 if dirname == '':
                     self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                     return
