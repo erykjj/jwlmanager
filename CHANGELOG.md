@@ -14,6 +14,7 @@
 - Added item type on status bar on import
 - Updated translations
 - Updated publications catalog
+- Disabled save to TXT button in Data Viewer until all notes are loaded
 
 ### Fixed
 
