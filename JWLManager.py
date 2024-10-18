@@ -2052,7 +2052,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item['HEADING']:
                     metadata += f"document: {item['HEADING']}\n"
                 if item['Link']:
-                    metadata += f"link: [[{item['Link']}]]\n"
+                    metadata += f"link: {item['Link']}\n"
                 metadata += f"color: {item['COLOR']}\n"
                 if item['TAGS']:
                     metadata += 'tags:\n'
