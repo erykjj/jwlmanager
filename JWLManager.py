@@ -1795,7 +1795,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
-        def update_viewer_title(): # TODO: disable save to TXT untill all notes loaded
+        def update_viewer_title():
             self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
 
         def delete_single_item(counter):
@@ -2042,6 +2042,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
+            self.viewer_window.txt_button.setEnabled(False)
             for item in get_notes():
                 metadata = f"title: {clean_text(item['TITLE'])}\n"
                 metadata += f"date: {item['MODIFIED']}\n"
@@ -2083,6 +2084,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 except:
                     return
                 counter += 1
+            self.viewer_window.txt_button.setEnabled(True)
 
         def show_annotations():
 
