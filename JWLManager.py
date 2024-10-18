@@ -1795,7 +1795,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
-        def update_viewer_title():
+        def update_viewer_title(): # TODO: disable save to TXT untill all notes loaded
             self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
 
         def delete_single_item(counter):
@@ -1887,22 +1887,33 @@ class Window(QMainWindow, Ui_MainWindow):
             self.activateWindow()
 
         def save_txt():
-            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
-            if fname == '':
-                self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-                return
-            self.working_dir = Path(fname).parent
-            txt = ''
-            for item in self.viewer_items.values():
-                if not item.note_widget.isVisible():
-                    continue
-                if category == _('Notes'):
-                    txt += '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body
-                else:
-                    txt += '---\n' + item.metadata + '\n---\n' + item.body
-                txt += '\n==========\n'
-            with open(fname, 'w', encoding='utf-8') as txtfile:
-                txtfile.write(txt)
+            if category == _('Notes'):
+                dirname = QFileDialog.getExistingDirectory(self, _('Save') + ' TXT', f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
+                if dirname == '':
+                    self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+                    return
+                self.working_dir = Path(dirname).parent
+                reg_guid = regex.compile(r'guid: (.*)', regex.MULTILINE)
+                for item in self.viewer_items.values():
+                    if not item.note_widget.isVisible():
+                        continue
+                    fname = dirname + '/' + regex.search(reg_guid, item.metadata).group(1) + '.md'
+                    txt = '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body
+                    with open(fname, 'w', encoding='utf-8') as txtfile:
+                        txtfile.write(txt)
+            else:
+                fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
+                if fname == '':
+                    self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+                    return
+                self.working_dir = Path(fname).parent
+                txt = ''
+                for item in self.viewer_items.values():
+                    if not item.note_widget.isVisible():
+                        continue
+                    txt += '---\n' + item.metadata + '\n---\n' + item.body + '\n==========\n'
+                with open(fname, 'w', encoding='utf-8') as txtfile:
+                    txtfile.write(txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
             self.viewer_window.raise_()
 
@@ -1953,7 +1964,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         u.ColorIndex,
                         b.StartToken,
                         b.EndToken,
-                        n.NoteId
+                        n.NoteId,
+                        n.Guid
                     FROM Note n
                         LEFT JOIN
                         Location l USING (
@@ -1995,7 +2007,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         'HEADING': row[11],
                         'MODIFIED': row[12][:10],
                         'COLOR': row[13] or 0,
-                        'ID': row[16]
+                        'ID': row[16],
+                        'GUID': row[17]
                     }
                     try:
                         item['LANG'] = lang_symbol[row[4]]
@@ -2038,11 +2051,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     metadata += f"document: {item['HEADING']}\n"
                 if item['Link']:
                     metadata += f"link: [[{item['Link']}]]\n"
+                metadata += f"color: {item['COLOR']}\n"
                 if item['TAGS']:
                     metadata += 'tags:\n'
                     for t in item['TAGS'].split(' | '):
                         metadata += f'  - {t}\n'
-                metadata += f"color: {item['COLOR']}"
+                metadata += f"guid: {item['GUID']}"
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     meta += f"<small><strong><tt>{item['MODIFIED']}"
