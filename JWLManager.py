@@ -1015,7 +1015,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in con.execute(sql).fetchall():
                     item = {
                         'TYPE': row[0],
-                        'TITLE': row[1],
+                        'TITLE': row[1] or '',
                         'NOTE': row[2].rstrip() if row[2] else '',
                         'TAGS': row[3] or '',
                         'LANG': row[4],
