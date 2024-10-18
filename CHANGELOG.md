@@ -4,13 +4,23 @@
 
 ### Added
 
-- **Bookmark export and import**
-- Save and restore Help window geometry
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [5.0.0] - 2024-10-18
+### Added
+
+- Added option to **save Notes in Data Viewer as individual markdown files**
+- Added **Bookmark export and import**
 - Added Bookmarks table to reindexing process
+- Save and restore Help window geometry
 
 ### Changed
 
-- **Changed structure of meta properties in TXT save from Note Viewer**
 - Added item type on status bar on import
 - Updated translations
 - Updated publications catalog
@@ -23,9 +33,6 @@
 - Close Help window on application exit
 - Fixed crash on NULL Note title
 
-### Removed
-
-____
 ## [4.5.3] - 2024-09-18
 ### Changed
 
