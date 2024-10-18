@@ -2043,6 +2043,7 @@ class Window(QMainWindow, Ui_MainWindow):
             clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
             counter = 1
             self.viewer_window.txt_button.setEnabled(False)
+            self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
             for item in get_notes():
                 metadata = f"title: {clean_text(item['TITLE'])}\n"
                 metadata += f"date: {item['MODIFIED']}\n"
@@ -2122,6 +2123,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return item_list
 
             counter = 1
+            self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
             for item in get_annotations():
                 metadata = f"publication: {item['PUB']} {item['ISSUE']}".strip()
                 metadata += f"\ndocument: {item['DOC']}\n"
