@@ -158,14 +158,14 @@ class DataViewer(QDialog):
     def _create_viewer(self):
         viewer = QFrame()
 
-        txt_button = QToolButton()
-        txt_button.setMaximumWidth(60)
-        txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        txt_button.setStyleSheet('color: #177c26; font: bold;')
+        self.txt_button = QToolButton()
+        self.txt_button.setMaximumWidth(60)
+        self.txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        self.txt_button.setStyleSheet('color: #177c26; font: bold;')
         self.txt_action = QAction('TXT')
         self.txt_action.setToolTip('⇣')
         self.txt_action.setIcon(QPixmap(_base_path+'/icons/icons8-save-64grey.png'))
-        txt_button.setDefaultAction(self.txt_action)
+        self.txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
         discard_button.setStyleSheet('color: #3f54aa; font: bold;')
@@ -192,7 +192,7 @@ class DataViewer(QDialog):
 
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
-        toolbar.addWidget(txt_button)
+        toolbar.addWidget(self.txt_button)
         toolbar.addWidget(discard_button)
         toolbar.addWidget(confirm_button)
         toolbar.addWidget(spacer)
