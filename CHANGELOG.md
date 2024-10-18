@@ -19,6 +19,7 @@
 
 - Fixed error on exporting from new (unsaved) archive
 - Close Help window on application exit
+- Fixed crash on NULL Note title
 
 ### Removed
 
