@@ -32,7 +32,7 @@ VERSION = 'v5.0.1'
 from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
-from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
+from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer, QTranslator
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
 
@@ -163,6 +163,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.currentTextChanged.connect(self.regroup)
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
+            self.treeWidget.itemClicked.connect(self.start_timer)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
             self.button_export.clicked.connect(self.export_items)
             self.button_import.clicked.connect(self.import_items)
@@ -212,6 +213,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
+        self.click_timer = QTimer()
+        self.click_timer.setSingleShot(True)
+        self.click_timer.timeout.connect(self.single_clicked)
+        self.clicked_item = None
         self.about_window = AboutBox(APP, VERSION)
         self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
@@ -264,7 +269,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
         else:
             QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
-
 
     def help_box(self):
         self.help_window.show()
@@ -362,7 +366,19 @@ class Window(QMainWindow, Ui_MainWindow):
     def collapse_all(self):
         self.treeWidget.collapseAll()
 
+
+    def start_timer(self, item):
+        self.clicked_item = item
+        self.click_timer.start(200)
+
+    def single_clicked(self):
+        if self.clicked_item.checkState(0) == Qt.Checked:
+            self.clicked_item.setCheckState(0, Qt.Unchecked)
+        else:
+            self.clicked_item.setCheckState(0, Qt.Checked)
+
     def double_clicked(self, item):
+        self.click_timer.stop()
         if self.treeWidget.isExpanded(item):
             self.treeWidget.setExpanded(item, False)
         else:
@@ -2184,7 +2200,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         selected = self.list_selected()
         self.filtered = len(selected)
-        if len(selected) > 1500:
+        if len(selected) > 1500: # TODO: can this be increased and the build speeded up somehow??
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
         try:
