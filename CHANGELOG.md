@@ -6,6 +6,8 @@
 
 ### Changed
 
+- fixed tooltip colors in Data Viewer
+
 ### Fixed
 
 ### Removed
