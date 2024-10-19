@@ -12,6 +12,8 @@
 
 ### Fixed
 
+- Fixed working directory being set to parent when saving Notes in Data Viewer
+
 ### Removed
 
 ____
