@@ -265,7 +265,7 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, idx, color, title, body, meta, metadata):
+    def __init__(self, idx, color, title, body, meta, metadata, crumb):
         super().__init__()
         self.idx = idx
         self.label = None
@@ -274,6 +274,7 @@ class ViewerItem(QWidget):
         self.title = title
         self.meta = meta
         self.metadata = metadata
+        self.crumb = crumb
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
