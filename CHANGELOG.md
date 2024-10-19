@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added **single-clicking** anywhere on item line (not just checkbox) will check/uncheck
+
 ### Changed
 
 - Notes from Data Viewer are now saved as markdown files organized in a directory tree based on publication, etc.
