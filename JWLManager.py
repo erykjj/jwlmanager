@@ -1892,7 +1892,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if dirname == '':
                     self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                     return
-                self.working_dir = Path(dirname).parent
+                self.working_dir = Path(dirname)
                 reg_guid = regex.compile(r'guid: (.*)', regex.MULTILINE)
                 for item in self.viewer_items.values():
                     if not item.note_widget.isVisible():
@@ -2021,7 +2021,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['RANGE'] = None
                     if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')): # independent note
-                        item['Crumb'] = None
+                        item['Crumb'] = _('* INDEPENDENT *').strip('* ') + '/'
                         item['Link'] = None
                     else: # attached note
                         if item.get('BK'): # Bible note
@@ -2064,17 +2064,16 @@ class Window(QMainWindow, Ui_MainWindow):
                     for t in item['TAGS'].split(' | '):
                         metadata += f'  - {t}\n'
                 metadata += f"guid: {item['GUID']}"
-                if item.get('Crumb'):
-                    if item.get('ISSUE'):
-                        crumb = item['Crumb'] + item['ISSUE'].strip() + '/'
-                    else:
-                        crumb = item['Crumb']
-                    # if item.get('HEADING'):
-                    #     crumb += item['HEADING'] + '/'
-                    if item.get('DOC'):
-                        crumb += f"{item['DOC']}/"
-                else:
-                    crumb = _('* INDEPENDENT *').strip('* ') + '/'
+
+                crumb = item['Crumb']
+                if item.get('ISSUE'):
+                    crumb += item['ISSUE'].strip() + '/'
+                # if item.get('HEADING'): # NOTE: not all notes have title headings!
+                #     crumb += item['HEADING'] + '/'
+                if item.get('DOC'):
+                    crumb += f"{item['DOC']}/"
+                # TODO: generate unique filename
+
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     meta += f"<small><strong><tt>{item['MODIFIED']}"
@@ -2088,6 +2087,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
+
                 note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata, crumb)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
