@@ -19,6 +19,7 @@ The ***View*** menu has some additional options (also accessible directly via th
   * Note: **double-clicking** on an entry will expand (or collapse) all *its* sub-levels
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
+  * Note: **clicking** anywhere on an entry line will check/uncheck the entry
 * **Unselect All (Ctrl+Z)** - unselect everything
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
