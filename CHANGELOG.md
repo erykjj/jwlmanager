@@ -6,7 +6,9 @@
 
 ### Changed
 
+- Notes from Data Viewer are now saved as markdown files organized in a directory tree based on publication, etc.
 - fixed tooltip colors in Data Viewer
+- made filter field in Data Viewer wider
 
 ### Fixed
 
