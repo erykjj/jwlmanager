@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.0.0'
+VERSION = 'v5.0.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1055,7 +1055,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 vs = '000'
                             item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
-                            if not item['HEADING']:
+                            if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                             elif item.get('VS') and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
@@ -1897,8 +1897,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 for item in self.viewer_items.values():
                     if not item.note_widget.isVisible():
                         continue
-                    fname = dirname + '/' + regex.search(reg_guid, item.metadata).group(1) + '.md'
-                    txt = '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body
+                    savedir = f"{dirname}/{item.crumb}"
+                    Path(savedir).mkdir(parents=True, exist_ok=True)
+                    fname = savedir + '/' + regex.search(reg_guid, item.metadata).group(1) + '.md'
+                    txt = '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body + '\n'
                     with open(fname, 'w', encoding='utf-8') as txtfile:
                         txtfile.write(txt)
             else:
@@ -2019,6 +2021,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['RANGE'] = None
                     if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')): # independent note
+                        item['Crumb'] = None
                         item['Link'] = None
                     else: # attached note
                         if item.get('BK'): # Bible note
@@ -2027,13 +2030,15 @@ class Window(QMainWindow, Ui_MainWindow):
                             else:
                                 vs = '000'
                             script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
+                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/{vs}"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
-                            if not item['HEADING']:
+                            if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                             elif item.get('VS') and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
+                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                         if row[9] and (row[9] > 10000000):
                             item['ISSUE'] = process_issue(row[9])
@@ -2047,18 +2052,29 @@ class Window(QMainWindow, Ui_MainWindow):
             for item in get_notes():
                 metadata = f"title: {clean_text(item['TITLE'])}\n"
                 metadata += f"date: {item['MODIFIED']}\n"
-                if item['PUB']:
+                if item.get('PUB'):
                     metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE']}".strip() + '\n'
-                if item['HEADING']:
+                if item.get('HEADING'):
                     metadata += f"document: {item['HEADING']}\n"
-                if item['Link']:
+                if item.get('Link'):
                     metadata += f"link: {item['Link']}\n"
                 metadata += f"color: {item['COLOR']}\n"
-                if item['TAGS']:
+                if item.get('TAGS'):
                     metadata += 'tags:\n'
                     for t in item['TAGS'].split(' | '):
                         metadata += f'  - {t}\n'
                 metadata += f"guid: {item['GUID']}"
+                if item.get('Crumb'):
+                    if item.get('ISSUE'):
+                        crumb = item['Crumb'] + item['ISSUE'].strip() + '/'
+                    else:
+                        crumb = item['Crumb']
+                    # if item.get('HEADING'):
+                    #     crumb += item['HEADING'] + '/'
+                    if item.get('DOC'):
+                        crumb += f"{item['DOC']}/"
+                else:
+                    crumb = _('* INDEPENDENT *').strip('* ') + '/'
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     meta += f"<small><strong><tt>{item['MODIFIED']}"
@@ -2072,7 +2088,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata, crumb)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
