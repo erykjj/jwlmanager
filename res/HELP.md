@@ -19,7 +19,6 @@ The ***View*** menu has some additional options (also accessible directly via th
   * Note: **double-clicking** on an entry will expand (or collapse) all *its* sub-levels
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
-  * Note: **clicking** anywhere on an entry line will check/uncheck the entry
 * **Unselect All (Ctrl+Z)** - unselect everything
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
@@ -31,7 +30,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 ######
 ### View (button)
 ######
-Shows selected Notes and Annotations in a **Data Viewer** window, with a filter that searches within the title and body, and an option to save the results to a signle text file, in the case of Annotations; or as individual markdown files (with a meta-data header listing its properties) in the selected directory, in the case of Notes. You can delete and/or edit individual items. You have to confirm all edits within the **Data Editor** and *again* in the Data Viewer before they are written to the database (of course, you still have to save the archive as usual). You can go back via the buttons (or `Escape` key) without affecting the database.
+Shows selected Notes and Annotations in a **Data Viewer** window, with a filter that searches within the title and body, and an option to save the results to a text file. You can delete and/or edit individual items. You have to confirm all edits within the **Data Editor** and *again* in the Data Viewer before they are written to the database (of course, you still have to save the archive as usual). You can go back via the buttons (or `Escape` key) without affecting the database.
 #####
 ######
 ### Add
@@ -46,9 +45,13 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 ######
 ### Export
 ######
-**Notes** and **Annotations** from selected publications can be exported to an MS Excel (default) or a text file (use filetype dropdown to select) which you can edit (add, remove, modify) and later import into your archive (or share with someone else). Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format. Exporting of **Bookmarks** and **Highlights** is also possible - not so much with a view of direct editing, but for sharing/merging into another archive.
+**Notes** and **Annotations** from selected publications can be exported to an MS Excel spreadsheet or a custom text file - either one of which you can edit (add, remove, modify) and later import into your archive (or share with someone else). They can also be exported (but not imported) as separate markdown files (with a meta-data header listing the properties of each one) organized in a hierarchical directory tree.
+######
+Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format.
 ######
 Items from differente **Playlists** can be exported to a `.jwlplaylist` archive containing one Playlist (with the name of the archive) which can be imported as a Playlist.
+######
+Exporting of **Bookmarks** and **Highlights** is also possible - not so much with a view of direct editing, but for sharing/merging into another archive.
 #####
 ######
 ### Import
