@@ -169,7 +169,7 @@ class DataViewer(QDialog):
         txt_button.setMaximumWidth(60)
         txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         txt_button.setStyleSheet('color: #177c26; font: bold;')
-        self.txt_action = QAction('TXT')
+        self.txt_action = QAction('')
         self.txt_action.setToolTip('⇣')
         self.txt_action.setIcon(QPixmap(_base_path+'/icons/icons8-save-64grey.png'))
         txt_button.setDefaultAction(self.txt_action)
