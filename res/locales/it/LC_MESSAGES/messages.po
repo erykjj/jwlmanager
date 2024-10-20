@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-10-20 18:38-0400\n"
-"PO-Revision-Date: 2024-10-05 22:13+0000\n"
+"PO-Revision-Date: 2024-10-20 23:09+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: it\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-rc\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:196 JWLManager.py:412 JWLManager.py:416 JWLManager.py:631
@@ -246,23 +247,20 @@ msgid "Saved"
 msgstr "Salvato"
 
 #: JWLManager.py:877
-#, fuzzy
 msgid "MS Excel file"
 msgstr "File MS Excel"
 
 #: JWLManager.py:879
-#, fuzzy
 msgid "Custom text file"
 msgstr "File di testo"
 
 #: JWLManager.py:881
 msgid "Markdown files"
-msgstr ""
+msgstr "File di markdown"
 
 #: JWLManager.py:908
-#, fuzzy
 msgid "UNTITLED"
-msgstr "Titolo"
+msgstr "SENZA_TITOLO"
 
 #: JWLManager.py:935 JWLManager.py:937 JWLManager.py:940 JWLManager.py:942
 msgid "Export file"
@@ -282,9 +280,8 @@ msgid "MS Excel files"
 msgstr "File MS Excel"
 
 #: JWLManager.py:944
-#, fuzzy
 msgid "Export directory"
-msgstr "Esporta file"
+msgstr "Elenco delle esportazioni"
 
 #: JWLManager.py:949 JWLManager.py:965
 msgid "Exported from"
@@ -745,4 +742,3 @@ msgstr "Note disposte"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NESSUN TITOLO"
-
