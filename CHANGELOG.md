@@ -4,13 +4,17 @@
 
 ### Added
 
-- Added **single-clicking** anywhere on item line (not just checkbox) will check/uncheck
+- Added **hierarchical markdown export** from main interface for Notes and Annotations
+  - Organized by publication/issue/document or publication/book/chapter
+  - Note names start with verse or paragraph number (if available) and are based on Note title or Annotation label
+    - Annotation export over-writes previous entries with same directory/filename
+    - Note export will create another note (with number appended) if same title exists in same directory
 
 ### Changed
 
-- Notes from Data Viewer are now saved as markdown files organized in a directory tree based on publication, etc.
-- fixed tooltip colors in Data Viewer
-- made filter field in Data Viewer wider
+- Fixed tooltip colors in Data Viewer
+- Made filter field in Data Viewer wider
+- Data Viewer save as TXT reverted to single-file export of visible items
 
 ### Fixed
 
