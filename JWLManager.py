@@ -895,6 +895,43 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def export_items(self, form):
 
+        def process_issue(i):
+            issue = str(i)
+            yr = issue[0:4]
+            m = issue[4:6]
+            d = issue[6:]
+            if d == '00':
+                d = ''
+            else:
+                d = '-' + d
+            return f'{yr}-{m}{d}'
+
+        def shorten_title(t):
+            if t == '':
+                return _('UNTITLED')
+            t = regex.sub(r'[^-\w\s\(\):,;]+', '', t) # strip off punctuation
+            t = t.strip()
+            if len(t) > 40:
+                m = regex.search(r'^(.{0,18}\w)\W', t)
+                if not m:
+                    return t[0:40]
+                left = m.group(1)
+                l = 33 - len(left)
+                m = regex.search(f'\s(\w.{{0,{l}}})$', t)
+                right = m.group(1)
+                t = left + ' […] ' + right
+            return t
+
+        def unique_filename(f):
+            if not os.path.exists(f):
+                return f
+            base, ext = os.path.splitext(f)
+            c = 1
+            while os.path.exists(f):
+                f = f"{base}~{c}{ext}"
+                c += 1
+            return f
+
         def export_file(form):
             now = datetime.now().strftime('%Y-%m-%d')
             if self.combo_category.currentText() == _('Highlights') or self.combo_category.currentText() == _('Bookmarks'):
@@ -962,15 +999,15 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
 
             get_annotations()
-            if xlsx:
+            if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
-            else:
+            else: # txt
                 with open(fname, 'w', encoding='utf-8') as file:
                     file.write(export_header('{ANNOTATIONS}'))
-                    for row in item_list:
-                        iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                        txt = '\n==={PUB='+row['PUB']+'}'+iss+'{DOC='+str(row['DOC'])+'}{LABEL='+row['LABEL']+'}===\n'+row['VALUE']
+                    for item in item_list:
+                        iss = '{ISSUE='+str(item['ISSUE'])+'}' if item['ISSUE'] else ''
+                        txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE']
                         file.write(txt)
                     file.write('\n==={END}===')
 
@@ -1024,7 +1061,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         n.Created,
                         u.ColorIndex,
                         b.StartToken,
-                        b.EndToken
+                        b.EndToken,
+                        n.Guid
                     FROM Note n
                         LEFT JOIN
                         Location l USING (
@@ -1058,7 +1096,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         'HEADING': row[11] or '',
                         'MODIFIED': row[12][:19],
                         'CREATED': row[13][:19],
-                        'COLOR': row[14] or 0
+                        'COLOR': row[14] or 0,
+                        'GUID': row[17]
                     }
                     if row[15]:
                         item['RANGE'] = f'{row[15]}-{row[16]}'
@@ -1096,42 +1135,86 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
 
             get_notes()
-            if xlsx:
+            if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
                 create_xlsx(fields)
-            else:
+            elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as file:
                     file.write(export_header('{NOTES=}'))
-                    for row in item_list:
-                        tags = row['TAGS'].replace(' | ', '|')
-                        col = str(row['COLOR']) or '0'
-                        rng = row['RANGE'] or ''
-                        blk = '{BLOCK='+str(row['BLOCK'])+'}' if row.get('BLOCK') else ''
-                        hdg = ('{HEADING='+row['HEADING']+'}') if row['HEADING'] != '' else ''
-                        lng = str(row['LANG'])
-                        txt = '\n==={CREATED='+row['CREATED']+'}{MODIFIED='+row['MODIFIED']+'}{TAGS='+tags+'}'
-                        if row.get('BK'):
-                            bk = str(row['BK'])
-                            ch = str(row['CH'])
-                            ref = '{Reference='+row['Reference']+'}' if row['Reference'] else ''
-                            if row.get('VS'):
-                                vs = '{VS='+str(row['VS'])+'}'
+                    for item in item_list:
+                        tags = item['TAGS'].replace(' | ', '|')
+                        col = str(item['COLOR']) or '0'
+                        rng = item['RANGE'] or ''
+                        blk = '{BLOCK='+str(item['BLOCK'])+'}' if item.get('BLOCK') else ''
+                        hdg = ('{HEADING='+item['HEADING']+'}') if item['HEADING'] != '' else ''
+                        lng = str(item['LANG'])
+                        txt = '\n==={CREATED='+item['CREATED']+'}{MODIFIED='+item['MODIFIED']+'}{TAGS='+tags+'}'
+                        if item.get('BK'):
+                            bk = str(item['BK'])
+                            ch = str(item['CH'])
+                            ref = '{Reference='+item['Reference']+'}' if item['Reference'] else ''
+                            if item.get('VS'):
+                                vs = '{VS='+str(item['VS'])+'}'
                             else:
                                 vs = ''
-                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+ref+hdg+'{COLOR='+col+'}'
-                            if row.get('RANGE'):
+                            txt += '{LANG='+lng+'}{PUB='+item['PUB']+'}{BK='+bk+'}{CH='+ch+'}'+vs+blk+ref+hdg+'{COLOR='+col+'}'
+                            if item.get('RANGE'):
                                 txt += '{RANGE='+rng+'}'
-                            if row.get('DOC'):
+                            if item.get('DOC'):
                                 txt += '{DOC=0}'
-                        elif row.get('DOC'):
-                            doc = '{DOC='+str(row['DOC'])+'}' if row['DOC'] else ''
-                            iss = '{ISSUE='+str(row['ISSUE'])+'}' if row['ISSUE'] else ''
-                            txt += '{LANG='+lng+'}{PUB='+row['PUB']+'}'+iss+doc+blk+hdg+'{COLOR='+col+'}'
-                            if row.get('RANGE'):
+                        elif item.get('DOC'):
+                            doc = '{DOC='+str(item['DOC'])+'}' if item['DOC'] else ''
+                            iss = '{ISSUE='+str(item['ISSUE'])+'}' if item['ISSUE'] else ''
+                            txt += '{LANG='+lng+'}{PUB='+item['PUB']+'}'+iss+doc+blk+hdg+'{COLOR='+col+'}'
+                            if item.get('RANGE'):
                                 txt += '{RANGE='+rng+'}'
-                        txt += '===\n'+row['TITLE']+'\n'+row['NOTE']
+                        txt += '===\n'+item['TITLE']+'\n'+item['NOTE']
                         file.write(txt)
                     file.write('\n==={END}===')
+            else: # TODO: markdown
+                for item in item_list:
+                    iss = ''
+                    if item.get('PUB'):
+                        pub = f"{item['PUB']}-{lang_symbol[item['LANG']]}"
+                    else:
+                        pub = None
+                    fname = f'{self.working_dir}/'
+                    if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')):
+                        fname += _('* INDEPENDENT *').strip('* ') + '/'
+                    elif item.get('BK'):
+                        fname += f"{pub}/{str(item['BK']).zfill(2)}_{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
+                        if item.get('VS'):
+                            fname += str(item['VS']).zfill(3) + '_'
+                    else:
+                        fname += f"{pub}/"
+                        if item.get('ISSUE'):
+                            iss = process_issue(item['ISSUE'])
+                            fname += f"{iss}/"
+                        fname += f"{item['DOC']}/"
+                        if item.get('BLOCK'):
+                            fname += str(item['BLOCK']).zfill(3) + '_'
+                    fname += shorten_title(item['TITLE']) + '.md'
+                    fname = unique_filename(fname)
+                    Path(fname).parent.mkdir(parents=True, exist_ok=True)
+
+                    txt = f"---\ntitle: {item['TITLE']}\n"
+                    txt += f"date: {item['MODIFIED'][:10]}\n"
+                    if pub:
+                        txt += f"publication: {pub} {iss}".strip() + '\n'
+                    if item.get('HEADING'):
+                        txt += f"document: {item['HEADING']}\n"
+                    if item.get('Link'):
+                        txt += f"link: {item['Link']}\n"
+                    txt += f"color: {item['COLOR']}\n"
+                    if item.get('TAGS'):
+                        txt += 'tags:\n'
+                        for t in item['TAGS'].split(' | '):
+                            txt += f'  - {t}\n'
+                    txt += f"guid: {item['GUID']}"
+                    txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
+                    with open(fname, 'x', encoding='utf-8') as f:
+                        f.write(txt)
+
 
         def export_playlist():
 
@@ -1224,6 +1307,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     newzip.write(f'{playlist_path}/{f}', f)
             shutil.rmtree(playlist_path, ignore_errors=True)
 
+        category = self.combo_category.currentText()
         fname = export_file(form)
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
@@ -1232,12 +1316,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.working_dir = Path(fname)
         else:
             self.working_dir = Path(fname).parent
-
-        if form == 'xlsx': # TODO: 
-            xlsx = True
-        else:
-            xlsx = False
-        category = self.combo_category.currentText()
         current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
         item_list = []
         try:
