@@ -33,8 +33,8 @@ from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
-from PySide6.QtGui import QFont, QPixmap
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
+from PySide6.QtGui import QAction, QFont, QPixmap
+from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
 
 from datetime import datetime, timezone
 from filehash import FileHash
@@ -164,7 +164,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
-            self.button_export.clicked.connect(self.export_items)
+            # self.button_export.clicked.connect(self.export_items)
+            self.button_export.clicked.connect(self.show_menu)
             self.button_import.clicked.connect(self.import_items)
             self.button_add.clicked.connect(self.add_items)
             self.button_delete.clicked.connect(self.delete_items)
@@ -368,6 +369,21 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
+    def show_menu(self):
+        if self.combo_category.currentText() != _('Notes'):
+            self.export_items('')
+        else:
+            menu = QMenu(self)
+            choice1_action = QAction('MS Excel (single)', self)
+            choice2_action = QAction('Markdown (multiple)', self)
+            choice3_action = QAction('Custom text (single)', self)
+            choice1_action.triggered.connect(lambda: self.export_items('xlsx'))
+            choice2_action.triggered.connect(lambda: self.export_items('md'))
+            choice3_action.triggered.connect(lambda: self.export_items('txt'))
+            menu.addAction(choice1_action)
+            menu.addAction(choice2_action)
+            menu.addAction(choice3_action)
+            menu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
 
     def select_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
@@ -868,7 +884,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
-    def export_items(self):
+    def export_items(self, format):
 
         def export_file():
             now = datetime.now().strftime('%Y-%m-%d')
