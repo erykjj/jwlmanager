@@ -165,7 +165,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.itemChanged.connect(self.tree_selection)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
             # self.button_export.clicked.connect(self.export_items)
-            self.button_export.clicked.connect(self.show_menu)
+            self.button_export.clicked.connect(self.export_menu)
             self.button_import.clicked.connect(self.import_items)
             self.button_add.clicked.connect(self.add_items)
             self.button_delete.clicked.connect(self.delete_items)
@@ -369,14 +369,21 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
-    def show_menu(self):
-        if self.combo_category.currentText() != _('Notes'):
-            self.export_items('')
-        else:
+    def export_menu(self): # TODO: restructure later for a single global execution
+        if self.combo_category.currentText() == _('Annotations'):
+            menu = QMenu(self) # TODO: restructure later for a single global execution
+            choice1_action = QAction(_('MS Excel (single)'), self)
+            choice2_action = QAction(_('Custom text (single)'), self)
+            choice1_action.triggered.connect(lambda: self.export_items('xlsx'))
+            choice2_action.triggered.connect(lambda: self.export_items('txt'))
+            menu.addAction(choice1_action)
+            menu.addAction(choice2_action)
+            menu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
+        elif self.combo_category.currentText() == _('Notes'):
             menu = QMenu(self)
-            choice1_action = QAction('MS Excel (single)', self)
-            choice2_action = QAction('Markdown (multiple)', self)
-            choice3_action = QAction('Custom text (single)', self)
+            choice1_action = QAction(_('MS Excel (single)'), self)
+            choice2_action = QAction(_('Markdown (multiple)'), self)
+            choice3_action = QAction(_('Custom text (single)'), self)
             choice1_action.triggered.connect(lambda: self.export_items('xlsx'))
             choice2_action.triggered.connect(lambda: self.export_items('md'))
             choice3_action.triggered.connect(lambda: self.export_items('txt'))
@@ -384,6 +391,8 @@ class Window(QMainWindow, Ui_MainWindow):
             menu.addAction(choice2_action)
             menu.addAction(choice3_action)
             menu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
+        else:
+            self.export_items('')
 
     def select_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
@@ -884,16 +893,21 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
 
-    def export_items(self, format):
+    def export_items(self, form):
 
-        def export_file():
+        def export_file(form):
             now = datetime.now().strftime('%Y-%m-%d')
             if self.combo_category.currentText() == _('Highlights') or self.combo_category.currentText() == _('Bookmarks'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
             elif self.combo_category.currentText() == _('Playlists'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
             else:
-                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)')[0]
+                if form == 'xlsx': 
+                    return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx)')[0]
+                elif form == 'txt':
+                    return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
+                else:
+                    return QFileDialog.getExistingDirectory(self, _('Save'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
 
         def create_xlsx(fields):
             last_field = fields[-1]
@@ -1210,18 +1224,22 @@ class Window(QMainWindow, Ui_MainWindow):
                     newzip.write(f'{playlist_path}/{f}', f)
             shutil.rmtree(playlist_path, ignore_errors=True)
 
-        category = self.combo_category.currentText()
-        fname = export_file()
-        self.working_dir = Path(fname).parent
+        fname = export_file(form)
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
-        current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
-        item_list = []
-        if Path(fname).suffix == '.xlsx':
+        if form == 'md':
+            self.working_dir = Path(fname)
+        else:
+            self.working_dir = Path(fname).parent
+
+        if form == 'xlsx': # TODO: 
             xlsx = True
         else:
             xlsx = False
+        category = self.combo_category.currentText()
+        current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
+        item_list = []
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
