@@ -2030,7 +2030,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             else:
                                 vs = '000'
                             script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
-                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
+                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{str(item['BK']).zfill(2)}) {bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
