@@ -1999,35 +1999,20 @@ class Window(QMainWindow, Ui_MainWindow):
             self.activateWindow()
 
         def save_txt():
-            if category == _('Notes'):
-                dirname = QFileDialog.getExistingDirectory(self, _('Save'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
-                if dirname == '':
-                    self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-                    return
-                self.working_dir = Path(dirname)
-                reg_guid = regex.compile(r'guid: (.*)', regex.MULTILINE)
-                for item in self.viewer_items.values():
-                    if not item.note_widget.isVisible():
-                        continue
-                    savedir = f"{dirname}/{item.crumb}"
-                    Path(savedir).mkdir(parents=True, exist_ok=True)
-                    fname = savedir + '/' + regex.search(reg_guid, item.metadata).group(1) + '.md'
+            fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
+            if fname == '':
+                self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+                return
+            self.working_dir = Path(fname).parent
+            for item in self.viewer_items.values():
+                if not item.note_widget.isVisible():
+                    continue
+                if category == _('Notes'):
                     txt = '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body + '\n'
-                    with open(fname, 'w', encoding='utf-8') as txtfile:
-                        txtfile.write(txt)
-            else:
-                fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
-                if fname == '':
-                    self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
-                    return
-                self.working_dir = Path(fname).parent
-                txt = ''
-                for item in self.viewer_items.values():
-                    if not item.note_widget.isVisible():
-                        continue
-                    txt += '---\n' + item.metadata + '\n---\n' + item.body + '\n==========\n'
-                with open(fname, 'w', encoding='utf-8') as txtfile:
-                    txtfile.write(txt)
+                else:
+                    txt = '---\n' + item.metadata + '\n---\n' + item.body + '\n==========\n'
+            with open(fname, 'w', encoding='utf-8') as txtfile:
+                txtfile.write(txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
             self.viewer_window.raise_()
 
@@ -2078,8 +2063,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         u.ColorIndex,
                         b.StartToken,
                         b.EndToken,
-                        n.NoteId,
-                        n.Guid
+                        n.NoteId
                     FROM Note n
                         LEFT JOIN
                         Location l USING (
@@ -2121,8 +2105,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         'HEADING': row[11],
                         'MODIFIED': row[12][:10],
                         'COLOR': row[13] or 0,
-                        'ID': row[16],
-                        'GUID': row[17]
+                        'ID': row[16]
                     }
                     try:
                         item['LANG'] = lang_symbol[row[4]]
@@ -2133,7 +2116,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['RANGE'] = None
                     if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')): # independent note
-                        item['Crumb'] = _('* INDEPENDENT *').strip('* ') + '/'
                         item['Link'] = None
                     else: # attached note
                         if item.get('BK'): # Bible note
@@ -2142,7 +2124,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             else:
                                 vs = '000'
                             script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
-                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{str(item['BK']).zfill(2)}) {bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
@@ -2150,12 +2131,9 @@ class Window(QMainWindow, Ui_MainWindow):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
-                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
                             if row[9] and (row[9] > 10000000):
                                 item['ISSUE'] = process_issue(row[9])
-                                item['Crumb'] += f"{item['ISSUE'].strip()}/"
-                            item['Crumb'] += f"{item['DOC']}/"
                     item_list.append(item)
                 return item_list
 
@@ -2164,23 +2142,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
             for item in get_notes():
-                metadata = f"title: {clean_text(item['TITLE'])}\n"
-                metadata += f"date: {item['MODIFIED']}\n"
-                if item.get('PUB'):
-                    metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE']}".strip() + '\n'
-                if item.get('HEADING'):
-                    metadata += f"document: {item['HEADING']}\n"
-                if item.get('Link'):
-                    metadata += f"link: {item['Link']}\n"
-                metadata += f"color: {item['COLOR']}\n"
-                if item.get('TAGS'):
-                    metadata += 'tags:\n'
-                    for t in item['TAGS'].split(' | '):
-                        metadata += f'  - {t}\n'
-                metadata += f"guid: {item['GUID']}"
-
-                crumb = item['Crumb']
-
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
                     meta += f"<small><strong><tt>{item['MODIFIED']}"
@@ -2194,8 +2155,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata, crumb)
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -2208,7 +2168,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 except:
                     return
                 counter += 1
-            self.viewer_window.txt_action.setText('MD')
             self.viewer_window.txt_action.setEnabled(True)
 
         def show_annotations():
