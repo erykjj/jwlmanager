@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-  JWLManager:   Multi-platform GUI for managing JW Library (.jwlibrary) files:
+  JWLManager:   Multi-platform GUI for managing JW Library files:
                 view, delete, edit, merge (via export/import), etc.
 
   MIT License:  Copyright (c) 2024 Eryk J.
@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.0.1'
+VERSION = 'v5.1.0'
 
 
 from res.ui_main_window import Ui_MainWindow
