@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2024-10-20 18:38-0400\n"
-"PO-Revision-Date: 2024-10-05 22:13+0000\n"
+"PO-Revision-Date: 2024-10-20 23:09+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: de\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.8-rc\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:196 JWLManager.py:412 JWLManager.py:416 JWLManager.py:631
@@ -29,7 +30,7 @@ msgstr "Hilfe"
 
 #: JWLManager.py:226
 msgid "Exit"
-msgstr "Aussteigen"
+msgstr "Schließen"
 
 #: JWLManager.py:226
 msgid "Save before quitting?"
@@ -53,7 +54,7 @@ msgstr "Wiedergabelisten"
 #: JWLManager.py:444 JWLManager.py:658 JWLManager.py:873 JWLManager.py:1340
 #: JWLManager.py:1833 JWLManager.py:2613
 msgid "Annotations"
-msgstr "Annotationen"
+msgstr "Anmerkungen"
 
 #: JWLManager.py:258 JWLManager.py:386 JWLManager.py:421 JWLManager.py:436
 #: JWLManager.py:629 JWLManager.py:934 JWLManager.py:1342 JWLManager.py:1817
@@ -88,7 +89,7 @@ msgstr "Letzte Version"
 
 #: JWLManager.py:300
 msgid "Error while checking for updates!"
-msgstr "Fehler überprüfend während für Updates!"
+msgstr "Fehler beim Suchen nach Updates!"
 
 #: JWLManager.py:309 JWLManager.py:1362 JWLManager.py:1384 JWLManager.py:1409
 #: JWLManager.py:1433 JWLManager.py:1471 JWLManager.py:1490 JWLManager.py:1536
@@ -106,11 +107,11 @@ msgstr "Notieren Sie, was Sie getan haben und"
 
 #: JWLManager.py:311
 msgid "inform the developer"
-msgstr "den Entwickler informieren"
+msgstr "informiere den Entwickler"
 
 #: JWLManager.py:317
 msgid "The app will terminate."
-msgstr "Die Applikation wird geschlossen."
+msgstr "Die App wird beendet."
 
 #: JWLManager.py:425 JWLManager.py:438 JWLManager.py:635 JWLManager.py:2538
 #: JWLManager.py:2605
@@ -177,7 +178,7 @@ msgstr "* KEINE SPRACHE *"
 
 #: JWLManager.py:565 JWLManager.py:576
 msgid "* NO TAG *"
-msgstr "* KEIN ETIKETT *"
+msgstr "* KEIN TAG *"
 
 #: JWLManager.py:565 JWLManager.py:1195
 msgid "* INDEPENDENT *"
@@ -199,7 +200,7 @@ msgstr "Farbe"
 
 #: JWLManager.py:656
 msgid "Tag"
-msgstr "Etikett"
+msgstr "Tag"
 
 #: JWLManager.py:685 JWLManager.py:2158 JWLManager.py:2238
 msgid "Processing…"
@@ -246,23 +247,20 @@ msgid "Saved"
 msgstr "Gespeichert"
 
 #: JWLManager.py:877
-#, fuzzy
 msgid "MS Excel file"
-msgstr "MS Excel Dateien"
+msgstr "MS Excel Datei"
 
 #: JWLManager.py:879
-#, fuzzy
 msgid "Custom text file"
-msgstr "Textdateien"
+msgstr "Textdatei"
 
 #: JWLManager.py:881
 msgid "Markdown files"
-msgstr ""
+msgstr "Markdown-Dateien"
 
 #: JWLManager.py:908
-#, fuzzy
 msgid "UNTITLED"
-msgstr "Titel"
+msgstr "UNTITLIERT"
 
 #: JWLManager.py:935 JWLManager.py:937 JWLManager.py:940 JWLManager.py:942
 msgid "Export file"
@@ -275,16 +273,15 @@ msgstr "Textdateien"
 
 #: JWLManager.py:937 JWLManager.py:1820
 msgid "JW Library playlists"
-msgstr "JW Library Listenarchiv"
+msgstr "JW Library Playlist"
 
 #: JWLManager.py:940 JWLManager.py:1822
 msgid "MS Excel files"
-msgstr "MS Excel Dateien"
+msgstr "MS-Excel Dateien"
 
 #: JWLManager.py:944
-#, fuzzy
 msgid "Export directory"
-msgstr "Exportdatei"
+msgstr "Exportverzeichnis"
 
 #: JWLManager.py:949 JWLManager.py:965
 msgid "Exported from"
@@ -741,4 +738,3 @@ msgstr "Notizen sortiert"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-
