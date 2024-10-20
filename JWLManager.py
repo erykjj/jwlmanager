@@ -2271,7 +2271,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         selected = self.list_selected()
         self.filtered = len(selected)
-        if len(selected) > 1500: # TODO: can this be increased and the build speeded up somehow??
+        if len(selected) > 1500:
             QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
         try:
