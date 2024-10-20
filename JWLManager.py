@@ -265,6 +265,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
 
+
     def help_box(self):
         self.help_window.show()
         self.help_window.raise_()
@@ -368,21 +369,6 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
-    def export_menu(self):
-        if self.combo_category.currentText() == _('Notes') or self.combo_category.currentText() == _('Annotations'):
-            submenu = QMenu(self)
-            action1 = QAction(_('MS Excel (single)'), self)
-            action2 = QAction(_('Markdown (multiple)'), self)
-            action3 = QAction(_('Custom text (single)'), self)
-            action1.triggered.connect(lambda: self.export_items('xlsx'))
-            action2.triggered.connect(lambda: self.export_items('md'))
-            action3.triggered.connect(lambda: self.export_items('txt'))
-            submenu.addAction(action1)
-            submenu.addAction(action2)
-            submenu.addAction(action3)
-            submenu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
-        else:
-            self.export_items('')
 
     def select_all(self):
         for item in QTreeWidgetItemIterator(self.treeWidget):
@@ -882,6 +868,27 @@ class Window(QMainWindow, Ui_MainWindow):
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 3500)
 
+
+    def export_menu(self):
+        if self.combo_category.currentText() == _('Notes') or self.combo_category.currentText() == _('Annotations'):
+            submenu = QMenu(self)
+            italic_font = QFont()
+            italic_font.setItalic(True)
+            action1 = QAction(_('MS Excel file'), self)
+            action1.setFont(italic_font)
+            action2 = QAction(_('Custom text file'), self)
+            action2.setFont(italic_font)
+            action3 = QAction(_('Markdown files'), self)
+            action3.setFont(italic_font)
+            action1.triggered.connect(lambda: self.export_items('xlsx'))
+            action2.triggered.connect(lambda: self.export_items('txt'))
+            action3.triggered.connect(lambda: self.export_items('md'))
+            submenu.addAction(action1)
+            submenu.addAction(action2)
+            submenu.addAction(action3)
+            submenu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
+        else:
+            self.export_items('')
 
     def export_items(self, form):
 
