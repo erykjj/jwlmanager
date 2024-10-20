@@ -15,6 +15,8 @@
 - Fixed tooltip colors in Data Viewer
 - Made filter field in Data Viewer wider
 - Data Viewer save as TXT reverted to single-file export of visible items
+- Updated translations
+  - Some corrections in German
 
 ### Fixed
 
