@@ -169,21 +169,21 @@ class DataViewer(QDialog):
         txt_button.setMaximumWidth(60)
         txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
         txt_button.setStyleSheet('color: #177c26; font: bold;')
-        self.txt_action = QAction()
+        self.txt_action = QAction('TXT')
         self.txt_action.setToolTip('⇣')
         self.txt_action.setIcon(QPixmap(_base_path+'/icons/icons8-save-64grey.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
         discard_button.setStyleSheet('color: #3f54aa; font: bold;')
-        self.discard_action = QAction()
+        self.discard_action = QAction('')
         self.discard_action.setToolTip('✗')
         self.discard_action.setDisabled(True)
         discard_button.setDefaultAction(self.discard_action)
 
         confirm_button = QToolButton()
         confirm_button.setStyleSheet('color: #c80b0b; font: bold;')
-        self.confirm_action = QAction()
+        self.confirm_action = QAction('')
         self.confirm_action.setToolTip('✔')
         self.confirm_action.setDisabled(True)
         confirm_button.setDefaultAction(self.confirm_action)
@@ -265,7 +265,7 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, idx, color, title, body, meta, metadata, crumb):
+    def __init__(self, idx, color, title, body, meta):
         super().__init__()
         self.idx = idx
         self.label = None
@@ -273,8 +273,6 @@ class ViewerItem(QWidget):
         self.body = body
         self.title = title
         self.meta = meta
-        self.metadata = metadata
-        self.crumb = crumb
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
