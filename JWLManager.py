@@ -32,7 +32,7 @@ VERSION = 'v5.0.1'
 from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
-from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer, QTranslator
+from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QFont, QPixmap
 from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
 
@@ -163,7 +163,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.currentTextChanged.connect(self.regroup)
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
-            self.treeWidget.itemClicked.connect(self.start_timer)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
             self.button_export.clicked.connect(self.export_items)
             self.button_import.clicked.connect(self.import_items)
@@ -213,10 +212,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        self.click_timer = QTimer()
-        self.click_timer.setSingleShot(True)
-        self.click_timer.timeout.connect(self.single_clicked)
-        self.clicked_item = None
         self.about_window = AboutBox(APP, VERSION)
         self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
@@ -367,18 +362,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.collapseAll()
 
 
-    def start_timer(self, item):
-        self.clicked_item = item
-        self.click_timer.start(200)
-
-    def single_clicked(self):
-        if self.clicked_item.checkState(0) == Qt.Checked:
-            self.clicked_item.setCheckState(0, Qt.Unchecked)
-        else:
-            self.clicked_item.setCheckState(0, Qt.Checked)
-
     def double_clicked(self, item):
-        self.click_timer.stop()
         if self.treeWidget.isExpanded(item):
             self.treeWidget.setExpanded(item, False)
         else:
@@ -2046,7 +2030,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             else:
                                 vs = '000'
                             script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
-                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/{vs}"
+                            item['Crumb'] = f"{item['PUB']}-{item['LANG']}/{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
@@ -2056,8 +2040,10 @@ class Window(QMainWindow, Ui_MainWindow):
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
                             item['Crumb'] = f"{item['PUB']}-{item['LANG']}/"
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
-                        if row[9] and (row[9] > 10000000):
-                            item['ISSUE'] = process_issue(row[9])
+                            if row[9] and (row[9] > 10000000):
+                                item['ISSUE'] = process_issue(row[9])
+                                item['Crumb'] += f"{item['ISSUE'].strip()}/"
+                            item['Crumb'] += f"{item['DOC']}/"
                     item_list.append(item)
                 return item_list
 
@@ -2082,13 +2068,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"guid: {item['GUID']}"
 
                 crumb = item['Crumb']
-                if item.get('ISSUE'):
-                    crumb += item['ISSUE'].strip() + '/'
-                # if item.get('HEADING'): # NOTE: not all notes have title headings!
-                #     crumb += item['HEADING'] + '/'
-                if item.get('DOC'):
-                    crumb += f"{item['DOC']}/"
-                # TODO: generate unique filename
 
                 meta = ''
                 if item['TAGS'] or item['PUB'] or item['Link']:
