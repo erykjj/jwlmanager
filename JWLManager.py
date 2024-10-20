@@ -368,19 +368,19 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.treeWidget.expandRecursively(item, -1)
 
-    def export_menu(self): # TODO: restructure later for a single global execution
+    def export_menu(self):
         if self.combo_category.currentText() == _('Notes') or self.combo_category.currentText() == _('Annotations'):
-            menu = QMenu(self)
-            choice1_action = QAction(_('MS Excel (single)'), self)
-            choice2_action = QAction(_('Markdown (multiple)'), self)
-            choice3_action = QAction(_('Custom text (single)'), self)
-            choice1_action.triggered.connect(lambda: self.export_items('xlsx'))
-            choice2_action.triggered.connect(lambda: self.export_items('md'))
-            choice3_action.triggered.connect(lambda: self.export_items('txt'))
-            menu.addAction(choice1_action)
-            menu.addAction(choice2_action)
-            menu.addAction(choice3_action)
-            menu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
+            submenu = QMenu(self)
+            action1 = QAction(_('MS Excel (single)'), self)
+            action2 = QAction(_('Markdown (multiple)'), self)
+            action3 = QAction(_('Custom text (single)'), self)
+            action1.triggered.connect(lambda: self.export_items('xlsx'))
+            action2.triggered.connect(lambda: self.export_items('md'))
+            action3.triggered.connect(lambda: self.export_items('txt'))
+            submenu.addAction(action1)
+            submenu.addAction(action2)
+            submenu.addAction(action3)
+            submenu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
         else:
             self.export_items('')
 
@@ -1000,7 +1000,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE']
                         file.write(txt)
                     file.write('\n==={END}===')
-            else: # TODO: markdown
+            else: # 'md'
                 for item in item_list:
                     iss = ''
                     pub = item['PUB']
@@ -1176,7 +1176,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt += '===\n'+item['TITLE']+'\n'+item['NOTE']
                         file.write(txt)
                     file.write('\n==={END}===')
-            else: # TODO: markdown
+            else: # 'md'
                 for item in item_list:
                     iss = ''
                     if item.get('PUB'):
