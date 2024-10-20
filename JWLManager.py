@@ -164,7 +164,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
-            # self.button_export.clicked.connect(self.export_items)
             self.button_export.clicked.connect(self.export_menu)
             self.button_import.clicked.connect(self.import_items)
             self.button_add.clicked.connect(self.add_items)
@@ -370,16 +369,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.treeWidget.expandRecursively(item, -1)
 
     def export_menu(self): # TODO: restructure later for a single global execution
-        if self.combo_category.currentText() == _('Annotations'):
-            menu = QMenu(self) # TODO: restructure later for a single global execution
-            choice1_action = QAction(_('MS Excel (single)'), self)
-            choice2_action = QAction(_('Custom text (single)'), self)
-            choice1_action.triggered.connect(lambda: self.export_items('xlsx'))
-            choice2_action.triggered.connect(lambda: self.export_items('txt'))
-            menu.addAction(choice1_action)
-            menu.addAction(choice2_action)
-            menu.exec(self.button_export.mapToGlobal(self.button_export.rect().bottomLeft()))
-        elif self.combo_category.currentText() == _('Notes'):
+        if self.combo_category.currentText() == _('Notes') or self.combo_category.currentText() == _('Annotations'):
             menu = QMenu(self)
             choice1_action = QAction(_('MS Excel (single)'), self)
             choice2_action = QAction(_('Markdown (multiple)'), self)
@@ -932,11 +922,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 c += 1
             return f
 
-        def export_file(form):
+        def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
-            if self.combo_category.currentText() == _('Highlights') or self.combo_category.currentText() == _('Bookmarks'):
+            if category == _('Highlights') or category == _('Bookmarks'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
-            elif self.combo_category.currentText() == _('Playlists'):
+            elif category == _('Playlists'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
             else:
                 if form == 'xlsx': 
@@ -944,7 +934,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 elif form == 'txt':
                     return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
                 else:
-                    return QFileDialog.getExistingDirectory(self, _('Save'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
+                    return QFileDialog.getExistingDirectory(self, _('Export directory'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
 
         def create_xlsx(fields):
             last_field = fields[-1]
@@ -967,7 +957,7 @@ class Window(QMainWindow, Ui_MainWindow):
             # Note: invisible char on first line to force UTF-8 encoding
             return category + '\n \n' + _('Exported from') + f' {current_archive}\n' + _('by') + f' {APP} ({VERSION}) ' + _('on') + f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}\n" + '*'*76
 
-        def export_annotations():
+        def export_annotations(fname):
 
             def get_annotations():
                 sql = f'''
@@ -1002,7 +992,7 @@ class Window(QMainWindow, Ui_MainWindow):
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
-            else: # txt
+            elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as file:
                     file.write(export_header('{ANNOTATIONS}'))
                     for item in item_list:
@@ -1010,8 +1000,23 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE']
                         file.write(txt)
                     file.write('\n==={END}===')
+            else: # TODO: markdown
+                for item in item_list:
+                    iss = ''
+                    pub = item['PUB']
+                    fname = f'{self.working_dir}/{pub}/'
+                    if item.get('ISSUE'):
+                        iss = process_issue(item['ISSUE'])
+                        fname += f"{iss}/"
+                    fname += f"{item['DOC']}/"
+                    fname += item['LABEL'] + '.md'
+                    Path(fname).parent.mkdir(parents=True, exist_ok=True)
+                    txt = f"---\npublication: {pub} {iss}".strip()
+                    txt += f"\ndocument: {item['DOC']}\nlabel: {item['LABEL']}\n---\n{item['VALUE'].strip()}\n"
+                    with open(fname, 'w', encoding='utf-8') as f:
+                        f.write(txt)
 
-        def export_bookmarks():
+        def export_bookmarks(fname):
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{BOOKMARKS}'))
                 for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};').fetchall():
@@ -1020,7 +1025,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         file.write(f'|{row[item]}')
                     item_list.append(None)
 
-        def export_highlights():
+        def export_highlights(fname):
             with open(fname, 'w', encoding='utf-8') as file:
                 file.write(export_header('{HIGHLIGHTS}'))
                 for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
@@ -1029,7 +1034,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         file.write(f',{row[item]}')
                     item_list.append(None)
 
-        def export_notes():
+        def export_notes(fname):
 
             def get_notes():
                 sql = f'''
@@ -1216,7 +1221,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(txt)
 
 
-        def export_playlist():
+        def export_playlist(fname):
 
             def playlist_export():
                 expcon.execute('INSERT INTO Tag VALUES (?, ?, ?);', (1, 2, Path(fname).stem))
@@ -1308,7 +1313,7 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
 
         category = self.combo_category.currentText()
-        fname = export_file(form)
+        fname = export_file(category, form)
         if fname == '':
             self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
             return
@@ -1322,15 +1327,15 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
-                export_highlights()
+                export_highlights(fname)
             elif category == _('Notes'):
-                export_notes()
+                export_notes(fname)
             elif category == _('Annotations'):
-                export_annotations()
+                export_annotations(fname)
             elif category == _('Bookmarks'):
-                export_bookmarks()
+                export_bookmarks(fname)
             elif category == _('Playlists'):
-                export_playlist()
+                export_playlist(fname)
             con.close()
         except Exception as ex:
             self.crash_box(ex)
