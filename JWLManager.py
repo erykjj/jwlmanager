@@ -2004,13 +2004,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
                 return
             self.working_dir = Path(fname).parent
+            txt = ''
             for item in self.viewer_items.values():
                 if not item.note_widget.isVisible():
                     continue
                 if category == _('Notes'):
-                    txt = '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body + '\n'
+                    txt += '---\n' + item.metadata + '\n---\n' + '# ' + item.title + '\n\n' + item.body + '\n==========\n'
                 else:
-                    txt = '---\n' + item.metadata + '\n---\n' + item.body + '\n==========\n'
+                    txt += '---\n' + item.metadata + '\n---\n' + item.body + '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
             self.statusBar.showMessage(' '+_('Saved'), 3500)
@@ -2168,6 +2169,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 except:
                     return
                 counter += 1
+            self.viewer_window.txt_action.setText('TXT')
             self.viewer_window.txt_action.setEnabled(True)
 
         def show_annotations():
@@ -2209,11 +2211,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
             for item in get_annotations():
-                metadata = f"publication: {item['PUB']} {item['ISSUE']}".strip()
-                metadata += f"\ndocument: {item['DOC']}\n"
-                metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None, metadata)
+                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
