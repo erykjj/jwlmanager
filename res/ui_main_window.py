@@ -9,10 +9,11 @@
 ################################################################################
 
 import os, sys
+from res.ui_extras import CustomTreeWidget
 
 from PySide6.QtCore import (QCoreApplication, QMetaObject, QRect, QSize, Qt)
 from PySide6.QtGui import (QAction, QActionGroup, QFont, QIcon)
-from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QSizePolicy, QSpacerItem, QStatusBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QSizePolicy, QSpacerItem, QStatusBar, QTreeWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -253,7 +254,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.frame_info)
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
-        self.treeWidget = QTreeWidget(self.centralwidget)
+        self.treeWidget = CustomTreeWidget(self.centralwidget)
         font = QFont()
         font.setBold(True)
         self.treeWidget.headerItem().setText(0, "")
