@@ -925,16 +925,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 t = left + ' […] ' + right
             return t
 
-        # def unique_filename(f):
-        #     if not os.path.exists(f):
-        #         return f
-        #     base, ext = os.path.splitext(f)
-        #     c = 1
-        #     while os.path.exists(f):
-        #         f = f"{base}~{c}{ext}"
-        #         c += 1
-        #     return f
-
         def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
             if category == _('Highlights') or category == _('Bookmarks'):
@@ -1212,7 +1202,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
                     fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
-                    # fname = unique_filename(fname)
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
                     txt = f"---\ntitle: {item['TITLE']}\n"
