@@ -1006,13 +1006,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
             elif form == 'txt':
-                with open(fname, 'w', encoding='utf-8') as file:
-                    file.write(export_header('{ANNOTATIONS}'))
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{ANNOTATIONS}'))
                     for item in item_list:
                         iss = '{ISSUE='+str(item['ISSUE'])+'}' if item['ISSUE'] else ''
                         txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE']
-                        file.write(txt)
-                    file.write('\n==={END}===')
+                        f.write(txt)
+                    f.write('\n==={END}===')
             else: # 'md'
                 for item in item_list:
                     iss = ''
@@ -1030,21 +1030,21 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(txt)
 
         def export_bookmarks(fname):
-            with open(fname, 'w', encoding='utf-8') as file:
-                file.write(export_header('{BOOKMARKS}'))
+            with open(fname, 'w', encoding='utf-8') as f:
+                f.write(export_header('{BOOKMARKS}'))
                 for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};').fetchall():
-                    file.write(f'\n{row[0]}')
+                    f.write(f'\n{row[0]}')
                     for item in range(1,12):
-                        file.write(f'|{row[item]}')
+                        f.write(f'|{row[item]}')
                     item_list.append(None)
 
         def export_highlights(fname):
-            with open(fname, 'w', encoding='utf-8') as file:
-                file.write(export_header('{HIGHLIGHTS}'))
+            with open(fname, 'w', encoding='utf-8') as f:
+                f.write(export_header('{HIGHLIGHTS}'))
                 for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
-                    file.write(f'\n{row[0]}')
+                    f.write(f'\n{row[0]}')
                     for item in range(1,13):
-                        file.write(f',{row[item]}')
+                        f.write(f',{row[item]}')
                     item_list.append(None)
 
         def export_notes(fname):
@@ -1157,8 +1157,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
                 create_xlsx(fields)
             elif form == 'txt':
-                with open(fname, 'w', encoding='utf-8') as file:
-                    file.write(export_header('{NOTES=}'))
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{NOTES=}'))
                     for item in item_list:
                         tags = item['TAGS'].replace(' | ', '|')
                         col = str(item['COLOR']) or '0'
@@ -1187,8 +1187,8 @@ class Window(QMainWindow, Ui_MainWindow):
                             if item.get('RANGE'):
                                 txt += '{RANGE='+rng+'}'
                         txt += '===\n'+item['TITLE']+'\n'+item['NOTE']
-                        file.write(txt)
-                    file.write('\n==={END}===')
+                        f.write(txt)
+                    f.write('\n==={END}===')
             else: # 'md'
                 for item in item_list:
                     iss = ''
@@ -1211,7 +1211,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         fname += f"{item['DOC']}/"
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
-                    fname += shorten_title(item['TITLE']) + '.md'
+                    fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
                     fname = unique_filename(fname)
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
