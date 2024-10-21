@@ -46,7 +46,7 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 ######
 ### Export
 ######
-**Notes** and **Annotations** from selected publications can be exported to an MS Excel spreadsheet or a custom text file - either one of which you can edit (add, remove, modify) and later import into your archive (or share with someone else). They can also be exported (but not imported) as separate markdown files (with a meta-data header listing the properties of each one) organized in a hierarchical directory tree.
+**Notes** and **Annotations** from selected publications can be exported to an MS Excel spreadsheet or a custom text file - either one of which you can edit (add, delete or modify items) and later import into your archive (or share with someone else). They can also be exported (but not imported) as separate markdown files (with a meta-data header listing the properties of each one) organized in a hierarchical directory tree.
 ######
 Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format.
 ######
