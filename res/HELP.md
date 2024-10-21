@@ -16,9 +16,10 @@ Clicking on the column headers allows for **sorting** the tree; clicking the sam
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
 ######
 * **Expand All (Ctrl+E)** - expands the tree to make all levels visible
-  * Note: **double-clicking** on an entry will expand (or collapse) all *its* sub-levels
+  * Note: **double-clicking** on an entry will expand (or collapse) all its sub-levels
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
+  * Note: **right-clicking** on an entry will check/uncheck it and all its sub-levels
 * **Unselect All (Ctrl+Z)** - unselect everything
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
