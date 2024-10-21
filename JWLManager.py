@@ -925,15 +925,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 t = left + ' […] ' + right
             return t
 
-        def unique_filename(f):
-            if not os.path.exists(f):
-                return f
-            base, ext = os.path.splitext(f)
-            c = 1
-            while os.path.exists(f):
-                f = f"{base}~{c}{ext}"
-                c += 1
-            return f
+        # def unique_filename(f):
+        #     if not os.path.exists(f):
+        #         return f
+        #     base, ext = os.path.splitext(f)
+        #     c = 1
+        #     while os.path.exists(f):
+        #         f = f"{base}~{c}{ext}"
+        #         c += 1
+        #     return f
 
         def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
@@ -1212,7 +1212,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
                     fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
-                    fname = unique_filename(fname)
+                    # fname = unique_filename(fname)
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
                     txt = f"---\ntitle: {item['TITLE']}\n"
@@ -1230,7 +1230,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             txt += f'  - {t}\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
-                    with open(fname, 'x', encoding='utf-8') as f:
+                    with open(fname, 'w', encoding='utf-8') as f:
                         f.write(txt)
 
 
