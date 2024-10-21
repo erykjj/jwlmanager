@@ -4,6 +4,17 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [5.1.0] - 2024-10-21
+
+### Added
+
 - Added **hierarchical markdown export** from main interface for Notes and Annotations
   - Organized by publication/issue/document or publication/book/chapter
   - Note names start with verse or paragraph number (if available) and are based on Note title or Annotation label
@@ -18,13 +29,6 @@
 - Updated translations
   - Some corrections in German
 
-### Fixed
-
-- Fixed working directory being set to parent when saving Notes in Data Viewer
-
-### Removed
-
-____
 ## [5.0.0] - 2024-10-18
 ### Added
 
@@ -725,6 +729,8 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[5.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.0
+[5.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.0.0
 [4.5.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.3
 [4.5.2]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.2
 [4.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.1
