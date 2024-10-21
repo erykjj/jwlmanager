@@ -9,6 +9,7 @@
   - Note names start with verse or paragraph number (if available) and are based on Note title or Annotation label
     - Annotation export over-writes previous entries with same directory/filename
     - Note export will create another note (with number appended) if same title exists in same directory
+- Added **check/uncheck on right-clicking on an entry** (not just left-clicking on checkbox)
 
 ### Changed
 
