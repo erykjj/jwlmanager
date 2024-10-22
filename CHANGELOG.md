@@ -20,6 +20,7 @@ ____
   - Note names start with verse or paragraph number (if available) and are based on Note title or Annotation label
     - Exports over-writes previous entries with same directory/filename
 - Added **check/uncheck on right-clicking on an entry** (not just left-clicking on checkbox)
+- Added status-bar message when exporting
 
 ### Changed
 
