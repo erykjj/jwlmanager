@@ -921,8 +921,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 left = m.group(1)
                 l = 33 - len(left)
                 m = regex.search(f'\s(\w.{{0,{l}}})$', t)
-                right = m.group(1)
-                t = left + ' […] ' + right
+                if not m:
+                    t = left + ' […]'
+                else:
+                    t = left + ' […] ' + m.group(1)
             return t
 
         def export_file(category, form):
