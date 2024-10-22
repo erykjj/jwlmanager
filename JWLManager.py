@@ -710,7 +710,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        delta = 3500 - (time()-start) * 1000
+        delta = 4000 - (time()-start) * 1000
         if message:
             self.statusBar.showMessage(msg, delta)
         else:
@@ -823,7 +823,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
         if fname[0] == '':
-            self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+            self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
             return False
         elif Path(fname[0]) == self.current_archive:
             reply = QMessageBox.critical(self, _('Save'), _("It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?"),
@@ -872,7 +872,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = False
         self.actionSave.setEnabled(False)
         self.status_label.setStyleSheet('font: normal;')
-        self.statusBar.showMessage(' '+_('Saved'), 3500)
+        self.statusBar.showMessage(' '+_('Saved'), 4000)
 
 
     def export_menu(self):
@@ -1317,7 +1317,7 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         fname = export_file(category, form)
         if fname == '':
-            self.statusBar.showMessage(' '+_('NOT exported!'), 3500)
+            self.statusBar.showMessage(' '+_('NOT exported!'), 4000)
             return
         if form == 'md':
             self.working_dir = Path(fname)
@@ -1343,7 +1343,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 3500)
+        self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
     def import_items(self, file='', category = ''):
 
@@ -1817,7 +1817,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
             file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
             if file == '':
-                self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
+                self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
                 return
         self.working_dir = Path(file).parent
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
@@ -1843,10 +1843,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         if not count:
-            self.statusBar.showMessage(' '+_('NOT imported!'), 3500)
+            self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
             return
         message = f' {category}: {count} '+_('items imported/updated')
-        self.statusBar.showMessage(message, 3500)
+        self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
         self.regroup(False, message)
@@ -1990,7 +1990,7 @@ class Window(QMainWindow, Ui_MainWindow):
             viewer_closed()
             if len(self.deleted_list) > 0:
                 message = f' {len(self.deleted_list)} '+_('items deleted')
-                self.statusBar.showMessage(message, 3500)
+                self.statusBar.showMessage(message, 4000)
                 self.trim_db()
                 self.regroup(False, message)
             self.archive_modified()
@@ -2008,7 +2008,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def save_txt():
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
             if fname == '':
-                self.statusBar.showMessage(' '+_('NOT saved!'), 3500)
+                self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
                 return
             self.working_dir = Path(fname).parent
             txt = ''
@@ -2021,7 +2021,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += item.metadata + '\n---\n' + item.body + '\n==========\n'
             with open(fname, 'w', encoding='utf-8') as txtfile:
                 txtfile.write(txt)
-            self.statusBar.showMessage(' '+_('Saved'), 3500)
+            self.statusBar.showMessage(' '+_('Saved'), 4000)
             self.viewer_window.raise_()
 
         def clean_text(text):
@@ -2542,7 +2542,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         if result > 0:
-            self.statusBar.showMessage(message, 3500)
+            self.statusBar.showMessage(message, 4000)
             self.archive_modified()
             self.trim_db()
             self.regroup(False, message)
@@ -2630,7 +2630,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         if result > 0:
             message = f' {result} '+_('items deleted')
-            self.statusBar.showMessage(message, 3500)
+            self.statusBar.showMessage(message, 4000)
             self.archive_modified()
             self.trim_db()
             self.regroup(False, message)
@@ -2707,7 +2707,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         message = ' '+_('Data masked')
-        self.statusBar.showMessage(message, 3500)
+        self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
         self.regroup(False, message)
@@ -2850,7 +2850,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         if self.interactive:
             message = ' '+_('Reindexed successfully')
-            self.statusBar.showMessage(message, 3500)
+            self.statusBar.showMessage(message, 4000)
             self.archive_modified()
             self.regroup(False, message)
 
@@ -2882,7 +2882,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         message = ' '+_('Notes reordered')
-        self.statusBar.showMessage(message, 3500)
+        self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
         self.regroup(False, message)
