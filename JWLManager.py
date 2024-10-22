@@ -1226,7 +1226,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     with open(fname, 'w', encoding='utf-8') as f:
                         f.write(txt)
 
-
         def export_playlist(fname):
 
             def playlist_export():
