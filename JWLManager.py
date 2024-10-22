@@ -1188,6 +1188,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     iss = ''
                     if item.get('PUB'):
                         pub = f"{item['PUB']}-{lang_symbol[item['LANG']]}"
+                        lng = lang_name[item['LANG']]
                     else:
                         pub = None
                     fname = f'{self.working_dir}/'
@@ -1211,9 +1212,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt = f"---\ntitle: {item['TITLE']}\n"
                     txt += f"date: {item['MODIFIED'][:10]}\n"
                     if pub:
-                        txt += f"publication: {pub} {iss}".strip() + '\n'
+                        txt += f'publication: {pub} {iss}'.strip() + '\n'
+                        txt += f'language: {lng}\n'
+                    if item.get('DOC'):
+                        txt += f"document: {item['DOC']}\n"
                     if item.get('HEADING'):
-                        txt += f"document: {item['HEADING']}\n"
+                        txt += f"heading: {item['HEADING']}\n"
                     if item.get('Link'):
                         txt += f"link: {item['Link']}\n"
                     txt += f"color: {item['COLOR']}\n"
