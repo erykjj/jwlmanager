@@ -769,7 +769,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.check_save()
         if not archive:
             fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
-            if fname[0] == '':
+            if not fname[0]:
                 return
             archive = fname[0]
         self.current_archive = Path(archive)
@@ -810,19 +810,19 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def save_file(self):
-        if self.save_filename == '':
+        if not self.save_filename:
             return self.save_as_file()
         else:
             self.zip_file()
 
     def save_as_file(self):
         fname = ()
-        if self.save_filename == '':
+        if not self.save_filename:
             now = datetime.now().strftime('%Y-%m-%d')
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), f'{self.working_dir}/MODIFIED_{now}.jwlibrary', _('JW Library archives')+'(*.jwlibrary)')
         else:
             fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
-        if fname[0] == '':
+        if not fname[0]:
             self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
             return False
         elif Path(fname[0]) == self.current_archive:
@@ -898,37 +898,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.export_items('')
 
     def export_items(self, form):
-
-        def process_issue(i):
-            issue = str(i)
-            yr = issue[0:4]
-            m = issue[4:6]
-            d = issue[6:]
-            if d == '00':
-                d = ''
-            else:
-                d = '-' + d
-            return f'{yr}-{m}{d}'
-
-        def shorten_title(t):
-            if t == '':
-                return _('UNTITLED')
-            t = regex.sub(r'(\d):+', r'\1.', t)
-            t = regex.sub(r':+', '-', t)
-            t = regex.sub(r'[^-\w\s\(\),;\.]+', '', t) # strip off punctuation
-            t = t.strip()
-            if len(t) > 40:
-                m = regex.search(r'^(.{0,18}\w)\W', t)
-                if not m:
-                    return t[0:40]
-                left = m.group(1)
-                l = 33 - len(left)
-                m = regex.search(f'\s(\w.{{0,{l}}})$', t)
-                if not m:
-                    t = left + ' […]'
-                else:
-                    t = left + ' […] ' + m.group(1)
-            return t
 
         def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
@@ -1043,6 +1012,36 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(None)
 
         def export_notes(fname):
+
+            def process_issue(i):
+                issue = str(i)
+                yr = issue[0:4]
+                m = issue[4:6]
+                d = issue[6:]
+                if d == '00':
+                    d = ''
+                else:
+                    d = '-' + d
+                return f'{yr}-{m}{d}'
+
+            def shorten_title(t):
+                if not t:
+                    return _('UNTITLED')
+                t = regex.sub(r'(\d):+|:+', lambda m: f"{m.group(1)}." if m.group(1) else "-", t)
+                t = regex.sub(r'[^\w\s\-,().;]+', '', t)
+                t = t.strip()
+                if len(t) > 40:
+                    m = regex.search(r'^(.{0,18}\w)\W', t)
+                    if not m:
+                        return t[0:40]
+                    left = m.group(1)
+                    l = 33 - len(left)
+                    m = regex.search(f'\s(\w.{{0,{l}}})$', t)
+                    if not m:
+                        t = left + ' […]'
+                    else:
+                        t = left + ' […] ' + m.group(1)
+                return t
 
             def get_notes():
                 sql = f'''
@@ -1321,7 +1320,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         category = self.combo_category.currentText()
         fname = export_file(category, form)
-        if fname == '':
+        if not fname:
             self.statusBar.showMessage(' '+_('NOT exported!'), 4000)
             return
         if form == 'md':
@@ -1330,6 +1329,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.working_dir = Path(fname).parent
         current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
         item_list = []
+        self.statusBar.showMessage(' '+_('Exporting. Please wait…'))
+        app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
@@ -1820,11 +1821,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
-            file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
-            if file == '':
+            f = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
+            if not f:
                 self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
                 return
-        self.working_dir = Path(file).parent
+        self.working_dir = Path(f).parent
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
         try:
@@ -2012,7 +2013,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def save_txt():
             fname = QFileDialog.getSaveFileName(self, _('Save') + ' TXT', f'{self.working_dir}/{category}.txt', _('Text files')+' (*.txt)')[0]
-            if fname == '':
+            if not fname:
                 self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
                 return
             self.working_dir = Path(fname).parent
