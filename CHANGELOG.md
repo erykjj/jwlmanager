@@ -28,6 +28,7 @@ ____
 - Data Viewer save as TXT reverted to single-file export of visible items
 - Updated translations
   - Some corrections in German
+- Increased status message timeout
 
 ## [5.0.0] - 2024-10-18
 ### Added
