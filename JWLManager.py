@@ -30,10 +30,10 @@ VERSION = 'v5.1.0'
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import CustomTreeWidget, AboutBox, HelpBox, DataViewer, ViewerItem, DropList
+from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
-from PySide6.QtGui import QAction, QFont, QMouseEvent, QPixmap
+from PySide6.QtGui import QAction, QFont, QPixmap
 from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
 
 from datetime import datetime, timezone
