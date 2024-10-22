@@ -832,6 +832,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return self.save_file()
         self.save_filename = fname[0]
         self.working_dir = Path(fname[0]).parent
+        self.current_archive = self.save_filename
         self.status_label.setText(f'{Path(fname[0]).stem}  ')
         self.zip_file()
 
@@ -912,7 +913,9 @@ class Window(QMainWindow, Ui_MainWindow):
         def shorten_title(t):
             if t == '':
                 return _('UNTITLED')
-            t = regex.sub(r'[^-\w\s\(\):,;]+', '', t) # strip off punctuation
+            t = regex.sub(r'(\d):+', r'\1.', t)
+            t = regex.sub(r':+', '-', t)
+            t = regex.sub(r'[^-\w\s\(\),;\.]+', '', t) # strip off punctuation
             t = t.strip()
             if len(t) > 40:
                 m = regex.search(r'^(.{0,18}\w)\W', t)
