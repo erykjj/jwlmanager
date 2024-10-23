@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.1.0'
+VERSION = 'v5.1.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1824,11 +1824,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
             else:
                 flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
-            f = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
-            if not f:
+            file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
+            if not file:
                 self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
                 return
-        self.working_dir = Path(f).parent
+        self.working_dir = Path(file).parent
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
         try:
