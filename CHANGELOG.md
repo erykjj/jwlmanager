@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [5.1.1] - 2024-10-23
+### Fixed
+
+- Fixed crash on import
+
 ## [5.1.0] - 2024-10-22
 
 ### Added
@@ -731,6 +736,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[5.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.1
 [5.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.0
 [5.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.0.0
 [4.5.3]:https://github.com/erykjj/jwlmanager/releases/tag/v4.5.3
