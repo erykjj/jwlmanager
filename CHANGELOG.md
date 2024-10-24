@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Ensure UTF-8 encoding on all import text files
+
 ### Fixed
 
 ### Removed
