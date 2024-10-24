@@ -899,6 +899,17 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def export_items(self, form):
 
+        def process_issue(i):
+            issue = str(i)
+            yr = issue[0:4]
+            m = issue[4:6]
+            d = issue[6:]
+            if d == '00':
+                d = ''
+            else:
+                d = '-' + d
+            return f'{yr}-{m}{d}'
+
         def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
             if category == _('Highlights') or category == _('Bookmarks'):
@@ -1012,17 +1023,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(None)
 
         def export_notes(fname):
-
-            def process_issue(i):
-                issue = str(i)
-                yr = issue[0:4]
-                m = issue[4:6]
-                d = issue[6:]
-                if d == '00':
-                    d = ''
-                else:
-                    d = '-' + d
-                return f'{yr}-{m}{d}'
 
             def shorten_title(t):
                 if not t:
