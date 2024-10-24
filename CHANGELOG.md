@@ -6,13 +6,16 @@
 
 ### Changed
 
-- Ensure UTF-8 encoding on all import text files
-
 ### Fixed
 
 ### Removed
 
 ____
+## [5.1.2] - 2024-10-24
+### Changed
+
+- Ensure UTF-8 encoding on all import text files
+
 ## [5.1.1] - 2024-10-23
 ### Fixed
 
@@ -738,6 +741,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[5.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.2
 [5.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.1
 [5.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.0
 [5.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.0.0
