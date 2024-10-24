@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.1.1'
+VERSION = 'v5.1.2'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1477,7 +1477,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
-            with open(file, 'r') as import_file:
+            with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
                 else:
@@ -1542,7 +1542,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
-            with open(file, 'r') as import_file:
+            with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
                 else:
