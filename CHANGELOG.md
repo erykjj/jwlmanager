@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed archive name color in dark mode
+
 ### Removed
 
 ____
