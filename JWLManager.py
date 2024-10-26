@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.1.2'
+VERSION = 'v5.1.3'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -734,7 +734,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def new_file(self):
         if self.modified:
             self.check_save()
-        self.status_label.setStyleSheet('color: black;')
+        # self.status_label.setStyleSheet('color: black;')
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         self.modified = False
         self.save_filename = ''
@@ -774,7 +774,7 @@ class Window(QMainWindow, Ui_MainWindow):
             archive = fname[0]
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
-        self.status_label.setStyleSheet('color: black;')
+        # self.status_label.setStyleSheet('color: black;')
         self.status_label.setText(f'{Path(archive).stem}  ')
         global db_name
         try:
