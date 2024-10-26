@@ -175,6 +175,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = 0
             self.modified = False
             self.title_format = settings.value('JWLManager/title','short')
+            self.theme = settings.value('JWLManager/theme', 'light')
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
@@ -267,6 +268,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help_box(self):
+        self.toggle_theme()
+        return
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
@@ -324,6 +327,24 @@ class Window(QMainWindow, Ui_MainWindow):
         button.clicked.connect(dialog.close)
         dialog.exec()
 
+
+    def toggle_theme(self):
+
+        def load_stylesheet(mode):
+            if mode == 'dark':
+                with open(f'{project_path}/res/dark.qss', 'r') as f:
+                    return f.read()
+            else:
+                with open(f'{project_path}/res/light.qss', 'r') as f:
+                    return f.read()
+
+        if self.theme == 'light':
+            app.setStyleSheet(load_stylesheet('dark'))
+            self.theme = 'dark'
+        else:
+            app.setStyleSheet(load_stylesheet('light'))
+            self.theme = 'light'
+        app.setStyleSheet(load_stylesheet(self.theme))
 
     def change_language(self):
         changed = False
@@ -2967,6 +2988,7 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('JWLManager/language', self.lang)
         settings.setValue('JWLManager/category', self.combo_category.currentIndex())
         settings.setValue('JWLManager/title', self.title_format)
+        settings.setValue('JWLManager/theme', self.theme)
         settings.setValue('JWLManager/column1', self.treeWidget.columnWidth(0))
         settings.setValue('JWLManager/column2', self.treeWidget.columnWidth(1))
         settings.setValue('JWLManager/sort', self.treeWidget.sortColumn())
