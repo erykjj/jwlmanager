@@ -64,13 +64,13 @@
       <property name="minimumSize">
        <size>
         <width>710</width>
-        <height>80</height>
+        <height>75</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>1600</width>
-        <height>80</height>
+        <height>75</height>
        </size>
       </property>
       <property name="sizeIncrement">
@@ -80,10 +80,10 @@
        </size>
       </property>
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::Shape::StyledPanel</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Shadow::Raised</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -91,13 +91,13 @@
          <property name="minimumSize">
           <size>
            <width>460</width>
-           <height>80</height>
+           <height>60</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>460</width>
-           <height>80</height>
+           <height>60</height>
           </size>
          </property>
          <widget class="QComboBox" name="combo_grouping">
@@ -159,10 +159,10 @@
            <string/>
           </property>
           <property name="textFormat">
-           <enum>Qt::MarkdownText</enum>
+           <enum>Qt::TextFormat::MarkdownText</enum>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
          </widget>
          <widget class="QLabel" name="label_grouping">
@@ -178,7 +178,7 @@
            <string/>
           </property>
           <property name="text">
-           <string>Grouping:</string>
+           <string>&amp;Grouping:</string>
           </property>
           <property name="buddy">
            <cstring>combo_grouping</cstring>
@@ -197,10 +197,10 @@
            <string/>
           </property>
           <property name="textFormat">
-           <enum>Qt::MarkdownText</enum>
+           <enum>Qt::TextFormat::MarkdownText</enum>
           </property>
           <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
           </property>
          </widget>
          <widget class="QLabel" name="label_selected">
@@ -229,7 +229,7 @@
            <string/>
           </property>
           <property name="text">
-           <string>Category:</string>
+           <string>Categor&amp;y:</string>
           </property>
           <property name="buddy">
            <cstring>combo_category</cstring>
@@ -307,15 +307,15 @@
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeType">
-          <enum>QSizePolicy::MinimumExpanding</enum>
+          <enum>QSizePolicy::Policy::MinimumExpanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>10</width>
-           <height>20</height>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -325,13 +325,13 @@
          <property name="minimumSize">
           <size>
            <width>175</width>
-           <height>80</height>
+           <height>60</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>175</width>
-           <height>80</height>
+           <height>60</height>
           </size>
          </property>
          <widget class="QPushButton" name="button_import">
@@ -439,7 +439,7 @@
          <bool>true</bool>
         </property>
         <property name="selectionMode">
-         <enum>QAbstractItemView::ExtendedSelection</enum>
+         <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
         </property>
         <property name="allColumnsShowFocus">
          <bool>true</bool>
@@ -500,7 +500,7 @@
      <x>0</x>
      <y>0</y>
      <width>728</width>
-     <height>25</height>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -796,7 +796,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Code</string>
+    <string>&amp;Code</string>
    </property>
    <property name="toolTip">
     <string>Use publication code as title</string>
@@ -810,7 +810,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Short</string>
+    <string>&amp;Short</string>
    </property>
    <property name="iconText">
     <string>Short</string>
@@ -824,7 +824,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Full</string>
+    <string>&amp;Full</string>
    </property>
    <property name="iconText">
     <string>Full</string>
@@ -871,7 +871,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>English</string>
+    <string>&amp;English</string>
    </property>
    <property name="toolTip">
     <string>en</string>
@@ -882,7 +882,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Español</string>
+    <string>E&amp;spañol</string>
    </property>
    <property name="toolTip">
     <string>es</string>
@@ -893,7 +893,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Deutsch</string>
+    <string>&amp;Deutsch</string>
    </property>
    <property name="toolTip">
     <string>de</string>
@@ -904,7 +904,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Français</string>
+    <string>&amp;Français</string>
    </property>
    <property name="toolTip">
     <string>fr</string>
@@ -915,7 +915,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Português</string>
+    <string>P&amp;ortuguês</string>
    </property>
    <property name="toolTip">
     <string>pt</string>
@@ -926,7 +926,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Italiano</string>
+    <string>&amp;Italiano</string>
    </property>
    <property name="toolTip">
     <string>it</string>
@@ -974,7 +974,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Polski</string>
+    <string>&amp;Polski</string>
    </property>
    <property name="toolTip">
     <string>pl</string>
