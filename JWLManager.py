@@ -34,7 +34,7 @@ from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QAction, QFont, QPixmap
-from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from datetime import datetime, timezone
 from filehash import FileHash
@@ -175,7 +175,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = 0
             self.modified = False
             self.title_format = settings.value('JWLManager/title','short')
-            self.theme = settings.value('JWLManager/theme', 'light')
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
@@ -193,6 +192,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = []
 
         self.setupUi(self)
+        self.theme = settings.value('JWLManager/theme', 'light')
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_grouping.setCurrentText(_('Type'))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
@@ -268,8 +268,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help_box(self):
-        self.toggle_theme()
-        return
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
@@ -328,23 +326,22 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.exec()
 
 
-    def toggle_theme(self):
+    # def toggle_theme(self):
 
-        def load_stylesheet(mode):
-            if mode == 'dark':
-                with open(f'{project_path}/res/dark.qss', 'r') as f:
-                    return f.read()
-            else:
-                with open(f'{project_path}/res/light.qss', 'r') as f:
-                    return f.read()
+    #     def load_stylesheet(mode):
+    #         if mode == 'dark':
+    #             with open(f'{project_path}/res/dark.qss', 'r') as f:
+    #                 return f.read()
+    #         else:
+    #             with open(f'{project_path}/res/light.qss', 'r') as f:
+    #                 return f.read()
 
-        if self.theme == 'light':
-            app.setStyleSheet(load_stylesheet('dark'))
-            self.theme = 'dark'
-        else:
-            app.setStyleSheet(load_stylesheet('light'))
-            self.theme = 'light'
-        app.setStyleSheet(load_stylesheet(self.theme))
+    #     if self.theme == 'light':
+    #         app.setStyleSheet(load_stylesheet('dark'))
+    #         self.theme = 'dark'
+    #     else:
+    #         app.setStyleSheet(load_stylesheet('light'))
+    #         self.theme = 'light'
 
     def change_language(self):
         changed = False
