@@ -9,6 +9,7 @@
 ### Fixed
 
 - Fixed archive name color in dark mode
+- Small cosmetic adjustments in main UI
 
 ### Removed
 
