@@ -62,7 +62,7 @@ class AboutBox(QDialog):
         layout = QHBoxLayout(self)
         left_layout = QVBoxLayout()
         icon = QLabel(self)
-        icon.setPixmap(QPixmap(_base_path+'/icons/project_72.png'))
+        icon.setPixmap(QPixmap(_base_path+'/icons/JWLManager.png'))
         icon.setAlignment(Qt.AlignTop)
         left_layout.addWidget(icon)
 
@@ -153,12 +153,12 @@ class DropList(QListWidget):
 class DataViewer(QDialog):
     escape_pressed = Signal()
 
-    def __init__(self, size, pos):
+    def __init__(self, size, pos, theme):
         super().__init__()
 
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
-        self.setWindowIcon((QIcon(_base_path+'/icons/project_72.png')))
+        self.setWindowIcon((QIcon(_base_path+'/icons/JWLManager.png')))
         self.setMinimumSize(755, 500)
         self.resize(size)
         self.move(pos)
@@ -171,13 +171,13 @@ class DataViewer(QDialog):
             }""")
 
         self.viewer_layout = QStackedLayout(self)
-        self._create_viewer()
-        self._create_editor()
+        self._create_viewer(theme)
+        self._create_editor(theme)
         self.viewer_layout.setCurrentIndex(0)
         self.setLayout(self.viewer_layout)
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
 
-    def _create_viewer(self):
+    def _create_viewer(self, theme):
         viewer = QFrame()
 
         txt_button = QToolButton()
@@ -186,7 +186,7 @@ class DataViewer(QDialog):
         txt_button.setStyleSheet('color: #177c26; font: bold;')
         self.txt_action = QAction('')
         self.txt_action.setToolTip('⇣')
-        self.txt_action.setIcon(QPixmap(_base_path+'/icons/icons8-save-64grey.png'))
+        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/save-disabled.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
@@ -235,19 +235,19 @@ class DataViewer(QDialog):
         layout.addWidget(scroll_area)
         self.viewer_layout.addWidget(viewer)
 
-    def _create_editor(self):
+    def _create_editor(self, theme):
         self.editor = QFrame()
 
         self.return_button = QToolButton()
         self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.return_action = QAction()
-        self.return_action.setIcon(QPixmap(_base_path+'/icons/icons8-left-return.png'))
+        self.return_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/return.png'))
         self.return_button.setDefaultAction(self.return_action)
 
         self.accept_button = QToolButton()
         self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.accept_action = QAction()
-        self.accept_action.setIcon(QPixmap(_base_path+'/icons/icons8-accept-64green.png'))
+        self.accept_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/accept.png'))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
 
@@ -280,7 +280,7 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, idx, color, title, body, meta, metadata):
+    def __init__(self, idx, color, title, body, meta, metadata, theme):
         super().__init__()
         self.idx = idx
         self.label = None
@@ -318,12 +318,12 @@ class ViewerItem(QWidget):
             self.meta_box.setText(meta)
 
         self.delete_button = QPushButton()
-        self.delete_button.setIcon(QPixmap(_base_path+'/icons/icons8-delete-64red.png'))
+        self.delete_button.setIcon(QPixmap(_base_path+f'/icons/{theme}/delete.png'))
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setStyleSheet('background-color: transparent; border: 0px;')
 
         self.edit_button = QPushButton()
-        self.edit_button.setIcon(QPixmap(_base_path+'/icons/icons8-edit-64blue.png'))
+        self.edit_button.setIcon(QPixmap(_base_path+f'/icons/{theme}/edit.png'))
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setStyleSheet('background-color: transparent; border: 0px;')
 
