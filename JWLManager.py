@@ -30,7 +30,7 @@ VERSION = 'v5.1.3'
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
+from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, IconManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QAction, QFont, QPixmap
@@ -193,6 +193,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.theme = settings.value('JWLManager/theme', 'light')
         self.setupUi(self, self.theme)
+        self.icons = IconManager()
+        self.icons.update_icons(self, self.theme)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_grouping.setCurrentText(_('Type'))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
@@ -213,7 +215,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        self.about_window = AboutBox(APP, VERSION, self.theme)
+        self.about_window = AboutBox(APP, VERSION)
         self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
@@ -342,6 +344,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             app.setStyleSheet(load_stylesheet('light'))
             self.theme = 'light'
+        self.icons.update_icons(self, self.theme)
 
     def change_language(self):
         changed = False
@@ -882,7 +885,8 @@ class Window(QMainWindow, Ui_MainWindow):
     def archive_modified(self):
         self.modified = True
         self.actionSave.setEnabled(True)
-        self.actionSave.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/save.png'))
+        self.actionSave.setProperty('icon_name', 'save')
+        # self.actionSave.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/save.png'))
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
@@ -2203,7 +2207,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata, self.theme)
+                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -2262,7 +2266,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"\ndocument: {item['DOC']}\n"
                 metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None, metadata, self.theme)
+                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None, metadata)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
@@ -2312,7 +2316,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified_list = []
         self.title_modified = False
         self.body_modified = False
-        self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos, self.theme)
+        self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         connect_signals()
         self.viewer_window.filter_box.setPlaceholderText(_('Filter'))
         self.viewer_window.show()
@@ -2436,12 +2440,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(26, 26)
-                get_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/add-file.png'))
+                get_files.setProperty('icon_name', 'add-file')
+                # get_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/add-file.png'))
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
                 clear_files.setFixedSize(26, 26)
-                clear_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/delete.png'))
+                clear_files.setProperty('icon_name', 'delete')
+                # clear_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/delete.png'))
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = DropList()
