@@ -33,7 +33,7 @@ from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, ViewerItem, DropList
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
-from PySide6.QtGui import QAction, QFont, QPalette, QPixmap
+from PySide6.QtGui import QAction, QFont, QPixmap
 from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from datetime import datetime, timezone
@@ -66,7 +66,6 @@ def get_language():
         'pt': 'Portuguese (Português)',
         'ru': 'Russian (Pусский)',
         'uk': 'Ukrainian (українська)'
-        # 'zh': 'Chinese (中文)',
         }
     tr = {}
     localedir = project_path / 'res/locales/'
@@ -158,6 +157,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionCollapse_All.triggered.connect(self.collapse_all)
             self.actionSelect_All.triggered.connect(self.select_all)
             self.actionUnselect_All.triggered.connect(self.unselect_all)
+            self.actionTheme.triggered.connect(self.toggle_theme)
             self.menuTitle_View.triggered.connect(self.change_title)
             self.menuLanguage.triggered.connect(self.change_language)
             self.combo_grouping.currentTextChanged.connect(self.regroup)
@@ -191,16 +191,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item.setChecked(True)
             self.current_data = []
 
-        def is_dark_mode():
-            palette = QApplication.palette()
-            window_color = palette.color(QPalette.Window)
-            brightness = (window_color.red() * 0.299 +
-                        window_color.green() * 0.587 +
-                        window_color.blue() * 0.114)
-            return brightness < 128
-
-        self.theme = "dark" if is_dark_mode() else "light"
-        # self.theme = settings.value('JWLManager/theme', 'light')
+        self.theme = settings.value('JWLManager/theme', 'light')
         self.setupUi(self, self.theme)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_grouping.setCurrentText(_('Type'))
@@ -222,7 +213,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        self.about_window = AboutBox(APP, VERSION)
+        self.about_window = AboutBox(APP, VERSION, self.theme)
         self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
@@ -335,22 +326,22 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.exec()
 
 
-    # def toggle_theme(self):
+    def toggle_theme(self):
 
-    #     def load_stylesheet(mode):
-    #         if mode == 'dark':
-    #             with open(f'{project_path}/res/dark.qss', 'r') as f:
-    #                 return f.read()
-    #         else:
-    #             with open(f'{project_path}/res/light.qss', 'r') as f:
-    #                 return f.read()
+        def load_stylesheet(mode):
+            if mode == 'dark':
+                with open(f'{project_path}/res/dark.qss', 'r') as f:
+                    return f.read()
+            else:
+                with open(f'{project_path}/res/light.qss', 'r') as f:
+                    return f.read()
 
-    #     if self.theme == 'light':
-    #         app.setStyleSheet(load_stylesheet('dark'))
-    #         self.theme = 'dark'
-    #     else:
-    #         app.setStyleSheet(load_stylesheet('light'))
-    #         self.theme = 'light'
+        if self.theme == 'light':
+            app.setStyleSheet(load_stylesheet('dark'))
+            self.theme = 'dark'
+        else:
+            app.setStyleSheet(load_stylesheet('light'))
+            self.theme = 'light'
 
     def change_language(self):
         changed = False
@@ -761,7 +752,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def new_file(self):
         if self.modified:
             self.check_save()
-        # self.status_label.setStyleSheet('color: black;')
         self.status_label.setText('* '+_('NEW ARCHIVE')+' *  ')
         self.modified = False
         self.save_filename = ''
@@ -801,7 +791,6 @@ class Window(QMainWindow, Ui_MainWindow):
             archive = fname[0]
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
-        # self.status_label.setStyleSheet('color: black;')
         self.status_label.setText(f'{Path(archive).stem}  ')
         global db_name
         try:
