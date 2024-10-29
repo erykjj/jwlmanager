@@ -50,7 +50,7 @@ class CustomTreeWidget(QTreeWidget):
 
 
 class AboutBox(QDialog):
-    def __init__(self, app, version):
+    def __init__(self, app, version, theme):
         super().__init__()
 
         year = f'MIT ©{datetime.now().year}'
@@ -62,7 +62,7 @@ class AboutBox(QDialog):
         layout = QHBoxLayout(self)
         left_layout = QVBoxLayout()
         icon = QLabel(self)
-        icon.setPixmap(QPixmap(_base_path+'/icons/JWLManager.png'))
+        icon.setPixmap(QPixmap(_base_path+f'/icons/{theme}/JWLManager.png'))
         icon.setAlignment(Qt.AlignTop)
         left_layout.addWidget(icon)
 
@@ -158,7 +158,7 @@ class DataViewer(QDialog):
 
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowFlags(Qt.Window)
-        self.setWindowIcon((QIcon(_base_path+'/icons/JWLManager.png')))
+        self.setWindowIcon((QIcon(_base_path+f'/icons/{theme}/JWLManager.png')))
         self.setMinimumSize(755, 500)
         self.resize(size)
         self.move(pos)
