@@ -15,7 +15,8 @@ Clicking on the column headers allows for **sorting** the tree; clicking the sam
 ######
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
 ######
-* **Expand All (Ctrl+E)** - expands the tree to make all levels visible
+* **Theme (Ctrl+T)** - toggle between light and dark mode
+* **Expand All (Ctrl+E)** - expand the tree to make all levels visible
   * Note: **double-clicking** on an entry will expand (or collapse) all its sub-levels
 * **Collapse All (Ctrl+C)** - collapse all levels
 * **Select All (Ctrl+A)** - a quick way to select all entries
