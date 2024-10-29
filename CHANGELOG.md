@@ -4,6 +4,8 @@
 
 ### Added
 
+- Light/dark mode toggle
+
 ### Changed
 
 ### Fixed
