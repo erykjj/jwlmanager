@@ -29,7 +29,7 @@ from glob import glob
 from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
-from PySide6.QtGui import QAction, QIcon, QPixmap, QWindow
+from PySide6.QtGui import QAction, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 _base_path = path.dirname(__file__)
@@ -294,11 +294,9 @@ class DataViewer(QDialog):
 
         self.title = QPlainTextEdit(self.editor)
         self.title.setMaximumHeight(60)
-        # self.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
         self.title.setStyleSheet('font: bold; font-size: 20px;')
 
         self.body = QPlainTextEdit(self.editor)
-        # self.body.setStyleSheet('font: normal; color: #3d3d5c;')
         self.body.setStyleSheet('font: normal;')
 
         self.meta = QLabel(self.editor)
@@ -336,7 +334,6 @@ class ViewerItem(QWidget):
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
         self.text_box.setFrameStyle(QFrame.NoFrame)
-        # self.text_box.setStyleSheet('color: #3d3d5c;')
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         self.update_note()
 
