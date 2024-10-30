@@ -1222,10 +1222,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
                     txt = f"---\ntitle: {item['TITLE']}\n"
-                    txt += f"date: {item['MODIFIED'][:10]}\n"
+                    txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
+                    txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
-                        txt += f'publication: {pub} {iss}'.strip() + '\n'
                         txt += f'language: {lng}\n'
+                        txt += f'publication: {pub} {iss}'.strip() + '\n'
                     if item.get('DOC'):
                         txt += f"document: {item['DOC']}\n"
                     if item.get('HEADING'):
@@ -2172,7 +2173,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            # clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
+            # FIX: create/reuse incons
             clrs = { # TODO: this needs to defined as variables in the qss
                 'light': ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa'],
                 'dark': ['#292929', '#49400e', '#233315', '#1f3646', '#401f2c', '#49290e', '#2d2438'] }
