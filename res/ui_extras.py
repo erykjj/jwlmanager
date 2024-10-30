@@ -29,7 +29,7 @@ from glob import glob
 from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
-from PySide6.QtGui import QAction, QIcon, QPixmap
+from PySide6.QtGui import QAction, QIcon, QPixmap, QWindow
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 _base_path = path.dirname(__file__)
@@ -116,28 +116,38 @@ class HelpBox(QDialog):
         self.finished.connect(self.hide())
 
 
-class IconManager:
+class ThemeManager:
     def __init__(self):
-        self.icon_cache = {'light': {}, 'dark': {}}
-        self.load_icons()
+        self.icons = {'light': {}, 'dark': {}}
+        self._load_icons()
+        self.qss = {'light': {}, 'dark': {}}
+        self._load_qss()
 
-    def load_icons(self):
+    def _load_qss(self):
+        for theme in ['light', 'dark']:
+            with open(_base_path+f'/{theme}.qss', 'r') as f:
+                self.qss[theme] = f.read()
+
+    def _load_icons(self):
         for theme in ['light', 'dark']:
             for f in glob('*.png', root_dir=_base_path+f'/icons/{theme}'):
                 name = path.splitext(f)[0]
-                self.icon_cache[theme][name] = QIcon(_base_path+f'/icons/{theme}/{f}')
+                self.icons[theme][name] = QIcon(_base_path+f'/icons/{theme}/{f}')
 
     def update_icons(self, widget, theme):
         if hasattr(widget, 'icon') and callable(getattr(widget, 'icon')):
             icon_name = widget.property('icon_name')
-            if icon_name and icon_name in self.icon_cache[theme]:
-                widget.setIcon(self.icon_cache[theme][icon_name])
+            if icon_name and icon_name in self.icons[theme]:
+                widget.setIcon(self.icons[theme][icon_name])
             for action in widget.actions():
                 icon_name = action.property('icon_name')
-                if icon_name and icon_name in self.icon_cache[theme]:
-                    action.setIcon(self.icon_cache[theme][icon_name])
+                if icon_name and icon_name in self.icons[theme]:
+                    action.setIcon(self.icons[theme][icon_name])
         for child in widget.findChildren(QWidget):
             self.update_icons(child, theme)
+
+    def set_theme(self, app, theme):
+        app.setStyleSheet(self.qss[theme])
 
 
 class DropList(QListWidget):
@@ -209,15 +219,15 @@ class DataViewer(QDialog):
         txt_button = QToolButton()
         txt_button.setMaximumWidth(60)
         txt_button.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
-        txt_button.setStyleSheet('color: #177c26; font: bold;')
+        txt_button.setStyleSheet('color: #177c26; font: bold;') # TODO: change the color to more 'universal'
         self.txt_action = QAction('')
         self.txt_action.setToolTip('⇣')
-        self.txt_action.setProperty('icon_name', 'save-disabled')
-        # self.txt_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/save-disabled.png'))
+        # self.txt_action.setProperty('icon_name', 'save-disabled')
+        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/save-disabViewerItemled.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
-        discard_button.setStyleSheet('color: #3f54aa; font: bold;')
+        discard_button.setStyleSheet('color: #3f54aa; font: bold;') # TODO: change the color to more 'universal'
         self.discard_action = QAction('')
         self.discard_action.setToolTip('✗')
         self.discard_action.setDisabled(True)
@@ -268,15 +278,15 @@ class DataViewer(QDialog):
         self.return_button = QToolButton()
         self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.return_action = QAction()
-        self.return_action.setProperty('icon_name', 'return')
-        # self.return_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/return.png'))
+        # self.return_action.setProperty('icon_name', 'return')
+        self.return_action.setIcon(QPixmap(_base_path+f'/icons/return.png'))
         self.return_button.setDefaultAction(self.return_action)
 
         self.accept_button = QToolButton()
         self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
         self.accept_action = QAction()
-        self.accept_action.setProperty('icon_name', 'accept')
-        # self.accept_action.setIcon(QPixmap(_base_path+f'/icons/{theme}/accept.png'))
+        # self.accept_action.setProperty('icon_name', 'accept')
+        self.accept_action.setIcon(QPixmap(_base_path+f'/icons/accept.png'))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
 
@@ -287,10 +297,12 @@ class DataViewer(QDialog):
 
         self.title = QPlainTextEdit(self.editor)
         self.title.setMaximumHeight(60)
-        self.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+        # self.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+        self.title.setStyleSheet('font: bold; font-size: 20px;')
 
         self.body = QPlainTextEdit(self.editor)
-        self.body.setStyleSheet('font: normal; color: #3d3d5c;')
+        # self.body.setStyleSheet('font: normal; color: #3d3d5c;')
+        self.body.setStyleSheet('font: normal;')
 
         self.meta = QLabel(self.editor)
         self.meta.setFixedHeight(80)
@@ -327,7 +339,7 @@ class ViewerItem(QWidget):
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
         self.text_box.setFrameStyle(QFrame.NoFrame)
-        self.text_box.setStyleSheet('color: #3d3d5c;')
+        # self.text_box.setStyleSheet('color: #3d3d5c;')
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
         self.update_note()
 
@@ -347,14 +359,14 @@ class ViewerItem(QWidget):
             self.meta_box.setText(meta)
 
         self.delete_button = QPushButton()
-        self.delete_button.setProperty('icon_name', 'delete')
-        # self.delete_button.setIcon(QPixmap(_base_path+f'/icons/{theme}/delete.png'))
+        # self.delete_button.setProperty('icon_name', 'delete')
+        self.delete_button.setIcon(QPixmap(_base_path+f'/icons/delete.png'))
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setStyleSheet('background-color: transparent; border: 0px;')
 
         self.edit_button = QPushButton()
-        self.edit_button.setProperty('icon_name', 'edit')
-        # self.edit_button.setIcon(QPixmap(_base_path+f'/icons/{theme}/edit.png'))
+        # self.edit_button.setProperty('icon_name', 'edit')
+        self.edit_button.setIcon(QPixmap(_base_path+f'/icons/edit.png'))
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setStyleSheet('background-color: transparent; border: 0px;')
 
