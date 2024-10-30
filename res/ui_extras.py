@@ -222,8 +222,7 @@ class DataViewer(QDialog):
         txt_button.setStyleSheet('color: #177c26; font: bold;') # TODO: change the color to more 'universal'
         self.txt_action = QAction('')
         self.txt_action.setToolTip('⇣')
-        # self.txt_action.setProperty('icon_name', 'save-disabled')
-        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/save-disabViewerItemled.png'))
+        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/save.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
@@ -276,16 +275,14 @@ class DataViewer(QDialog):
         self.editor = QFrame()
 
         self.return_button = QToolButton()
-        self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
+        self.return_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.return_action = QAction()
-        # self.return_action.setProperty('icon_name', 'return')
         self.return_action.setIcon(QPixmap(_base_path+f'/icons/return.png'))
         self.return_button.setDefaultAction(self.return_action)
 
         self.accept_button = QToolButton()
-        self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly) #Qt.ToolButtonTextBesideIcon
+        self.accept_button.setToolButtonStyle(Qt.ToolButtonIconOnly)
         self.accept_action = QAction()
-        # self.accept_action.setProperty('icon_name', 'accept')
         self.accept_action.setIcon(QPixmap(_base_path+f'/icons/accept.png'))
         self.accept_button.setDefaultAction(self.accept_action)
         self.accept_action.setVisible(False)
@@ -359,13 +356,11 @@ class ViewerItem(QWidget):
             self.meta_box.setText(meta)
 
         self.delete_button = QPushButton()
-        # self.delete_button.setProperty('icon_name', 'delete')
         self.delete_button.setIcon(QPixmap(_base_path+f'/icons/delete.png'))
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setStyleSheet('background-color: transparent; border: 0px;')
 
         self.edit_button = QPushButton()
-        # self.edit_button.setProperty('icon_name', 'edit')
         self.edit_button.setIcon(QPixmap(_base_path+f'/icons/edit.png'))
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setStyleSheet('background-color: transparent; border: 0px;')
