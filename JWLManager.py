@@ -877,7 +877,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = True
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
-        # self.actionSave.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/save.png'))
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
@@ -2439,14 +2438,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(26, 26)
-                get_files.setProperty('icon_name', 'add-file')
-                # get_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/add-file.png'))
+                get_files.setIcon(QPixmap(f'{project_path}/res/icons/add.png'))
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
                 clear_files.setFixedSize(26, 26)
-                clear_files.setProperty('icon_name', 'delete')
-                # clear_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/delete.png'))
+                clear_files.setIcon(QPixmap(f'{project_path}/res/icons/remove.png'))
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = DropList()
