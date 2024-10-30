@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v5.1.3'
+VERSION = 'v6.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -129,6 +129,7 @@ db_name = 'userData.db'
 settings = set_settings_path()
 lang = get_language()
 read_resources(lang)
+
 
 #### Main app
 class Window(QMainWindow, Ui_MainWindow):
