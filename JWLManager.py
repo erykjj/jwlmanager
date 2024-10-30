@@ -30,7 +30,7 @@ VERSION = 'v5.1.3'
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, IconManager, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, ThemeManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QAction, QFont, QPixmap
@@ -191,10 +191,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     item.setChecked(True)
             self.current_data = []
 
-        self.theme = settings.value('JWLManager/theme', 'light')
-        self.setupUi(self, self.theme)
-        self.icons = IconManager()
-        self.icons.update_icons(self, self.theme)
+        self.mode = settings.value('JWLManager/theme', 'light')
+        self.setupUi(self, self.mode)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_grouping.setCurrentText(_('Type'))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
@@ -216,7 +214,10 @@ class Window(QMainWindow, Ui_MainWindow):
         connect_signals()
         set_vars()
         self.about_window = AboutBox(APP, VERSION)
-        self.help_window = HelpBox(_('Help'),self.help_size, self.help_pos)
+        self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
+        self.theme = ThemeManager()
+        self.theme.set_theme(app, self.mode)
+        self.theme.update_icons(self, self.mode)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
 
@@ -329,22 +330,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def toggle_theme(self):
-
-        def load_stylesheet(mode):
-            if mode == 'dark':
-                with open(f'{project_path}/res/dark.qss', 'r') as f:
-                    return f.read()
-            else:
-                with open(f'{project_path}/res/light.qss', 'r') as f:
-                    return f.read()
-
-        if self.theme == 'light':
-            app.setStyleSheet(load_stylesheet('dark'))
-            self.theme = 'dark'
+        if self.mode == 'light':
+            self.mode = 'dark'
         else:
-            app.setStyleSheet(load_stylesheet('light'))
-            self.theme = 'light'
-        self.icons.update_icons(self, self.theme)
+            self.mode = 'light'
+        self.theme.set_theme(app, self.mode)
+        self.theme.update_icons(self, self.mode)
 
     def change_language(self):
         changed = False
@@ -886,7 +877,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = True
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
-        # self.actionSave.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/save.png'))
+        # self.actionSave.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/save.png'))
         self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
@@ -1016,11 +1007,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     fname = f'{self.working_dir}/{pub}/'
                     if item.get('ISSUE'):
                         iss = process_issue(item['ISSUE'])
-                        fname += f"{iss}/"
+                        fname += f'{iss}/'
                     fname += f"{item['DOC']}/"
                     fname += item['LABEL'] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
-                    txt = f"---\npublication: {pub} {iss}".strip()
+                    txt = f'---\npublication: {pub} {iss}'.strip()
                     txt += f"\ndocument: {item['DOC']}\nlabel: {item['LABEL']}\n---\n{item['VALUE'].strip()}\n"
                     with open(fname, 'w', encoding='utf-8') as f:
                         f.write(txt)
@@ -1048,7 +1039,7 @@ class Window(QMainWindow, Ui_MainWindow):
             def shorten_title(t):
                 if not t:
                     return _('UNTITLED')
-                t = regex.sub(r'(\d):+|:+', lambda m: f"{m.group(1)}." if m.group(1) else "-", t)
+                t = regex.sub(r'(\d):+|:+', lambda m: f'{m.group(1)}.' if m.group(1) else '-', t)
                 t = regex.sub(r'[^\w\s\-,().;]+', '', t)
                 t = t.strip()
                 if len(t) > 40:
@@ -1220,10 +1211,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         if item.get('VS'):
                             fname += str(item['VS']).zfill(3) + '_'
                     else:
-                        fname += f"{pub}/"
+                        fname += f'{pub}/'
                         if item.get('ISSUE'):
                             iss = process_issue(item['ISSUE'])
-                            fname += f"{iss}/"
+                            fname += f'{iss}/'
                         fname += f"{item['DOC']}/"
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
@@ -1315,7 +1306,7 @@ class Window(QMainWindow, Ui_MainWindow):
             with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
-            expcon.executescript('PRAGMA temp_store = 2; PRAGMA journal_mode = "OFF"; PRAGMA foreign_keys = "OFF";')
+            expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
             playlist_export()
             self.reindex_db(expcon, playlist_path)
             expcon.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
@@ -1886,19 +1877,23 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def body_changed():
             if self.viewer_window.body.toPlainText() == self.note_item.body:
-                self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
+                # self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
+                self.viewer_window.body.setStyleSheet('font: normal;')
                 self.body_modified = False
             else:
-                self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
+                # self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
+                self.viewer_window.body.setStyleSheet('font: italic;')
                 self.body_modified = True
             update_editor_toolbar()
 
         def title_changed():
             if self.viewer_window.title.toPlainText() == self.note_item.title:
-                self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+                # self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
+                self.viewer_window.title.setStyleSheet('font: bold; font-size: 20px;')
                 self.title_modified = False
             else:
-                self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
+                # self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
+                self.viewer_window.title.setStyleSheet('font: bold italic; font-size: 20px;')
                 self.title_modified = True
             update_editor_toolbar()
 
@@ -1934,7 +1929,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            self.viewer_window.editor.setStyleSheet(f"background-color: {self.note_item.color}")
+            self.viewer_window.editor.setStyleSheet(f'background-color: {self.note_item.color}')
             self.viewer_window.viewer_layout.setCurrentIndex(1)
             app.processEvents()
 
@@ -2177,7 +2172,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
+            # clrs = ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa']
+            clrs = { # TODO: this needs to defined as variables in the qss
+                'light': ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa'],
+                'dark': ['#292929', '#49400e', '#233315', '#1f3646', '#401f2c', '#49290e', '#2d2438'] }
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
@@ -2207,7 +2205,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
+                note_box = ViewerItem(item['ID'], clrs[self.mode][item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -2258,6 +2256,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
+            clrs = { 'light': '#f1f1f1', 'dark': '#292929' }
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
@@ -2266,7 +2265,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"\ndocument: {item['DOC']}\n"
                 metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(item['ID'], '#f1f1f1', title, clean_text(item['VALUE']), None, metadata)
+                note_box = ViewerItem(item['ID'], clrs[self.mode], title, clean_text(item['VALUE']), None, metadata)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
@@ -2441,13 +2440,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(26, 26)
                 get_files.setProperty('icon_name', 'add-file')
-                # get_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/add-file.png'))
+                # get_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/add-file.png'))
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
                 clear_files.setFixedSize(26, 26)
                 clear_files.setProperty('icon_name', 'delete')
-                # clear_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.theme}/delete.png'))
+                # clear_files.setIcon(QPixmap(f'{project_path}/res/icons/{self.mode}/delete.png'))
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = DropList()
@@ -2990,7 +2989,7 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('JWLManager/language', self.lang)
         settings.setValue('JWLManager/category', self.combo_category.currentIndex())
         settings.setValue('JWLManager/title', self.title_format)
-        settings.setValue('JWLManager/theme', self.theme)
+        settings.setValue('JWLManager/theme', self.mode)
         settings.setValue('JWLManager/column1', self.treeWidget.columnWidth(0))
         settings.setValue('JWLManager/column2', self.treeWidget.columnWidth(1))
         settings.setValue('JWLManager/sort', self.treeWidget.sortColumn())
