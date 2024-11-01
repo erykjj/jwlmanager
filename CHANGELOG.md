@@ -8,6 +8,9 @@
 
 ### Changed
 
+- Markdown export:
+  - Only notes with newer modification time will be replaced
+
 ### Fixed
 
 - Fixed archive name color in dark mode
