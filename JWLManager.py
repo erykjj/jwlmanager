@@ -2182,9 +2182,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 return item_list
 
             # FIX: create/reuse incons
-            clrs = { # TODO: this needs to defined as variables in the qss
-                'light': ['#f1f1f1', '#fffce6', '#effbe6', '#e6f7ff', '#ffe6f0', '#fff0e6', '#f1eafa'],
-                'dark': ['#292929', '#49400e', '#233315', '#1f3646', '#401f2c', '#49290e', '#2d2438'] }
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
@@ -2214,7 +2211,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], clrs[self.mode][item['COLOR']], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
+                note_box = ViewerItem(item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
