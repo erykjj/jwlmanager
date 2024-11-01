@@ -1036,6 +1036,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_notes(fname):
 
+            def save_file(fname):
+                record_modified = datetime.strptime(item['MODIFIED'][:19], '%Y-%m-%dT%H:%M:%S').timestamp()
+                if os.path.exists(fname) and (os.stat(fname).st_mtime == record_modified):
+                        return
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(txt)
+                os.utime(fname, (record_modified, record_modified))
+
             def shorten_title(t):
                 if not t:
                     return _('UNTITLED')
@@ -1240,8 +1248,8 @@ class Window(QMainWindow, Ui_MainWindow):
                             txt += f'  - {t}\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
-                    with open(fname, 'w', encoding='utf-8') as f:
-                        f.write(txt)
+                    save_file(fname)
+
 
         def export_playlist(fname):
 
