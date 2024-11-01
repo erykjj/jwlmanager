@@ -318,9 +318,16 @@ class DataViewer(QDialog):
 class ViewerItem(QWidget):
     def __init__(self, idx, color, title, body, meta, metadata):
         super().__init__()
+        classes = {
+            0: 'grey-note',
+            1: 'yellow-note',
+            2: 'green-note',
+            3: 'blue-note',
+            4: 'red-note',
+            5: 'orange-note',
+            6: 'purple-note' }
         self.idx = idx
         self.label = None
-        self.color = color
         self.body = body
         self.title = title
         self.meta = meta
@@ -329,38 +336,44 @@ class ViewerItem(QWidget):
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
         self.note_widget.setFrameShape(QFrame.Panel)
-        self.note_widget.setStyleSheet(f'background-color: {color}')
 
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
         self.text_box.setFrameStyle(QFrame.NoFrame)
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
+        self.text_box.setProperty('noteColor', classes[color])
         self.update_note()
 
         separator = QFrame()
         separator.setContentsMargins(2, 0, 2, 0)
         separator.setFrameShape(QFrame.HLine)
         separator.setStyleSheet('color: #7575a3;')
+        separator.setProperty('noteColor', classes[color])
 
         if self.meta:
             self.meta_box = QLabel(self.note_widget)
-            self.meta_box.setMargin(2)
+            self.meta_box.setContentsMargins(5, 0, 0, 0)
             self.meta_box.setFixedHeight(78)
             self.meta_box.setWordWrap(True)
             self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             self.meta_box.setStyleSheet('color: #7575a3;')
             self.meta_box.setTextFormat(Qt.RichText)
             self.meta_box.setText(meta)
+            self.meta_box.setProperty('noteColor', classes[color])
 
         self.delete_button = QPushButton()
         self.delete_button.setIcon(QPixmap(_base_path+f'/icons/delete.png'))
         self.delete_button.setIconSize(QSize(28, 28))
-        self.delete_button.setStyleSheet('background-color: transparent; border: 0px;')
+        self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.delete_button.setStyleSheet('border: 0px;')
+        self.delete_button.setProperty('noteColor', classes[color])
 
         self.edit_button = QPushButton()
         self.edit_button.setIcon(QPixmap(_base_path+f'/icons/edit.png'))
         self.edit_button.setIconSize(QSize(24, 24))
-        self.edit_button.setStyleSheet('background-color: transparent; border: 0px;')
+        self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.edit_button.setStyleSheet('border: 0px;')
+        self.edit_button.setProperty('noteColor', classes[color])
 
         layout = QGridLayout(self.note_widget)
         layout.setSpacing(0)
@@ -371,18 +384,24 @@ class ViewerItem(QWidget):
         if self.meta:
             layout.addWidget(self.meta_box, 2, 0)
             button_layout = QVBoxLayout()
+            button_layout.setSpacing(0)
+            button_layout.setContentsMargins(0, 0, 0, 0)
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
             button_frame.setMaximumWidth(50)
             button_frame.setLayout(button_layout)
+            button_frame.setStyleSheet('border: none;')
             layout.addWidget(button_frame, 2, 1, Qt.AlignmentFlag.AlignRight)
         else:
             button_layout = QHBoxLayout()
+            button_layout.setSpacing(0)
+            button_layout.setContentsMargins(0, 0, 0, 0)
             button_layout.addWidget(self.delete_button)
             button_layout.addWidget(self.edit_button)
             button_frame = QFrame()
             button_frame.setLayout(button_layout)
+            button_frame.setStyleSheet('border: none;')
             layout.addWidget(button_frame, 2, 0)
 
     def update_note(self):
