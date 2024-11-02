@@ -2210,7 +2210,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
+                note_box = ViewerItem(self, item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -2270,7 +2270,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"\ndocument: {item['DOC']}\n"
                 metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(item['ID'], clrs[self.mode], title, clean_text(item['VALUE']), None, metadata)
+                note_box = ViewerItem(self, item['ID'], clrs[self.mode], title, clean_text(item['VALUE']), None, metadata)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
