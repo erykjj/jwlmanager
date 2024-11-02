@@ -1931,20 +1931,24 @@ class Window(QMainWindow, Ui_MainWindow):
         def data_editor(counter):
             self.viewer_window.setWindowTitle(_('Data Editor'))
             self.note_item = self.viewer_items[counter]
-            self.viewer_window.title.setPlainText(self.note_item.title)
             if self.note_item.meta:
                 self.viewer_window.meta.setText(self.note_item.meta)
             else:
                 self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
+            note_color = self.note_item.text_box.property('noteColor')
+            self.viewer_window.title.setPlainText(self.note_item.title)
+            self.viewer_window.title.setProperty('noteColor', note_color)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            self.viewer_window.editor.setStyleSheet(f'background-color: {self.note_item.color}')
-            self.viewer_window.viewer_layout.setCurrentIndex(1)
+            self.viewer_window.body.setProperty('noteColor', note_color)
             app.processEvents()
+            self.viewer_window.viewer_layout.setCurrentIndex(1)
 
         def update_viewer_toolbar():
             self.viewer_window.discard_action.setText(_('Discard changes and close'))
             self.viewer_window.confirm_action.setText(_('Confirm changes and close'))
+            self.viewer_window.confirm_action.setToolTip('✔')
+            self.viewer_window.discard_action.setToolTip('✗')
             self.viewer_window.confirm_action.setEnabled(True)
             self.viewer_window.discard_action.setEnabled(True)
 
