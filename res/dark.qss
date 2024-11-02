@@ -1,10 +1,18 @@
-QWidget[class='grey-note'] { color: white; background-color: #292929; }
-QWidget[class='yellow-note'] { color: white; background-color: #49400e; }
-QWidget[class='green-note'] { color: white; background-color: #233315; }
-QWidget[class='blue-note'] { color: white; background-color: #1f3646; }
-QWidget[class='red-note'] { color: white; background-color: #401f2c; }
-QWidget[class='orange-note'] { color: white; background-color: #49290e; }
-QWidget[class='purple-note'] { color: white; background-color: #2d2438; }
+QWidget[background='grey'] { background-color: #292929; }
+QWidget[background='yellow'] { background-color: #49400e; }
+QWidget[background='green'] { background-color: #233315; }
+QWidget[background='blue'] { background-color: #1f3646; }
+QWidget[background='red'] { background-color: #401f2c; }
+QWidget[background='orange'] { background-color: #49290e; }
+QWidget[background='purple'] { background-color: #2d2438; }
+
+QWidget[foreground='separator'] { color: #7575a3; }
+QWidget[foreground='editor-meta'] { color: #7575a3; }
+QWidget[foreground='viewer-meta'] { color: #7575a3; }
+
+QWidget[class='confirm'] { color: #c80b0b; font: bold; }
+QWidget[class='discard'] { color: #3f54aa; font: bold; }
+QWidget[class='download'] { color: #177c26; font: bold; }
 
 QWidget {
     background-color: #222;
