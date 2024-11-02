@@ -214,7 +214,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        self.about_window = AboutBox(APP, VERSION)
+        self.about_window = AboutBox(self, app=APP, version=VERSION)
         self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
         self.theme = ThemeManager()
         self.theme.set_theme(app, self.mode)
@@ -2354,7 +2354,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     publication.clear()
                     publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
 
-                dialog = QDialog()
+                dialog = QDialog(self)
                 dialog.setWindowTitle(_('Add Favorite'))
                 label = QLabel(dialog)
                 label.setText(_('Select the language and Bible edition to add:'))
@@ -2430,10 +2430,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 def remove_files():
                     selected_files.clear_files()
 
-                dialog = QDialog()
+                dialog = QDialog(self)
                 dialog.resize(400, 450)
                 dialog.setWindowTitle(_('Add Images'))
-                dialog.setWindowIcon(self.theme.icons['universal']['JWLManager'])
+
                 label = QLabel(dialog)
                 label.setText(_('Select existing playlist or type name of new one:'))
 
