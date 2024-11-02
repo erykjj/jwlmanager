@@ -117,32 +117,44 @@ class HelpBox(QDialog):
 
 
 class ThemeManager:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(ThemeManager, cls).__new__(cls)
+        return cls._instance
+
     def __init__(self):
-        self.icons = {'light': {}, 'dark': {}}
-        self._load_icons()
-        self.qss = {'light': {}, 'dark': {}}
-        self._load_qss()
+        if not hasattr(self, 'initialized'):
+            self.initialized = True
+            self.icons = {'light': {}, 'dark': {}, 'universal': {}}
+            self._load_icons()
+            self.qss = {'light': {}, 'dark': {}}
+            self._load_qss()
 
     def _load_qss(self):
         for theme in ['light', 'dark']:
-            with open(_base_path+f'/{theme}.qss', 'r') as f:
+            with open(_base_path + f'/{theme}.qss', 'r') as f:
                 self.qss[theme] = f.read()
 
     def _load_icons(self):
+        for f in glob('*.png', root_dir=_base_path + f'/icons'):
+            name = path.splitext(f)[0]
+            self.icons['universal'][name] = QIcon(_base_path + f'/icons/{f}')
         for theme in ['light', 'dark']:
-            for f in glob('*.png', root_dir=_base_path+f'/icons/{theme}'):
+            for f in glob('*.png', root_dir=_base_path + f'/icons/{theme}'):
                 name = path.splitext(f)[0]
-                self.icons[theme][name] = QIcon(_base_path+f'/icons/{theme}/{f}')
+                self.icons[theme][name] = QIcon(_base_path + f'/icons/{theme}/{f}')
 
     def update_icons(self, widget, theme):
         if hasattr(widget, 'icon') and callable(getattr(widget, 'icon')):
             icon_name = widget.property('icon_name')
             if icon_name and icon_name in self.icons[theme]:
                 widget.setIcon(self.icons[theme][icon_name])
-            for action in widget.actions():
-                icon_name = action.property('icon_name')
-                if icon_name and icon_name in self.icons[theme]:
-                    action.setIcon(self.icons[theme][icon_name])
+        for action in widget.actions():
+            icon_name = action.property('icon_name')
+            if icon_name and icon_name in self.icons[theme]:
+                action.setIcon(self.icons[theme][icon_name])
         for child in widget.findChildren(QWidget):
             self.update_icons(child, theme)
 
@@ -332,6 +344,7 @@ class ViewerItem(QWidget):
         self.title = title
         self.meta = meta
         self.metadata= metadata
+        theme_manager = ThemeManager()
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
@@ -362,14 +375,14 @@ class ViewerItem(QWidget):
             self.meta_box.setProperty('noteColor', classes[color])
 
         self.delete_button = QPushButton()
-        self.delete_button.setIcon(QPixmap(_base_path+f'/icons/delete.png'))
+        self.delete_button.setIcon(theme_manager.icons['universal']['delete'])
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.delete_button.setStyleSheet('border: 0px;')
         self.delete_button.setProperty('noteColor', classes[color])
 
         self.edit_button = QPushButton()
-        self.edit_button.setIcon(QPixmap(_base_path+f'/icons/edit.png'))
+        self.edit_button.setIcon(theme_manager.icons['universal']['edit'])
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
