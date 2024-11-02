@@ -117,20 +117,11 @@ class HelpBox(QDialog):
 
 
 class ThemeManager:
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if cls._instance is None:
-            cls._instance = super(ThemeManager, cls).__new__(cls)
-        return cls._instance
-
     def __init__(self):
-        if not hasattr(self, 'initialized'):
-            self.initialized = True
-            self.icons = {'light': {}, 'dark': {}, 'universal': {}}
-            self._load_icons()
-            self.qss = {'light': {}, 'dark': {}}
-            self._load_qss()
+        self.icons = {'light': {}, 'dark': {}, 'universal': {}}
+        self._load_icons()
+        self.qss = {'light': {}, 'dark': {}}
+        self._load_qss()
 
     def _load_qss(self):
         for theme in ['light', 'dark']:
@@ -328,8 +319,8 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, idx, color, title, body, meta, metadata):
-        super().__init__()
+    def __init__(self, parent, idx, color, title, body, meta, metadata):
+        super().__init__(parent)
         classes = {
             0: 'grey-note',
             1: 'yellow-note',
@@ -344,7 +335,7 @@ class ViewerItem(QWidget):
         self.title = title
         self.meta = meta
         self.metadata= metadata
-        theme_manager = ThemeManager()
+        theme = parent.theme
 
         self.note_widget = QFrame()
         self.note_widget.setFixedHeight(250)
@@ -375,14 +366,14 @@ class ViewerItem(QWidget):
             self.meta_box.setProperty('noteColor', classes[color])
 
         self.delete_button = QPushButton()
-        self.delete_button.setIcon(theme_manager.icons['universal']['delete'])
+        self.delete_button.setIcon(theme.icons['universal']['delete'])
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.delete_button.setStyleSheet('border: 0px;')
         self.delete_button.setProperty('noteColor', classes[color])
 
         self.edit_button = QPushButton()
-        self.edit_button.setIcon(theme_manager.icons['universal']['edit'])
+        self.edit_button.setIcon(theme.icons['universal']['edit'])
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
