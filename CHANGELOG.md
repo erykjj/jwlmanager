@@ -15,6 +15,7 @@
 
 - Fixed archive name color in dark mode
 - Small cosmetic adjustments in main UI
+- Improved parent/child relationships between main app and dialogs
 
 ### Removed
 
