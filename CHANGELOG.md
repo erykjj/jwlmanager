@@ -10,6 +10,7 @@
 
 - Markdown export:
   - Only notes with newer modification time will be replaced
+- Many cosmetic fixes/improvements
 
 ### Fixed
 
