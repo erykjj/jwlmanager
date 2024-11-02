@@ -2181,7 +2181,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            # FIX: create/reuse incons
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
@@ -2445,12 +2444,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(26, 26)
-                get_files.setIcon(QPixmap(f'{project_path}/res/icons/add.png'))
+                get_files.setIcon(self.theme.icons['universal']['add'])
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
                 clear_files.setFixedSize(26, 26)
-                clear_files.setIcon(QPixmap(f'{project_path}/res/icons/remove.png'))
+                clear_files.setIcon(self.theme.icons['universal']['remove'])
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = DropList()
