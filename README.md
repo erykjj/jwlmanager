@@ -10,7 +10,7 @@ In addition to the main functions of **viewing, editing, exporting, importing, a
 
 Keep in mind that the more items there are to be sorted into a tree structure, the longer it will take. Also, *do* keep a backup until you're convinced that all is well ;-)
 
-![preview](res/images/JWLManager.gif)
+![preview](res/JWLManager.gif)
 
 ____
 ## Usage
