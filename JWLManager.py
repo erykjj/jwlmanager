@@ -2433,6 +2433,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 dialog = QDialog()
                 dialog.resize(400, 450)
                 dialog.setWindowTitle(_('Add Images'))
+                dialog.setWindowIcon(self.theme.icons['universal']['JWLManager'])
                 label = QLabel(dialog)
                 label.setText(_('Select existing playlist or type name of new one:'))
 
@@ -2443,12 +2444,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 playlist.setMaxVisibleItems(20)
 
                 get_files = QPushButton(dialog)
-                get_files.setFixedSize(26, 26)
+                get_files.setFixedSize(28, 28)
                 get_files.setIcon(self.theme.icons['universal']['add'])
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
-                clear_files.setFixedSize(26, 26)
+                clear_files.setFixedSize(28, 28)
                 clear_files.setIcon(self.theme.icons['universal']['remove'])
                 clear_files.clicked.connect(remove_files)
 
