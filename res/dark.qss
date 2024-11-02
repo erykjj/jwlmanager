@@ -1,0 +1,20 @@
+QWidget[noteColor='grey-note'] { background-color: #292929; }
+QWidget[noteColor='yellow-note'] { background-color: #49400e; }
+QWidget[noteColor='green-note'] { background-color: #233315; }
+QWidget[noteColor='blue-note'] { background-color: #1f3646; }
+QWidget[noteColor='red-note'] { background-color: #401f2c; }
+QWidget[noteColor='orange-note'] { background-color: #49290e; }
+QWidget[noteColor='purple-note'] { background-color: #2d2438; }
+
+QWidget {
+    background-color: #222;
+    alternate-background-color: #333;
+    selection-color: #aaa;
+    selection-background-color: #555;
+    color: #aaa;
+}
+
+QMenu {
+    border: 1px solid #444;
+    background-color: #333;
+}
