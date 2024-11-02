@@ -348,14 +348,14 @@ class ViewerItem(QWidget):
         self.text_box.setReadOnly(True)
         self.text_box.setFrameStyle(QFrame.NoFrame)
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
-        self.text_box.setProperty('noteColor', classes[color])
+        self.text_box.setProperty('class', classes[color])
         self.update_note()
 
         separator = QFrame()
         separator.setContentsMargins(2, 0, 2, 0)
         separator.setFrameShape(QFrame.HLine)
         separator.setStyleSheet('color: #7575a3;')
-        separator.setProperty('noteColor', classes[color])
+        separator.setProperty('class', classes[color])
 
         if self.meta:
             self.meta_box = QLabel(self.note_widget)
@@ -366,21 +366,21 @@ class ViewerItem(QWidget):
             self.meta_box.setStyleSheet('color: #7575a3;')
             self.meta_box.setTextFormat(Qt.RichText)
             self.meta_box.setText(meta)
-            self.meta_box.setProperty('noteColor', classes[color])
+            self.meta_box.setProperty('class', classes[color])
 
         self.delete_button = QPushButton()
         self.delete_button.setIcon(theme.icons['delete'])
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.delete_button.setStyleSheet('border: 0px;')
-        self.delete_button.setProperty('noteColor', classes[color])
+        self.delete_button.setProperty('class', classes[color])
 
         self.edit_button = QPushButton()
         self.edit_button.setIcon(theme.icons['edit'])
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
-        self.edit_button.setProperty('noteColor', classes[color])
+        self.edit_button.setProperty('class', classes[color])
 
         layout = QGridLayout(self.note_widget)
         layout.setSpacing(0)
