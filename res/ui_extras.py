@@ -51,8 +51,8 @@ class CustomTreeWidget(QTreeWidget):
 
 
 class AboutBox(QDialog):
-    def __init__(self, app, version):
-        super().__init__()
+    def __init__(self, parent, app, version):
+        super().__init__(parent)
 
         year = f'MIT ©{datetime.now().year}'
         owner = 'Eryk J.'
