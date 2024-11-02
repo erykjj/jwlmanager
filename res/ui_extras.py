@@ -233,15 +233,13 @@ class DataViewer(QDialog):
 
         discard_button = QToolButton()
         discard_button.setStyleSheet('color: #3f54aa; font: bold;') # TODO: change the color to more 'universal'
-        self.discard_action = QAction('')
-        self.discard_action.setToolTip('✗')
+        self.discard_action = QAction()
         self.discard_action.setDisabled(True)
         discard_button.setDefaultAction(self.discard_action)
 
         confirm_button = QToolButton()
         confirm_button.setStyleSheet('color: #c80b0b; font: bold;')
-        self.confirm_action = QAction('')
-        self.confirm_action.setToolTip('✔')
+        self.confirm_action = QAction()
         self.confirm_action.setDisabled(True)
         confirm_button.setDefaultAction(self.confirm_action)
 
