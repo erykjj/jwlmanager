@@ -118,34 +118,37 @@ class HelpBox(QDialog):
 
 class ThemeManager:
     def __init__(self):
-        self.icons = {'light': {}, 'dark': {}, 'universal': {}}
-        self._load_icons()
-        self.qss = {'light': {}, 'dark': {}}
-        self._load_qss()
+        self.all_icons = self._load_icons()
+        self.qss = self._load_qss()
 
     def _load_qss(self):
-        for theme in ['light', 'dark']:
+        qss = {'light': {}, 'dark': {}}
+        for theme in qss.keys():
             with open(_base_path + f'/{theme}.qss', 'r') as f:
-                self.qss[theme] = f.read()
+                qss[theme] = f.read()
+        return qss
 
     def _load_icons(self):
+        icons = {'light': {}, 'dark': {}, 'universal': {}}
         for f in glob('*.png', root_dir=_base_path + f'/icons'):
             name = path.splitext(f)[0]
-            self.icons['universal'][name] = QIcon(_base_path + f'/icons/{f}')
+            icons['universal'][name] = QIcon(_base_path + f'/icons/{f}')
         for theme in ['light', 'dark']:
             for f in glob('*.png', root_dir=_base_path + f'/icons/{theme}'):
                 name = path.splitext(f)[0]
-                self.icons[theme][name] = QIcon(_base_path + f'/icons/{theme}/{f}')
+                icons[theme][name] = QIcon(_base_path + f'/icons/{theme}/{f}')
+        return icons
 
     def update_icons(self, widget, theme):
+        self.icons = {**self.all_icons[theme], **self.all_icons['universal']}
         if hasattr(widget, 'icon') and callable(getattr(widget, 'icon')):
             icon_name = widget.property('icon_name')
-            if icon_name and icon_name in self.icons[theme]:
-                widget.setIcon(self.icons[theme][icon_name])
+            if icon_name and icon_name in self.icons.keys():
+                widget.setIcon(self.icons[icon_name])
         for action in widget.actions():
             icon_name = action.property('icon_name')
-            if icon_name and icon_name in self.icons[theme]:
-                action.setIcon(self.icons[theme][icon_name])
+            if icon_name and icon_name in self.icons.keys():
+                action.setIcon(self.icons[icon_name])
         for child in widget.findChildren(QWidget):
             self.update_icons(child, theme)
 
@@ -225,7 +228,7 @@ class DataViewer(QDialog):
         txt_button.setStyleSheet('color: #177c26; font: bold;') # TODO: change the color to more 'universal'
         self.txt_action = QAction('')
         self.txt_action.setToolTip('⇣')
-        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/save.png'))
+        self.txt_action.setIcon(QPixmap(_base_path+f'/icons/download.png'))
         txt_button.setDefaultAction(self.txt_action)
 
         discard_button = QToolButton()
@@ -297,6 +300,7 @@ class DataViewer(QDialog):
 
         self.title = QPlainTextEdit(self.editor)
         self.title.setMaximumHeight(60)
+        self.title.setContentsMargins(5, 0, 5, 0)
         self.title.setStyleSheet('font: bold; font-size: 20px;')
 
         self.body = QPlainTextEdit(self.editor)
@@ -304,6 +308,7 @@ class DataViewer(QDialog):
 
         self.meta = QLabel(self.editor)
         self.meta.setFixedHeight(80)
+        self.meta.setContentsMargins(5, 0, 5, 0)
         self.meta.setStyleSheet('color: #7575a3;')
 
         layout = QVBoxLayout(self.editor)
@@ -366,14 +371,14 @@ class ViewerItem(QWidget):
             self.meta_box.setProperty('noteColor', classes[color])
 
         self.delete_button = QPushButton()
-        self.delete_button.setIcon(theme.icons['universal']['delete'])
+        self.delete_button.setIcon(theme.icons['delete'])
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.delete_button.setStyleSheet('border: 0px;')
         self.delete_button.setProperty('noteColor', classes[color])
 
         self.edit_button = QPushButton()
-        self.edit_button.setIcon(theme.icons['universal']['edit'])
+        self.edit_button.setIcon(theme.icons['edit'])
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
