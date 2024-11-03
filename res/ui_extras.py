@@ -307,7 +307,7 @@ class DataViewer(QDialog):
         self.meta = QLabel(self.editor)
         self.meta.setFixedHeight(80)
         self.meta.setContentsMargins(5, 0, 5, 0)
-        self.meta.setProperty('foreground', 'editor-meta')
+        self.meta.setProperty('foreground', 'meta')
 
         layout = QVBoxLayout(self.editor)
         layout.addWidget(toolbar)
@@ -355,7 +355,7 @@ class ViewerItem(QWidget):
         separator.setContentsMargins(2, 0, 2, 0)
         separator.setFrameShape(QFrame.HLine)
         separator.setProperty('background', classes[color])
-        separator.setProperty('foreground', 'separator')
+        separator.setProperty('foreground', 'meta')
 
         if self.meta:
             self.meta_box = QLabel(self.note_widget)
@@ -364,7 +364,7 @@ class ViewerItem(QWidget):
             self.meta_box.setWordWrap(True)
             self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             self.meta_box.setProperty('background', classes[color])
-            self.meta_box.setProperty('foreground', 'viewer-meta')
+            self.meta_box.setProperty('foreground', 'meta')
             self.meta_box.setTextFormat(Qt.RichText)
             self.meta_box.setText(meta)
 
