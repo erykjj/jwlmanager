@@ -1,29 +1,66 @@
-QWidget[background='grey'] { background-color: #f1f1f1; }
-QWidget[background='yellow'] { background-color: #fffce6; }
-QWidget[background='green'] { background-color: #effbe6; }
-QWidget[background='blue'] { background-color: #e6f7ff; }
-QWidget[background='red'] { background-color: #ffe6f0; }
-QWidget[background='orange'] { background-color: #fff0e6; }
-QWidget[background='purple'] { background-color: #f1eafa; }
+QWidget[background='grey'] { background-color: #c0c0c0; }
+QWidget[background='yellow'] { background-color: #fff37a; }
+QWidget[background='green'] { background-color: #8cebb7; }
+QWidget[background='blue'] { background-color: #98d8ff; }
+QWidget[background='red'] { background-color: #f698bc; }
+QWidget[background='orange'] { background-color: #ffba8a; }
+QWidget[background='purple'] { background-color: #a9a7c9; }
 
-QWidget[foreground='separator'] { color: #7575a3; }
-QWidget[foreground='editor-meta'] { color: #7575a3; }
-QWidget[foreground='viewer-meta'] { color: #7575a3; }
+QWidget[foreground='meta'] { color: #4f4f4f; }
 
 QWidget[class='confirm'] { color: #c80b0b; font: bold; }
 QWidget[class='discard'] { color: #3f54aa; font: bold; }
 QWidget[class='download'] { color: #177c26; font: bold; }
 
+QLabel a {
+    color: #4f4f4f;
+    text-decoration: none;
+}
 
 QWidget {
     background-color: #ffffff;
     alternate-background-color: #f0f0f0;
-    selection-color: #222;
+    selection-color: #000;
     selection-background-color: #aaa;
-    color: #222;
+    color: #000;
+}
+
+QPushButton[class='button']:enabled {
+    background-color: #e0e0e0;
+    color: #000;
+    border: 1px solid #bbb;
+	border-radius: 5px;
+}
+
+QPushButton[class='button']:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    border: 1px solid #ddd;
+	border-radius: 5px;
 }
 
 QMenu {
     border: 1px solid #ccc;
-    background-color: #ffffff;
+	selection-background-color: #e0e0e0;
+    background-color: #f5f5f5;
 }
+
+QComboBox QAbstractItemView {
+    background-color: #f5f5f5;
+    selection-background-color: #e0e0e0;
+    border: 1px solid #ccc;
+}
+
+QFrame[class='info'] {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+QTreeWidget {
+    border: 1px solid #ccc;
+}
+
+/*
+Filter
+Scrollbars
+*/
