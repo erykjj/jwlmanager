@@ -297,11 +297,11 @@ class DataViewer(QDialog):
 
         self.title = QPlainTextEdit(self.editor)
         self.title.setMaximumHeight(60)
-        self.title.setViewportMargins(5, 2, 5, 2)
+        self.title.setViewportMargins(5, 0, 5, 0)
         self.title.setStyleSheet('font: bold; font-size: 20px;')
 
         self.body = QPlainTextEdit(self.editor)
-        self.body.setViewportMargins(5, 2, 5, 2)
+        self.body.setViewportMargins(5, 0, 5, 0)
         self.body.setStyleSheet('font: normal;')
 
         self.meta = QLabel(self.editor)
