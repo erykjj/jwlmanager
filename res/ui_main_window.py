@@ -136,6 +136,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.frame_info = QFrame(self.centralwidget)
         self.frame_info.setObjectName(u"frame_info")
+        self.frame_info.setProperty('class', 'info')
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
@@ -233,6 +234,11 @@ class Ui_MainWindow(object):
         self.button_view.setObjectName(u"button_view")
         self.button_view.setEnabled(False)
         self.button_view.setGeometry(QRect(0, 0, 85, 28))
+        self.button_import.setProperty('class', 'button')
+        self.button_export.setProperty('class', 'button')
+        self.button_delete.setProperty('class', 'button')
+        self.button_add.setProperty('class', 'button')
+        self.button_view.setProperty('class', 'button')
 
         self.horizontalLayout.addWidget(self.buttons)
 
