@@ -1,10 +1,10 @@
-QWidget[background='grey'] { color: #fff; background-color: #4f4f4f; }
-QWidget[background='yellow'] { color: #fff; background-color: #897215; }
-QWidget[background='green'] { color: #fff; background-color: #1d8642; }
-QWidget[background='blue'] { color: #fff; background-color: #1971ac; }
-QWidget[background='red'] { color: #fff; background-color: #9b1a4b; }
-QWidget[background='orange'] { color: #fff; background-color: #a71d01; }
-QWidget[background='purple'] { color: #fff; background-color: #2f2c5c; }
+QWidget[background='grey'] { color: #fff; background-color: #292929; }
+QWidget[background='yellow'] { color: #fff; background-color: #49400E; }
+QWidget[background='green'] { color: #fff; background-color: #233315; }
+QWidget[background='blue'] { color: #fff; background-color: #1F3646; }
+QWidget[background='red'] { color: #fff; background-color: #401F2C; }
+QWidget[background='orange'] { color: #fff; background-color: #49290E; }
+QWidget[background='purple'] { color: #fff; background-color: #2D2438; }
 
 QWidget[foreground='meta'] { color: #c0c0c0; }
 
