@@ -34,9 +34,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
-        <source>&amp;Grouping:</source>
-        <oldsource>Grouping:</oldsource>
-        <translation>Groupement:</translation>
+        <source>Grouping:</source>
+        <oldsource>&amp;Grouping:</oldsource>
+        <translation type="unfinished">Groupement:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -46,9 +46,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
-        <source>Categor&amp;y:</source>
-        <oldsource>Category:</oldsource>
-        <translation>Catégorie:</translation>
+        <source>Category:</source>
+        <oldsource>Categor&amp;y:</oldsource>
+        <translation type="unfinished">Catégorie:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -305,13 +305,17 @@
     </message>
     <message>
         <location filename="main_window.ui" line="812"/>
-        <source>&amp;Short</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="815"/>
+        <source>Short</source>
+        <oldsource>&amp;Short</oldsource>
+        <translation type="unfinished">Courts</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
-        <source>&amp;Full</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="829"/>
+        <source>Full</source>
+        <oldsource>&amp;Full</oldsource>
+        <translation type="unfinished">Complets</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="965"/>
@@ -337,8 +341,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>&amp;Code</source>
-        <oldsource>Code</oldsource>
+        <source>Code</source>
+        <oldsource>&amp;Code</oldsource>
         <translation type="unfinished">Code</translation>
     </message>
     <message>
@@ -347,6 +351,7 @@
         <translation>Utiliser le code de publication comme titre</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
@@ -358,6 +363,7 @@
         <translation>Utiliser un titre de publication court</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>

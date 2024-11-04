@@ -34,8 +34,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
-        <source>&amp;Grouping:</source>
-        <oldsource>Grouping:</oldsource>
+        <source>Grouping:</source>
+        <oldsource>&amp;Grouping:</oldsource>
         <translation type="unfinished">Raggruppamento:</translation>
     </message>
     <message>
@@ -46,8 +46,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
-        <source>Categor&amp;y:</source>
-        <oldsource>Category:</oldsource>
+        <source>Category:</source>
+        <oldsource>Categor&amp;y:</oldsource>
         <translation type="unfinished">Categoria:</translation>
     </message>
     <message>
@@ -301,13 +301,17 @@
     </message>
     <message>
         <location filename="main_window.ui" line="812"/>
-        <source>&amp;Short</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="815"/>
+        <source>Short</source>
+        <oldsource>&amp;Short</oldsource>
+        <translation type="unfinished">Abbreviato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
-        <source>&amp;Full</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="829"/>
+        <source>Full</source>
+        <oldsource>&amp;Full</oldsource>
+        <translation type="unfinished">Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="965"/>
@@ -333,8 +337,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>&amp;Code</source>
-        <oldsource>Code</oldsource>
+        <source>Code</source>
+        <oldsource>&amp;Code</oldsource>
         <translation type="unfinished">Sigla</translation>
     </message>
     <message>
@@ -343,6 +347,7 @@
         <translation>Usa sigla come titolo</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
@@ -354,6 +359,7 @@
         <translation>Usa titolo abbreviato</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>

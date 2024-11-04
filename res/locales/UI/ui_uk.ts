@@ -40,8 +40,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
-        <source>&amp;Grouping:</source>
-        <oldsource>Grouping:</oldsource>
+        <source>Grouping:</source>
+        <oldsource>&amp;Grouping:</oldsource>
         <translation type="unfinished">Групування:</translation>
     </message>
     <message>
@@ -51,8 +51,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
-        <source>Categor&amp;y:</source>
-        <oldsource>Category:</oldsource>
+        <source>Category:</source>
+        <oldsource>Categor&amp;y:</oldsource>
         <translation type="unfinished">Категорія:</translation>
     </message>
     <message>
@@ -305,19 +305,23 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>&amp;Code</source>
-        <oldsource>Code</oldsource>
+        <source>Code</source>
+        <oldsource>&amp;Code</oldsource>
         <translation type="unfinished">Код</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="812"/>
-        <source>&amp;Short</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="815"/>
+        <source>Short</source>
+        <oldsource>&amp;Short</oldsource>
+        <translation type="unfinished">Короткий</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
-        <source>&amp;Full</source>
-        <translation type="unfinished"></translation>
+        <location filename="main_window.ui" line="829"/>
+        <source>Full</source>
+        <oldsource>&amp;Full</oldsource>
+        <translation type="unfinished">Повне</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="873"/>
@@ -383,6 +387,7 @@
         <translation>Код публікації як заголовок</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
@@ -394,6 +399,7 @@
         <translation>Коротке ім&apos;я піблікацій</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
