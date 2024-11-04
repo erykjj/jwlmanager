@@ -4,18 +4,17 @@
 
 ### Added
 
-- Light/dark mode toggle
+- **Light/dark mode toggle**
 
 ### Changed
 
-- Markdown export:
+- **Markdown export**:
   - Only notes with newer modification time will be replaced
-- Many cosmetic fixes/improvements
+- Many cosmetic/UI fixes/improvements
 
 ### Fixed
 
 - Fixed archive name color in dark mode
-- Small cosmetic adjustments in main UI
 - Improved parent/child relationships between main app and dialogs
 
 ### Removed
