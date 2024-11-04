@@ -305,9 +305,19 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <oldsource>&amp;Code</oldsource>
+        <source>&amp;Code</source>
+        <oldsource>Code</oldsource>
         <translation type="unfinished">Kod</translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="812"/>
+        <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="826"/>
+        <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="873"/>
@@ -368,27 +378,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <translation>Kod</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="801"/>
         <source>Use publication code as title</source>
         <translation>Używać kodu publikacji jako tytuł</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
         <translation type="unfinished">Krótki</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="812"/>
-        <location filename="main_window.ui" line="815"/>
-        <source>Short</source>
-        <translation>Krótki</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="818"/>
@@ -396,17 +394,10 @@
         <translation>Używać krótkiego tytułu publikacji</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
         <translation type="unfinished">Kompletny</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="826"/>
-        <location filename="main_window.ui" line="829"/>
-        <source>Full</source>
-        <translation>Kompletny</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="832"/>

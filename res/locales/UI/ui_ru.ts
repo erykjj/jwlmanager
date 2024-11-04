@@ -294,6 +294,16 @@
         <translation>Ctrl+Z</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
+        <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="826"/>
+        <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="main_window.ui" line="965"/>
         <source>&amp;Polski</source>
         <oldsource>Polski</oldsource>
@@ -317,8 +327,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <translation>Код</translation>
+        <source>&amp;Code</source>
+        <oldsource>Code</oldsource>
+        <translation type="unfinished">Код</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="801"/>
@@ -326,18 +337,10 @@
         <translation>Код публикации как заголовок</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
         <translation type="unfinished">Короткий</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="812"/>
-        <location filename="main_window.ui" line="815"/>
-        <source>Short</source>
-        <oldsource>Short Title</oldsource>
-        <translation>Короткий</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="818"/>
@@ -345,17 +348,10 @@
         <translation>Короткий заголовок публикаций</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
         <translation type="unfinished">Полный</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="826"/>
-        <location filename="main_window.ui" line="829"/>
-        <source>Full</source>
-        <translation>Полный</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="859"/>
@@ -449,12 +445,6 @@
         <location filename="main_window.ui" line="832"/>
         <source>Use full publication title</source>
         <translation>Полный заголовок публикаций</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <oldsource>&amp;Code</oldsource>
-        <translation type="unfinished">Код</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="841"/>

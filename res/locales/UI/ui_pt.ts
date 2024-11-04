@@ -296,6 +296,16 @@
         <translation>Ctrl+Z</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
+        <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="826"/>
+        <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="main_window.ui" line="965"/>
         <source>&amp;Polski</source>
         <oldsource>Polski</oldsource>
@@ -319,8 +329,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <translation>Código</translation>
+        <source>&amp;Code</source>
+        <oldsource>Code</oldsource>
+        <translation type="unfinished">Código</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="801"/>
@@ -328,18 +339,10 @@
         <translation>Usar código de publicação com título</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
         <translation type="unfinished">Curto</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="812"/>
-        <location filename="main_window.ui" line="815"/>
-        <source>Short</source>
-        <oldsource>Short Title</oldsource>
-        <translation>Curto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="818"/>
@@ -347,17 +350,10 @@
         <translation>Usar título de publicação curto</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
         <translation type="unfinished">Completo</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="826"/>
-        <location filename="main_window.ui" line="829"/>
-        <source>Full</source>
-        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="859"/>
@@ -451,12 +447,6 @@
         <location filename="main_window.ui" line="832"/>
         <source>Use full publication title</source>
         <translation>Usar título completo da publicação</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <oldsource>&amp;Code</oldsource>
-        <translation type="unfinished">Código</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="841"/>

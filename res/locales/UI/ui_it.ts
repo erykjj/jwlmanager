@@ -300,6 +300,16 @@
         <translation>Ctrl+Z</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="812"/>
+        <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="826"/>
+        <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="main_window.ui" line="965"/>
         <source>&amp;Polski</source>
         <oldsource>Polski</oldsource>
@@ -323,8 +333,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <translation>Sigla</translation>
+        <source>&amp;Code</source>
+        <oldsource>Code</oldsource>
+        <translation type="unfinished">Sigla</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="801"/>
@@ -332,18 +343,10 @@
         <translation>Usa sigla come titolo</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="812"/>
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
         <translation type="unfinished">Abbreviato</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="812"/>
-        <location filename="main_window.ui" line="815"/>
-        <source>Short</source>
-        <oldsource>Short Title</oldsource>
-        <translation>Abbreviato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="818"/>
@@ -351,17 +354,10 @@
         <translation>Usa titolo abbreviato</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
         <translation type="unfinished">Completo</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="826"/>
-        <location filename="main_window.ui" line="829"/>
-        <source>Full</source>
-        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="859"/>
@@ -502,12 +498,6 @@
         <location filename="main_window.ui" line="125"/>
         <source>Type</source>
         <translation>Tipo</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="798"/>
-        <source>Code</source>
-        <oldsource>&amp;Code</oldsource>
-        <translation type="unfinished">Sigla</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="876"/>
