@@ -2212,7 +2212,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         meta += f" — {item['HEADING']}"
                     if item['Link']:
                         lnk = item['Link']
-                        meta += f"<br><a href='{lnk}' style='color: #7575a3; text-decoration: none'>{lnk}</a>"
+                        meta += f"<br><a href='{lnk}'>{lnk}</a>"
+                        # meta += f"<br><a href='{lnk}' style='color: #c0c0c0; text-decoration: none'>{lnk}</a>" # NOTE: color is hardcoded - tried in qss but couldn't get it to apply :-/
                     meta += '</tt></strong></small>'
                 note_box = ViewerItem(self, item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
@@ -2449,12 +2450,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 get_files = QPushButton(dialog)
                 get_files.setFixedSize(28, 28)
-                get_files.setIcon(self.theme.icons['universal']['add'])
+                get_files.setIcon(self.theme.icons['add'])
                 get_files.clicked.connect(select_files)
 
                 clear_files = QPushButton(dialog)
                 clear_files.setFixedSize(28, 28)
-                clear_files.setIcon(self.theme.icons['universal']['remove'])
+                clear_files.setIcon(self.theme.icons['remove'])
                 clear_files.clicked.connect(remove_files)
 
                 selected_files = DropList()
