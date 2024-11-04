@@ -34,8 +34,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
-        <source>Grouping:</source>
-        <translation>Groupement:</translation>
+        <source>&amp;Grouping:</source>
+        <oldsource>Grouping:</oldsource>
+        <translation type="unfinished">Groupement:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -45,8 +46,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
-        <source>Category:</source>
-        <translation>Catégorie:</translation>
+        <source>Categor&amp;y:</source>
+        <oldsource>Category:</oldsource>
+        <translation type="unfinished">Catégorie:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -121,14 +123,15 @@
     </message>
     <message>
         <location filename="main_window.ui" line="523"/>
-        <location filename="main_window.ui" line="698"/>
+        <location filename="main_window.ui" line="697"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
-        <source>&amp;View</source>
-        <translation>&amp;Voir</translation>
+        <source>V&amp;iew</source>
+        <oldsource>&amp;View</oldsource>
+        <translation type="unfinished">&amp;Voir</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="541"/>
@@ -141,8 +144,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="544"/>
-        <source>&amp;Title View</source>
-        <translation>&amp;Titres</translation>
+        <source>Title &amp;View</source>
+        <oldsource>&amp;Title View</oldsource>
+        <translation type="unfinished">&amp;Titres</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
@@ -175,205 +179,260 @@
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="638"/>
+        <location filename="main_window.ui" line="637"/>
         <source>&amp;Save</source>
         <translation>&amp;Enregistrer</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="641"/>
+        <location filename="main_window.ui" line="640"/>
         <source>Save archive</source>
         <translation>Enregistrer l&apos;archive</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="644"/>
+        <location filename="main_window.ui" line="643"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="656"/>
+        <location filename="main_window.ui" line="655"/>
         <source>&amp;Reindex</source>
         <translation>&amp;Réindexer</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="659"/>
+        <location filename="main_window.ui" line="658"/>
         <source>Optimize database</source>
         <translation>Optimiser la base de données</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="668"/>
+        <location filename="main_window.ui" line="667"/>
         <source>&amp;Quit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="671"/>
+        <location filename="main_window.ui" line="670"/>
         <source>Exit</source>
         <translation>Sortir</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="674"/>
+        <location filename="main_window.ui" line="673"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="683"/>
+        <location filename="main_window.ui" line="682"/>
         <source>&amp;About…</source>
         <translation>À &amp;propos…</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="686"/>
+        <location filename="main_window.ui" line="685"/>
         <source>About…</source>
         <translation>À propos…</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="710"/>
+        <location filename="main_window.ui" line="709"/>
         <source>Save &amp;As…</source>
         <translation>Enregistrer &amp;comme…</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="713"/>
+        <location filename="main_window.ui" line="712"/>
         <source>Save archive as…</source>
         <translation>Enregistrer l&apos;archive comme…</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="716"/>
+        <location filename="main_window.ui" line="715"/>
         <source>Ctrl+Alt+S</source>
         <translation>Ctrl+Alt+S</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="728"/>
+        <location filename="main_window.ui" line="727"/>
         <source>E&amp;xpand All</source>
         <translation>&amp;Étendre tout</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="731"/>
+        <location filename="main_window.ui" line="730"/>
         <source>Expand all items</source>
         <translation>Étendre tous les éléments</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="734"/>
+        <location filename="main_window.ui" line="733"/>
         <source>Ctrl+E</source>
         <translation>Ctrl+E</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="746"/>
+        <location filename="main_window.ui" line="745"/>
         <source>&amp;Collapse All</source>
         <translation>&amp;Réduire tout</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="749"/>
+        <location filename="main_window.ui" line="748"/>
         <source>Collapse all items</source>
         <translation>Réduire tous les éléments</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="752"/>
+        <location filename="main_window.ui" line="751"/>
         <source>Ctrl+C</source>
         <translation>Ctrl+C</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="764"/>
+        <location filename="main_window.ui" line="763"/>
         <source>&amp;Select All</source>
         <translation>&amp;Sélectionner tout</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="767"/>
+        <location filename="main_window.ui" line="766"/>
         <source>Select all items</source>
         <translation>Sélectionner tous les éléments</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="770"/>
+        <location filename="main_window.ui" line="769"/>
         <source>Ctrl+A</source>
         <translation>Ctrl+A</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="782"/>
+        <location filename="main_window.ui" line="781"/>
         <source>&amp;Unselect All</source>
         <translation>&amp;Désélectionner tout</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="785"/>
+        <location filename="main_window.ui" line="784"/>
         <source>Unselect all items</source>
         <translation>Désélectionner tous les éléments</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="788"/>
+        <location filename="main_window.ui" line="787"/>
         <source>Ctrl+Z</source>
         <translation>Ctrl+Z</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="799"/>
-        <source>Code</source>
-        <translation>Code</translation>
+        <location filename="main_window.ui" line="965"/>
+        <source>&amp;Polski</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="802"/>
+        <location filename="main_window.ui" line="991"/>
+        <source>T&amp;heme</source>
+        <oldsource>&amp;Theme</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="994"/>
+        <source>Toggle theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="997"/>
+        <source>Ctrl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Code</source>
+        <translation type="vanished">Code</translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="801"/>
         <source>Use publication code as title</source>
         <translation>Utiliser le code de publication comme titre</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="813"/>
-        <location filename="main_window.ui" line="816"/>
+        <location filename="main_window.ui" line="812"/>
+        <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>Short Title</oldsource>
         <translation>Courts</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="819"/>
+        <location filename="main_window.ui" line="818"/>
         <source>Use short publication title</source>
         <translation>Utiliser un titre de publication court</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="827"/>
-        <location filename="main_window.ui" line="830"/>
+        <location filename="main_window.ui" line="826"/>
+        <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <translation>Complets</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="860"/>
+        <location filename="main_window.ui" line="859"/>
         <source>&amp;Mask</source>
         <translation>&amp;Masquer</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="940"/>
+        <location filename="main_window.ui" line="873"/>
+        <source>&amp;English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="884"/>
+        <source>E&amp;spañol</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="895"/>
+        <source>&amp;Deutsch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="906"/>
+        <source>&amp;Français</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="917"/>
+        <source>P&amp;ortuguês</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="928"/>
+        <source>&amp;Italiano</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="939"/>
         <source>Pусский</source>
         <translation>Pусский</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="943"/>
+        <location filename="main_window.ui" line="942"/>
         <source>ru</source>
         <translation>ru</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="951"/>
         <source>中文</source>
-        <translation>中文</translation>
+        <translation type="vanished">中文</translation>
+    </message>
+    <message>
+        <source>zh</source>
+        <translation type="vanished">zh</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="954"/>
-        <source>zh</source>
-        <translation>zh</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="966"/>
         <source>&amp;Sort</source>
         <translation>&amp;Trier</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="969"/>
+        <location filename="main_window.ui" line="957"/>
         <source>Sort Notes</source>
         <translation>Trier les notes</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="977"/>
         <source>Polski</source>
-        <translation>Polski</translation>
+        <translation type="vanished">Polski</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="980"/>
+        <location filename="main_window.ui" line="968"/>
         <source>pl</source>
         <translation>pl</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="991"/>
+        <location filename="main_window.ui" line="979"/>
         <source>Українська</source>
         <translation>Українська</translation>
     </message>
@@ -382,7 +441,7 @@
         <translation type="vanished">Українська</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="994"/>
+        <location filename="main_window.ui" line="982"/>
         <source>uk</source>
         <translation>uk</translation>
     </message>
@@ -391,7 +450,7 @@
         <translation type="vanished">Titre complet</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="833"/>
+        <location filename="main_window.ui" line="832"/>
         <source>Use full publication title</source>
         <translation>Utiliser le titre complet de la publication</translation>
     </message>
@@ -404,17 +463,17 @@
         <translation type="vanished">Regrouper les publications par catégorie</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="842"/>
+        <location filename="main_window.ui" line="841"/>
         <source>&amp;New</source>
         <translation>&amp;Nouveau</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="845"/>
+        <location filename="main_window.ui" line="844"/>
         <source>Create an empty archive</source>
         <translation>Créer une archive vide</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="848"/>
+        <location filename="main_window.ui" line="847"/>
         <source>Ctrl+N</source>
         <translation>Ctrl+N</translation>
     </message>
@@ -432,7 +491,7 @@
         <translation type="vanished">Masquer</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="863"/>
+        <location filename="main_window.ui" line="862"/>
         <source>Mask text data</source>
         <translation>Masquer les données de texte</translation>
     </message>
@@ -445,14 +504,13 @@
         <translation type="vanished">Importer d’un fichier d’exportation</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="921"/>
+        <location filename="main_window.ui" line="920"/>
         <source>pt</source>
         <translation>pt</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="874"/>
         <source>English</source>
-        <translation>English</translation>
+        <translation type="vanished">English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -465,54 +523,54 @@
         <translation>Type</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="877"/>
+        <location filename="main_window.ui" line="798"/>
+        <source>&amp;Code</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="876"/>
         <source>en</source>
         <translation>en</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="885"/>
         <source>Español</source>
-        <translation>Español</translation>
+        <translation type="vanished">Español</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="888"/>
+        <location filename="main_window.ui" line="887"/>
         <source>es</source>
         <translation>es</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="899"/>
+        <location filename="main_window.ui" line="898"/>
         <source>de</source>
         <translation>de</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="907"/>
         <source>Français</source>
-        <translation>Français</translation>
+        <translation type="vanished">Français</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="910"/>
+        <location filename="main_window.ui" line="909"/>
         <source>fr</source>
         <translation>fr</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="918"/>
         <source>Português</source>
-        <translation>Português</translation>
+        <translation type="vanished">Português</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
-        <translation>Italiano</translation>
+        <translation type="vanished">Italiano</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="932"/>
+        <location filename="main_window.ui" line="931"/>
         <source>it</source>
         <translation>it</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="896"/>
         <source>Deutsch</source>
-        <translation>Deutsch</translation>
+        <translation type="vanished">Deutsch</translation>
     </message>
 </context>
 </TS>
