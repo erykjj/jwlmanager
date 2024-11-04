@@ -12,14 +12,9 @@ QWidget[class='confirm'] { color: #c80b0b; font: bold; }
 QWidget[class='discard'] { color: #3f54aa; font: bold; }
 QWidget[class='download'] { color: #177c26; font: bold; }
 
-QLabel a {
-    color: #c0c0c0;
-    text-decoration: none;
-}
-
 QWidget {
-    background-color: #222;
-    alternate-background-color: #333;
+    background-color: #2a2a2a;
+    alternate-background-color: #3c3c3c;
     selection-color: #fff;
     selection-background-color: #555;
     color: #fff;
@@ -29,14 +24,14 @@ QPushButton[class='button']:enabled {
     background-color: #3c3c3c;
     color: #fff;
     border: 1px solid #555;
-	border-radius: 5px;
+	border-radius: 2px;
 }
 
 QPushButton[class='button']:disabled {
     background-color: #2a2a2a;
     color: #777;
     border: 1px solid #444;
-	border-radius: 5px;
+	border-radius: 2px;
 }
 
 QMenu {
@@ -51,47 +46,15 @@ QComboBox QAbstractItemView {
     border: 1px solid #444;
 }
 
+QLineEdit {
+    border: 1px solid #444;
+}
+
 QFrame[class='info'] {
     border: 1px solid #444;
-    border-radius: 5px;
+    border-radius: 2px;
 }
 
 QTreeWidget {
     border: 1px solid #444;
-}
-
-/* General scrollbar style */
-QScrollBar {
-    background: #333; /* Track background color */
-    border: 1px solid #444;
-}
-
-QScrollBar::handle {
-    background: #555; /* Scrollbar handle color */
-    border: 1px solid #666;
-    border-radius: 5px;
-    min-height: 20px; /* Ensures a minimum handle size */
-}
-
-QScrollBar::add-line, QScrollBar::sub-line {
-    background: #444; /* Arrow button background color */
-    border: 1px solid #666;
-    width: 12px;
-    height: 12px;
-    subcontrol-origin: margin;
-}
-
-QScrollBar::add-line:pressed, QScrollBar::sub-line:pressed {
-    background: #666; /* Darker color when arrow button is pressed */
-}
-
-QScrollBar::up-arrow, QScrollBar::down-arrow, 
-QScrollBar::left-arrow, QScrollBar::right-arrow {
-    width: 7px;
-    height: 7px;
-    background: #aaa; /* Arrow color */
-}
-
-QScrollBar::add-page, QScrollBar::sub-page {
-    background: #333; /* Color for the empty space in the track */
 }
