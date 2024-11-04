@@ -361,12 +361,12 @@ class ViewerItem(QWidget):
         if self.meta:
             self.meta_box = QLabel(self.note_widget)
             self.meta_box.setContentsMargins(5, 0, 0, 0)
-            self.meta_box.setFixedHeight(78)
+            self.meta_box.setFixedHeight(85)
             self.meta_box.setWordWrap(True)
             self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             self.meta_box.setProperty('background', colors[color])
             self.meta_box.setProperty('foreground', 'meta')
-            self.meta_box.setTextFormat(Qt.RichText)
+            self.meta_box.setTextInteractionFlags(Qt.TextSelectableByMouse)
             self.meta_box.setText(meta)
 
         self.delete_button = QPushButton()
