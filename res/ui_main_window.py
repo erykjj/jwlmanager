@@ -18,7 +18,7 @@ from PySide6.QtWidgets import (QAbstractItemView, QComboBox, QFrame, QGridLayout
 
 class Ui_MainWindow(object):
 
-    def setupUi(self, MainWindow, theme):
+    def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(728, 795)
