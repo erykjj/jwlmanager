@@ -1,3 +1,7 @@
+/* TO DO:
+
+*/
+
 QWidget[background='grey'] { color: #000; background-color: #F1F1F1; }
 QWidget[background='yellow'] { color: #000; background-color: #FFFCE6; }
 QWidget[background='green'] { color: #000; background-color: #EFFBE6; }
@@ -57,4 +61,13 @@ QFrame[class='info'] {
 
 QTreeWidget {
     border: 1px solid #ccc;
+}
+
+QProgressDialog QProgressBar {
+    text-align: center;
+}
+
+QProgressDialog QProgressBar::chunk {
+    background-color: #5B3C88;
+    border-radius: 5px;
 }

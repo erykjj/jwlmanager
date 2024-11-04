@@ -58,3 +58,12 @@ QFrame[class='info'] {
 QTreeWidget {
     border: 1px solid #444;
 }
+
+QProgressDialog QProgressBar {
+    text-align: center;
+}
+
+QProgressDialog QProgressBar::chunk {
+    background-color: #5B3C88;
+    border-radius: 5px;
+}
