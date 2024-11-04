@@ -36,7 +36,7 @@
         <location filename="main_window.ui" line="181"/>
         <source>&amp;Grouping:</source>
         <oldsource>Grouping:</oldsource>
-        <translation type="unfinished">Groupement:</translation>
+        <translation>Groupement:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -48,7 +48,7 @@
         <location filename="main_window.ui" line="232"/>
         <source>Categor&amp;y:</source>
         <oldsource>Category:</oldsource>
-        <translation type="unfinished">Catégorie:</translation>
+        <translation>Catégorie:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
