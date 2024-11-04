@@ -324,7 +324,7 @@ class DataViewer(QDialog):
 class ViewerItem(QWidget):
     def __init__(self, parent, idx, color, title, body, meta, metadata):
         super().__init__(parent)
-        classes = {
+        colors = {
             0: 'grey',
             1: 'yellow',
             2: 'green',
@@ -346,15 +346,17 @@ class ViewerItem(QWidget):
 
         self.text_box = QTextEdit(self.note_widget)
         self.text_box.setReadOnly(True)
+        self.text_box.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.text_box.verticalScrollBar().setEnabled(True)
         self.text_box.setFrameStyle(QFrame.NoFrame)
         self.text_box.sizePolicy().setHorizontalPolicy(QSizePolicy.MinimumExpanding)
-        self.text_box.setProperty('background', classes[color])
+        self.text_box.setProperty('background', colors[color])
         self.update_note()
 
         separator = QFrame()
         separator.setContentsMargins(2, 0, 2, 0)
         separator.setFrameShape(QFrame.HLine)
-        separator.setProperty('background', classes[color])
+        separator.setProperty('background', colors[color])
         separator.setProperty('foreground', 'meta')
 
         if self.meta:
@@ -363,7 +365,7 @@ class ViewerItem(QWidget):
             self.meta_box.setFixedHeight(78)
             self.meta_box.setWordWrap(True)
             self.meta_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-            self.meta_box.setProperty('background', classes[color])
+            self.meta_box.setProperty('background', colors[color])
             self.meta_box.setProperty('foreground', 'meta')
             self.meta_box.setTextFormat(Qt.RichText)
             self.meta_box.setText(meta)
@@ -373,14 +375,14 @@ class ViewerItem(QWidget):
         self.delete_button.setIconSize(QSize(28, 28))
         self.delete_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.delete_button.setStyleSheet('border: 0px;')
-        self.delete_button.setProperty('background', classes[color])
+        self.delete_button.setProperty('background', colors[color])
 
         self.edit_button = QPushButton()
         self.edit_button.setIcon(theme.icons['edit'])
         self.edit_button.setIconSize(QSize(24, 24))
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
-        self.edit_button.setProperty('background', classes[color])
+        self.edit_button.setProperty('background', colors[color])
 
         layout = QGridLayout(self.note_widget)
         layout.setSpacing(0)
