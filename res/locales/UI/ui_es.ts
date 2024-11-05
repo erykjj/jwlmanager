@@ -348,7 +348,7 @@
     <message>
         <location filename="main_window.ui" line="994"/>
         <source>Toggle theme</source>
-        <translation>Cambiar entre modo claro y oscuro</translation>
+        <translation>Alternar tema</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="997"/>
