@@ -123,9 +123,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="531"/>
-        <source>V&amp;iew</source>
-        <oldsource>&amp;View</oldsource>
-        <translation>&amp;Вид</translation>
+        <source>&amp;View</source>
+        <oldsource>V&amp;iew</oldsource>
+        <translation type="unfinished">&amp;Вид</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="541"/>
