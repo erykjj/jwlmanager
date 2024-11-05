@@ -109,7 +109,7 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>Ausblick</translation>
+        <translation>&amp;Ausblick</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="480"/>
@@ -142,7 +142,7 @@
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation>&amp;Titelansicht</translation>
+        <translation>Tite&amp;lansicht</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
