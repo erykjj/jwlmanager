@@ -36,7 +36,7 @@
         <location filename="main_window.ui" line="181"/>
         <source>Grouping:</source>
         <oldsource>&amp;Grouping:</oldsource>
-        <translation type="unfinished">Raggruppamento:</translation>
+        <translation>Raggruppamento:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -48,7 +48,7 @@
         <location filename="main_window.ui" line="232"/>
         <source>Category:</source>
         <oldsource>Categor&amp;y:</oldsource>
-        <translation type="unfinished">Categoria:</translation>
+        <translation>Categoria:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -131,7 +131,7 @@
         <location filename="main_window.ui" line="531"/>
         <source>V&amp;iew</source>
         <oldsource>&amp;View</oldsource>
-        <translation type="unfinished">&amp;Visualizza</translation>
+        <translation>&amp;Visualizza</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="541"/>
@@ -142,7 +142,7 @@
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation type="unfinished">Formato &amp;Titolo</translation>
+        <translation>Formato &amp;Titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
@@ -304,42 +304,42 @@
         <location filename="main_window.ui" line="815"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
-        <translation type="unfinished">Abbreviato</translation>
+        <translation>Abbreviato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="826"/>
         <location filename="main_window.ui" line="829"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation type="unfinished">Completo</translation>
+        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="965"/>
         <source>Polski</source>
         <oldsource>&amp;Polski</oldsource>
-        <translation type="unfinished">Polski</translation>
+        <translation>Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="991"/>
         <source>&amp;Theme</source>
         <oldsource>T&amp;heme</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Tema</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="994"/>
         <source>Toggle theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Alterna il tema</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="997"/>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="798"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation type="unfinished">Sigla</translation>
+        <translation>Sigla</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="801"/>
@@ -360,37 +360,37 @@
         <location filename="main_window.ui" line="873"/>
         <source>English</source>
         <oldsource>&amp;English</oldsource>
-        <translation type="unfinished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="884"/>
         <source>Español</source>
         <oldsource>E&amp;spañol</oldsource>
-        <translation type="unfinished">Español</translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="895"/>
         <source>Deutsch</source>
         <oldsource>&amp;Deutsch</oldsource>
-        <translation type="unfinished">Deutsch</translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="906"/>
         <source>Français</source>
         <oldsource>&amp;Français</oldsource>
-        <translation type="unfinished">Français</translation>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="917"/>
         <source>Português</source>
         <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="unfinished">Português</translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="928"/>
         <source>Italiano</source>
         <oldsource>&amp;Italiano</oldsource>
-        <translation type="unfinished">Italiano</translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="939"/>
