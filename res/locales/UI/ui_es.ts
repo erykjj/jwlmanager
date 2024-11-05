@@ -150,13 +150,13 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>Ver</translation>
+        <translation>&amp;Ver</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation>&amp;Títulos</translation>
+        <translation>Títu&amp;los</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
