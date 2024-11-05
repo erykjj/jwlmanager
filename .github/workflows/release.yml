@@ -1,4 +1,4 @@
-name: 'Draft Release v1.0.0'
+name: 'Draft Release v1.0.1'
 
 on:
   push:
@@ -56,13 +56,13 @@ jobs:
         body: |
           ${{ steps.extract-release-notes.outputs.release_notes }}
           ____
-          You can download the latest source script and execute it from the commandline, or try these self-contained packages, which don't require the installation of Python or dependencies:
+          You can download the latest source script and execute it from the commandline, or try these self-contained packages, which don't require the installation of Python or any dependencies:
           - Linux:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - macOS 11/12/13:
+          - macOS 13/14:
             - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
           JWLManager_${{ github.ref_name }}
