@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: JWLManager v4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-10-22 15:07-0400\n"
+"POT-Creation-Date: 2024-11-04 19:42-0500\n"
 "PO-Revision-Date: 2024-10-22 19:14+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language: uk\n"
@@ -19,223 +19,223 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: JWLManager.py:196 JWLManager.py:418 JWLManager.py:422 JWLManager.py:637
-#: JWLManager.py:643 JWLManager.py:651 JWLManager.py:658 JWLManager.py:666
-#: JWLManager.py:720
+#: JWLManager.py:198 JWLManager.py:431 JWLManager.py:435 JWLManager.py:650
+#: JWLManager.py:656 JWLManager.py:664 JWLManager.py:671 JWLManager.py:679
+#: JWLManager.py:733
 msgid "Type"
 msgstr "Тип"
 
-#: JWLManager.py:216
+#: JWLManager.py:218
 msgid "Help"
 msgstr "Допомога"
 
-#: JWLManager.py:226
+#: JWLManager.py:231
 msgid "Exit"
 msgstr "Вихід"
 
-#: JWLManager.py:226
+#: JWLManager.py:231
 msgid "Save before quitting?"
 msgstr "Зберегти перед виходом?"
 
-#: JWLManager.py:249 JWLManager.py:264 JWLManager.py:266
+#: JWLManager.py:254 JWLManager.py:269 JWLManager.py:271
 msgid "Error"
 msgstr "Помилка"
 
-#: JWLManager.py:249
+#: JWLManager.py:254
 msgid "No archive has been opened!"
 msgstr "Архів не був відкритий!"
 
-#: JWLManager.py:251 JWLManager.py:392 JWLManager.py:433 JWLManager.py:452
-#: JWLManager.py:647 JWLManager.py:906 JWLManager.py:1345 JWLManager.py:1820
-#: JWLManager.py:1842 JWLManager.py:2541 JWLManager.py:2616
+#: JWLManager.py:256 JWLManager.py:405 JWLManager.py:446 JWLManager.py:465
+#: JWLManager.py:660 JWLManager.py:929 JWLManager.py:1369 JWLManager.py:1844
+#: JWLManager.py:1866 JWLManager.py:2574 JWLManager.py:2649
 msgid "Playlists"
 msgstr "Плейлисти"
 
-#: JWLManager.py:256 JWLManager.py:391 JWLManager.py:392 JWLManager.py:429
-#: JWLManager.py:450 JWLManager.py:664 JWLManager.py:880 JWLManager.py:1341
-#: JWLManager.py:1834 JWLManager.py:2614
+#: JWLManager.py:261 JWLManager.py:404 JWLManager.py:405 JWLManager.py:442
+#: JWLManager.py:463 JWLManager.py:677 JWLManager.py:892 JWLManager.py:1365
+#: JWLManager.py:1858 JWLManager.py:2647
 msgid "Annotations"
 msgstr "Примітки"
 
-#: JWLManager.py:258 JWLManager.py:392 JWLManager.py:427 JWLManager.py:442
-#: JWLManager.py:635 JWLManager.py:904 JWLManager.py:1343 JWLManager.py:1818
-#: JWLManager.py:1836 JWLManager.py:2604
+#: JWLManager.py:263 JWLManager.py:405 JWLManager.py:440 JWLManager.py:455
+#: JWLManager.py:648 JWLManager.py:927 JWLManager.py:1367 JWLManager.py:1842
+#: JWLManager.py:1860 JWLManager.py:2637
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: JWLManager.py:260 JWLManager.py:392 JWLManager.py:424 JWLManager.py:446
-#: JWLManager.py:649 JWLManager.py:904 JWLManager.py:1337 JWLManager.py:1818
-#: JWLManager.py:1838 JWLManager.py:2608
+#: JWLManager.py:265 JWLManager.py:405 JWLManager.py:437 JWLManager.py:459
+#: JWLManager.py:662 JWLManager.py:927 JWLManager.py:1361 JWLManager.py:1842
+#: JWLManager.py:1862 JWLManager.py:2641
 msgid "Highlights"
 msgstr "Підкреслення"
 
-#: JWLManager.py:262 JWLManager.py:391 JWLManager.py:392 JWLManager.py:421
-#: JWLManager.py:448 JWLManager.py:656 JWLManager.py:880 JWLManager.py:1339
-#: JWLManager.py:1840 JWLManager.py:1985 JWLManager.py:2024 JWLManager.py:2306
-#: JWLManager.py:2610
+#: JWLManager.py:267 JWLManager.py:404 JWLManager.py:405 JWLManager.py:434
+#: JWLManager.py:461 JWLManager.py:669 JWLManager.py:892 JWLManager.py:1363
+#: JWLManager.py:1864 JWLManager.py:2017 JWLManager.py:2056 JWLManager.py:2338
+#: JWLManager.py:2643
 msgid "Notes"
 msgstr "Нотатки"
 
-#: JWLManager.py:264 JWLManager.py:266
+#: JWLManager.py:269 JWLManager.py:271
 msgid "File \"{}\" not recognized!"
 msgstr "Файл \"{}\" не розпізнано!"
 
-#: JWLManager.py:296
+#: JWLManager.py:301
 msgid "update available!"
 msgstr "оновлення доступне!"
 
-#: JWLManager.py:298
+#: JWLManager.py:303
 msgid "Latest version"
 msgstr "Остання версія"
 
-#: JWLManager.py:300
+#: JWLManager.py:305
 msgid "Error while checking for updates!"
 msgstr "Помилка при перевірці оновлень!"
 
-#: JWLManager.py:309 JWLManager.py:1363 JWLManager.py:1385 JWLManager.py:1410
-#: JWLManager.py:1434 JWLManager.py:1472 JWLManager.py:1491 JWLManager.py:1537
-#: JWLManager.py:1568 JWLManager.py:1596 JWLManager.py:1702
+#: JWLManager.py:314 JWLManager.py:1387 JWLManager.py:1409 JWLManager.py:1434
+#: JWLManager.py:1458 JWLManager.py:1496 JWLManager.py:1515 JWLManager.py:1561
+#: JWLManager.py:1592 JWLManager.py:1620 JWLManager.py:1726
 msgid "Error!"
 msgstr "Помилка!"
 
-#: JWLManager.py:311
+#: JWLManager.py:316
 msgid "Oops! Something went wrong…"
 msgstr "Отакої! Щось пішло не так…"
 
-#: JWLManager.py:311
+#: JWLManager.py:316
 msgid "Take note of what you were doing and"
 msgstr "Занотуйте свої дії і"
 
-#: JWLManager.py:311
+#: JWLManager.py:316
 msgid "inform the developer"
 msgstr "відправте розробнику"
 
-#: JWLManager.py:317
+#: JWLManager.py:322
 msgid "The app will terminate."
 msgstr "Додаток буде закритий."
 
-#: JWLManager.py:431 JWLManager.py:444 JWLManager.py:641 JWLManager.py:2539
-#: JWLManager.py:2606
+#: JWLManager.py:444 JWLManager.py:457 JWLManager.py:654 JWLManager.py:2572
+#: JWLManager.py:2639
 msgid "Favorites"
 msgstr "Вибране"
 
-#: JWLManager.py:434 JWLManager.py:638 JWLManager.py:644 JWLManager.py:648
-#: JWLManager.py:652 JWLManager.py:659 JWLManager.py:667
+#: JWLManager.py:447 JWLManager.py:651 JWLManager.py:657 JWLManager.py:661
+#: JWLManager.py:665 JWLManager.py:672 JWLManager.py:680
 msgid "Title"
 msgstr "Заголовок"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Grey"
 msgstr "Сірий"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Yellow"
 msgstr "Жовтий"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Green"
 msgstr "Зелений"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Blue"
 msgstr "Синій"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Red"
 msgstr "Червоний"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Orange"
 msgstr "Померанчевий"
 
-#: JWLManager.py:474
+#: JWLManager.py:487
 msgid "Purple"
 msgstr "Фіолетовий"
 
-#: JWLManager.py:478 JWLManager.py:534 JWLManager.py:546 JWLManager.py:571
-#: JWLManager.py:582 JWLManager.py:593
+#: JWLManager.py:491 JWLManager.py:547 JWLManager.py:559 JWLManager.py:584
+#: JWLManager.py:595 JWLManager.py:606
 msgid "* OTHER *"
 msgstr "* ІНШИЙ *"
 
-#: JWLManager.py:494
+#: JWLManager.py:507
 msgid "Chap."
 msgstr "Розд."
 
-#: JWLManager.py:500
+#: JWLManager.py:513
 msgid "* YEAR UNCERTAIN *"
 msgstr "* РІК НЕВИЗНАЧЕНИЙ *"
 
-#: JWLManager.py:508
+#: JWLManager.py:521
 msgid "Other"
 msgstr "Інше"
 
-#: JWLManager.py:509
+#: JWLManager.py:522
 msgid "* NO YEAR *"
 msgstr "* НЕМАЄ РОКУ *"
 
-#: JWLManager.py:518 JWLManager.py:571
+#: JWLManager.py:531 JWLManager.py:584
 msgid "* NO LANGUAGE *"
 msgstr "* НЕМАЄ МОВИ *"
 
-#: JWLManager.py:571 JWLManager.py:582
+#: JWLManager.py:584 JWLManager.py:595
 msgid "* NO TAG *"
 msgstr "* НЕМАЄ ТЕГУ *"
 
-#: JWLManager.py:571 JWLManager.py:1195
+#: JWLManager.py:584 JWLManager.py:1216
 msgid "* INDEPENDENT *"
 msgstr "* НЕЗАЛЕЖНО *"
 
-#: JWLManager.py:639 JWLManager.py:645 JWLManager.py:653 JWLManager.py:660
-#: JWLManager.py:2352
+#: JWLManager.py:652 JWLManager.py:658 JWLManager.py:666 JWLManager.py:673
+#: JWLManager.py:2384
 msgid "Language"
 msgstr "Мова"
 
-#: JWLManager.py:640 JWLManager.py:646 JWLManager.py:654 JWLManager.py:661
-#: JWLManager.py:668
+#: JWLManager.py:653 JWLManager.py:659 JWLManager.py:667 JWLManager.py:674
+#: JWLManager.py:681
 msgid "Year"
 msgstr "Рік"
 
-#: JWLManager.py:655 JWLManager.py:663
+#: JWLManager.py:668 JWLManager.py:676
 msgid "Color"
 msgstr "Колір"
 
-#: JWLManager.py:662
+#: JWLManager.py:675
 msgid "Tag"
 msgstr "Тег"
 
-#: JWLManager.py:691 JWLManager.py:2159 JWLManager.py:2239
+#: JWLManager.py:704 JWLManager.py:2190 JWLManager.py:2271
 msgid "Processing…"
 msgstr "Обробка…"
 
-#: JWLManager.py:726 JWLManager.py:829 JWLManager.py:2015
+#: JWLManager.py:739 JWLManager.py:840 JWLManager.py:2047
 msgid "Save"
 msgstr "Зберегти"
 
-#: JWLManager.py:726
+#: JWLManager.py:739
 msgid "Save current archive?"
 msgstr "Зберегти поточний архів?"
 
-#: JWLManager.py:738 JWLManager.py:1330
+#: JWLManager.py:750 JWLManager.py:1354
 msgid "NEW ARCHIVE"
 msgstr "НОВИЙ АРХІВ"
 
-#: JWLManager.py:771
+#: JWLManager.py:783
 msgid "Open archive"
 msgstr "Відкрити архів"
 
-#: JWLManager.py:771 JWLManager.py:822 JWLManager.py:824
+#: JWLManager.py:783 JWLManager.py:833 JWLManager.py:835
 msgid "JW Library archives"
 msgstr "JW Library архіви"
 
-#: JWLManager.py:822 JWLManager.py:824
+#: JWLManager.py:833 JWLManager.py:835
 msgid "Save archive"
 msgstr "Зберегти архів"
 
-#: JWLManager.py:826 JWLManager.py:2017
+#: JWLManager.py:837 JWLManager.py:2049
 msgid "NOT saved!"
 msgstr "НЕ збережено!"
 
-#: JWLManager.py:829
+#: JWLManager.py:840
 msgid ""
 "It's recommended to save under another name.\n"
 "Are you absolutely sure you want to replace the original?"
@@ -243,76 +243,76 @@ msgstr ""
 "Радимо вибрати інше ім'я.\n"
 "Ви абсолютно впевнені, що хочете замістити оригінал?"
 
-#: JWLManager.py:876 JWLManager.py:2030
+#: JWLManager.py:888 JWLManager.py:2062
 msgid "Saved"
 msgstr "Збережено"
 
-#: JWLManager.py:884
+#: JWLManager.py:896
 msgid "MS Excel file"
 msgstr "Файл MS Excel"
 
-#: JWLManager.py:886
+#: JWLManager.py:898
 msgid "Custom text file"
 msgstr "Текстовий файл"
 
-#: JWLManager.py:888
+#: JWLManager.py:900
 msgid "Markdown files"
 msgstr "Файли уцінки"
 
-#: JWLManager.py:905 JWLManager.py:907 JWLManager.py:910 JWLManager.py:912
+#: JWLManager.py:928 JWLManager.py:930 JWLManager.py:933 JWLManager.py:935
 msgid "Export file"
 msgstr "Експорт файлу"
 
-#: JWLManager.py:905 JWLManager.py:912 JWLManager.py:1819 JWLManager.py:1823
-#: JWLManager.py:2015
+#: JWLManager.py:928 JWLManager.py:935 JWLManager.py:1843 JWLManager.py:1847
+#: JWLManager.py:2047
 msgid "Text files"
 msgstr "Текстові файли"
 
-#: JWLManager.py:907 JWLManager.py:1821
+#: JWLManager.py:930 JWLManager.py:1845
 msgid "JW Library playlists"
 msgstr "JW Library архіви"
 
-#: JWLManager.py:910 JWLManager.py:1823
+#: JWLManager.py:933 JWLManager.py:1847
 msgid "MS Excel files"
 msgstr "MS Excel файли"
 
-#: JWLManager.py:914
+#: JWLManager.py:937
 msgid "Export directory"
 msgstr "Папка для експорту"
 
-#: JWLManager.py:919 JWLManager.py:935
+#: JWLManager.py:942 JWLManager.py:958
 msgid "Exported from"
 msgstr "Експортовано з"
 
-#: JWLManager.py:919 JWLManager.py:935
+#: JWLManager.py:942 JWLManager.py:958
 msgid "by"
 msgstr "з"
 
-#: JWLManager.py:919 JWLManager.py:935
+#: JWLManager.py:942 JWLManager.py:958
 msgid "on"
 msgstr "на"
 
-#: JWLManager.py:958
+#: JWLManager.py:981
 msgid "NO TEXT"
 msgstr "НЕМАЄ ТЕКСТУ"
 
-#: JWLManager.py:1029
+#: JWLManager.py:1049
 msgid "UNTITLED"
 msgstr "БЕЗ_НАЗВИ"
 
-#: JWLManager.py:1324
+#: JWLManager.py:1348
 msgid "NOT exported!"
 msgstr "НЕ експортовано!"
 
-#: JWLManager.py:1332
+#: JWLManager.py:1356
 msgid "Exporting. Please wait…"
 msgstr "Експротування. Будь ласка, почекайте…"
 
-#: JWLManager.py:1352
+#: JWLManager.py:1376
 msgid "items exported"
 msgstr "елементи експортовані"
 
-#: JWLManager.py:1363
+#: JWLManager.py:1387
 msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
@@ -320,8 +320,8 @@ msgstr ""
 "Неправильний формат файлу, що імпортується:\n"
 "Відсутній{ANNOTATIONS} рядок тега"
 
-#: JWLManager.py:1385 JWLManager.py:1410 JWLManager.py:1472 JWLManager.py:1537
-#: JWLManager.py:1596 JWLManager.py:1702
+#: JWLManager.py:1409 JWLManager.py:1434 JWLManager.py:1496 JWLManager.py:1561
+#: JWLManager.py:1620 JWLManager.py:1726
 msgid ""
 "Error on import!\n"
 "\n"
@@ -331,7 +331,7 @@ msgstr ""
 "\n"
 "Несправний запис"
 
-#: JWLManager.py:1434
+#: JWLManager.py:1458
 msgid ""
 "Wrong import file format:\n"
 "Missing {BOOKMARKS} tag line"
@@ -339,7 +339,7 @@ msgstr ""
 "Неправильний формат файлу, що імпортується:\n"
 "Відсутній{BOOKMARKS} рядок тега"
 
-#: JWLManager.py:1491
+#: JWLManager.py:1515
 msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
@@ -347,15 +347,15 @@ msgstr ""
 "Неправильний формат файлу, що імпортується::\n"
 "Відсутній{HIGHLIGHTS} рядок тега"
 
-#: JWLManager.py:1557 JWLManager.py:2283
+#: JWLManager.py:1581 JWLManager.py:2315
 msgid "Warning"
 msgstr "Увага"
 
-#: JWLManager.py:1557
+#: JWLManager.py:1581
 msgid "notes starting with"
 msgstr "нотатки починаються з"
 
-#: JWLManager.py:1557
+#: JWLManager.py:1581
 msgid ""
 "WILL BE DELETED before importing.\n"
 "\n"
@@ -365,7 +365,7 @@ msgstr ""
 "\n"
 "Продовжити видалення? (НІ щоб відмінити)"
 
-#: JWLManager.py:1568
+#: JWLManager.py:1592
 msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {NOTES=} attribute line"
@@ -373,43 +373,43 @@ msgstr ""
 "Неправильний формат файлу, що імпортується::\n"
 "Відсутній або помилковий {NOTES=} рядок атрибуту"
 
-#: JWLManager.py:1824
+#: JWLManager.py:1848
 msgid "Import file"
 msgstr "Імпорт файлу"
 
-#: JWLManager.py:1826 JWLManager.py:1852
+#: JWLManager.py:1850 JWLManager.py:1876
 msgid "NOT imported!"
 msgstr "НЕ імпортовано!"
 
-#: JWLManager.py:1829
+#: JWLManager.py:1853
 msgid "Importing. Please wait…"
 msgstr "Імпротування. Будь ласка, почекайте…"
 
-#: JWLManager.py:1854
+#: JWLManager.py:1878
 msgid "items imported/updated"
 msgstr "Елементи імпортовано/оновлено"
 
-#: JWLManager.py:1904
+#: JWLManager.py:1932
 msgid "Data Editor"
 msgstr "Редагування Даних"
 
-#: JWLManager.py:1918
+#: JWLManager.py:1948
 msgid "Discard changes and close"
 msgstr "Відмінити зміни і закрити"
 
-#: JWLManager.py:1919
+#: JWLManager.py:1949
 msgid "Confirm changes and close"
 msgstr "Підтвердити зміни і закрити"
 
-#: JWLManager.py:1924 JWLManager.py:2159 JWLManager.py:2239
+#: JWLManager.py:1956 JWLManager.py:2190 JWLManager.py:2271
 msgid "Data Viewer"
 msgstr "Перегляд Даних"
 
-#: JWLManager.py:1998 JWLManager.py:2638
+#: JWLManager.py:2030 JWLManager.py:2671
 msgid "items deleted"
 msgstr "Елементи видалено"
 
-#: JWLManager.py:2283
+#: JWLManager.py:2315
 msgid ""
 "You are trying to preview {} items.\n"
 "Please select a smaller subset."
@@ -417,55 +417,55 @@ msgstr ""
 "Ви намагаєтесь переглянути {} елементів.\n"
 "Будь ласка, виберіть меншу кількість."
 
-#: JWLManager.py:2297
+#: JWLManager.py:2329
 msgid "Filter"
 msgstr "Фільтр"
 
-#: JWLManager.py:2330
+#: JWLManager.py:2362
 msgid "Add Favorite"
 msgstr "Додати Вибране"
 
-#: JWLManager.py:2332
+#: JWLManager.py:2364
 msgid "Select the language and Bible edition to add:"
 msgstr "Виберіть мову та переклад Біблії для додавання:"
 
-#: JWLManager.py:2353
+#: JWLManager.py:2385
 msgid "Edition"
 msgstr "Переклад"
 
-#: JWLManager.py:2378
+#: JWLManager.py:2410
 msgid "Nothing added!"
 msgstr "Нічого не додано!"
 
-#: JWLManager.py:2384
+#: JWLManager.py:2416
 msgid "Favorite for \"{}\" in {} already exists."
 msgstr "Вибране для \"{}\" в {} вже існує."
 
-#: JWLManager.py:2387
+#: JWLManager.py:2419
 msgid "Added \"{}\" in {}"
 msgstr "Додано \"{}\"в {}"
 
-#: JWLManager.py:2395
+#: JWLManager.py:2427
 msgid "Select images"
 msgstr "Вибрати зображення"
 
-#: JWLManager.py:2407
+#: JWLManager.py:2439
 msgid "Add Images"
 msgstr "Додати зображення"
 
-#: JWLManager.py:2409
+#: JWLManager.py:2442
 msgid "Select existing playlist or type name of new one:"
 msgstr "Виберіть існуючий плейлист або введіть нову назву:"
 
-#: JWLManager.py:2533
+#: JWLManager.py:2566
 msgid "items added"
 msgstr "додано елементів"
 
-#: JWLManager.py:2619
+#: JWLManager.py:2652
 msgid "Delete"
 msgstr "Видалити"
 
-#: JWLManager.py:2619
+#: JWLManager.py:2652
 msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
@@ -473,15 +473,15 @@ msgstr ""
 "Ви впевнені, що хочете\n"
 "ВИДАЛИТИ цих {} елементів?"
 
-#: JWLManager.py:2622
+#: JWLManager.py:2655
 msgid "Deleting. Please wait…"
 msgstr "Видалення. Почекайте…"
 
-#: JWLManager.py:2695
+#: JWLManager.py:2728
 msgid "Mask"
 msgstr "Приховати"
 
-#: JWLManager.py:2695
+#: JWLManager.py:2728
 msgid ""
 "Are you sure you want to\n"
 "MASK all text fields?"
@@ -489,27 +489,27 @@ msgstr ""
 "Ви впевнені, що хочете\n"
 "ПРИХОВАТИ всі текстові поля?"
 
-#: JWLManager.py:2698
+#: JWLManager.py:2731
 msgid "Masking. Please wait…"
 msgstr "Приховування. Почекайте…"
 
-#: JWLManager.py:2715
+#: JWLManager.py:2748
 msgid "Data masked"
 msgstr "Дані приховано"
 
-#: JWLManager.py:2724
+#: JWLManager.py:2757
 msgid "Please wait…"
 msgstr "Будь ласка, почекайте…"
 
-#: JWLManager.py:2726
+#: JWLManager.py:2759
 msgid "Reindexing"
 msgstr "Переіндексування"
 
-#: JWLManager.py:2827
+#: JWLManager.py:2860
 msgid "Reindex"
 msgstr "Переіндексація"
 
-#: JWLManager.py:2827
+#: JWLManager.py:2860
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
@@ -517,19 +517,19 @@ msgstr ""
 "Це може зайняти кілька секунд.\n"
 "Продовжити?"
 
-#: JWLManager.py:2830
+#: JWLManager.py:2863
 msgid "Reindexing. Please wait…"
 msgstr "Переіндексація. Почекайте…"
 
-#: JWLManager.py:2858
+#: JWLManager.py:2891
 msgid "Reindexed successfully"
 msgstr "Переіндексовано успішно"
 
-#: JWLManager.py:2875
+#: JWLManager.py:2908
 msgid "Reorder"
 msgstr "Переорганізація"
 
-#: JWLManager.py:2875
+#: JWLManager.py:2908
 msgid ""
 "All notes will be REORDERED.\n"
 "Proceed?"
@@ -537,11 +537,11 @@ msgstr ""
 "Усі нотатки будуть ПЕРЕОРГАНІЗОВАНІ.\n"
 "Продовжити?"
 
-#: JWLManager.py:2878
+#: JWLManager.py:2911
 msgid "Reordering. Please wait…"
 msgstr "Переорганізація. Почекайте…"
 
-#: JWLManager.py:2890
+#: JWLManager.py:2923
 msgid "Notes reordered"
 msgstr "Нотатки переорганізовані"
 
