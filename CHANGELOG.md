@@ -11,6 +11,7 @@
 - **Markdown export**:
   - Only notes with newer modification time will be replaced
 - Many cosmetic/UI fixes/improvements
+- Translation corrections
 
 ### Fixed
 
