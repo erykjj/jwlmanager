@@ -12,6 +12,15 @@ QWidget[class='confirm'] { color: #c80b0b; font: bold; }
 QWidget[class='discard'] { color: #3f54aa; font: bold; }
 QWidget[class='download'] { color: #177c26; font: bold; }
 
+QProgressDialog QProgressBar {
+    text-align: center;
+}
+
+QProgressDialog QProgressBar::chunk {
+    background-color: #5B3C88;
+    border-radius: 5px;
+}
+
 QWidget {
     background-color: #2a2a2a;
     alternate-background-color: #3c3c3c;
@@ -40,6 +49,23 @@ QMenu {
     background-color: #2a2a2a;
 }
 
+QMenuBar {
+    background-color: #2a2a2a;
+}
+
+QMenuBar::item {
+    background-color: #2a2a2a;
+    color: #ffffff;
+}
+
+QMenuBar::item:selected {
+	background-color: #3c3c3c;
+}
+
+QComboBox {
+    border: 1px solid #444;
+}
+
 QComboBox QAbstractItemView { 
     background-color: #2a2a2a;
     selection-background-color: #3c3c3c;
@@ -57,13 +83,4 @@ QFrame[class='info'] {
 
 QTreeWidget {
     border: 1px solid #444;
-}
-
-QProgressDialog QProgressBar {
-    text-align: center;
-}
-
-QProgressDialog QProgressBar::chunk {
-    background-color: #5B3C88;
-    border-radius: 5px;
 }
