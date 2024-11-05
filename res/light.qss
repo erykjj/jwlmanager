@@ -21,7 +21,7 @@ QProgressDialog QProgressBar {
 }
 
 QProgressDialog QProgressBar::chunk {
-    background-color: #5B3C88;
+    background-color: #4a90e2;
     border-radius: 5px;
 }
 
@@ -29,7 +29,7 @@ QWidget {
     background-color: #ffffff;
     alternate-background-color: #e0e0e0;
     selection-color: #000;
-    selection-background-color: #f5f5f5;
+    selection-background-color: #4a90e2;
     color: #000;
 }
 
@@ -37,19 +37,19 @@ QPushButton[class='button']:enabled {
     background-color: #e0e0e0;
     color: #000;
     border: 1px solid #bbb;
-	border-radius: 2px;
+    border-radius: 2px;
 }
 
 QPushButton[class='button']:disabled {
     background-color: #f5f5f5;
     color: #999;
     border: 1px solid #ddd;
-	border-radius: 2px;
+    border-radius: 2px;
 }
 
 QMenu {
     border: 1px solid #ccc;
-	selection-background-color: #e0e0e0;
+    selection-background-color: #4a90e2;
     background-color: #f5f5f5;
 }
 
@@ -63,7 +63,7 @@ QMenuBar::item {
 }
 
 QMenuBar::item:selected {
-	background-color: #e0e0e0;
+    background-color: #4a90e2;
 }
 
 QComboBox {
