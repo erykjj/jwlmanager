@@ -146,7 +146,7 @@
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation>&amp;Titres</translation>
+        <translation>T&amp;itres</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
