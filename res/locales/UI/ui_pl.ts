@@ -369,17 +369,17 @@
         <location filename="main_window.ui" line="991"/>
         <source>&amp;Theme</source>
         <oldsource>T&amp;heme</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Motyw</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="994"/>
         <source>Toggle theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Przełączanie motywu</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="997"/>
         <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+T</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="801"/>
