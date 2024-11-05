@@ -332,7 +332,7 @@
     <message>
         <location filename="main_window.ui" line="994"/>
         <source>Toggle theme</source>
-        <translation>Passer entre le mode clair et le mode foncé</translation>
+        <translation>Changement de thème</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="997"/>
