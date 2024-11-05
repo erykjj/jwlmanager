@@ -142,7 +142,7 @@
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation>Formato &amp;Titolo</translation>
+        <translation>&amp;Formato Titolo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
