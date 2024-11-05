@@ -195,6 +195,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.mode = settings.value('JWLManager/theme', 'light')
         self.setupUi(self)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
+        self.combo_category.view().setMinimumWidth(190)
         self.combo_grouping.setCurrentText(_('Type'))
         self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
         self.viewer_size = settings.value('Viewer/size', QSize(755, 500))
