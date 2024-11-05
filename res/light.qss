@@ -2,13 +2,13 @@
 
 */
 
-QWidget[background='grey'] { color: #000; background-color: #F1F1F1; }
-QWidget[background='yellow'] { color: #000; background-color: #FFFCE6; }
-QWidget[background='green'] { color: #000; background-color: #EFFBE6; }
-QWidget[background='blue'] { color: #000; background-color: #E6F7FF; }
-QWidget[background='red'] { color: #000; background-color: #FFE6F0; }
-QWidget[background='orange'] { color: #000; background-color: #FFF0E6; }
-QWidget[background='purple'] { color: #000; background-color: #F1EAFA; }
+QWidget[background='grey'] { color: #000000; background-color: #F1F1F1; }
+QWidget[background='yellow'] { color: #000000; background-color: #FFFCE6; }
+QWidget[background='green'] { color: #000000; background-color: #EFFBE6; }
+QWidget[background='blue'] { color: #000000; background-color: #E6F7FF; }
+QWidget[background='red'] { color: #000000; background-color: #FFE6F0; }
+QWidget[background='orange'] { color: #000000; background-color: #FFF0E6; }
+QWidget[background='purple'] { color: #000000; background-color: #F1EAFA; }
 
 QWidget[foreground='meta'] { color: #4f4f4f; }
 
@@ -17,6 +17,7 @@ QWidget[class='discard'] { color: #3f54aa; font: bold; }
 QWidget[class='download'] { color: #177c26; font: bold; }
 
 QProgressDialog QProgressBar {
+    color: #000000;
     text-align: center;
 }
 
@@ -28,14 +29,14 @@ QProgressDialog QProgressBar::chunk {
 QWidget {
     background-color: #ffffff;
     alternate-background-color: #e0e0e0;
-    selection-color: #000;
+    selection-color: #000000;
     selection-background-color: #4a90e2;
-    color: #000;
+    color: #000000;
 }
 
 QPushButton[class='button']:enabled {
     background-color: #e0e0e0;
-    color: #000;
+    color: #000000;
     border: 1px solid #bbb;
     border-radius: 2px;
 }
@@ -59,7 +60,7 @@ QMenuBar {
 
 QMenuBar::item {
     background-color: #f5f5f5;
-    color: #000;
+    color: #000000;
 }
 
 QMenuBar::item:selected {
@@ -72,7 +73,7 @@ QComboBox {
 
 QComboBox QAbstractItemView {
     background-color: #f5f5f5;
-    selection-background-color: #e0e0e0;
+    selection-background-color: #4a90e2;
     border: 1px solid #ccc;
 }
 
@@ -87,4 +88,8 @@ QFrame[class='info'] {
 
 QTreeWidget {
     border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    alternate-background-color: #e0e0e0;
+    selection-background-color: #4a90e2;
+    color: #000000;
 }
