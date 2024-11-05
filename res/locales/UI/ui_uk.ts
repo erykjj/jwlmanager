@@ -135,7 +135,7 @@
         <location filename="main_window.ui" line="531"/>
         <source>&amp;View</source>
         <oldsource>V&amp;iew</oldsource>
-        <translation type="unfinished">&amp;Вигляд</translation>
+        <translation>&amp;Вигляд</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="541"/>
