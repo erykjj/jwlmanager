@@ -360,6 +360,7 @@ class Ui_MainWindow(object):
         self.langChoices.addAction(self.actionPL)
         self.langChoices.addAction(self.actionPT)
         self.langChoices.addAction(self.actionRU)
+        self.langChoices.addAction(self.actionUK)
         self.titleChoices = QActionGroup(self.menuTitle_View)
         self.titleChoices.addAction(self.actionCode_Title)
         self.titleChoices.addAction(self.actionShort_Title)
