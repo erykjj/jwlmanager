@@ -109,7 +109,7 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>Voir</translation>
+        <translation>&amp;Voir</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="480"/>
