@@ -19,7 +19,6 @@ QProgressDialog QProgressBar {
 
 QProgressDialog QProgressBar::chunk {
     background-color: #d97917;
-    border-radius: 5px;
 }
 
 QWidget {
@@ -80,10 +79,10 @@ QFrame[class='info'] {
     border-radius: 2px;
 }
 
-QTreeWidget {
+CustomTreeWidget {
     border: 1px solid #444;
-    background-color: #2a2a2a;
+/*    background-color: #2a2a2a;
     alternate-background-color: #3c3c3c;
     selection-background-color: #d97917;
-    color: #ffffff;
+    color: #ffffff; */
 }
