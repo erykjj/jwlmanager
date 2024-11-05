@@ -138,7 +138,7 @@
         <location filename="main_window.ui" line="544"/>
         <source>Title &amp;View</source>
         <oldsource>&amp;Title View</oldsource>
-        <translation>Exibição do &amp;título</translation>
+        <translation>Ex&amp;ibição do título</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="559"/>
@@ -198,7 +198,7 @@
     <message>
         <location filename="main_window.ui" line="667"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Sair</translation>
+        <translation>Sa&amp;ir</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="670"/>
