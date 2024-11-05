@@ -295,7 +295,7 @@ class DataViewer(QDialog):
         toolbar.addWidget(self.accept_button)
 
         self.title = QPlainTextEdit(self.editor)
-        self.title.setMaximumHeight(60)
+        self.title.setMaximumHeight(62)
         self.title.setViewportMargins(5, 0, 5, 0)
         self.title.setStyleSheet('font: bold; font-size: 20px;')
 
