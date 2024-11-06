@@ -29,7 +29,7 @@ from glob import glob
 from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
-from PySide6.QtGui import QAction, QIcon, QPixmap
+from PySide6.QtGui import QAction, QIcon, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 _base_path = path.dirname(__file__)
@@ -249,6 +249,8 @@ class DataViewer(QDialog):
         self.filter_box = QLineEdit()
         self.filter_box.setClearButtonEnabled(True)
         self.filter_box.setFixedWidth(225)
+        shortcut = QShortcut(QKeySequence('Ctrl+F'), self)
+        shortcut.activated.connect(self.filter_box.setFocus)
 
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
@@ -295,9 +297,9 @@ class DataViewer(QDialog):
         toolbar.addWidget(self.accept_button)
 
         self.title = QPlainTextEdit(self.editor)
-        self.title.setMaximumHeight(62)
+        self.title.setFixedHeight(62)
         self.title.setViewportMargins(5, 0, 5, 0)
-        self.title.setStyleSheet('font: bold; font-size: 20px;')
+        self.title.setStyleSheet('font: bold; font-size: 18px;')
 
         self.body = QPlainTextEdit(self.editor)
         self.body.setViewportMargins(5, 0, 5, 0)
