@@ -2064,7 +2064,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.raise_()
 
         def clean_text(text):
-            return regex.sub(r'\p{Z}', ' ', text)
+            return regex.sub(r'\p{Z}', ' ', text.trim())
 
         def process_issue(i):
             issue = str(i)
