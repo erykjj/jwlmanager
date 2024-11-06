@@ -39,11 +39,11 @@ QPushButton[class='button']:enabled {
 QPushButton[class='button']:disabled {
     background-color: #2a2a2a;
     color: #777777;
-    border: 1px solid #444;
+    border: 1px solid #444444;
     border-radius: 2px;
 }
 QMenu {
-    border: 1px solid #444;
+    border: 1px solid #444444;
     selection-background-color: #d97917;
     background-color: #2a2a2a;
 }
@@ -61,28 +61,33 @@ QMenuBar::item:selected {
 }
 
 QComboBox {
-    border: 1px solid #444;
+    border: 1px solid #444444;
 }
 
 QComboBox QAbstractItemView {
     background-color: #2a2a2a;
     selection-background-color: #d97917;
-    border: 1px solid #444;
+    border: 1px solid #444444;
 }
 
 QLineEdit {
-    border: 1px solid #444;
+    border: 1px solid #444444;
 }
 
 QFrame[class='info'] {
-    border: 1px solid #444;
+    border: 1px solid #444444;
     border-radius: 2px;
 }
 
-CustomTreeWidget {
-    border: 1px solid #444;
-/*    background-color: #2a2a2a;
+QTreeWidget {
+    border: 1px solid #444444;
+    background-color: #2a2a2a;
     alternate-background-color: #3c3c3c;
     selection-background-color: #d97917;
-    color: #ffffff; */
+    color: #ffffff;
+}
+
+QHeaderView::section {
+    background-color: #3c3c3c;
+    color: #ffffff;
 }
