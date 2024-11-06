@@ -194,6 +194,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.mode = settings.value('JWLManager/theme', 'light')
         self.setupUi(self)
+        self.treeWidget.setAttribute(Qt.WA_StyledBackground, True)
+        self.combo_grouping.setAttribute(Qt.WA_StyledBackground, True)
+        self.combo_category.setAttribute(Qt.WA_StyledBackground, True)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_category.view().setMinimumWidth(190)
         self.combo_grouping.setCurrentText(_('Type'))
@@ -3021,6 +3024,7 @@ if __name__ == "__main__":
     font = QFont()
     font.setPixelSize(16)
     app.setFont(font)
+    app.setStyle('Fusion')
     win = Window()
     win.show()
     sys.exit(app.exec())
