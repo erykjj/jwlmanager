@@ -1205,7 +1205,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt += '===\n'+item['TITLE']+'\n'+item['NOTE']
                         f.write(txt)
                     f.write('\n==={END}===')
-            else: # 'md' # TODO: [[attributes]]
+            else: # 'md'
                 for item in item_list:
                     iss = ''
                     if item.get('PUB'):
