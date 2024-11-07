@@ -1047,23 +1047,22 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def shorten_title(t):
                 if not t:
-                    return _('UNTITLED'), _('UNTITLED')
+                    return _('UNTITLED')
                 t = regex.sub(r'(\d):+|:+', lambda m: f'{m.group(1)}.' if m.group(1) else '-', t)
                 t = regex.sub(r'[^\w\s\-,().;]+', '', t)
                 t = t.strip()
-                s = t[0:40]
                 if len(t) > 40:
                     m = regex.search(r'^(.{0,18}\w)\W', t)
                     if not m:
-                        return t, s
+                        return t
                     left = m.group(1)
                     l = 33 - len(left)
                     m = regex.search(f'\s(\w.{{0,{l}}})$', t)
                     if not m:
-                        s = left + ' […]'
+                        t = left + ' […]'
                     else:
-                        s = left + ' […] ' + m.group(1)
-                return t, s
+                        t = left + ' […] ' + m.group(1)
+                return t
 
             def get_notes():
                 sql = f'''
@@ -1228,29 +1227,29 @@ class Window(QMainWindow, Ui_MainWindow):
                         fname += f"{item['DOC']}/"
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
-                    t, s = shorten_title(item['TITLE'])
-                    fname += s + '_' + item['GUID'][:8] + '.md'
+                    t = shorten_title(item['TITLE'])
+                    fname += t + '_' + item['GUID'][:8] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
-                    txt = f"---\ntitle: [[{t}]]\n"
+                    txt = f"---\ntitle: {t}\n"
                     txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
-                        txt += f'language: [[{lng}]]\n'
-                        txt += f'publication: [[{pub} {iss}'.strip() + ']]\n'
+                        txt += f'language: "[[{lng}]]"\n'
+                        txt += f'publication: "[[{pub} {iss}'.strip() + ']]"\n'
                     if item.get('DOC'):
-                        txt += f"document: [[{item['DOC']}]]\n"
+                        txt += f'document: "[[' + str(item['DOC']) + ']]"\n'
                     elif item.get('Reference'):
-                        txt += f"document: [[{item['Reference']}]]\n"
+                        txt += f'document: "[[' + item['Reference'] + ']]"\n'
                     if item.get('HEADING'):
                         txt += f"heading: {item['HEADING']}\n"
                     if item.get('Link'):
                         txt += f"link: {item['Link']}\n"
-                    txt += f"color: [[{item['COLOR']}]]\n"
+                    txt += f'color: "[[' + str(item['COLOR']) + ']]"\n'
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
-                            txt += f'  - [[{t}]]\n'
+                            txt += f'  - "[[{t}]]"\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
