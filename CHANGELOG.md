@@ -8,7 +8,7 @@
 
 ### Changed
 
-- **Markdown export**:
+- **Markdown export** (thank you @SchneiderSam for suggestions and testing)
   - Only notes with newer modification time will be replaced
 - Many cosmetic/UI fixes/improvements
 - Translation corrections
