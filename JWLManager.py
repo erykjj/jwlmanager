@@ -1236,7 +1236,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
                         txt += f'language: "[[{lng}]]"\n'
-                        txt += f'publication: "[[{pub} {iss}'.strip() + ']]"\n'
+                        txt += f'publication: "[[' + item['PUB'] + f' {iss}'.strip() + ']]"\n'
                     if item.get('DOC'):
                         txt += f'document: "[[' + str(item['DOC']) + ']]"\n'
                     elif item.get('Reference'):
@@ -1249,7 +1249,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
-                            txt += f'  - "[[{t}]]"\n'
+                            txt += f'  - {t}\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
