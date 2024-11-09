@@ -1231,7 +1231,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     fname += t + '_' + item['GUID'][:8] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
-                    txt = f"---\ntitle: {t}\n"
+                    txt = f'---\ntitle: "{t}"\n'
                     txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
@@ -1242,14 +1242,14 @@ class Window(QMainWindow, Ui_MainWindow):
                     elif item.get('Reference'):
                         txt += f'document: "[[' + item['Reference'] + ']]"\n'
                     if item.get('HEADING'):
-                        txt += f"heading: {item['HEADING']}\n"
+                        txt += f'heading: "' + item['HEADING'] + '"\n'
                     if item.get('Link'):
                         txt += f"link: {item['Link']}\n"
                     txt += f'color: "[[' + str(item['COLOR']) + ']]"\n'
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
-                            txt += f'  - {t}\n'
+                            txt += f'  - "{t}"\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
