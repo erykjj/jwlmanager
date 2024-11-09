@@ -1,4 +1,4 @@
-name: 'Build Mac package v1.0.4'
+name: 'Build Mac package v1.0.3'
 
 on:
   workflow_call:
@@ -29,7 +29,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r res/requirements.txt
-        pip install pyinstaller
+        pip install pyinstaller==5.13
         pip install pyinstaller-hooks-contrib
     - name: Build with Pyinstaller
       run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
