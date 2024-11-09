@@ -1227,11 +1227,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         fname += f"{item['DOC']}/"
                         if item.get('BLOCK'):
                             fname += str(item['BLOCK']).zfill(3) + '_'
-                    t = shorten_title(item['TITLE'])
-                    fname += t + '_' + item['GUID'][:8] + '.md'
+                    fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
-                    txt = f'---\ntitle: "{t}"\n'
+                    txt = f'---\ntitle: "{item['TITLE']}"\n'
                     txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
@@ -1249,7 +1248,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
-                            txt += f'  - "{t}"\n'
+                            txt += f'  - {t}\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
