@@ -11,11 +11,11 @@
 - **Markdown export** (thank you @SchneiderSam for suggestions and testing)
   - Only notes with newer modification time will be replaced
 - Many cosmetic/UI fixes/improvements
+  - Fixed archive name color in dark mode
 - Translation corrections
 
 ### Fixed
 
-- Fixed archive name color in dark mode
 - Improved parent/child relationships between main app and dialogs
 
 ### Removed
