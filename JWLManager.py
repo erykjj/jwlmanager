@@ -1230,7 +1230,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
 
-                    txt = f'---\ntitle: "{item['TITLE']}"\n'
+                    txt = f'---\ntitle: "' + item['TITLE'] + '"\n'
                     txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
