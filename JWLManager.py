@@ -1248,7 +1248,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
-                            txt += f'  - {t}\n'
+                            txt += f'  - "{t}"\n'
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
