@@ -339,7 +339,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
 
-    def change_language(self):
+    def change_language(self): # FIX: something wrong when changing between en <> fr
         changed = False
         self.combo_grouping.blockSignals(True)
         for item in self.langChoices.actions():
