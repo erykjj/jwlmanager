@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [6.0.0] - 2024-11-10
+### Added
+
 - **Light/dark mode toggle**
 
 ### Changed
@@ -18,9 +28,6 @@
 
 - Improved parent/child relationships between main app and dialogs
 
-### Removed
-
-____
 ## [5.1.2] - 2024-10-24
 ### Changed
 
@@ -751,6 +758,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[6.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.0.0
 [5.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.2
 [5.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.1
 [5.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.0
