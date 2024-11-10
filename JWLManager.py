@@ -347,6 +347,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 app.removeTranslator(translator[self.lang])
                 self.lang = item.toolTip()
                 changed = True
+                break
         if not changed:
             return
         read_resources(self.lang)
