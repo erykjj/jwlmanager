@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed link language in exported md files
+
 ### Removed
 
 ____
