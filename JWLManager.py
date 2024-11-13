@@ -1206,6 +1206,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(txt)
                     f.write('\n==={END}===')
             else: # 'md'
+                group = self.combo_grouping.currentText()
                 for item in item_list:
                     iss = ''
                     if item.get('PUB'):
@@ -1230,12 +1231,14 @@ class Window(QMainWindow, Ui_MainWindow):
                             fname += str(item['BLOCK']).zfill(3) + '_'
                     fname += shorten_title(item['TITLE']) + '_' + item['GUID'][:8] + '.md'
                     Path(fname).parent.mkdir(parents=True, exist_ok=True)
-
                     txt = f'---\ntitle: "' + item['TITLE'] + '"\n'
                     txt += f"created: {item['CREATED'][:19].replace('T', ' ')}\n"
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
-                        txt += f'language: "[[{lng}]]"\n'
+                        if group == _('Language'):
+                            txt += f'language: "[[{lng}]]"\n'
+                        else:
+                            txt += f'language: "{lng}"\n'
                         txt += f'publication: "' + item['PUB'] + f' {iss}'.strip() + '"\n'
                     if item.get('DOC'):
                         txt += f'document: "[[' + str(item['DOC']) + ']]"\n'
@@ -1245,7 +1248,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         txt += f'heading: "' + item['HEADING'] + '"\n'
                     if item.get('Link'):
                         txt += f"link: {item['Link']}\n"
-                    txt += f'color: "[[' + str(item['COLOR']) + ']]"\n'
+                    if group == _('Color'):
+                        txt += f'color: "[[' + str(item['COLOR']) + ']]"\n'
+                    else:
+                        txt += f'color: "' + str(item['COLOR']) + '"\n'
                     if item.get('TAGS'):
                         txt += 'tags:\n'
                         for t in item['TAGS'].split(' | '):
