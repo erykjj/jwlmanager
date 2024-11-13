@@ -1236,7 +1236,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"modified: {item['MODIFIED'][:19].replace('T', ' ')}\n"
                     if pub:
                         txt += f'language: "[[{lng}]]"\n'
-                        txt += f'publication: "[[' + item['PUB'] + f' {iss}'.strip() + ']]"\n'
+                        txt += f'publication: "' + item['PUB'] + f' {iss}'.strip() + '"\n'
                     if item.get('DOC'):
                         txt += f'document: "[[' + str(item['DOC']) + ']]"\n'
                     elif item.get('Reference'):
