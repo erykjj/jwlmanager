@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v6.0.0'
+VERSION = 'v6.0.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1157,7 +1157,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             else:
                                 vs = '000'
                             item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={item['Reference']}"
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&pub={item['PUB']}&bible={item['Reference']}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                             elif item.get('VS') and (':' not in item['HEADING']):
@@ -1165,7 +1165,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         else: # publication note
                             item['VS'] = None
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                            item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&docid={item['DOC']}{par}"
                     item_list.append(item)
 
             get_notes()
