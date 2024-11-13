@@ -6,6 +6,8 @@
 
 ### Changed
 
+- `color` and `language` properties in meta-data of Notes exported to markdown will only be enclosed in [[double brackets]] if the corresponding Grouping is selected before the export
+
 ### Fixed
 
 - Fixed link language in exported md files
