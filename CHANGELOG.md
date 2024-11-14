@@ -6,15 +6,20 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [6.1.0] - 2024-11-14
+### Changed
+
 - `color` and `language` properties in meta-data of Notes exported to markdown will only be enclosed in [[double brackets]] if the corresponding Grouping is selected before the export
 
 ### Fixed
 
 - Fixed link language in exported md files
 
-### Removed
-
-____
 ## [6.0.0] - 2024-11-10
 ### Added
 
@@ -762,6 +767,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[6.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.0
 [6.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.0.0
 [5.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.2
 [5.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.1
