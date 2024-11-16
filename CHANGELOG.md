@@ -18,7 +18,7 @@ ____
 
 ### Fixed
 
-- Fixed link language in exported md files
+- Fixed link language in exported md files (thank you, @riggles)
 
 ## [6.0.0] - 2024-11-10
 ### Added
