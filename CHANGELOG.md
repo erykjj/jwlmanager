@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Imported .jwlplaylist filename deternmines the playlist name (instead of the name it was exported with)
+
 ### Fixed
 
 ### Removed
