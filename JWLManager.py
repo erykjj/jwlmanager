@@ -931,10 +931,16 @@ class Window(QMainWindow, Ui_MainWindow):
             if category == _('Highlights') or category == _('Bookmarks'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
             elif category == _('Playlists'):
-                return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
+                fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
+                if Path(fname).suffix != '.jwlplaylist':
+                    fname += '.jwlplaylist'
+                return fname
             else:
-                if form == 'xlsx': 
-                    return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx)')[0]
+                if form == 'xlsx':
+                    fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx)')[0]
+                    if Path(fname).suffix != '.xlsx':
+                        fname += '.xlsx'
+                    return fname
                 elif form == 'txt':
                     return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
                 else:
