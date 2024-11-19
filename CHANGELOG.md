@@ -6,6 +6,14 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [6.1.1] - 2024-11-19
+### Changed
+
 - Imported .jwlplaylist filename deternmines the playlist name (instead of the name it was exported with)
 - Proper suffixes on saved/exported files are added if missing (where applicable)
 
@@ -13,9 +21,6 @@
 
 - Fixed edge case of language change not triggering regroup
 
-### Removed
-
-____
 ## [6.1.0] - 2024-11-14
 ### Changed
 
@@ -772,6 +777,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[6.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.1
 [6.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.0
 [6.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.0.0
 [5.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v5.1.2
