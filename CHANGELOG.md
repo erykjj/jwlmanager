@@ -11,6 +11,8 @@
 
 ### Fixed
 
+- Fixed edge case of language change not triggering regroup
+
 ### Removed
 
 ____
