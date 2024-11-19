@@ -7,6 +7,7 @@
 ### Changed
 
 - Imported .jwlplaylist filename deternmines the playlist name (instead of the name it was exported with)
+- Proper suffixes on saved/exported files are added if missing (where applicable)
 
 ### Fixed
 
