@@ -339,23 +339,25 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
 
-    def change_language(self): # FIX: something wrong when changing between en <> fr
+    def change_language(self):
         changed = False
         self.combo_grouping.blockSignals(True)
+        group = self.combo_grouping.currentText()
         for item in self.langChoices.actions():
             if item.isChecked() and (self.lang != item.toolTip()):
                 app.removeTranslator(translator[self.lang])
                 self.lang = item.toolTip()
                 changed = True
                 break
-        if not changed:
-            return
-        read_resources(self.lang)
-        if self.lang not in translator.keys():
-            translator[self.lang] = QTranslator()
-            translator[self.lang].load(f'{project_path}/res/locales/UI/qt_{self.lang}.qm')
-        app.installTranslator(translator[self.lang])
-        app.processEvents()
+        if changed:
+            read_resources(self.lang)
+            if self.lang not in translator.keys():
+                translator[self.lang] = QTranslator()
+                translator[self.lang].load(f'{project_path}/res/locales/UI/qt_{self.lang}.qm')
+            app.installTranslator(translator[self.lang])
+            app.processEvents()
+            if self.combo_grouping.currentText() == group: # same word despite language change
+                self.regroup()
         self.combo_grouping.blockSignals(False)
 
     def change_title(self):
