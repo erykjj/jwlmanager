@@ -832,21 +832,23 @@ class Window(QMainWindow, Ui_MainWindow):
         fname = ()
         if not self.save_filename:
             now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f'{self.working_dir}/MODIFIED_{now}.jwlibrary', _('JW Library archives')+'(*.jwlibrary)')
+            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f'{self.working_dir}/MODIFIED_{now}.jwlibrary', _('JW Library archives')+'(*.jwlibrary)')[0]
         else:
-            fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')
-        if not fname[0]:
+            fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')[0]
+        if not fname:
             self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
             return False
-        elif Path(fname[0]) == self.current_archive:
+        elif Path(fname) == self.current_archive:
             reply = QMessageBox.critical(self, _('Save'), _("It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?"),
               QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if reply == QMessageBox.No:
                 return self.save_file()
-        self.save_filename = fname[0]
-        self.working_dir = Path(fname[0]).parent
+        if Path(fname).suffix != '.jwlibrary':
+            fname += '.jwlibrary'
+        self.save_filename = fname
+        self.working_dir = Path(fname).parent
         self.current_archive = self.save_filename
-        self.status_label.setText(f'{Path(fname[0]).stem}  ')
+        self.status_label.setText(f'{Path(fname).stem}  ')
         self.zip_file()
 
     def zip_file(self):
