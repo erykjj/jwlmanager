@@ -21,7 +21,7 @@ See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md)
 
 The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
-You can force the GUI to launch in the a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as...
+You can force the GUI to launch in a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as...
 - Linux terminal: `python3 JWLManager.py -es`
 - Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
 - macOS Terminal: `open -a JWLManager.app --args -es`
