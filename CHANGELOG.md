@@ -4,6 +4,8 @@
 
 ### Added
 
+- test
+
 ### Changed
 
 ### Fixed
@@ -841,4 +843,3 @@ ____
 [0.0.9]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.9
 [0.0.8]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.8
 [0.0.7]:https://gitlab.com/erykj/jwlmanager/-/releases/v0.0.7
-
