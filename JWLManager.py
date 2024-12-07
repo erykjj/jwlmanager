@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v6.1.1'
+VERSION = 'v6.1.2'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -2291,7 +2291,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     item_list.append(item)
                 return item_list
 
-            clrs = { 'light': '#f1f1f1', 'dark': '#292929' }
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
@@ -2300,7 +2299,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"\ndocument: {item['DOC']}\n"
                 metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(self, item['ID'], clrs[self.mode], title, clean_text(item['VALUE']), None, metadata)
+                note_box = ViewerItem(self, item['ID'], 0, title, clean_text(item['VALUE']), None, metadata)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
