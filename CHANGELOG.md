@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [6.1.2] - 2024-12-07
+### Fixed
+
+- Fixed crash on Annotation viewer (thank you, @opathofer)
+
 ## [6.1.1] - 2024-11-19
 ### Changed
 
@@ -777,6 +782,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[6.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.2
 [6.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.1
 [6.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.0
 [6.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.0.0
