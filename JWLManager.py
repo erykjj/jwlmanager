@@ -1907,6 +1907,84 @@ class Window(QMainWindow, Ui_MainWindow):
         self.trim_db()
         self.regroup(False, message)
 
+    def merge_items(self, file=''):
+
+        def merge():
+            sql = '''
+                -- Insert or update data in db1 from db2 based on Title and Location
+                INSERT OR REPLACE INTO Note (NoteId, Guid, UserMarkId, LocationId, Title, Content, LastModified, Created, BlockType, BlockIdentifier)
+                SELECT 
+                    db2.NoteId, 
+                    db2.Guid, 
+                    db2.UserMarkId, 
+                    db2.LocationId, 
+                    db2.Title, 
+                    db2.Content, 
+                    db2.LastModified, 
+                    db2.Created, 
+                    db2.BlockType, 
+                    db2.BlockIdentifier
+                FROM db2.Note AS db2
+                WHERE EXISTS (
+                    -- Check if a record with the same Title and LocationId exists in db1 by matching the Location's data
+                    SELECT 1
+                    FROM db1.Note AS db1
+                    JOIN db1.Location AS loc1 ON db1.LocationId = loc1.LocationId
+                    JOIN db2.Location AS loc2 ON db2.LocationId = loc2.LocationId
+                    WHERE db1.Title = db2.Title
+                    AND loc1.BookNumber = loc2.BookNumber 
+                    AND loc1.ChapterNumber = loc2.ChapterNumber 
+                    -- Optionally, add more checks to match other relevant Location fields (e.g., DocumentId, KeySymbol)
+                )
+                OR NOT EXISTS (
+                    -- If no matching Title at the same Location exists in db1, insert the record
+                    SELECT 1
+                    FROM db1.Note AS db1
+                    JOIN db1.Location AS loc1 ON db1.LocationId = loc1.LocationId
+                    JOIN db2.Location AS loc2 ON db2.LocationId = loc2.LocationId
+                    WHERE db1.Title = db2.Title
+                    AND loc1.BookNumber = loc2.BookNumber
+                    AND loc1.ChapterNumber = loc2.ChapterNumber
+                    -- Optionally, add more checks to match other relevant Location fields
+                );
+
+                -- Detach db2 after the operation
+                DETACH DATABASE db2;
+            '''
+
+        if not file:
+            file = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')[0]
+            if not file:
+                self.statusBar.showMessage(' '+_('NOT merged!'), 4000)
+                return
+        self.working_dir = Path(file).parent
+        self.statusBar.showMessage(' '+_('Merging. Please wait…'))
+        app.processEvents()
+        try:
+            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con.executescript(f'''
+                ATTACH DATABASE '{file}' AS db2;
+                PRAGMA temp_store = 2;
+                PRAGMA journal_mode = 'MEMORY';
+                PRAGMA foreign_keys = 'OFF';
+                BEGIN;''')
+            count = merge()
+            con.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        if not count:
+            self.statusBar.showMessage(' '+_('NOT merged!'), 4000)
+            return
+        message = f' {count} '+_('items merged')
+        self.statusBar.showMessage(message, 4000)
+        self.archive_modified()
+        self.trim_db()
+        self.regroup(False, message)
+
 
     def data_viewer(self):
 
