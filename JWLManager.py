@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v6.1.2'
+VERSION = 'v6.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -179,7 +179,7 @@ class Window(QMainWindow, Ui_MainWindow):
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
-            self.current_archive = settings.value('JWLManager/archive', '')
+            self.current_archive = ''
             if not os.path.exists(self.current_archive):
                 self.current_archive = ''
             self.working_dir = Path.home()
@@ -3105,7 +3105,6 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('JWLManager/column2', self.treeWidget.columnWidth(1))
         settings.setValue('JWLManager/sort', self.treeWidget.sortColumn())
         settings.setValue('JWLManager/direction', self.treeWidget.header().sortIndicatorOrder())
-        settings.setValue('JWLManager/archive', self.current_archive)
         settings.setValue('Main_Window/position', self.pos())
         settings.setValue('Main_Window/size', self.size())
         settings.setValue('Viewer/position', self.viewer_pos)
