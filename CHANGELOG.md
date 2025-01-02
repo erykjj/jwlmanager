@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Stopped re-opening previous archive on application start
+
 ### Fixed
 
 ### Removed
