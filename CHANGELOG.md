@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added exception handling on load and save
+
 ### Changed
 
 - Stopped re-opening previous archive on application start
