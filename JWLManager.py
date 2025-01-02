@@ -4,7 +4,7 @@
   JWLManager:   Multi-platform GUI for managing JW Library files:
                 view, delete, edit, merge (via export/import), etc.
 
-  MIT License:  Copyright (c) 2024 Eryk J.
+  MIT License:  Copyright (c) 2025 Eryk J.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
