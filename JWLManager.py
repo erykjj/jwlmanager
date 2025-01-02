@@ -745,8 +745,6 @@ class Window(QMainWindow, Ui_MainWindow):
             QMessageBox.Yes)
         if reply == QMessageBox.Yes:
             self.save_file()
-        # elif reply == QMessageBox.Cancel:
-        #     return
 
     def new_file(self):
         if self.modified:
@@ -797,8 +795,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 os.remove(f)
         except:
             pass
-        with ZipFile(archive,'r') as zipped:
-            zipped.extractall(tmp_path)
+        try:
+            with ZipFile(archive,'r') as zipped:
+                zipped.extractall(tmp_path)
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
         db_name = 'userData.db'
         self.file_loaded()
 
@@ -873,10 +876,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
         update_manifest()
-        with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
-            files = os.listdir(tmp_path)
-            for f in files:
-                newzip.write(f'{tmp_path}/{f}', f)
+        try:
+            with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
+                files = os.listdir(tmp_path)
+                for f in files:
+                    newzip.write(f'{tmp_path}/{f}', f)
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
         self.archive_saved()
 
 
