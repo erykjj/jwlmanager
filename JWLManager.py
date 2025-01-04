@@ -1972,18 +1972,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 DETACH DATABASE db2;
             '''
 
-        if not file:
-            file = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')[0]
-            if not file:
-                self.statusBar.showMessage(' '+_('NOT merged!'), 4000)
-                return
-        self.working_dir = Path(file).parent
         self.statusBar.showMessage(' '+_('Merging. Please wait…'))
         app.processEvents()
         try:
+            with ZipFile(file,'r') as zipped:
+                zipped.extractall(f'{tmp_path}/merge')
+            db_name = 'userData.db'
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             con.executescript(f'''
-                ATTACH DATABASE '{file}' AS db2;
+                ATTACH DATABASE '{tmp_path}/merge/{db_name}' AS db2;
                 PRAGMA temp_store = 2;
                 PRAGMA journal_mode = 'MEMORY';
                 PRAGMA foreign_keys = 'OFF';
@@ -1992,6 +1989,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             con.close()
+            shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
