@@ -30,7 +30,7 @@ VERSION = 'v6.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, ThemeManager, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, ThemeManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QAction, QFont
@@ -217,6 +217,7 @@ class Window(QMainWindow, Ui_MainWindow):
         set_vars()
         self.about_window = AboutBox(self, app=APP, version=VERSION)
         self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
+        self.merge_window = MergeDialog(self)
         self.theme = ThemeManager()
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
@@ -250,7 +251,18 @@ class Window(QMainWindow, Ui_MainWindow):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
         if suffix == '.jwlibrary':
-            self.load_file(file)
+            if self.current_archive == '':
+                self.load_file(file)
+            else:
+                self.merge_window.setWindowTitle(_('Open or Merge'))
+                self.merge_window.label.setText(_('Open archive or merge with current?'))
+                self.merge_window.open_button.setText(_('Open'))
+                self.merge_window.merge_button.setText(_('Merge'))
+                self.merge_window.exec()
+                if self.merge_window.choice == 'open':
+                    self.load_file(file)
+                else: # 'merge'
+                    self.merge_items(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
         elif suffix == '.jwlplaylist':
