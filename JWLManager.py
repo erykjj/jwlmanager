@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v6.2.0'
+VERSION = 'v7.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -798,7 +798,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.file_loaded()
 
 
-    def load_file(self, archive = ''):
+    def load_file(self, archive=''):
         if self.modified:
             self.check_save()
         if not archive:
@@ -822,7 +822,6 @@ class Window(QMainWindow, Ui_MainWindow):
             return True
         except:
             return None
-        self.file_loaded()
 
     def file_loaded(self):
         self.actionReindex.setEnabled(True)
@@ -1463,7 +1462,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
-    def import_items(self, file='', category = '', item_list=None):
+    def import_items(self, file='', category='', item_list=None):
 
         def import_annotations(item_list=None):
 
@@ -3078,12 +3077,10 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
 
-    def trim_db(self, connection=None):
+    def trim_db(self, con=None):
         try:
-            if not connection:
+            if not con:
                 con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            else:
-                con = connection
             sql = """
                 PRAGMA temp_store = 2;
                 PRAGMA journal_mode = 'OFF';
