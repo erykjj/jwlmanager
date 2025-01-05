@@ -254,7 +254,7 @@ class Window(QMainWindow, Ui_MainWindow):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
         if suffix == '.jwlibrary':
-            if self.current_archive == '':
+            if (self.current_archive == '') and (self.modified == False):
                 self.load_file(file)
             else:
                 self.merge_window.setWindowTitle(_('Open or Merge'))
@@ -1585,6 +1585,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
+            if item_list:
+                import_file = item_list
+                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1650,6 +1653,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
+            if item_list:
+                import_file = item_list
+                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1932,8 +1938,8 @@ class Window(QMainWindow, Ui_MainWindow):
         def import_all(items):
             count = 0
             count += import_annotations(items['annotations'])
-            # count += import_bookmarks(items['bookmarks'])
-            # count += import_highlights(items['highlights'])
+            count += import_bookmarks(items['bookmarks'])
+            count += import_highlights(items['highlights'])
             count += import_notes(items['notes'])
             # count += import_playlist(items['playlists'])
             return count
