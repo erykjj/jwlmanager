@@ -220,6 +220,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme = ThemeManager()
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
+        pd.set_option('future.no_silent_downcasting', True)
         self.load_file(self.current_archive) if self.current_archive else self.new_file()
 
 
