@@ -116,6 +116,33 @@ class HelpBox(QDialog):
         self.finished.connect(self.hide())
 
 
+class MergeDialog(QDialog):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setStyleSheet("QDialog {border:2px solid #5b3c88}")
+        layout = QVBoxLayout(self)
+        self.label = QLabel()
+        self.open_button = QPushButton()
+        self.merge_button = QPushButton()
+        self.open_button.setDefault(True)
+        self.open_button.clicked.connect(self.open_action)
+        self.merge_button.clicked.connect(self.merge_action)
+        button_box = QDialogButtonBox()
+        button_box.addButton(self.open_button, QDialogButtonBox.ButtonRole.AcceptRole)
+        button_box.addButton(self.merge_button, QDialogButtonBox.ButtonRole.ActionRole)
+        layout.addWidget(self.label)
+        layout.addWidget(button_box, alignment=Qt.AlignmentFlag.AlignHCenter)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+
+    def open_action(self):
+        self.choice = 'open'
+        self.accept()
+
+    def merge_action(self):
+        self.choice = 'merge'
+        self.accept()
+
+
 class ThemeManager:
     def __init__(self):
         self.all_icons = self._load_icons()

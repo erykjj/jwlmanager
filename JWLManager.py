@@ -30,7 +30,7 @@ VERSION = 'v6.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, ThemeManager, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, ThemeManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
 from PySide6.QtGui import QAction, QFont
@@ -51,6 +51,8 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
+
+from pprint import pprint #DEBUG
 
 
 #### Initial language setting based on passed arguments
@@ -217,6 +219,7 @@ class Window(QMainWindow, Ui_MainWindow):
         set_vars()
         self.about_window = AboutBox(self, app=APP, version=VERSION)
         self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
+        self.merge_window = MergeDialog(self)
         self.theme = ThemeManager()
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
@@ -251,7 +254,18 @@ class Window(QMainWindow, Ui_MainWindow):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
         if suffix == '.jwlibrary':
-            self.load_file(file)
+            if (self.current_archive == '') and (self.modified == False):
+                self.load_file(file)
+            else:
+                self.merge_window.setWindowTitle(_('Open or Merge'))
+                self.merge_window.label.setText(_('Open archive or merge with current?'))
+                self.merge_window.open_button.setText(_('Open'))
+                self.merge_window.merge_button.setText(_('Merge'))
+                self.merge_window.exec()
+                if self.merge_window.choice == 'open':
+                    self.load_file(file)
+                else: # 'merge'
+                    self.merge_items(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
         elif suffix == '.jwlplaylist':
@@ -924,7 +938,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.export_items('')
 
-    def export_items(self, form):
+    def export_items(self, form, con=None):
 
         def process_issue(i):
             issue = str(i)
@@ -980,7 +994,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_annotations(fname):
 
-            def get_annotations():
+            def get_annotations(all=False):
+                item_list = []
+                if not all:
+                    where = f'WHERE LocationId IN {items}'
+                else:
+                    where = ''
                 sql = f'''
                     SELECT TextTag,
                         Value,
@@ -993,7 +1012,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         Location l USING (
                             LocationId
                         )
-                    WHERE LocationId IN {items}
+                    {where}
                     ORDER BY doc, i;
                     '''
                 for row in con.execute(sql).fetchall():
@@ -1008,8 +1027,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['ISSUE'] = None
                     item_list.append(item)
+                return item_list
 
-            get_annotations()
+            if not fname:
+                return get_annotations(True)
+            item_list = get_annotations()
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
@@ -1036,24 +1058,39 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"\ndocument: {item['DOC']}\nlabel: {item['LABEL']}\n---\n{item['VALUE'].strip()}\n"
                     with open(fname, 'w', encoding='utf-8') as f:
                         f.write(txt)
+            return item_list
 
         def export_bookmarks(fname):
-            with open(fname, 'w', encoding='utf-8') as f:
-                f.write(export_header('{BOOKMARKS}'))
-                for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};').fetchall():
-                    f.write(f'\n{row[0]}')
-                    for item in range(1,12):
-                        f.write(f'|{row[item]}')
-                    item_list.append(None)
+            if fname:
+                where = f'WHERE BookmarkId IN {items}'
+            else:
+                where = ''
+            item_list = []
+            for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) {where};').fetchall():
+                item = '|'.join(str(x) if x is not None else 'None' for x in row)
+                item_list.append(item)
+            if fname:
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{BOOKMARKS}'))
+                    for item in item_list:
+                        f.write(f'\n{item}')
+            return item_list
 
         def export_highlights(fname):
-            with open(fname, 'w', encoding='utf-8') as f:
-                f.write(export_header('{HIGHLIGHTS}'))
-                for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
-                    f.write(f'\n{row[0]}')
-                    for item in range(1,13):
-                        f.write(f',{row[item]}')
-                    item_list.append(None)
+            if fname:
+                where = f'WHERE BlockRangeId IN {items}'
+            else:
+                where = ''
+            item_list = []
+            for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) {where};').fetchall():
+                item = ','.join(str(x) if x is not None else 'None' for x in row)
+                item_list.append(item)
+            if fname:
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{HIGHLIGHTS}'))
+                    for item in item_list:
+                        f.write(f'\n{item}')
+            return item_list
 
         def export_notes(fname):
 
@@ -1084,7 +1121,12 @@ class Window(QMainWindow, Ui_MainWindow):
                         t = left + ' […] ' + m.group(1)
                 return t
 
-            def get_notes():
+            def get_notes(all=False):
+                item_list = []
+                if not all:
+                    where = f'WHERE n.NoteId IN {items}'
+                else:
+                    where = ''
                 sql = f'''
                     SELECT n.BlockType Type,
                         n.Title,
@@ -1129,7 +1171,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         BlockRange b USING (
                             UserMarkId
                         )
-                    WHERE n.NoteId IN {items} 
+                    {where} 
                     GROUP BY n.NoteId
                     ORDER BY Type, Date DESC;
                     '''
@@ -1186,8 +1228,11 @@ class Window(QMainWindow, Ui_MainWindow):
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&docid={item['DOC']}{par}"
                     item_list.append(item)
+                return item_list
 
-            get_notes()
+            if not fname:
+                return get_notes(True)
+            item_list = get_notes()
             if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
                 create_xlsx(fields)
@@ -1278,7 +1323,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
-
+            return item_list
 
         def export_playlist(fname):
 
@@ -1371,6 +1416,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     newzip.write(f'{playlist_path}/{f}', f)
             shutil.rmtree(playlist_path, ignore_errors=True)
 
+        def export_all():
+            items = {}
+            items['annotations'] = export_annotations(None)
+            items['bookmarks'] = export_bookmarks(None)
+            items['highlights'] = export_highlights(None)
+            items['notes'] = export_notes(None)
+            # items['playlists'] = export_playlist(None)
+            return items
+
+        if con: # coming from merge_items
+            return export_all()
         category = self.combo_category.currentText()
         fname = export_file(category, form)
         if not fname:
@@ -1381,22 +1437,21 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.working_dir = Path(fname).parent
         current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
-        item_list = []
         self.statusBar.showMessage(' '+_('Exporting. Please wait…'))
         app.processEvents()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
-                export_highlights(fname)
+                item_list = export_highlights(fname)
             elif category == _('Notes'):
-                export_notes(fname)
+                item_list = export_notes(fname)
             elif category == _('Annotations'):
-                export_annotations(fname)
+                item_list = export_annotations(fname)
             elif category == _('Bookmarks'):
-                export_bookmarks(fname)
+                item_list = export_bookmarks(fname)
             elif category == _('Playlists'):
-                export_playlist(fname)
+                item_list = export_playlist(fname)
             con.close()
         except Exception as ex:
             self.crash_box(ex)
@@ -1404,9 +1459,9 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
-    def import_items(self, file='', category = ''):
+    def import_items(self, file='', category = '', item_list=None):
 
-        def import_annotations():
+        def import_annotations(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1465,6 +1520,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         return 0
                 return count
 
+            if item_list:
+                df = pd.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                return update_db(df)
             if Path(file).suffix == '.txt':
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
@@ -1477,7 +1535,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_bookmarks():
+        def import_bookmarks(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1527,6 +1585,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
+            if item_list:
+                import_file = item_list
+                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1534,7 +1595,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_highlights():
+        def import_highlights(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1592,6 +1653,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             return 0
                 return count
 
+            if item_list:
+                import_file = item_list
+                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1599,7 +1663,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_notes():
+        def import_notes(item_list=None):
 
             def pre_import():
 
@@ -1757,6 +1821,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         return 0
                 return count
 
+            if item_list:
+                df = pd.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                return update_db(df)
             if Path(file).suffix == '.txt':
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
@@ -1769,7 +1836,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist(n): 
+        def import_playlist(n, item_list=None): 
 
             def update_db(n):
 
@@ -1868,6 +1935,28 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
 
+        def import_all(items):
+            count = 0
+            count += import_annotations(items['annotations'])
+            count += import_bookmarks(items['bookmarks'])
+            count += import_highlights(items['highlights'])
+            count += import_notes(items['notes'])
+            # count += import_playlist(items['playlists'])
+            return count
+
+        if item_list:
+            try:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+                count = import_all(item_list)
+                con.execute("PRAGMA foreign_keys = 'ON';")
+                con.commit()
+                con.close()
+            except Exception as ex:
+                self.crash_box(ex)
+                self.clean_up()
+                sys.exit()
+            return count
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks'):
@@ -1911,6 +2000,30 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
             return
         message = f' {category}: {count} '+_('items imported/updated')
+        self.statusBar.showMessage(message, 4000)
+        self.archive_modified()
+        self.trim_db()
+        self.regroup(False, message)
+
+    def merge_items(self, file=''):
+        self.statusBar.showMessage(' '+_('Merging. Please wait…'))
+        app.processEvents()
+        try:
+            with ZipFile(file,'r') as zipped:
+                zipped.extractall(f'{tmp_path}/merge')
+            con = sqlite3.connect(f'{tmp_path}/merge/{db_name}')
+            items = self.export_items(form=None, con=con)
+            count = self.import_items(item_list=items)
+            con.close()
+            shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        if not count:
+            self.statusBar.showMessage(' '+_('NOT merged!'), 4000)
+            return
+        message = f' {count} '+_('items merged')
         self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
