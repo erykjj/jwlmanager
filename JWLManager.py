@@ -52,8 +52,6 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
-from pprint import pprint #DEBUG
-
 
 #### Initial language setting based on passed arguments
 def get_language():
@@ -76,15 +74,18 @@ def get_language():
     parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
     language_group = parser.add_argument_group('interface language', 'English by default')
     group = language_group.add_mutually_exclusive_group(required=False)
+    parser.add_argument('archive', type=str, nargs='?', default=None, help='archive to open')
     for k in sorted(available_languages.keys()):
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
-
     lng = settings.value('JWLManager/language', 'en')
-    for l in args.keys():
+    for l in available_languages.keys():
         if args[l]:
             lng = l
+            break
+    if args['archive']:
+        sys.argv.append(args['archive'])
     return lng
 
 def read_resources(lng):
@@ -135,7 +136,7 @@ read_resources(lang)
 
 #### Main app
 class Window(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self, archive=''):
         super().__init__()
 
         def center():
@@ -181,7 +182,7 @@ class Window(QMainWindow, Ui_MainWindow):
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
-            self.current_archive = ''
+            self.current_archive = archive
             if not os.path.exists(self.current_archive):
                 self.current_archive = ''
             self.working_dir = Path.home()
@@ -224,7 +225,11 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
         pd.set_option('future.no_silent_downcasting', True)
-        self.load_file(self.current_archive) if self.current_archive else self.new_file()
+        if self.current_archive and self.load_file(self.current_archive):
+            self.file_loaded()
+        else:
+            self.current_archive = ''
+            self.new_file()
 
 
     def changeEvent(self, event):
@@ -805,6 +810,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.working_dir = Path(archive).parent
         self.status_label.setText(f'{Path(archive).stem}  ')
         global db_name
+        db_name = 'userData.db'
         try:
             for f in glob.glob(f'{tmp_path}/*', recursive=True):
                 os.remove(f)
@@ -813,11 +819,9 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive,'r') as zipped:
                 zipped.extractall(tmp_path)
-        except Exception as ex:
-            self.crash_box(ex)
-            self.clean_up()
-            sys.exit()
-        db_name = 'userData.db'
+            return True
+        except:
+            return None
         self.file_loaded()
 
     def file_loaded(self):
@@ -3167,6 +3171,6 @@ if __name__ == "__main__":
     font.setPixelSize(16)
     app.setFont(font)
     app.setStyle('Fusion')
-    win = Window()
+    win = Window(sys.argv[-1])
     win.show()
     sys.exit(app.exec())
