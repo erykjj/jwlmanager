@@ -995,6 +995,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_annotations(fname):
 
             def get_annotations(all=False):
+                item_list = []
                 if not all:
                     where = f'WHERE LocationId IN {items}'
                 else:
@@ -1030,7 +1031,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             if not fname:
                 return get_annotations(True)
-            get_annotations()
+            item_list = get_annotations()
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 create_xlsx(fields)
@@ -1057,24 +1058,39 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"\ndocument: {item['DOC']}\nlabel: {item['LABEL']}\n---\n{item['VALUE'].strip()}\n"
                     with open(fname, 'w', encoding='utf-8') as f:
                         f.write(txt)
+            return item_list
 
         def export_bookmarks(fname):
-            with open(fname, 'w', encoding='utf-8') as f:
-                f.write(export_header('{BOOKMARKS}'))
-                for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) WHERE BookmarkId IN {items};').fetchall():
-                    f.write(f'\n{row[0]}')
-                    for item in range(1,12):
-                        f.write(f'|{row[item]}')
-                    item_list.append(None)
+            if fname:
+                where = f'WHERE BookmarkId IN {items}'
+            else:
+                where = ''
+            item_list = []
+            for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) {where};').fetchall():
+                item = '|'.join(str(x) if x is not None else 'None' for x in row)
+                item_list.append(item)
+            if fname:
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{BOOKMARKS}'))
+                    for item in item_list:
+                        f.write(f'\n{item}')
+            return item_list
 
         def export_highlights(fname):
-            with open(fname, 'w', encoding='utf-8') as f:
-                f.write(export_header('{HIGHLIGHTS}'))
-                for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) WHERE BlockRangeId IN {items};').fetchall():
-                    f.write(f'\n{row[0]}')
-                    for item in range(1,13):
-                        f.write(f',{row[item]}')
-                    item_list.append(None)
+            if fname:
+                where = f'WHERE BlockRangeId IN {items}'
+            else:
+                where = ''
+            item_list = []
+            for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) {where};').fetchall():
+                item = ','.join(str(x) if x is not None else 'None' for x in row)
+                item_list.append(item)
+            if fname:
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{HIGHLIGHTS}'))
+                    for item in item_list:
+                        f.write(f'\n{item}')
+            return item_list
 
         def export_notes(fname):
 
@@ -1106,6 +1122,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return t
 
             def get_notes(all=False):
+                item_list = []
                 if not all:
                     where = f'WHERE n.NoteId IN {items}'
                 else:
@@ -1215,7 +1232,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             if not fname:
                 return get_notes(True)
-            get_notes()
+            item_list = get_notes()
             if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
                 create_xlsx(fields)
@@ -1306,6 +1323,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"guid: {item['GUID']}"
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
+            return item_list
 
         def export_playlist(fname):
 
@@ -1401,15 +1419,12 @@ class Window(QMainWindow, Ui_MainWindow):
         def export_all():
             items = {}
             items['annotations'] = export_annotations(None)
-            # items['bookmarks'] = export_bookmarks(None)
-            # items['highlights'] = export_highlights(None)
+            items['bookmarks'] = export_bookmarks(None)
+            items['highlights'] = export_highlights(None)
             items['notes'] = export_notes(None)
-            pprint(items['annotations'])#DEBUG
-            pprint(items['notes'])#DEBUG
             # items['playlists'] = export_playlist(None)
             return items
 
-        item_list = [] #FIX: this is being reused by all categories!!
         if con: # coming from merge_items
             return export_all()
         category = self.combo_category.currentText()
@@ -1428,15 +1443,15 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
-                export_highlights(fname)
+                item_list = export_highlights(fname)
             elif category == _('Notes'):
-                export_notes(fname)
+                item_list = export_notes(fname)
             elif category == _('Annotations'):
-                export_annotations(fname)
+                item_list = export_annotations(fname)
             elif category == _('Bookmarks'):
-                export_bookmarks(fname)
+                item_list = export_bookmarks(fname)
             elif category == _('Playlists'):
-                export_playlist(fname)
+                item_list = export_playlist(fname)
             con.close()
         except Exception as ex:
             self.crash_box(ex)
