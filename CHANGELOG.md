@@ -5,6 +5,7 @@
 ### Added
 
 - Added exception handling on load and save
+- Enabled opening archive from commandline
 
 ### Changed
 
