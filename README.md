@@ -42,9 +42,12 @@ chmod +x JWLManager.py
 If you use the `-h` flag, you'll see the following options:
 
 ```
-usage: JWLManager.py [-h] [-v] [-de | -en | -es | -fr | -it | -pl | -pt | -ru | -uk]
+usage: JWLManager.py [-h] [-v] [-de | -en | -es | -fr | -it | -pl | -pt | -ru | -uk] [archive]
 
 Manage .jwlibrary backup archives
+
+positional arguments:
+  archive        archive to open
 
 options:
   -h, --help     show this help message and exit
