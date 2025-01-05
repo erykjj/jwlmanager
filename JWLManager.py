@@ -52,6 +52,8 @@ from zipfile import ZipFile, ZIP_DEFLATED
 import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
+from pprint import pprint #DEBUG
+
 
 #### Initial language setting based on passed arguments
 def get_language():
@@ -935,7 +937,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.export_items('')
 
-    def export_items(self, form):
+    def export_items(self, form, con=None):
 
         def process_issue(i):
             issue = str(i)
@@ -991,7 +993,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_annotations(fname):
 
-            def get_annotations():
+            def get_annotations(all=False):
+                if not all:
+                    where = f'WHERE LocationId IN {items}'
+                else:
+                    where = ''
                 sql = f'''
                     SELECT TextTag,
                         Value,
@@ -1004,7 +1010,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         Location l USING (
                             LocationId
                         )
-                    WHERE LocationId IN {items}
+                    {where}
                     ORDER BY doc, i;
                     '''
                 for row in con.execute(sql).fetchall():
@@ -1019,7 +1025,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         item['ISSUE'] = None
                     item_list.append(item)
+                return item_list
 
+            if not fname:
+                return get_annotations(True)
             get_annotations()
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
@@ -1095,7 +1104,11 @@ class Window(QMainWindow, Ui_MainWindow):
                         t = left + ' […] ' + m.group(1)
                 return t
 
-            def get_notes():
+            def get_notes(all=False):
+                if not all:
+                    where = f'WHERE n.NoteId IN {items}'
+                else:
+                    where = ''
                 sql = f'''
                     SELECT n.BlockType Type,
                         n.Title,
@@ -1140,7 +1153,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         BlockRange b USING (
                             UserMarkId
                         )
-                    WHERE n.NoteId IN {items} 
+                    {where} 
                     GROUP BY n.NoteId
                     ORDER BY Type, Date DESC;
                     '''
@@ -1197,7 +1210,10 @@ class Window(QMainWindow, Ui_MainWindow):
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&docid={item['DOC']}{par}"
                     item_list.append(item)
+                return item_list
 
+            if not fname:
+                return get_notes(True)
             get_notes()
             if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
@@ -1290,7 +1306,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     txt += f"\n---\n# {item['TITLE']}\n\n{item['NOTE'].strip()}\n"
                     save_file(fname)
 
-
         def export_playlist(fname):
 
             def playlist_export():
@@ -1382,6 +1397,20 @@ class Window(QMainWindow, Ui_MainWindow):
                     newzip.write(f'{playlist_path}/{f}', f)
             shutil.rmtree(playlist_path, ignore_errors=True)
 
+        def export_all():
+            items = {}
+            items['annotations'] = export_annotations(None)
+            # items['bookmarks'] = export_bookmarks(None)
+            # items['highlights'] = export_highlights(None)
+            items['notes'] = export_notes(None)
+            pprint(items['annotations'])#DEBUG
+            pprint(items['notes'])#DEBUG
+            # items['playlists'] = export_playlist(None)
+            return items
+
+        item_list = [] #FIX: this is being reused by all categories!!
+        if con: # coming from merge_items
+            return export_all()
         category = self.combo_category.currentText()
         fname = export_file(category, form)
         if not fname:
@@ -1392,7 +1421,6 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.working_dir = Path(fname).parent
         current_archive = self.current_archive.name if self.current_archive else _('NEW ARCHIVE')
-        item_list = []
         self.statusBar.showMessage(' '+_('Exporting. Please wait…'))
         app.processEvents()
         try:
@@ -1415,9 +1443,9 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
-    def import_items(self, file='', category = ''):
+    def import_items(self, file='', category = '', item_list=None):
 
-        def import_annotations():
+        def import_annotations(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1476,6 +1504,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         return 0
                 return count
 
+            if item_list:
+                df = pd.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                return update_db(df)
             if Path(file).suffix == '.txt':
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
@@ -1488,7 +1519,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_bookmarks():
+        def import_bookmarks(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1545,7 +1576,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_highlights():
+        def import_highlights(item_list=None):
 
             def pre_import():
                 line = import_file.readline()
@@ -1610,7 +1641,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_notes():
+        def import_notes(item_list=None):
 
             def pre_import():
 
@@ -1768,6 +1799,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         return 0
                 return count
 
+            if item_list:
+                df = pd.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                return update_db(df)
             if Path(file).suffix == '.txt':
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
@@ -1780,7 +1814,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist(n): 
+        def import_playlist(n, item_list=None): 
 
             def update_db(n):
 
@@ -1879,6 +1913,28 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
 
+        def import_all(items):
+            count = 0
+            count += import_annotations(items['annotations'])
+            # count += import_bookmarks(items['bookmarks'])
+            # count += import_highlights(items['highlights'])
+            count += import_notes(items['notes'])
+            # count += import_playlist(items['playlists'])
+            return count
+
+        if item_list:
+            try:
+                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+                count = import_all(item_list)
+                con.execute("PRAGMA foreign_keys = 'ON';")
+                con.commit()
+                con.close()
+            except Exception as ex:
+                self.crash_box(ex)
+                self.clean_up()
+                sys.exit()
+            return count
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks'):
@@ -1928,66 +1984,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
     def merge_items(self, file=''):
-
-        def merge():
-            sql = '''
-                -- Insert or update data in db1 from db2 based on Title and Location
-                INSERT OR REPLACE INTO Note (NoteId, Guid, UserMarkId, LocationId, Title, Content, LastModified, Created, BlockType, BlockIdentifier)
-                SELECT 
-                    db2.NoteId, 
-                    db2.Guid, 
-                    db2.UserMarkId, 
-                    db2.LocationId, 
-                    db2.Title, 
-                    db2.Content, 
-                    db2.LastModified, 
-                    db2.Created, 
-                    db2.BlockType, 
-                    db2.BlockIdentifier
-                FROM db2.Note AS db2
-                WHERE EXISTS (
-                    -- Check if a record with the same Title and LocationId exists in db1 by matching the Location's data
-                    SELECT 1
-                    FROM db1.Note AS db1
-                    JOIN db1.Location AS loc1 ON db1.LocationId = loc1.LocationId
-                    JOIN db2.Location AS loc2 ON db2.LocationId = loc2.LocationId
-                    WHERE db1.Title = db2.Title
-                    AND loc1.BookNumber = loc2.BookNumber 
-                    AND loc1.ChapterNumber = loc2.ChapterNumber 
-                    -- Optionally, add more checks to match other relevant Location fields (e.g., DocumentId, KeySymbol)
-                )
-                OR NOT EXISTS (
-                    -- If no matching Title at the same Location exists in db1, insert the record
-                    SELECT 1
-                    FROM db1.Note AS db1
-                    JOIN db1.Location AS loc1 ON db1.LocationId = loc1.LocationId
-                    JOIN db2.Location AS loc2 ON db2.LocationId = loc2.LocationId
-                    WHERE db1.Title = db2.Title
-                    AND loc1.BookNumber = loc2.BookNumber
-                    AND loc1.ChapterNumber = loc2.ChapterNumber
-                    -- Optionally, add more checks to match other relevant Location fields
-                );
-
-                -- Detach db2 after the operation
-                DETACH DATABASE db2;
-            '''
-
         self.statusBar.showMessage(' '+_('Merging. Please wait…'))
         app.processEvents()
         try:
             with ZipFile(file,'r') as zipped:
                 zipped.extractall(f'{tmp_path}/merge')
-            db_name = 'userData.db'
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
-            con.executescript(f'''
-                ATTACH DATABASE '{tmp_path}/merge/{db_name}' AS db2;
-                PRAGMA temp_store = 2;
-                PRAGMA journal_mode = 'MEMORY';
-                PRAGMA foreign_keys = 'OFF';
-                BEGIN;''')
-            count = merge()
-            con.execute("PRAGMA foreign_keys = 'ON';")
-            con.commit()
+            con = sqlite3.connect(f'{tmp_path}/merge/{db_name}')
+            items = self.export_items(form=None, con=con)
+            count = self.import_items(item_list=items)
             con.close()
             shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
         except Exception as ex:
