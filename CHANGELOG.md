@@ -5,11 +5,11 @@
 ### Added
 
 - Added exception handling on load and save
-- Enabled opening archive from commandline
+- Enabled **opening archive from commandline**
 
 ### Changed
 
-- Stopped re-opening previous archive on application start
+- Disabled re-opening previous archive on application start
 
 ### Fixed
 
