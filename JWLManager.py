@@ -1081,7 +1081,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(f'\n{item}')
             return item_list
 
-        def export_favorites(fname): # TODO
+        def export_favorites(fname):
             if fname:
                 where = f'AND TagMapId IN {items}'
             else:
