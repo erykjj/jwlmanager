@@ -1081,6 +1081,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(f'\n{item}')
             return item_list
 
+        # TODO: export_favorites(fname):
+
         def export_highlights(fname):
             if fname:
                 where = f'WHERE BlockRangeId IN {items}'
@@ -1427,7 +1429,8 @@ class Window(QMainWindow, Ui_MainWindow):
             items['bookmarks'] = export_bookmarks(None)
             items['highlights'] = export_highlights(None)
             items['notes'] = export_notes(None)
-            # items['playlists'] = export_playlist(None)
+            # items['playlists'] = export_playlist(None) # TODO
+            # items['favorites'] = export_favorites(None)
             return items
 
         if con: # coming from merge_items
@@ -1599,6 +1602,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 else:
                     count = 0
             return count
+
+        # TODO: import_favorites(item_list=None):
 
         def import_highlights(item_list=None):
 
@@ -1946,7 +1951,8 @@ class Window(QMainWindow, Ui_MainWindow):
             count += import_bookmarks(items['bookmarks'])
             count += import_highlights(items['highlights'])
             count += import_notes(items['notes'])
-            # count += import_playlist(items['playlists'])
+            # count += import_playlist(items['playlists']) # TODO
+            # count += import_favorites(items['favorites'])
             return count
 
         if item_list:
