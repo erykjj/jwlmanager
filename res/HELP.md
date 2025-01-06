@@ -1,10 +1,12 @@
 ## Operation
 ######
-Open a *.jwlibrary* backup archive to see the Annotations (the editable text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. **Drag-and-drop to open** is implemented.
+Open a `.jwlibrary` backup archive to see the Annotations (the editable text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
+######
+If you **drag-and-drop** an archive into the app when another archive is already opened, you will have the option to "Open" it (replacing the current one) or "Merge". If you choose to **merge**, *all* the records (Annotations, Bookmarks, Highlights and Notes) from this second archive will be added to the already opened one, *over-writing* any that may be the same (eg., a note at the same location and with the same title). Since you don't have fine-grained control over which records to import, it is preferable to export the items you want from the second archive and import them into the first in two steps.
 ######
 The state of the application (size, position, language, and various selection choices) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 ######
-Notes that are not associated with any publication (created directly in the Personal Study space), are listed as *\* OTHER \** and with *\* NO LANGUAGE \**. Notes that aren't tagged will be listed as *\* NO TAG \**.
+Notes that are not associated with any publication (created directly in the Personal Study space), are listed as `* OTHER *` and with `* NO LANGUAGE *`. Notes that aren't tagged will be listed as `* NO TAG *`.
 ######
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
 ######
@@ -27,7 +29,7 @@ The ***View*** menu has some additional options (also accessible directly via th
   * **Short** - abbreviated title
   * **Full** - complete title
 ######
-If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original *.jwlibrary* archive in case you need to restore after messing up ;-)
+If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original `.jwlibrary` archive in case you need to restore.
 #####
 ######
 ### View (button)
@@ -37,7 +39,7 @@ Shows selected Notes and Annotations in a **Data Viewer** window, with a filter 
 ######
 ### Add
 ######
-In the case of Favorites, used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. And with Playlists you can add *images* ('bmp', 'gif', 'heic', 'jpg', 'png') to an existing playlist or create a new list.
+In the case of **Favorites**, used for adding a Bible translation to your favorites, since there is no direct way of doing that in the JW Library app itself. And with **Playlists** you can add *images* ('bmp', 'gif', 'heic', 'jpg', 'png') to an existing playlist or create a new list.
 #####
 ######
 ### Delete
@@ -53,7 +55,7 @@ They can also be exported (but not imported) as separate markdown files (with a 
 ######
 Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format.
 ######
-Items from differente **Playlists** can be exported to a `.jwlplaylist` archive containing one Playlist (with the name of the archive) which can be imported as a Playlist.
+Items from differente **Playlists** can be exported to a `.jwlplaylist` archive containing one playlist (with the name of the archive) which can be imported as a playlist.
 ######
 Exporting of **Bookmarks** and **Highlights** is also possible - not so much with a view of direct editing, but for sharing/merging into another archive.
 #####
