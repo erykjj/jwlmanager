@@ -260,7 +260,8 @@ class Window(QMainWindow, Ui_MainWindow):
         suffix = Path(file).suffix
         if suffix == '.jwlibrary':
             if (self.current_archive == '') and (self.modified == False):
-                self.load_file(file)
+                if self.load_file(file):
+                    self.file_loaded()
             else:
                 self.merge_window.setWindowTitle(_('Open or Merge'))
                 self.merge_window.label.setText(_('Open archive or merge with current?'))
@@ -268,7 +269,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.merge_window.merge_button.setText(_('Merge'))
                 self.merge_window.exec()
                 if self.merge_window.choice == 'open':
-                    self.load_file(file)
+                    if self.load_file(file):
+                        self.file_loaded()
                 else: # 'merge'
                     self.merge_items(file)
         elif not self.combo_category.isEnabled():
