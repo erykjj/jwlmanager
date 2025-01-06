@@ -428,7 +428,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights'), _('Annotations'), _('Playlists'), _('Bookmarks')))
+        self.button_export.setEnabled(self.selected_items)
 
     def list_selected(self):
         selected = []
@@ -468,7 +468,7 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Annotations'):
             disable_options([2,4,5], False, True, True, True)
         elif selection == _('Favorites'):
-            disable_options([4,5], True, False, False, False)
+            disable_options([4,5], True, True, True, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
             disable_options([1,2,3,4,5], True, True, True, False)
@@ -958,7 +958,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_file(category, form):
             now = datetime.now().strftime('%Y-%m-%d')
-            if category == _('Highlights') or category == _('Bookmarks'):
+            if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
                 return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
             elif category == _('Playlists'):
                 fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.jwlplaylist', _('JW Library playlists')+' (*.jwlplaylist)')[0]
@@ -1081,7 +1081,21 @@ class Window(QMainWindow, Ui_MainWindow):
                         f.write(f'\n{item}')
             return item_list
 
-        # TODO: export_favorites(fname):
+        def export_favorites(fname): # TODO
+            if fname:
+                where = f'AND TagMapId IN {items}'
+            else:
+                where = ''
+            item_list = []
+            for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite') {where} ORDER BY Position;").fetchall():
+                item = '|'.join(str(x) for x in row)
+                item_list.append(item)
+            if fname:
+                with open(fname, 'w', encoding='utf-8') as f:
+                    f.write(export_header('{FAVORITES}'))
+                    for item in item_list:
+                        f.write(f'\n{item}')
+            return item_list
 
         def export_highlights(fname):
             if fname:
@@ -1430,7 +1444,7 @@ class Window(QMainWindow, Ui_MainWindow):
             items['highlights'] = export_highlights(None)
             items['notes'] = export_notes(None)
             # items['playlists'] = export_playlist(None) # TODO
-            # items['favorites'] = export_favorites(None)
+            items['favorites'] = export_favorites(None)
             return items
 
         if con: # coming from merge_items
@@ -1452,6 +1466,8 @@ class Window(QMainWindow, Ui_MainWindow):
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
                 item_list = export_highlights(fname)
+            elif category == _('Favorites'):
+                item_list = export_favorites(fname)
             elif category == _('Notes'):
                 item_list = export_notes(fname)
             elif category == _('Annotations'):
