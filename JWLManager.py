@@ -1514,7 +1514,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         attribs['VALUE'] = item.group(2)
                         items.append(attribs)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
+                        QMessageBox.critical(None, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
@@ -1539,7 +1539,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
+                        QMessageBox.critical(None, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 return count
@@ -1604,7 +1604,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 location_id = add_publication_location(attribs)
                             add_bookmark(attribs, location_id)
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(None, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1664,7 +1664,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
                             position += 1
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(None, _('Error!'), _('Favorites')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1732,7 +1732,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 location_id = add_publication_location(attribs)
                             add_usermark(attribs, location_id)
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(None, _('Error!'), _('Highlights')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1794,7 +1794,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         attribs['NOTE'] = '\n'.join(note[1:])
                         items.append(attribs)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
+                        QMessageBox.critical(None, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
@@ -1900,7 +1900,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         else: # independent note
                             update_note(row, None, 0, None)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
+                        QMessageBox.critical(None, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 return count
