@@ -423,13 +423,6 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
 
-    def tree_selection(self):
-        self.selected_items = len(self.list_selected())
-        self.selected.setText(f'**{self.selected_items:,}**')
-        self.button_delete.setEnabled(self.selected_items)
-        self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
-        self.button_export.setEnabled(self.selected_items)
-
     def list_selected(self):
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
@@ -438,6 +431,13 @@ class Window(QMainWindow, Ui_MainWindow):
             for i in self.leaves.get(index):
                 selected.append(i)
         return selected
+
+    def tree_selection(self):
+        self.selected_items = len(self.list_selected())
+        self.selected.setText(f'**{self.selected_items:,}**')
+        self.button_delete.setEnabled(self.selected_items)
+        self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
+        self.button_export.setEnabled(self.selected_items)
 
 
     def switchboard(self, selection):
@@ -1648,7 +1648,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     return favorite_list
 
                 def add_publication_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, IssueTagNumber, Type) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?);', attribs)
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, IssueTagNumber, Type) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?);', attribs+attribs)
                     result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?;', attribs).fetchone()[0]
                     return result
 
