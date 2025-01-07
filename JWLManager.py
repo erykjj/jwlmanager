@@ -1087,7 +1087,7 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 where = ''
             item_list = []
-            for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite') {where} ORDER BY Position;").fetchall():
+            for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = (SELECT TagId FROM Tag WHERE Type = 0 AND Name = 'Favorite') {where} ORDER BY Position;").fetchall():
                 item = '|'.join(str(x) for x in row)
                 item_list.append(item)
             if fname:
@@ -1619,7 +1619,65 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        # TODO: import_favorites(item_list=None):
+        def import_favorites(item_list=None):
+
+            def pre_import():
+                line = import_file.readline()
+                if regex.search('{FAVORITES}', line):
+                    return True
+                else:
+                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {FAVORITES} tag line'), QMessageBox.Abort)
+                    return False
+
+            def update_db():
+
+                def tag_positions():
+                    con.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
+                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                    position = con.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
+                    if position[0] != None:
+                        return tag_id, position[0] + 1
+                    else:
+                        return tag_id, 0
+
+                def get_current(tag_id):
+                    favorite_list = []
+                    for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = {tag_id};").fetchall():
+                        item = '|'.join(str(x) for x in row)
+                        favorite_list.append(item)
+                    return favorite_list
+
+                def add_publication_location(attribs):
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, IssueTagNumber, Type) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?);', attribs)
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?;', attribs).fetchone()[0]
+                    return result
+
+                tag_id, position = tag_positions()
+                favorite_list = get_current(tag_id)
+                count = 0
+                for line in import_file:
+                    if ('|' in line) and (line not in favorite_list):
+                        try:
+                            count += 1
+                            attribs = regex.split('\|', line.rstrip())
+                            location_id = add_publication_location(attribs)
+                            con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
+                            position += 1
+                        except:
+                            QMessageBox.critical(None, _('Error!'), _('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                            con.execute('ROLLBACK;')
+                            return 0
+                return count
+
+            if item_list:
+                import_file = item_list
+                return update_db()
+            with open(file, 'r', encoding='utf-8') as import_file:
+                if pre_import():
+                    count = update_db()
+                else:
+                    count = 0
+            return count
 
         def import_highlights(item_list=None):
 
@@ -1968,7 +2026,7 @@ class Window(QMainWindow, Ui_MainWindow):
             count += import_highlights(items['highlights'])
             count += import_notes(items['notes'])
             # count += import_playlist(items['playlists']) # TODO
-            # count += import_favorites(items['favorites'])
+            count += import_favorites(items['favorites'])
             return count
 
         if item_list:
@@ -1986,7 +2044,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return count
         if not file:
             category = self.combo_category.currentText()
-            if category == _('Highlights') or category == _('Bookmarks'):
+            if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
                 flt = _('Text files')+' (*.txt)'
             elif category == _('Playlists'):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
@@ -2006,6 +2064,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = import_annotations()
             elif category == _('Bookmarks'):
                 count = import_bookmarks()
+            elif category == _('Favorites'):
+                count = import_favorites()
             elif category == _('Highlights'):
                 count = import_highlights()
             elif category == _('Notes'):
