@@ -1495,7 +1495,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if regex.search('{ANNOTATIONS}', line):
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {ANNOTATIONS} tag line'), QMessageBox.Abort)
+                    QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing {ANNOTATIONS} tag line'), QMessageBox.Abort)
                     return False
 
             def read_text():
@@ -1517,7 +1517,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         attribs['VALUE'] = item.group(2)
                         items.append(attribs)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
+                        QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
@@ -1542,7 +1542,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
+                        QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 return count
@@ -1569,7 +1569,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if regex.search('{BOOKMARKS}', line):
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort)
+                    QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort)
                     return False
 
             def update_db():
@@ -1607,7 +1607,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 location_id = add_publication_location(attribs)
                             add_bookmark(attribs, location_id)
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(self, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1629,7 +1629,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if regex.search('{FAVORITES}', line):
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {FAVORITES} tag line'), QMessageBox.Abort)
+                    QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing {FAVORITES} tag line'), QMessageBox.Abort)
                     return False
 
             def update_db():
@@ -1667,7 +1667,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
                             position += 1
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Favorites')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(self, _('Error!'), _('Favorites')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1689,7 +1689,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if regex.search('{HIGHLIGHTS}', line):
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing {HIGHLIGHTS} tag line'), QMessageBox.Abort)
+                    QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing {HIGHLIGHTS} tag line'), QMessageBox.Abort)
                     return False
 
             def update_db():
@@ -1735,7 +1735,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 location_id = add_publication_location(attribs)
                             add_usermark(attribs, location_id)
                         except:
-                            QMessageBox.critical(None, _('Error!'), _('Highlights')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
+                            QMessageBox.critical(self, _('Error!'), _('Highlights')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
                             return 0
                 return count
@@ -1769,7 +1769,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         delete_notes(m.group(1))
                     return True
                 else:
-                    QMessageBox.critical(None, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
+                    QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing or malformed {NOTES=} attribute line'), QMessageBox.Abort)
                     return False
 
             def read_text():
@@ -1797,7 +1797,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         attribs['NOTE'] = '\n'.join(note[1:])
                         items.append(attribs)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
+                        QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count+1}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
@@ -1903,7 +1903,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         else: # independent note
                             update_note(row, None, 0, None)
                     except:
-                        QMessageBox.critical(None, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
+                        QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count+1}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return 0
                 return count
