@@ -7,6 +7,7 @@
 - Added exception handling on load and save
 - Enabled **opening archive from commandline**
 - Implemented **exporting/importing Favorites**
+- Added more detail in import error box
 
 ### Changed
 
