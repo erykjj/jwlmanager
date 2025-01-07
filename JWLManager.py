@@ -496,6 +496,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 code = 'ws-'
             elif not code:
                 code = ''
+            elif regex.match(code_jwb, code):
+                code = 'jwb-'
             yr = ''
             dated = regex.search(code_yr, code) # Year included in code
             if dated:
@@ -733,6 +735,7 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         grouping = self.combo_grouping.currentText()
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
+        code_jwb = regex.compile(r'jwb-\d+$')
         start = time()
         try:
             con = sqlite3.connect(f'{tmp_path}/{db_name}')
