@@ -11,6 +11,7 @@
 ### Changed
 
 - Disabled re-opening previous archive on application start
+- Updated publications catalog
 
 ### Fixed
 
