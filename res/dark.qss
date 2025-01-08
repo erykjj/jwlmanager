@@ -20,6 +20,11 @@ QWidget {
     color: #ffffff;
 }
 
+QComboBox:disabled {
+    background-color: #2a2a2a;
+    color: #777777;
+}
+
 QLineEdit {
     border: 1px solid #444444;
 }
@@ -59,15 +64,6 @@ QMenuBar::item {
 }
 QMenuBar::item:selected {
     background-color: #d97917;
-}
-
-QComboBox {
-    border: 1px solid #444444;
-}
-QComboBox QAbstractItemView {
-    background-color: #2a2a2a;
-    selection-background-color: #d97917;
-    border: 1px solid #444444;
 }
 
 QTreeWidget {
