@@ -1090,8 +1090,8 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 where = ''
             item_list = []
-            for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = (SELECT TagId FROM Tag WHERE Type = 0 AND Name = 'Favorite') {where} ORDER BY Position;").fetchall():
-                item = '|'.join(str(x) for x in row)
+            for row in con.execute(f"SELECT DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type FROM Location JOIN TagMap USING (LocationId) WHERE TagId = (SELECT TagId FROM Tag WHERE Type = 0 AND Name = 'Favorite') {where} ORDER BY Position;").fetchall():
+                item = '|'.join(str(x) if x is not None else 'None' for x in row)
                 item_list.append(item)
             if fname:
                 with open(fname, 'w', encoding='utf-8') as f:
@@ -1645,15 +1645,24 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def get_current(tag_id):
                     favorite_list = []
-                    for row in con.execute(f"SELECT l.KeySymbol, l.MepsLanguage, l.IssueTagNumber, l.Type FROM TagMap LEFT JOIN Location l USING (LocationId) WHERE TagId = {tag_id};").fetchall():
-                        item = '|'.join(str(x) for x in row)
+                    for row in con.execute(f'SELECT DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Position FROM Location JOIN TagMap USING (LocationId) WHERE TagId = {tag_id};').fetchall():
+                        item = '|'.join(str(x) if x is not None else 'None' for x in row)
                         favorite_list.append(item)
                     return favorite_list
 
                 def add_publication_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, IssueTagNumber, Type) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?);', attribs+attribs)
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND Type = ?;', attribs).fetchone()[0]
-                    return result
+                    con.execute('INSERT OR IGNORE INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type) VALUES (?, ?, ?, ?, ?, ?);', attribs)
+                    conditions = []
+                    params = []
+                    columns = ['DocumentId', 'Track', 'IssueTagNumber', 'KeySymbol', 'MepsLanguage', 'Type']
+                    for col, value in zip(columns, attribs):
+                        if value is None:
+                            conditions.append(f'{col} IS NULL')
+                        else:
+                            conditions.append(f'{col} = ?')
+                            params.append(value)
+                    sql = f"SELECT LocationId FROM Location WHERE {' AND '.join(conditions)}"
+                    return con.execute(sql, params).fetchone()[0]
 
                 tag_id, position = tag_positions()
                 favorite_list = get_current(tag_id)
@@ -1663,6 +1672,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         try:
                             count += 1
                             attribs = regex.split('\|', line.rstrip())
+                            attribs = [None if attr == 'None' else attr for attr in attribs]
                             location_id = add_publication_location(attribs)
                             con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
                             position += 1
