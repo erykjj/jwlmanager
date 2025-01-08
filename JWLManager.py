@@ -1650,7 +1650,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def get_current(tag_id):
                     favorite_list = []
-                    for row in con.execute(f'SELECT DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Position FROM Location JOIN TagMap USING (LocationId) WHERE TagId = {tag_id};').fetchall():
+                    for row in con.execute(f'SELECT DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type FROM Location JOIN TagMap USING (LocationId) WHERE TagId = {tag_id};').fetchall():
                         item = '|'.join(str(x) if x is not None else 'None' for x in row)
                         favorite_list.append(item)
                     return favorite_list
@@ -1666,14 +1666,16 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             conditions.append(f'{col} = ?')
                             params.append(value)
-                    sql = f"SELECT LocationId FROM Location WHERE {' AND '.join(conditions)}"
+                    # sql = f"INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE {' AND '.join(conditions)});"
+                    # con.execute(sql, attribs+params)
+                    sql = f"SELECT LocationId FROM Location WHERE {' AND '.join(conditions)};"
                     return con.execute(sql, params).fetchone()[0]
 
                 tag_id, position = tag_positions()
                 favorite_list = get_current(tag_id)
                 count = 0
                 for line in import_file:
-                    if ('|' in line) and (line not in favorite_list):
+                    if ('|' in line) and (line.strip() not in favorite_list):
                         try:
                             count += 1
                             attribs = regex.split('\|', line.rstrip())
