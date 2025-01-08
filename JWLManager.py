@@ -1520,7 +1520,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
-                        return 0
+                        return None
                 df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return df
 
@@ -1545,7 +1545,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
-                        return 0
+                        return None
                 return count
 
             if item_list:
@@ -1555,6 +1555,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
+                        if not df:
+                            return None
                         count = update_db(df)
                     else:
                         count = 0
@@ -1610,7 +1612,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         except:
                             QMessageBox.critical(self, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
-                            return 0
+                            return None
                 return count
 
             if item_list:
@@ -1619,6 +1621,8 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
+                    if not count:
+                        return None
                 else:
                     count = 0
             return count
@@ -1680,7 +1684,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         except:
                             QMessageBox.critical(self, _('Error!'), _('Favorites')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
-                            return 0
+                            return None
                 return count
 
             if item_list:
@@ -1689,6 +1693,8 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
+                    if not count:
+                        return None
                 else:
                     count = 0
             return count
@@ -1748,7 +1754,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         except:
                             QMessageBox.critical(self, _('Error!'), _('Highlights')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
                             con.execute('ROLLBACK;')
-                            return 0
+                            return None
                 return count
 
             if item_list:
@@ -1757,6 +1763,8 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
+                    if not count:
+                        return None
                 else:
                     count = 0
             return count
@@ -1810,7 +1818,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
-                        return 0
+                        return None
                 df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return df
 
@@ -1916,7 +1924,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
-                        return 0
+                        return None
                 return count
 
             if item_list:
@@ -1926,6 +1934,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
+                        if not df:
+                            return None
                         count = update_db(df)
                     else:
                         count = 0
@@ -2035,13 +2045,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_all(items):
             count = 0
-            count += import_annotations(items['annotations'])
-            count += import_bookmarks(items['bookmarks'])
-            count += import_highlights(items['highlights'])
-            count += import_notes(items['notes'])
-            # count += import_playlist(items['playlists']) # TODO
-            count += import_favorites(items['favorites'])
-            return count
+            try:
+                count += import_annotations(items['annotations'])
+                count += import_bookmarks(items['bookmarks'])
+                count += import_highlights(items['highlights'])
+                count += import_notes(items['notes'])
+                # count += import_playlist(items['playlists']) # TODO
+                count += import_favorites(items['favorites'])
+                return count
+            except:
+                return None
 
         if item_list:
             try:
