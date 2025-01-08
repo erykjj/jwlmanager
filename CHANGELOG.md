@@ -17,6 +17,7 @@
 ### Fixed
 
 - Disable selections (and buttons, etc.) on new archive after selections where active
+- Adjust CSS for disabled drop-down items to make them more notable
 
 ### Removed
 
