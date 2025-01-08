@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: it\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -37,20 +38,19 @@ msgstr "Salvare prima di uscire?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Aprire o Unire"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Aprire l'archivio o unirlo a quello attuale?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "su"
+msgstr "Aprire"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Unire"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -335,7 +335,7 @@ msgid ""
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
 "Il formato del file importato è errato:\n"
-"Missing {ANNOTATIONS} tag line"
+"Manca la linea di tag {ANNOTATIONS}"
 
 #: JWLManager.py:1521 JWLManager.py:1546 JWLManager.py:1611 JWLManager.py:1681
 #: JWLManager.py:1749 JWLManager.py:1811 JWLManager.py:1917
@@ -354,16 +354,15 @@ msgid ""
 "Missing {BOOKMARKS} tag line"
 msgstr ""
 "Il formato del file importato è errato:\n"
-"Missing {BOOKMARKS} tag line"
+"Manca la linea di tag {BOOKMARKS}"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Il formato del file importato è errato:\n"
-"Missing {ANNOTATIONS} tag line"
+"Manca la linea di tag {FAVORITES}"
 
 #: JWLManager.py:1703
 msgid ""
@@ -397,7 +396,7 @@ msgid ""
 "Missing or malformed {NOTES=} attribute line"
 msgstr ""
 "Il formato del file importato è errato:\n"
-"Missing or malformed {NOTES=} attribute line"
+"Manca o malformata la linea di tag {NOTES=}"
 
 #: JWLManager.py:2067
 msgid "Import file"
@@ -416,19 +415,16 @@ msgid "items imported/updated"
 msgstr "elementi importati/aggiornati"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Importazione. Attendere…"
+msgstr "Unire. Attendere…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "NON importato!"
+msgstr "NON unito!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "elementi esportati"
+msgstr "elementi unite"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -788,4 +784,3 @@ msgstr "Note disposte"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NESSUN TITOLO"
-

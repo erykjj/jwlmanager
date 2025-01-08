@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: ru\n"
 "Language-Team: ru <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -38,20 +39,19 @@ msgstr "Сохранить перед выходом?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Открыть или объединить"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Открыть архив или объединить с текущим?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "на"
+msgstr "Открыть"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Объединить"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -358,13 +358,12 @@ msgstr ""
 "Отсутствует {BOOKMARKS} строка тега"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Неправильный формат импортируемого файла:\n"
-"Отсутствует {ANNOTATIONS} строка тега"
+"Отсутствует {FAVORITES} строка тега"
 
 #: JWLManager.py:1703
 msgid ""
@@ -417,19 +416,16 @@ msgid "items imported/updated"
 msgstr "Элементы импортированы/обновлены"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Импорт. Пожалуйста, подождите…"
+msgstr "объединение. Пожалуйста, подождите…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "НЕ импортировано!"
+msgstr "НЕ объединено!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "элементы экспортированы"
+msgstr "элементы объединены"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -785,4 +781,3 @@ msgstr "Заметки переупорядочены!"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-

@@ -8,15 +8,16 @@ msgstr ""
 "Project-Id-Version: JWLManager v4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: uk\n"
 "Language-Team: uk <LL@li.org>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -39,20 +40,19 @@ msgstr "Зберегти перед виходом?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Відкрити або об'єднати"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Відкрити архів чи об'єднати з поточним?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "на"
+msgstr "Відкрити"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Об'єднати"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -337,7 +337,7 @@ msgid ""
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
 "Неправильний формат файлу, що імпортується:\n"
-"Відсутній{ANNOTATIONS} рядок тега"
+"Відсутній {ANNOTATIONS} рядок тега"
 
 #: JWLManager.py:1521 JWLManager.py:1546 JWLManager.py:1611 JWLManager.py:1681
 #: JWLManager.py:1749 JWLManager.py:1811 JWLManager.py:1917
@@ -356,16 +356,15 @@ msgid ""
 "Missing {BOOKMARKS} tag line"
 msgstr ""
 "Неправильний формат файлу, що імпортується:\n"
-"Відсутній{BOOKMARKS} рядок тега"
+"Відсутній {BOOKMARKS} рядок тега"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Неправильний формат файлу, що імпортується:\n"
-"Відсутній{ANNOTATIONS} рядок тега"
+"Відсутній {FAVORITES} рядок тега"
 
 #: JWLManager.py:1703
 msgid ""
@@ -373,7 +372,7 @@ msgid ""
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
 "Неправильний формат файлу, що імпортується::\n"
-"Відсутній{HIGHLIGHTS} рядок тега"
+"Відсутній {HIGHLIGHTS} рядок тега"
 
 #: JWLManager.py:1772 JWLManager.py:2563
 msgid "Warning"
@@ -418,19 +417,16 @@ msgid "items imported/updated"
 msgstr "Елементи імпортовано/оновлено"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Імпротування. Будь ласка, почекайте…"
+msgstr "об'єднання. Будь ласка, почекайте…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "НЕ імпортовано!"
+msgstr "НЕ об'єднано!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "елементи експортовані"
+msgstr "елементи об'єднано"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -587,4 +583,3 @@ msgstr "Переорганізація. Почекайте…"
 #: JWLManager.py:3171
 msgid "Notes reordered"
 msgstr "Нотатки переорганізовані"
-
