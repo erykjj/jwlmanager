@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: en\n"
 "Language-Team: en <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -37,20 +38,19 @@ msgstr "Save before quitting?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Open or Merge"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Open archive or merge with current?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "on"
+msgstr "Open"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Merge"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -357,13 +357,12 @@ msgstr ""
 "Missing {BOOKMARKS} tag line"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Wrong import file format:\n"
-"Missing {ANNOTATIONS} tag line"
+"Missing {FAVORITES} tag line"
 
 #: JWLManager.py:1703
 msgid ""
@@ -416,19 +415,16 @@ msgid "items imported/updated"
 msgstr "items imported/updated"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Importing. Please wait…"
+msgstr "Merging. Please wait…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "NOT imported!"
+msgstr "NOT merged!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "items exported"
+msgstr "items merged"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -776,4 +772,3 @@ msgstr "Notes reordered"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-

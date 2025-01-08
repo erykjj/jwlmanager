@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: de\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -37,20 +38,19 @@ msgstr "Speichern bevor schließen?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Öffnen oder Zusammenführen"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Archiv öffnen oder mit dem aktuellen zusammenführen?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "auf"
+msgstr "Öffnen"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Zusammenführen"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -357,13 +357,12 @@ msgstr ""
 "Fehlende {BOOKMARKS} Taglinie"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Falsches Format für die Datei importieren:\n"
-"Fehlende {ANNOTATIONS} Taglinie"
+"Fehlende {FAVORITES} Taglinie"
 
 #: JWLManager.py:1703
 msgid ""
@@ -416,19 +415,16 @@ msgid "items imported/updated"
 msgstr "Aufzeichnungen importiert/aktualisiert"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Importieren. Bitte warten…"
+msgstr "Zusammenführen. Bitte warten…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "NICHT importiert!"
+msgstr "NICHT zusammengeführt!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "aufzeichnungen exportiert"
+msgstr "aufzeichnungen zusammengeführt"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -784,4 +780,3 @@ msgstr "Notizen sortiert"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-

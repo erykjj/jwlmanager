@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2024-10-22 19:14+0000\n"
+"PO-Revision-Date: 2025-01-08 14:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: pt\n"
 "Language-Team: pt <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:202 JWLManager.py:457 JWLManager.py:461 JWLManager.py:678
@@ -37,20 +38,19 @@ msgstr "Salvar antes de sair?"
 
 #: JWLManager.py:266
 msgid "Open or Merge"
-msgstr ""
+msgstr "Abrir ou Combinar"
 
 #: JWLManager.py:267
 msgid "Open archive or merge with current?"
-msgstr ""
+msgstr "Abrir arquivo ou combinar com o atual?"
 
 #: JWLManager.py:268
-#, fuzzy
 msgid "Open"
-msgstr "em"
+msgstr "Abrir"
 
 #: JWLManager.py:269
 msgid "Merge"
-msgstr ""
+msgstr "Combinar"
 
 #: JWLManager.py:277 JWLManager.py:292 JWLManager.py:294
 msgid "Error"
@@ -357,13 +357,12 @@ msgstr ""
 "Faltando linha com atributo {BOOKMARKS}"
 
 #: JWLManager.py:1633
-#, fuzzy
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Formato de arquivo de importação incorreto:\n"
-"Faltando linha com atributo {ANNOTATIONS}"
+"Faltando linha com atributo {FAVORITES}"
 
 #: JWLManager.py:1703
 msgid ""
@@ -416,19 +415,16 @@ msgid "items imported/updated"
 msgstr "itens importados/atualizados"
 
 #: JWLManager.py:2110
-#, fuzzy
 msgid "Merging. Please wait…"
-msgstr "Importando. Por favor, aguarde…"
+msgstr "Combinando. Por favor, aguarde…"
 
 #: JWLManager.py:2125
-#, fuzzy
 msgid "NOT merged!"
-msgstr "NÃO importado!"
+msgstr "NÃO combinado!"
 
 #: JWLManager.py:2127
-#, fuzzy
 msgid "items merged"
-msgstr "itens exportados"
+msgstr "itens combinados"
 
 #: JWLManager.py:2181
 msgid "Data Editor"
@@ -786,4 +782,3 @@ msgstr "Notas ordenadas"
 
 #~ msgid "NO TITLE"
 #~ msgstr "SEM TÍTULO"
-
