@@ -55,6 +55,11 @@ QMenu {
     selection-background-color: #4a90e2;
     background-color: #f5f5f5;
 }
+QMenu:disabled {
+    background-color: #f5f5f5;
+    color: #999999;
+}
+
 QMenuBar {
     background-color: #ffffff;
 }
@@ -65,6 +70,7 @@ QMenuBar::item {
 QMenuBar::item:selected {
     background-color: #4a90e2;
 }
+
 
 QTreeWidget {
     border: 1px solid #ccc;
