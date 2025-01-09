@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: JWLManager v4\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-01-08 08:41-0500\n"
-"PO-Revision-Date: 2025-01-08 16:45+0000\n"
-"Last-Translator: Prefill add-on <noreply-addon-prefill@weblate.org>\n"
+"PO-Revision-Date: 2025-01-09 20:00+0000\n"
+"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language-Team: hu <LL@li.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr "Open or Merge"
 #: JWLManager.py:267
 #, fuzzy
 msgid "Open archive or merge with current?"
-msgstr "Open archive or merge with current?"
+msgstr "Nyílt archívum vagy egyesülés a jelenlegivel?"
 
 #: JWLManager.py:268
 #, fuzzy
