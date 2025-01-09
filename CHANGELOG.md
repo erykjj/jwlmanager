@@ -16,6 +16,7 @@
 
 ### Fixed
 
+- Fixed export/import of Psalm heading and book heading notes
 - Disable selections (and buttons, etc.) on new archive after selections where active
 - Adjust CSS for disabled drop-down and menu items to make them more notable
 
