@@ -1556,7 +1556,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
-                        if not df:
+                        if df.empty:
                             return None
                         count = update_db(df)
                     else:
@@ -1937,7 +1937,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
-                        if not df:
+                        if df.empty:
                             return None
                         count = update_db(df)
                     else:
