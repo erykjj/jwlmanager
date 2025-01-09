@@ -844,6 +844,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.total.setText('**0**')
         self.selected.setText('**0**')
         self.unselect_all()
+        self.modified = False
         try:
             self.viewer_window.close()
         except:
