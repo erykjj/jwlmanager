@@ -4,9 +4,10 @@
 
 ### Added
 
-- Added exception handling on load and save
 - Enabled **opening archive from commandline**
 - Implemented **exporting/importing Favorites**
+- Added **merging** (all items except Playlists)
+- Added exception handling on load and save
 - Added more detail in import error box
 
 ### Changed
@@ -16,8 +17,8 @@
 
 ### Fixed
 
-- Fixed export/import of Psalm heading and book heading notes
-- Fixed import of notes with empty title
+- Fixed export/import of Psalm heading and book heading notes (custom text file)
+- Fixed import of notes with empty title (custom text file)
 - Disable selections (and buttons, etc.) on new archive after selections where active
 - Adjust CSS for disabled drop-down and menu items to make them more notable
 
