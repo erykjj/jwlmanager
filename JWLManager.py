@@ -1812,7 +1812,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         header = item.group(1)
                         attribs = process_header(header)
                         if item.group(2):
-                            note = item.group(2).strip().split('\n')
+                            note = item.group(2).rstrip().split('\n')
                         else:
                             note = ['', '']
                         attribs['TITLE'] = note[0]
