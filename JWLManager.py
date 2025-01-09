@@ -1238,7 +1238,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         item['Link'] = None
                     else:
                         if item.get('BK'): # Bible note
-                            if item.get('VS'):
+                            if item.get('VS') is not None:
                                 vs = str(item['VS']).zfill(3)
                                 item['BLOCK'] = None
                             else:
@@ -1247,7 +1247,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&pub={item['PUB']}&bible={item['Reference']}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
-                            elif item.get('VS') and (':' not in item['HEADING']):
+                            elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
                             item['VS'] = None
@@ -1277,7 +1277,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             bk = str(item['BK'])
                             ch = str(item['CH'])
                             ref = '{Reference='+item['Reference']+'}' if item['Reference'] else ''
-                            if item.get('VS'):
+                            if item.get('VS') is not None:
                                 vs = '{VS='+str(item['VS'])+'}'
                             else:
                                 vs = ''
@@ -1309,7 +1309,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         fname += _('* INDEPENDENT *').strip('* ') + '/'
                     elif item.get('BK'):
                         fname += f"{pub}/{str(item['BK']).zfill(2)}_{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
-                        if item.get('VS'):
+                        if item.get('VS') is not None:
                             fname += str(item['VS']).zfill(3) + '_'
                     else:
                         fname += f'{pub}/'
@@ -1880,7 +1880,11 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
                     if location_id:
-                        result = con.execute('SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND BlockIdentifier = ? AND BlockType = ?;', (location_id, attribs['TITLE'], attribs['BLOCK'], block_type)).fetchone()
+                        if pd.notnull(attribs['BLOCK']):
+                            blk = f"BlockIdentifier = {attribs['BLOCK']}"
+                        else:
+                            blk = 'BlockIdentifier IS NULL'
+                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND {blk} AND BlockType = ?;', (location_id, attribs['TITLE'], block_type)).fetchone()
                     else:
                         result = con.execute('SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND BlockType = 0;', (attribs['TITLE'],)).fetchone()
                     if result:
@@ -2432,7 +2436,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         item['Link'] = None
                     else: # attached note
                         if item.get('BK'): # Bible note
-                            if item.get('VS'):
+                            if item.get('VS') is not None:
                                 vs = str(item['VS']).zfill(3)
                             else:
                                 vs = '000'
@@ -2440,7 +2444,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
-                            elif item.get('VS') and (':' not in item['HEADING']):
+                            elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
                             par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
