@@ -3022,13 +3022,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def reindex_db(self, con=None, pth=None):
 
         def init_progress():
-            pd = QProgressDialog(_('Please wait…'), None, 0, 28, parent=self)
-            pd.setWindowModality(Qt.WindowModal)
-            pd.setWindowTitle(_('Reindexing'))
-            pd.setWindowFlag(Qt.FramelessWindowHint)
-            pd.setModal(True)
-            pd.setMinimumDuration(0)
-            return pd
+            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 28, parent=self)
+            progress_dialog.setWindowModality(Qt.WindowModal)
+            progress_dialog.setWindowTitle(_('Reindexing'))
+            progress_dialog.setWindowFlag(Qt.FramelessWindowHint)
+            progress_dialog.setModal(True)
+            progress_dialog.setMinimumDuration(0)
+            return progress_dialog
 
         def make_table(table):
             con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
