@@ -14,6 +14,7 @@
 
 - Disabled re-opening previous archive on application start
 - Updated publications catalog
+- Updated translations
 
 ### Fixed
 
