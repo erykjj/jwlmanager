@@ -6,7 +6,7 @@
 
 - Enabled **opening archive from commandline**
 - Implemented **exporting/importing Favorites**
-- Added **merging** (including Playlists)
+- Added **merging** of all items (including Playlists)
   - Add progress dialog on merge
 - Added exception handling on load and save
 - Added more detail in import error box
