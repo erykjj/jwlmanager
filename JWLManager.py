@@ -1444,12 +1444,16 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def export_all():
             items = {}
-            items['annotations'] = export_annotations(None)
-            items['bookmarks'] = export_bookmarks(None)
-            items['highlights'] = export_highlights(None)
-            items['notes'] = export_notes(None)
-            # items['playlists'] = export_playlist(None) # TODO
-            items['favorites'] = export_favorites(None)
+            functions = {
+                'bookmarks': export_bookmarks,
+                'highlights': export_highlights,
+                'favorites': export_favorites,
+                'annotations': export_annotations,
+                # 'playlists': export_playlist, #TODO
+                'notes': export_notes }
+            for item, func in functions.items():
+                items[item] = func(None)
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
             return items
 
         if con: # coming from merge_items
@@ -2052,13 +2056,17 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_all(items):
             count = 0
+            functions = {
+                'bookmarks': import_bookmarks,
+                'highlights': import_highlights,
+                'favorites': import_favorites,
+                'annotations': import_annotations,
+                # 'playlists': import_playlist, #TODO
+                'notes': import_notes }
             try:
-                count += import_annotations(items['annotations'])
-                count += import_bookmarks(items['bookmarks'])
-                count += import_highlights(items['highlights'])
-                count += import_notes(items['notes'])
-                # count += import_playlist(items['playlists']) # TODO
-                count += import_favorites(items['favorites'])
+                for item, func in functions.items():
+                    count += func(items[item])
+                    self.progress_dialog.setValue(self.progress_dialog.value() + 1)
                 return count
             except:
                 return None
@@ -2127,9 +2135,20 @@ class Window(QMainWindow, Ui_MainWindow):
         self.regroup(False, message)
 
     def merge_items(self, file=''):
+
+        def init_progress():
+            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 9, parent=self)
+            progress_dialog.setWindowModality(Qt.WindowModal)
+            progress_dialog.setWindowTitle(_('Merging'))
+            progress_dialog.setWindowFlag(Qt.FramelessWindowHint)
+            progress_dialog.setModal(True)
+            progress_dialog.setMinimumDuration(0)
+            return progress_dialog
+
         self.statusBar.showMessage(' '+_('Merging. Please wait…'))
         app.processEvents()
         try:
+            self.progress_dialog = init_progress()
             with ZipFile(file,'r') as zipped:
                 zipped.extractall(f'{tmp_path}/merge')
             con = sqlite3.connect(f'{tmp_path}/merge/{db_name}')
@@ -2139,6 +2158,7 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
         except Exception as ex:
             self.crash_box(ex)
+            self.progress_dialog.close()
             self.clean_up()
             sys.exit()
         if not count:
@@ -3152,7 +3172,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.trim_db(con)
         except Exception as ex:
             self.crash_box(ex)
-            self.progress_dialog.close()
+            progress_dialog.close()
             self.clean_up()
             sys.exit()
         if self.interactive:
