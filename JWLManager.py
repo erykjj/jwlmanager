@@ -1449,7 +1449,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 'highlights': export_highlights,
                 'favorites': export_favorites,
                 'annotations': export_annotations,
-                # 'playlists': export_playlist, #TODO
                 'notes': export_notes }
             for item, func in functions.items():
                 items[item] = func(None)
@@ -1955,7 +1954,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist(n, item_list=None): 
+        def import_playlist(n): 
 
             def update_db(n):
 
@@ -2061,12 +2060,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 'highlights': import_highlights,
                 'favorites': import_favorites,
                 'annotations': import_annotations,
-                # 'playlists': import_playlist, #TODO
                 'notes': import_notes }
             try:
                 for item, func in functions.items():
                     count += func(items[item])
                     self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count += import_playlist(None)
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
                 return count
             except:
                 return None
@@ -2137,7 +2137,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def merge_items(self, file=''):
 
         def init_progress():
-            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 9, parent=self)
+            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 10, parent=self)
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setWindowTitle(_('Merging'))
             progress_dialog.setWindowFlag(Qt.FramelessWindowHint)
@@ -2153,7 +2153,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 zipped.extractall(f'{tmp_path}/merge')
             con = sqlite3.connect(f'{tmp_path}/merge/{db_name}')
             items = self.export_items(form=None, con=con)
-            count = self.import_items(item_list=items)
+            count = self.import_items(item_list=items, file=file)
             con.close()
             shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
         except Exception as ex:
