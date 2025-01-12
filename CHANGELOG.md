@@ -8,6 +8,7 @@
 - Implemented **exporting/importing Favorites**
 - Added **merging** of all items (including Playlists)
   - Add progress dialog on merge
+- Implemented **single-instance** (with lockfile)
 - Added exception handling on load and save
 - Added more detail in import error box
 
