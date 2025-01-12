@@ -54,7 +54,6 @@ import pandas as pd
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
-LOCK_FILE = PROJECT_PATH / '.JWLManager.lock'
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
 
@@ -3244,6 +3243,8 @@ def set_settings_path():
         except NameError:
             application_path = os.getcwd()
     settings_path = application_path+'/'+APP+'.conf'
+    global LOCK_FILE
+    LOCK_FILE = application_path+'/'+'.JWLManager.lock'
     if not os.path.exists(settings_path) and os.path.exists(LOCK_FILE):
         os.remove(LOCK_FILE)
     return QSettings(settings_path, QSettings.Format.IniFormat)
