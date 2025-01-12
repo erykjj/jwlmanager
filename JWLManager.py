@@ -163,6 +163,8 @@ class Window(QMainWindow, Ui_MainWindow):
             if self.load_file(file):
                 self.file_loaded()
         else:
+            self.raise_()
+            self.activateWindow()
             self.merge_window.setWindowTitle(_('Open or Merge'))
             self.merge_window.label.setText(_('Open archive or merge with current?'))
             self.merge_window.open_button.setText(_('Open'))
@@ -3286,6 +3288,7 @@ def get_language():
     if args['archive']:
         sys.argv.append(args['archive'])
     if os.path.exists(LOCK_FILE):
+        print(LOCK_FILE)
         if len(sys.argv) > 1 and os.path.exists(sys.argv[-1]):
             write_lockfile(sys.argv[-1])
         sys.exit(0)
