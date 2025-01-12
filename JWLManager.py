@@ -32,7 +32,7 @@ VERSION = 'v7.0.0'
 from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, ThemeManager, ViewerItem
 
-from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTranslator
+from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
 from PySide6.QtGui import QAction, QFont
 from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
@@ -53,88 +53,12 @@ import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sq
 import pandas as pd
 
 
-#### Initial language setting based on passed arguments
-def get_language():
-    global available_languages, tr
-    available_languages = { # add/enable completed languages
-        'de': 'German (Deutsch)',
-        'en': 'English (default)',
-        'es': 'Spanish (español)',
-        'fr': 'French (français)',
-        'it': 'Italian (italiano)',
-        'pl': 'Polish (Polski)',
-        'pt': 'Portuguese (Português)',
-        'ru': 'Russian (Pусский)',
-        'uk': 'Ukrainian (українська)'
-        }
-    tr = {}
-    localedir = project_path / 'res/locales/'
-
-    parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
-    parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
-    language_group = parser.add_argument_group('interface language', 'English by default')
-    group = language_group.add_mutually_exclusive_group(required=False)
-    parser.add_argument('archive', type=str, nargs='?', default=None, help='archive to open')
-    for k in sorted(available_languages.keys()):
-        group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
-        tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
-    args = vars(parser.parse_args())
-    lng = settings.value('JWLManager/language', 'en')
-    for l in available_languages.keys():
-        if args[l]:
-            lng = l
-            break
-    if args['archive']:
-        sys.argv.append(args['archive'])
-    return lng
-
-def read_resources(lng):
-
-    def load_bible_books(lng):
-        for row in con.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
-            bible_books[row[0]] = row[1]
-
-    def load_languages():
-        for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
-            lang_name[row[0]] = row[1]
-            lang_symbol[row[0]] = row[3]
-            if row[2] == lng:
-                ui_lang = row[0]
-        return ui_lang
-
-    global _, bible_books, favorites, lang_name, lang_symbol, publications
-    _ = tr[lng].gettext
-    lang_name = {}
-    lang_symbol = {}
-    bible_books = {}
-    con = sqlite3.connect(project_path / 'res/resources.db')
-    ui_lang = load_languages()
-    load_bible_books(ui_lang)
-    pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
-    extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
-    publications = pd.concat([pubs, extras], ignore_index=True)
-    favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
-    con.close()
-
-def set_settings_path():
-    if getattr(sys, 'frozen', False):
-        application_path = os.path.dirname(sys.executable)
-    else:
-        try:
-            application_path = os.path.dirname(os.path.realpath(__file__))
-        except NameError:
-            application_path = os.getcwd()
-    return QSettings(application_path+'/'+APP+'.conf', QSettings.Format.IniFormat)
-
-project_path = Path(__file__).resolve().parent
-tmp_path = mkdtemp(prefix='JWLManager_')
-db_name = 'userData.db'
-settings = set_settings_path()
-lang = get_language()
-read_resources(lang)
+PROJECT_PATH = Path(__file__).resolve().parent
+LOCK_FILE = PROJECT_PATH / '.JWLManager.lock'
+TMP_PATH = mkdtemp(prefix='JWLManager_')
+DB_NAME = 'userData.db'
 
 
-#### Main app
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, archive=''):
         super().__init__()
@@ -225,12 +149,40 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
         pd.set_option('future.no_silent_downcasting', True)
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.check_lockfile)
+        self.timer.start(1000)
         if self.current_archive and self.load_file(self.current_archive):
             self.file_loaded()
         else:
             self.current_archive = ''
             self.new_file()
 
+
+    def check_file(self, file):
+        if (self.current_archive == '') and (self.modified == False):
+            if self.load_file(file):
+                self.file_loaded()
+        else:
+            self.merge_window.setWindowTitle(_('Open or Merge'))
+            self.merge_window.label.setText(_('Open archive or merge with current?'))
+            self.merge_window.open_button.setText(_('Open'))
+            self.merge_window.merge_button.setText(_('Merge'))
+            self.merge_window.exec()
+            if self.merge_window.choice == 'open':
+                if self.load_file(file):
+                    self.file_loaded()
+            else: # 'merge'
+                self.merge_items(file)
+
+    def check_lockfile(self):
+        if os.path.exists(LOCK_FILE):
+            with open(LOCK_FILE, 'r+') as lockfile:
+                file = lockfile.read().strip()
+                lockfile.seek(0)
+                lockfile.truncate()
+            if Path(file).suffix == '.jwlibrary':
+                self.check_file(file)
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -259,20 +211,7 @@ class Window(QMainWindow, Ui_MainWindow):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
         if suffix == '.jwlibrary':
-            if (self.current_archive == '') and (self.modified == False):
-                if self.load_file(file):
-                    self.file_loaded()
-            else:
-                self.merge_window.setWindowTitle(_('Open or Merge'))
-                self.merge_window.label.setText(_('Open archive or merge with current?'))
-                self.merge_window.open_button.setText(_('Open'))
-                self.merge_window.merge_button.setText(_('Merge'))
-                self.merge_window.exec()
-                if self.merge_window.choice == 'open':
-                    if self.load_file(file):
-                        self.file_loaded()
-                else: # 'merge'
-                    self.merge_items(file)
+            self.check_file(file)
         elif not self.combo_category.isEnabled():
             QMessageBox.warning(self, _('Error'), _('No archive has been opened!'), QMessageBox.Cancel)
         elif suffix == '.jwlplaylist':
@@ -375,7 +314,7 @@ class Window(QMainWindow, Ui_MainWindow):
             read_resources(self.lang)
             if self.lang not in translator.keys():
                 translator[self.lang] = QTranslator()
-                translator[self.lang].load(f'{project_path}/res/locales/UI/qt_{self.lang}.qm')
+                translator[self.lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{self.lang}.qm')
             app.installTranslator(translator[self.lang])
             app.processEvents()
             if self.combo_grouping.currentText() == group: # same word despite language change
@@ -738,7 +677,7 @@ class Window(QMainWindow, Ui_MainWindow):
         code_jwb = regex.compile(r'jwb-\d+$')
         start = time()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             if not same_data:
                 get_data()
@@ -778,15 +717,13 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = False
         self.save_filename = ''
         self.current_archive = ''
-        global db_name
         try:
-            for f in glob.glob(f'{tmp_path}/*', recursive=True):
+            for f in glob.glob(f'{TMP_PATH}/*', recursive=True):
                 os.remove(f)
         except:
             pass
-        db_name = 'userData.db'
-        with ZipFile(project_path / 'res/blank','r') as zipped:
-            zipped.extractall(tmp_path)
+        with ZipFile(PROJECT_PATH / 'res/blank','r') as zipped:
+            zipped.extractall(TMP_PATH)
         m = {
             'name': APP,
             'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -798,7 +735,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'databaseName': 'userData.db',
                 'hash': '',
                 'schemaVersion': 14 } }
-        with open(f'{tmp_path}/manifest.json', 'w') as json_file:
+        with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
 
@@ -814,16 +751,16 @@ class Window(QMainWindow, Ui_MainWindow):
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
         self.status_label.setText(f'{Path(archive).stem}  ')
-        global db_name
-        db_name = 'userData.db'
+        self.actionSave.setEnabled(False)
+        self.status_label.setStyleSheet('font: normal;')
         try:
-            for f in glob.glob(f'{tmp_path}/*', recursive=True):
+            for f in glob.glob(f'{TMP_PATH}/*', recursive=True):
                 os.remove(f)
         except:
             pass
         try:
             with ZipFile(archive,'r') as zipped:
-                zipped.extractall(tmp_path)
+                zipped.extractall(TMP_PATH)
             return True
         except:
             return None
@@ -884,28 +821,28 @@ class Window(QMainWindow, Ui_MainWindow):
     def zip_file(self):
 
         def update_manifest():
-            with open(f'{tmp_path}/manifest.json', 'r') as json_file:
+            with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 m = json.load(json_file)
             m['name'] = APP
             m['creationDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
             m['userDataBackup']['lastModifiedDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             sha256hash = FileHash('sha256')
-            m['userDataBackup']['hash'] = sha256hash.hash_file(f'{tmp_path}/{db_name}')
-            m['userDataBackup']['databaseName'] = db_name
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            m['userDataBackup']['hash'] = sha256hash.hash_file(f'{TMP_PATH}/{DB_NAME}')
+            m['userDataBackup']['databaseName'] = DB_NAME
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
             con.commit()
             con.close()
-            with open(f'{tmp_path}/manifest.json', 'w') as json_file:
+            with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
-                files = os.listdir(tmp_path)
+                files = os.listdir(TMP_PATH)
                 for f in files:
-                    newzip.write(f'{tmp_path}/{f}', f)
+                    newzip.write(f'{TMP_PATH}/{f}', f)
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
@@ -1401,7 +1338,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = con.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
                 expcon.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
                 for f in rows:
-                    shutil.copy2(tmp_path+'/'+f[2], playlist_path+'/'+f[2])
+                    shutil.copy2(TMP_PATH+'/'+f[2], playlist_path+'/'+f[2])
 
                 rows = expcon.execute(f'SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
                 lo = '('
@@ -1412,7 +1349,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 expcon.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
-            with ZipFile(project_path / 'res/blank_playlist','r') as zipped:
+            with ZipFile(PROJECT_PATH / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
@@ -1470,7 +1407,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Exporting. Please wait…'))
         app.processEvents()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             if category == _('Highlights'):
                 item_list = export_highlights(fname)
@@ -1972,10 +1909,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     if rec[-1] in current_hashes and fn == current_media[current_hashes.index(rec[-1])][2] and rec[-1] == current_media[current_hashes.index(rec[-1])][4]: # exact same file (name and hash) already exists
                         return fn, current_media[current_hashes.index(rec[-1])][0]
                     ext = 0
-                    while os.path.isfile(tmp_path + '/' + fn):
+                    while os.path.isfile(TMP_PATH + '/' + fn):
                         ext += 1
                         fn = f'{rec[1]}_{ext}'
-                    shutil.copy2(playlist_path + '/' + rec[1], tmp_path + '/' + fn)
+                    shutil.copy2(playlist_path + '/' + rec[1], TMP_PATH + '/' + fn)
                     rec[1] = fn
                     current_media.append(fn)
                     current_hashes.append(rec[-1])
@@ -2073,7 +2010,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         if item_list:
             try:
-                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
                 con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
                 count = import_all(item_list)
                 con.execute("PRAGMA foreign_keys = 'ON';")
@@ -2100,7 +2037,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Importing. Please wait…'))
         app.processEvents()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Annotations'):
                 count = import_annotations()
@@ -2150,12 +2087,12 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             self.progress_dialog = init_progress()
             with ZipFile(file,'r') as zipped:
-                zipped.extractall(f'{tmp_path}/merge')
-            con = sqlite3.connect(f'{tmp_path}/merge/{db_name}')
+                zipped.extractall(f'{TMP_PATH}/merge')
+            con = sqlite3.connect(f'{TMP_PATH}/merge/{DB_NAME}')
             items = self.export_items(form=None, con=con)
             count = self.import_items(item_list=items, file=file)
             con.close()
-            shutil.rmtree(f'{tmp_path}/merge', ignore_errors=True)
+            shutil.rmtree(f'{TMP_PATH}/merge', ignore_errors=True)
         except Exception as ex:
             self.crash_box(ex)
             self.progress_dialog.close()
@@ -2301,7 +2238,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     con.execute('DELETE FROM InputField WHERE LocationId = ? AND TextTag = ?;', (item.idx, item.label))
 
             try:
-                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
                 con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
                 if category == _('Notes'):
                     update_notes()
@@ -2621,7 +2558,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window.filter_box.setFocus()
         app.processEvents()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             items = str(selected).replace('[', '(').replace(']', ')')
             if category == _('Notes'):
                 show_notes()
@@ -2821,17 +2758,17 @@ class Window(QMainWindow, Ui_MainWindow):
                         current_hashes.append(hash256)
                         new_name = check_name(name)
                         current_files.append(new_name)
-                        shutil.copy2(f, f'{tmp_path}/{new_name}')
+                        shutil.copy2(f, f'{TMP_PATH}/{new_name}')
                         media_id = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, new_name, mime, hash256)).lastrowid
 
                         # generate and add thumbnail file
                         unique_id = str(uuid.uuid1())
                         thumb_name = f'{unique_id}.{ext}'
-                        shutil.copy2(f, f'{tmp_path}/{thumb_name}')
-                        i = Image.open(f'{tmp_path}/{thumb_name}')
+                        shutil.copy2(f, f'{TMP_PATH}/{thumb_name}')
+                        i = Image.open(f'{TMP_PATH}/{thumb_name}')
                         i.thumbnail((250, 250))
-                        i.save(f'{tmp_path}/{thumb_name}')
-                        thash = sha256hash.hash_file(f'{tmp_path}/{thumb_name}')
+                        i.save(f'{TMP_PATH}/{thumb_name}')
+                        thash = sha256hash.hash_file(f'{TMP_PATH}/{thumb_name}')
                         con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
                     else: # file alread in archive
@@ -2855,7 +2792,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         category = self.combo_category.currentText()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             if category == _('Favorites'):
                 result, message = add_favorite()
@@ -2897,7 +2834,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     continue
                 con.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
-                    os.remove(tmp_path + '/' + f[0])
+                    os.remove(TMP_PATH + '/' + f[0])
                 except:
                     pass
             rows = con.execute(f'SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId) WHERE PlaylistItemId NOT IN {items};').fetchall()
@@ -2907,7 +2844,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     continue
                 con.execute('DELETE FROM IndependentMedia WHERE FilePath = ?;', f)
                 try:
-                    os.remove(tmp_path + '/' + f[0])
+                    os.remove(TMP_PATH + '/' + f[0])
                 except:
                     pass
             delete('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
@@ -2944,7 +2881,7 @@ class Window(QMainWindow, Ui_MainWindow):
         app.processEvents()
         category = self.combo_category.currentText()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             result = delete_items()
@@ -3021,7 +2958,7 @@ class Window(QMainWindow, Ui_MainWindow):
         words = ['obscured', 'yada', 'bla', 'gibberish', 'børk']
         m = regex.compile(r'\p{L}')
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
             obscure_annotations()
             obscure_bookmarks()
@@ -3153,10 +3090,10 @@ class Window(QMainWindow, Ui_MainWindow):
             progress_dialog = init_progress()
             self.trim_db()
         if not pth:
-            pth = tmp_path
+            pth = TMP_PATH
         try:
             if self.interactive:
-                con = sqlite3.connect(f'{pth}/{db_name}')
+                con = sqlite3.connect(f'{pth}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             reindex_notes()
             reindex_tags()
@@ -3199,7 +3136,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(' '+_('Reordering. Please wait…'))
         app.processEvents()
         try:
-            con = sqlite3.connect(f'{tmp_path}/{db_name}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
             reorder()
             con.commit()
@@ -3218,7 +3155,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def trim_db(self, con=None):
         try:
             if not con:
-                con = sqlite3.connect(f'{tmp_path}/{db_name}')
+                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
                 PRAGMA temp_store = 2;
                 PRAGMA journal_mode = 'OFF';
@@ -3279,7 +3216,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.help_window.close()
         except:
             pass
-        shutil.rmtree(tmp_path, ignore_errors=True)
+        shutil.rmtree(TMP_PATH, ignore_errors=True)
         settings.setValue('JWLManager/language', self.lang)
         settings.setValue('JWLManager/category', self.combo_category.currentIndex())
         settings.setValue('JWLManager/title', self.title_format)
@@ -3294,13 +3231,104 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('Viewer/size', self.viewer_size)
         settings.setValue('Help/position', self.help_pos)
         settings.setValue('Help/size', self.help_size)
+        if os.path.exists(LOCK_FILE):
+            os.remove(LOCK_FILE)
+
+
+def set_settings_path():
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
+    else:
+        try:
+            application_path = os.path.dirname(os.path.realpath(__file__))
+        except NameError:
+            application_path = os.getcwd()
+    settings_path = application_path+'/'+APP+'.conf'
+    if not os.path.exists(settings_path) and os.path.exists(LOCK_FILE):
+        os.remove(LOCK_FILE)
+    return QSettings(settings_path, QSettings.Format.IniFormat)
+
+def write_lockfile(file):
+    with open(LOCK_FILE, 'w') as lockfile:
+        lockfile.write(file)
+
+def get_language():
+    global available_languages, tr
+    available_languages = { # add/enable completed languages
+        'de': 'German (Deutsch)',
+        'en': 'English (default)',
+        'es': 'Spanish (español)',
+        'fr': 'French (français)',
+        'it': 'Italian (italiano)',
+        'pl': 'Polish (Polski)',
+        'pt': 'Portuguese (Português)',
+        'ru': 'Russian (Pусский)',
+        'uk': 'Ukrainian (українська)'
+        }
+    tr = {}
+    localedir = PROJECT_PATH / 'res/locales/'
+
+    parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
+    parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
+    language_group = parser.add_argument_group('interface language', 'English by default')
+    group = language_group.add_mutually_exclusive_group(required=False)
+    parser.add_argument('archive', type=str, nargs='?', default=None, help='archive to open')
+    for k in sorted(available_languages.keys()):
+        group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
+        tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
+    args = vars(parser.parse_args())
+    lng = settings.value('JWLManager/language', 'en')
+    for l in available_languages.keys():
+        if args[l]:
+            lng = l
+            break
+    if args['archive']:
+        sys.argv.append(args['archive'])
+    if os.path.exists(LOCK_FILE):
+        if len(sys.argv) > 1 and os.path.exists(sys.argv[-1]):
+            write_lockfile(sys.argv[-1])
+        sys.exit(0)
+    else:
+        write_lockfile('')
+    return lng
+
+def read_resources(lng):
+
+    def load_bible_books(lng):
+        for row in con.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
+            bible_books[row[0]] = row[1]
+
+    def load_languages():
+        for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
+            lang_name[row[0]] = row[1]
+            lang_symbol[row[0]] = row[3]
+            if row[2] == lng:
+                ui_lang = row[0]
+        return ui_lang
+
+    global _, bible_books, favorites, lang_name, lang_symbol, publications
+    _ = tr[lng].gettext
+    lang_name = {}
+    lang_symbol = {}
+    bible_books = {}
+    con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
+    ui_lang = load_languages()
+    load_bible_books(ui_lang)
+    pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
+    extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
+    publications = pd.concat([pubs, extras], ignore_index=True)
+    favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
+    con.close()
 
 if __name__ == "__main__":
+    settings = set_settings_path()
+    lang = get_language()
+    read_resources(lang)
     app = QApplication(sys.argv)
     global translator
     translator = {}
     translator[lang] = QTranslator()
-    translator[lang].load(f'{project_path}/res/locales/UI/qt_{lang}.qm')
+    translator[lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{lang}.qm')
     app.installTranslator(translator[lang])
     font = QFont()
     font.setPixelSize(16)
