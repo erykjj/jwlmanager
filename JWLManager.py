@@ -166,6 +166,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.raise_()
             self.activateWindow()
             self.merge_window.setWindowTitle(_('Open or Merge'))
+            self.merge_window.archive.setText(Path(file).name)
             self.merge_window.label.setText(_('Open archive or merge with current?'))
             self.merge_window.open_button.setText(_('Open'))
             self.merge_window.merge_button.setText(_('Merge'))
@@ -180,6 +181,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if os.path.exists(LOCK_FILE):
             with open(LOCK_FILE, 'r+') as lockfile:
                 file = lockfile.read().strip()
+                #TODO: check if not empty and pause timer
                 lockfile.seek(0)
                 lockfile.truncate()
             if Path(file).suffix == '.jwlibrary':
@@ -3287,7 +3289,7 @@ def get_language():
             break
     if args['archive']:
         sys.argv.append(args['archive'])
-    if os.path.exists(LOCK_FILE):
+    if os.path.exists(LOCK_FILE): #TODO: check if empty
         print(LOCK_FILE)
         if len(sys.argv) > 1 and os.path.exists(sys.argv[-1]):
             write_lockfile(sys.argv[-1])
