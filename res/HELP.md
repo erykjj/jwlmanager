@@ -6,7 +6,7 @@ If you **drag-and-drop** an archive into the app when another archive is already
 ######
 The state of the application (size, position, language, and various selection choices) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 ######
-Notes that are not associated with any publication (created directly in the Personal Study space), are listed as `* OTHER *` and with `* NO LANGUAGE *`. Notes that aren't tagged will be listed as `* NO TAG *`.
+Notes that are not associated with any publication (created directly in the Personal Study space), are listed as `* OTHER *` and with `* NO LANGUAGE *`. Notes that aren't tagged will be listed as `* NO TAG *`.
 ######
 The **status bar** shows the name of the currently opened archive. The **Count** column shows the number of items for each branch of the tree.
 ######
