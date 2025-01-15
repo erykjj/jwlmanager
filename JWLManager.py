@@ -2010,6 +2010,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.progress_dialog.setValue(self.progress_dialog.value() + 1)
                 return count
             except:
+                self.progress_dialog.close()
                 return None
 
         if item_list:
