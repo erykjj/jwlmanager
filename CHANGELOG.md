@@ -17,6 +17,7 @@
 - Disabled re-opening previous archive on application start
 - Updated publications catalog
 - Updated translations
+- Use `|` as separator (instead of `,`) in custom Highlights export file - to match the others
 
 ### Fixed
 
