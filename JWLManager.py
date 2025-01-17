@@ -1050,7 +1050,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 where = ''
             item_list = []
             for row in con.execute(f'SELECT b.BlockType, b.Identifier, b.StartToken, b.EndToken, u.ColorIndex, u.Version, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type FROM UserMark u JOIN Location l USING (LocationId), BlockRange b USING (UserMarkId) {where};').fetchall():
-                item = ','.join(str(x) if x is not None else 'None' for x in row)
+                item = '|'.join(str(x) if x is not None else 'None' for x in row)
                 item_list.append(item)
             if fname:
                 with open(fname, 'w', encoding='utf-8') as f:
@@ -1432,6 +1432,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
+
     def import_items(self, file='', category='', item_list=None):
 
         def import_annotations(item_list=None):
@@ -1689,10 +1690,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 count = 0
                 for line in import_file:
-                    if regex.match(r'^(\d+,){6}', line):
+                    if regex.match(r'^(\d+\|){6}', line):
                         try:
                             count += 1
-                            attribs = regex.split(',', line.rstrip().replace('None', ''))
+                            attribs = regex.split('\|', line.rstrip().replace('None', ''))
                             if attribs[6]:
                                 location_id = add_scripture_location(attribs)
                             else:
