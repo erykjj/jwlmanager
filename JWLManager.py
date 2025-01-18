@@ -3174,6 +3174,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 NOT IN (SELECT NoteId FROM Note);
                 DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
+                DELETE FROM UserMark WHERE LocationId NOT IN (SELECT LocationId FROM Location WHERE BookNumber IS NOT NULL OR DocumentId IS NOT NULL);
                 DELETE FROM BlockRange WHERE UserMarkId NOT IN
                 (SELECT UserMarkId FROM UserMark);
                 DELETE FROM UserMark WHERE UserMarkId NOT IN
