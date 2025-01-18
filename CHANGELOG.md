@@ -11,6 +11,7 @@
 - Implemented **single-instance** (with lockfile)
 - Added exception handling on load and save
 - Added more detail in import error box
+- Added query to Trim to remove invalid Highlights
 
 ### Changed
 
