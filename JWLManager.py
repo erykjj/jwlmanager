@@ -151,9 +151,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.check_lockfile)
         self.timer.start(1000)
-        if self.current_archive and self.load_file(self.current_archive):
-            self.file_loaded()
-        else:
+        if not (self.current_archive and self.load_file(self.current_archive)):
             self.current_archive = ''
             self.new_file()
 
@@ -161,8 +159,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def check_file(self, file):
         self.timer.stop()
         if (self.current_archive == '') and (self.modified == False):
-            if self.load_file(file):
-                self.file_loaded()
+            self.load_file(file)
         else:
             self.raise_()
             self.activateWindow()
@@ -173,8 +170,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.merge_window.merge_button.setText(_('Merge'))
             self.merge_window.exec()
             if self.merge_window.choice == 'open':
-                if self.load_file(file):
-                    self.file_loaded()
+                self.load_file(file)
             else:
                 self.merge_items(file)
         self.timer.start(1000)
@@ -750,7 +746,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if not archive:
             fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
             if not fname[0]:
-                return
+                return False
             archive = fname[0]
         self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
@@ -765,6 +761,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive,'r') as zipped:
                 zipped.extractall(TMP_PATH)
+            self.file_loaded()
             return True
         except:
             return None
