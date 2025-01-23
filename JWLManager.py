@@ -1993,17 +1993,17 @@ class Window(QMainWindow, Ui_MainWindow):
             return count
 
         def import_all(items):
-            count = 0
-            functions = {
-                'bookmarks': import_bookmarks,
-                'highlights': import_highlights,
-                'favorites': import_favorites,
-                'annotations': import_annotations,
-                'notes': import_notes }
             try:
-                for item, func in functions.items():
-                    count += func(items[item])
-                    self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count = import_bookmarks(items['bookmarks']) if items.get('bookmarks') else 0
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count += import_highlights(items['highlights']) if items.get('highlights') else 0
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count += import_favorites(items['favorites']) if items.get('favorites') else 0
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count += import_annotations(items['annotations']) if items.get('annotations') else 0
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+                count += import_notes(items['notes']) if items.get('notes') else 0
+                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
                 count += import_playlist(None)
                 self.progress_dialog.setValue(self.progress_dialog.value() + 1)
                 return count
