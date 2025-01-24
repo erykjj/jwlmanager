@@ -28,6 +28,7 @@
 - Fixed import of notes with empty title (custom text file)
 - Disable selections (and buttons, etc.) on new archive after selections where active
 - Adjust CSS for disabled drop-down and menu items to make them more notable
+- Fixed other minor bugs
 - Thanks to: @glenmwright, @AnatolyOn for bug reports
 
 ### Removed
