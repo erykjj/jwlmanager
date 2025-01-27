@@ -2035,7 +2035,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.clean_up()
                 sys.exit()
             return count
-        if not file: # TODO: Save preferred (last used) format (txt or xlsx)
+        if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
                 flt = _('Text files')+' (*.txt)'
