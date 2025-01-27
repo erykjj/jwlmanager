@@ -17,7 +17,7 @@
 ### Changed
 
 - Disabled re-opening previous archive on application start
-- Modified how Notes without a title are handled on import
+- **Modified how Notes without a title are handled on import**
   - Previously, a note with an empty title would automatically replace any other note with no title at the same location
   - Now, content is compared; if there is even a slight difference, the note is added without over-writing
   - If the notes have identical titles (at the same location) the import still replaces the original
