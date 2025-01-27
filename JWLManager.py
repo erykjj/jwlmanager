@@ -1828,7 +1828,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         sql = 'Title = ?'
                         attrib = attribs['TITLE']
                     else:
-                        sql = 'Content = ?'
+                        sql = 'Title = "" AND Content = ?'
                         attrib = attribs['NOTE']
                     if location_id:
                         if pd.notnull(attribs['BLOCK']):
