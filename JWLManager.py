@@ -1821,14 +1821,20 @@ class Window(QMainWindow, Ui_MainWindow):
                             position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                             con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
+                    if attribs.get('TITLE'):
+                        sql = 'Title = ?'
+                        attrib = attribs['TITLE']
+                    else:
+                        sql = 'Content = ?'
+                        attrib = attribs['NOTE']
                     if location_id:
                         if pd.notnull(attribs['BLOCK']):
                             blk = f"BlockIdentifier = {attribs['BLOCK']}"
                         else:
                             blk = 'BlockIdentifier IS NULL'
-                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND Title = ? AND {blk} AND BlockType = ?;', (location_id, attribs['TITLE'], block_type)).fetchone()
+                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND {sql} AND {blk} AND BlockType = ?;', (location_id, attrib, block_type)).fetchone()
                     else:
-                        result = con.execute('SELECT Guid, LastModified, Created FROM Note WHERE Title = ? AND BlockType = 0;', (attribs['TITLE'],)).fetchone()
+                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE {sql} AND BlockType = 0;', (attrib,)).fetchone()
                     if result:
                         unique_id = result[0]
                         modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
