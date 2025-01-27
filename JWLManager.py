@@ -119,6 +119,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = []
 
         self.mode = settings.value('JWLManager/theme', 'light')
+        self.format = settings.value('JWLManager/format', 'xlsx')
         self.setupUi(self)
         self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
         self.combo_category.view().setMinimumWidth(190)
@@ -1495,6 +1496,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 df = pd.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
+                self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
@@ -1504,6 +1506,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         count = 0
             else:
+                self.format = 'xlsx'
                 df = pd.read_excel(file)
                 count = update_db(df)
             return count
@@ -1886,6 +1889,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 df = pd.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
+                self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
@@ -1895,6 +1899,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         count = 0
             else:
+                self.format = 'xlsx'
                 df = pd.read_excel(file)
                 count = update_db(df)
             return count
@@ -2030,14 +2035,17 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.clean_up()
                 sys.exit()
             return count
-        if not file:
+        if not file: # TODO: Save preferred (last used) format (txt or xlsx)
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
                 flt = _('Text files')+' (*.txt)'
             elif category == _('Playlists'):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
             else:
-                flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
+                if self.format == 'xlxs':
+                    flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
+                else:
+                    flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
             file = QFileDialog.getOpenFileName(self, _('Import file'), f'{self.working_dir}/', flt)[0]
             if not file:
                 self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
@@ -3235,6 +3243,7 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('JWLManager/column2', self.treeWidget.columnWidth(1))
         settings.setValue('JWLManager/sort', self.treeWidget.sortColumn())
         settings.setValue('JWLManager/direction', self.treeWidget.header().sortIndicatorOrder())
+        settings.setValue('JWLManager/format', self.format)
         settings.setValue('Main_Window/position', self.pos())
         settings.setValue('Main_Window/size', self.size())
         settings.setValue('Viewer/position', self.viewer_pos)
