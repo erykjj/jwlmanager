@@ -9,6 +9,7 @@
 - Added **merging** of all items (including Playlists)
   - Add progress dialog on merge
 - Implemented **single-instance** (with lockfile)
+- Saving preferred/last-used import format (txt/xlsx)
 - Added exception handling on load and save
 - Added more detail in import error box
 - Added query to Trim to remove invalid Highlights
