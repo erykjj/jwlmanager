@@ -211,6 +211,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def dropEvent(self, event):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
+        # TODO: handle '.xlsx' drag-and-drop
         if suffix == '.jwlibrary':
             self.check_file(file)
         elif not self.combo_category.isEnabled():
