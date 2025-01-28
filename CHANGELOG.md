@@ -4,6 +4,19 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [7.0.0] - 2025-01-28
+
+- Thanks to: @glenmwright, @AnatolyOn for testing and bug reports
+
+### Added
+
 - Enabled **opening archive from commandline**
 - Implemented **exporting/importing Favorites**
 - Added **merging** of all items (including Playlists)
@@ -35,11 +48,7 @@
 - Disable selections (and buttons, etc.) on new archive after selections where active
 - Adjust CSS for disabled drop-down and menu items to make them more notable
 - Fixed other minor bugs
-- Thanks to: @glenmwright, @AnatolyOn for bug reports
 
-### Removed
-
-____
 ## [6.1.2] - 2024-12-07
 ### Fixed
 
