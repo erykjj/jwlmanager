@@ -224,6 +224,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.import_items(file, _('Annotations'))
             elif header == r'{BOOKMARKS}':
                 self.import_items(file, _('Bookmarks'))
+            elif header == r'{FAVORITES}':
+                self.import_items(file, _('Favorites'))
             elif header == r'{HIGHLIGHTS}':
                 self.import_items(file, _('Highlights'))
             elif regex.search('{NOTES=', header):
