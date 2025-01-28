@@ -3009,7 +3009,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def update_table(table, field):
             app.processEvents()
-            con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE CrossReference.Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+            con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
             if self.interactive:
                 progress_dialog.setValue(progress_dialog.value() + 1)
 
@@ -3050,7 +3050,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if self.interactive:
                     progress_dialog.setValue(progress_dialog.value() + 1)
 
-            con.execute('DELETE FROM TagMap WHERE PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
+            con.execute('DELETE FROM TagMap WHERE PlaylistItemId IS NOT NULL AND PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
             make_table('PlaylistItem')
             update_table('PlaylistItem', 'PlaylistItemId')
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
@@ -3111,7 +3111,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             if self.interactive:
                 con = sqlite3.connect(f'{pth}/{DB_NAME}')
-            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
             reindex_notes()
             reindex_tags()
             reindex_playlists()
