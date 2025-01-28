@@ -1304,6 +1304,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 rows = con.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
                 expcon.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
+                item_list = []
+                for row in rows:
+                    item_list.append(row)
 
                 rows = con.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
                 expcon.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
@@ -1349,13 +1352,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 lo = lo.rstrip(', ') + ')'
                 rows = con.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
                 expcon.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
+                return item_list
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
             with ZipFile(PROJECT_PATH / 'res/blank_playlist','r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
-            playlist_export()
+            item_list = playlist_export()
             self.reindex_db(expcon, playlist_path)
             expcon.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
             expcon.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
@@ -1380,6 +1384,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for f in files:
                     newzip.write(f'{playlist_path}/{f}', f)
             shutil.rmtree(playlist_path, ignore_errors=True)
+            return item_list
 
         def export_all():
             items = {}
