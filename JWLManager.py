@@ -703,6 +703,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText('**0**')
         if self.combo_grouping.currentText() == _('Type'):
             self.treeWidget.expandToDepth(0)
+        self.tree_selection()
         app.processEvents()
 
 
