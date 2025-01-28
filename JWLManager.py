@@ -1302,8 +1302,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 rows = con.execute(f'SELECT * FROM PlaylistItem WHERE PlaylistItemId IN {items};').fetchall()
                 expcon.executemany('INSERT INTO PlaylistItem VALUES (?, ?, ?, ?, ?, ?, ?);', rows)
-                for row in rows:
-                    item_list.append(row)
 
                 rows = con.execute(f'SELECT * FROM PlaylistItemLocationMap WHERE PlaylistItemId IN {items};').fetchall()
                 expcon.executemany('INSERT INTO PlaylistItemLocationMap VALUES (?, ?, ?, ?);', rows)
