@@ -29,6 +29,7 @@
 
 ### Fixed
 
+- Fixed serious bug related to reindexing (that would remove tags)
 - Fixed export/import of Psalm heading and book heading notes (custom text file)
 - Fixed import of notes with empty title (custom text file)
 - Disable selections (and buttons, etc.) on new archive after selections where active
