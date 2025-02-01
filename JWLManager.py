@@ -1412,7 +1412,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.working_dir = Path(fname)
         else:
             self.working_dir = Path(fname).parent
-        current_archive = self.current_archive if self.current_archive else _('NEW ARCHIVE')
+        current_archive = Path(self.current_archive).name if self.current_archive else _('NEW ARCHIVE')
         self.statusBar.showMessage(' '+_('Exporting. Please wait…'))
         app.processEvents()
         try:
