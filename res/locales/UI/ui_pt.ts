@@ -32,7 +32,7 @@
         <location filename="main_window.ui" line="181"/>
         <source>&amp;Grouping:</source>
         <oldsource>Grouping:</oldsource>
-        <translation type="unfinished">Agrupamento:</translation>
+        <translation>Agrupamento:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -44,7 +44,7 @@
         <location filename="main_window.ui" line="232"/>
         <source>Categor&amp;y:</source>
         <oldsource>Category:</oldsource>
-        <translation type="unfinished">Categoria:</translation>
+        <translation>Categoria:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -298,12 +298,12 @@
     <message>
         <location filename="main_window.ui" line="799"/>
         <source>&amp;Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Códigos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
         <source>&amp;Short</source>
-        <translation type="unfinished"></translation>
+        <translation>Curtos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="816"/>
@@ -314,7 +314,7 @@
     <message>
         <location filename="main_window.ui" line="827"/>
         <source>&amp;Full</source>
-        <translation type="unfinished"></translation>
+        <translation>Completos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="830"/>
@@ -325,12 +325,12 @@
     <message>
         <location filename="main_window.ui" line="1010"/>
         <source>&amp;Merge…</source>
-        <translation type="unfinished"></translation>
+        <translation>Com&amp;binar…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1013"/>
         <source>Merge another archive</source>
-        <translation type="unfinished"></translation>
+        <translation>Unir outro arquivo</translation>
     </message>
     <message>
         <source>Polski</source>
@@ -434,7 +434,7 @@
     <message>
         <location filename="main_window.ui" line="966"/>
         <source>&amp;Polski</source>
-        <translation type="unfinished"></translation>
+        <translation>Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="969"/>
@@ -498,7 +498,7 @@
     <message>
         <location filename="main_window.ui" line="874"/>
         <source>&amp;English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="877"/>
@@ -508,7 +508,7 @@
     <message>
         <location filename="main_window.ui" line="885"/>
         <source>E&amp;spañol</source>
-        <translation type="unfinished"></translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
@@ -518,7 +518,7 @@
     <message>
         <location filename="main_window.ui" line="896"/>
         <source>&amp;Deutsch</source>
-        <translation type="unfinished"></translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="899"/>
@@ -528,7 +528,7 @@
     <message>
         <location filename="main_window.ui" line="907"/>
         <source>&amp;Français</source>
-        <translation type="unfinished"></translation>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
@@ -538,12 +538,12 @@
     <message>
         <location filename="main_window.ui" line="918"/>
         <source>P&amp;ortuguês</source>
-        <translation type="unfinished"></translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
         <source>&amp;Italiano</source>
-        <translation type="unfinished"></translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
