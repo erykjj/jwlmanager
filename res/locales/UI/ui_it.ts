@@ -303,21 +303,21 @@
         <location filename="main_window.ui" line="799"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation type="unfinished">Siglas</translation>
+        <translation>Siglas</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
         <location filename="main_window.ui" line="816"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
-        <translation type="unfinished">Abbreviato</translation>
+        <translation>Abbreviatos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="827"/>
         <location filename="main_window.ui" line="830"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation type="unfinished">Completo</translation>
+        <translation>Completos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1010"/>
