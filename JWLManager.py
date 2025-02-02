@@ -1861,8 +1861,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
                     else:
                         unique_id = uuid.uuid1()
-                        created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'))
-                        modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S')
+                        created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+                        modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
                         con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
@@ -2260,7 +2260,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_notes():
                 for item in self.modified_list:
-                    con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S'), item.idx))
+                    con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), item.idx))
                 for item in self.deleted_list:
                     con.execute(f'DELETE FROM Note WHERE NoteId = {item.idx};')
 
@@ -3034,6 +3034,8 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('Note', 'NoteId')
             update_table('TagMap', 'NoteId')
             con.execute('DROP TABLE CrossReference;')
+            con.execute('UPDATE Note SET LastModified = LastModified || "Z" WHERE LastModified IS NOT NULL AND LastModified NOT LIKE "%Z"')
+            con.execute('UPDATE Note SET Created = Created || "Z" WHERE Created IS NOT NULL AND Created NOT LIKE "%Z"') 
 
         def reindex_bookmarks():
             make_table('Bookmark')
