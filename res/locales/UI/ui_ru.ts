@@ -295,15 +295,19 @@
     </message>
     <message>
         <location filename="main_window.ui" line="799"/>
-        <source>&amp;Code</source>
-        <translation>Коды</translation>
+        <source>Code</source>
+        <oldsource>&amp;Code</oldsource>
+        <translation type="unfinished">Коды</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
-        <source>&amp;Short</source>
-        <translation>Короткие</translation>
+        <location filename="main_window.ui" line="816"/>
+        <source>Short</source>
+        <oldsource>&amp;Short</oldsource>
+        <translation type="unfinished">Короткие</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="813"/>
         <location filename="main_window.ui" line="816"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
@@ -311,10 +315,13 @@
     </message>
     <message>
         <location filename="main_window.ui" line="827"/>
-        <source>&amp;Full</source>
-        <translation>Полные</translation>
+        <location filename="main_window.ui" line="830"/>
+        <source>Full</source>
+        <oldsource>&amp;Full</oldsource>
+        <translation type="unfinished">Полные</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="827"/>
         <location filename="main_window.ui" line="830"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
@@ -331,9 +338,10 @@
         <translation>Объединить другой архив</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="966"/>
         <source>Polski</source>
         <oldsource>&amp;Polski</oldsource>
-        <translation type="vanished">Polski</translation>
+        <translation>Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="992"/>
@@ -352,9 +360,10 @@
         <translation>Ctrl+T</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="799"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation type="vanished">Код</translation>
+        <translation>Код</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="802"/>
@@ -372,34 +381,40 @@
         <translation>&amp;Скрыть</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="874"/>
         <source>English</source>
         <oldsource>&amp;English</oldsource>
-        <translation type="vanished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="885"/>
         <source>Español</source>
         <oldsource>E&amp;spañol</oldsource>
-        <translation type="vanished">Español</translation>
+        <translation>Español</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="896"/>
         <source>Deutsch</source>
         <oldsource>&amp;Deutsch</oldsource>
-        <translation type="vanished">Deutsch</translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="907"/>
         <source>Français</source>
         <oldsource>&amp;Français</oldsource>
-        <translation type="vanished">Français</translation>
+        <translation>Français</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="918"/>
         <source>Português</source>
         <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="vanished">Português</translation>
+        <translation>Português</translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
         <oldsource>&amp;Italiano</oldsource>
-        <translation type="vanished">Italiano</translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="940"/>
@@ -431,8 +446,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="966"/>
-        <source>&amp;Polski</source>
-        <translation>Polski</translation>
+        <source>Polski</source>
+        <oldsource>&amp;Polski</oldsource>
+        <translation type="unfinished">Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="969"/>
@@ -495,8 +511,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="874"/>
-        <source>&amp;English</source>
-        <translation>English</translation>
+        <source>English</source>
+        <oldsource>&amp;English</oldsource>
+        <translation type="unfinished">English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="877"/>
@@ -505,8 +522,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="885"/>
-        <source>E&amp;spañol</source>
-        <translation>Español</translation>
+        <source>Español</source>
+        <oldsource>E&amp;spañol</oldsource>
+        <translation type="unfinished">Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
@@ -515,8 +533,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="896"/>
-        <source>&amp;Deutsch</source>
-        <translation>Deutsch</translation>
+        <source>Deutsch</source>
+        <oldsource>&amp;Deutsch</oldsource>
+        <translation type="unfinished">Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="899"/>
@@ -525,8 +544,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="907"/>
-        <source>&amp;Français</source>
-        <translation>Français</translation>
+        <source>Français</source>
+        <oldsource>&amp;Français</oldsource>
+        <translation type="unfinished">Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
@@ -535,13 +555,15 @@
     </message>
     <message>
         <location filename="main_window.ui" line="918"/>
-        <source>P&amp;ortuguês</source>
-        <translation>Português</translation>
+        <source>Português</source>
+        <oldsource>P&amp;ortuguês</oldsource>
+        <translation type="unfinished">Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
-        <source>&amp;Italiano</source>
-        <translation>Italiano</translation>
+        <source>Italiano</source>
+        <oldsource>&amp;Italiano</oldsource>
+        <translation type="unfinished">Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
