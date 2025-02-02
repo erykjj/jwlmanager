@@ -318,12 +318,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="813"/>
-        <location filename="main_window.ui" line="816"/>
-        <source>Short</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="819"/>
         <source>Use short publication title</source>
         <translation type="unfinished"></translation>
@@ -333,12 +327,6 @@
         <location filename="main_window.ui" line="830"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="827"/>
-        <location filename="main_window.ui" line="830"/>
-        <source>Full</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

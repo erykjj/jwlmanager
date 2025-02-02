@@ -397,22 +397,8 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="813"/>
-        <location filename="main_window.ui" line="816"/>
-        <source>Short</source>
-        <oldsource>&amp;Short</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="819"/>
         <source>Use short publication title</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="827"/>
-        <location filename="main_window.ui" line="830"/>
-        <source>Full</source>
-        <oldsource>&amp;Full</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -446,21 +432,9 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="874"/>
-        <source>English</source>
-        <oldsource>&amp;English</oldsource>
-        <translation type="unfinished">English</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="877"/>
         <source>en</source>
         <translation>en</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="885"/>
-        <source>Español</source>
-        <oldsource>E&amp;spañol</oldsource>
-        <translation type="unfinished">Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
@@ -468,21 +442,9 @@
         <translation>es</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="896"/>
-        <source>Deutsch</source>
-        <oldsource>&amp;Deutsch</oldsource>
-        <translation type="unfinished">Deutsch</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="899"/>
         <source>de</source>
         <translation>de</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="907"/>
-        <source>Français</source>
-        <oldsource>&amp;Français</oldsource>
-        <translation type="unfinished">Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
@@ -490,21 +452,9 @@
         <translation>fr</translation>
     </message>
     <message>
-        <location filename="main_window.ui" line="918"/>
-        <source>Português</source>
-        <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="unfinished">Português</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="921"/>
         <source>pt</source>
         <translation>pt</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="929"/>
-        <source>Italiano</source>
-        <oldsource>&amp;Italiano</oldsource>
-        <translation type="unfinished">Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
@@ -538,12 +488,6 @@
         <location filename="main_window.ui" line="958"/>
         <source>Sort Notes</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="966"/>
-        <source>Polski</source>
-        <oldsource>&amp;Polski</oldsource>
-        <translation type="unfinished">Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="969"/>
