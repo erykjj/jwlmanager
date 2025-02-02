@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ja_JP">
+<TS version="2.1" language="zh_CN">
 <context>
     <name>MainWindow</name>
     <message>
         <location filename="main_window.ui" line="33"/>
         <source>JWLManager</source>
-        <translation>JWLManager</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="120"/>
@@ -41,7 +41,6 @@
     <message>
         <location filename="main_window.ui" line="181"/>
         <source>&amp;Grouping:</source>
-        <oldsource>Grouping:</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -52,7 +51,6 @@
     <message>
         <location filename="main_window.ui" line="232"/>
         <source>Categor&amp;y:</source>
-        <oldsource>Category:</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -134,7 +132,6 @@
     <message>
         <location filename="main_window.ui" line="532"/>
         <source>&amp;View</source>
-        <oldsource>V&amp;iew</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -145,7 +142,6 @@
     <message>
         <location filename="main_window.ui" line="545"/>
         <source>Title &amp;View</source>
-        <oldsource>&amp;Title View</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -176,7 +172,7 @@
     <message>
         <location filename="main_window.ui" line="626"/>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="638"/>
@@ -191,7 +187,7 @@
     <message>
         <location filename="main_window.ui" line="644"/>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="656"/>
@@ -216,7 +212,7 @@
     <message>
         <location filename="main_window.ui" line="674"/>
         <source>Ctrl+Q</source>
-        <translation>Ctrl+Q</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="683"/>
@@ -241,7 +237,7 @@
     <message>
         <location filename="main_window.ui" line="716"/>
         <source>Ctrl+Alt+S</source>
-        <translation>Ctrl+Alt+S</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="728"/>
@@ -256,7 +252,7 @@
     <message>
         <location filename="main_window.ui" line="734"/>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="746"/>
@@ -271,7 +267,7 @@
     <message>
         <location filename="main_window.ui" line="752"/>
         <source>Ctrl+C</source>
-        <translation>Ctrl+C</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="764"/>
@@ -286,7 +282,7 @@
     <message>
         <location filename="main_window.ui" line="770"/>
         <source>Ctrl+A</source>
-        <translation>Ctrl+A</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="782"/>
@@ -301,84 +297,6 @@
     <message>
         <location filename="main_window.ui" line="788"/>
         <source>Ctrl+Z</source>
-        <translation>Ctrl+Z</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="1010"/>
-        <source>&amp;Merge…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="1013"/>
-        <source>Merge another archive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="816"/>
-        <source>Short</source>
-        <oldsource>&amp;Short</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="830"/>
-        <source>Full</source>
-        <oldsource>&amp;Full</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>English</source>
-        <oldsource>&amp;English</oldsource>
-        <translation type="obsolete">English</translation>
-    </message>
-    <message>
-        <source>Español</source>
-        <oldsource>E&amp;spañol</oldsource>
-        <translation type="obsolete">Español</translation>
-    </message>
-    <message>
-        <source>Deutsch</source>
-        <oldsource>&amp;Deutsch</oldsource>
-        <translation type="obsolete">Deutsch</translation>
-    </message>
-    <message>
-        <source>Français</source>
-        <oldsource>&amp;Français</oldsource>
-        <translation type="obsolete">Français</translation>
-    </message>
-    <message>
-        <source>Português</source>
-        <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="obsolete">Português</translation>
-    </message>
-    <message>
-        <source>Italiano</source>
-        <oldsource>&amp;Italiano</oldsource>
-        <translation type="obsolete">Italiano</translation>
-    </message>
-    <message>
-        <source>Polski</source>
-        <oldsource>&amp;Polski</oldsource>
-        <translation type="obsolete">Polski</translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="992"/>
-        <source>&amp;Theme</source>
-        <oldsource>T&amp;heme</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="995"/>
-        <source>Toggle theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="998"/>
-        <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="main_window.ui" line="802"/>
-        <source>Use publication code as title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -387,8 +305,18 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="main_window.ui" line="802"/>
+        <source>Use publication code as title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="main_window.ui" line="813"/>
         <source>&amp;Short</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="816"/>
+        <source>Short</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -399,6 +327,11 @@
     <message>
         <location filename="main_window.ui" line="827"/>
         <source>&amp;Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="830"/>
+        <source>Full</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -419,7 +352,7 @@
     <message>
         <location filename="main_window.ui" line="848"/>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="860"/>
@@ -439,7 +372,7 @@
     <message>
         <location filename="main_window.ui" line="877"/>
         <source>en</source>
-        <translation>en</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="885"/>
@@ -449,7 +382,7 @@
     <message>
         <location filename="main_window.ui" line="888"/>
         <source>es</source>
-        <translation>es</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="896"/>
@@ -459,7 +392,7 @@
     <message>
         <location filename="main_window.ui" line="899"/>
         <source>de</source>
-        <translation>de</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="907"/>
@@ -469,7 +402,7 @@
     <message>
         <location filename="main_window.ui" line="910"/>
         <source>fr</source>
-        <translation>fr</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="918"/>
@@ -479,7 +412,7 @@
     <message>
         <location filename="main_window.ui" line="921"/>
         <source>pt</source>
-        <translation>pt</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
@@ -489,25 +422,17 @@
     <message>
         <location filename="main_window.ui" line="932"/>
         <source>it</source>
-        <translation>it</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="940"/>
         <source>Pусский</source>
-        <translation>Pусский</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="943"/>
         <source>ru</source>
-        <translation>ru</translation>
-    </message>
-    <message>
-        <source>中文</source>
-        <translation type="vanished">中文</translation>
-    </message>
-    <message>
-        <source>zh</source>
-        <translation type="vanished">zh</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="955"/>
@@ -527,7 +452,7 @@
     <message>
         <location filename="main_window.ui" line="969"/>
         <source>pl</source>
-        <translation>pl</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="main_window.ui" line="980"/>
@@ -535,13 +460,34 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>українська</source>
-        <translation type="vanished">Українська</translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="983"/>
         <source>uk</source>
-        <translation>uk</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="992"/>
+        <source>&amp;Theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="995"/>
+        <source>Toggle theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="998"/>
+        <source>Ctrl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="1010"/>
+        <source>&amp;Merge…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="main_window.ui" line="1013"/>
+        <source>Merge another archive</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
