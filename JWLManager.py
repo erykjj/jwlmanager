@@ -74,6 +74,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionAbout.triggered.connect(self.about_box)
             self.actionNew.triggered.connect(self.new_file)
             self.actionOpen.triggered.connect(self.load_file)
+            self.actionMerge.triggered.connect(self.merge_file)
             self.actionQuit.triggered.connect(self.clean_up)
             self.actionSave.triggered.connect(self.save_file)
             self.actionSave_As.triggered.connect(self.save_as_file)
@@ -743,7 +744,14 @@ class Window(QMainWindow, Ui_MainWindow):
         with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
+        self.actionMerge.setEnabled(False)
 
+
+    def merge_file(self):
+        fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+        if not fname[0]:
+            return False
+        self.merge_items(fname[0])
 
     def load_file(self, archive=''):
         if self.modified:
@@ -767,6 +775,7 @@ class Window(QMainWindow, Ui_MainWindow):
             with ZipFile(archive,'r') as zipped:
                 zipped.extractall(TMP_PATH)
             self.file_loaded()
+            self.actionMerge.setEnabled(True)
             return True
         except:
             return None
