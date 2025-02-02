@@ -12,6 +12,8 @@
 
 ### Fixed
 
+- Minor fixes
+
 ### Removed
 
 ____
