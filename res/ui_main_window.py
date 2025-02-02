@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.actionOpen.setProperty('icon_name', 'open')
         self.actionMerge = QAction(MainWindow)
         self.actionMerge.setObjectName(u"actionMerge")
-        self.actionMerge.setProperty('icon_name', 'open')
+        self.actionMerge.setProperty('icon_name', 'merge')
         self.actionMerge.setEnabled(False)
         self.actionSave = QAction(MainWindow)
         self.actionSave.setObjectName(u"actionSave")
