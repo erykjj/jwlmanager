@@ -317,19 +317,19 @@
         <location filename="main_window.ui" line="874"/>
         <source>English</source>
         <oldsource>&amp;English</oldsource>
-        <translation type="unfinished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="918"/>
         <source>Português</source>
         <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="unfinished">Português</translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
         <oldsource>&amp;Italiano</oldsource>
-        <translation type="unfinished">Italiano</translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1010"/>
@@ -345,7 +345,7 @@
         <location filename="main_window.ui" line="799"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation>Código</translation>
+        <translation>Códigos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
