@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-02-02 08:19-0500\n"
-"PO-Revision-Date: 2025-01-08 14:33+0000\n"
+"PO-Revision-Date: 2025-02-02 13:26+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: it\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: ../JWLManager.py:127 ../JWLManager.py:401 ../JWLManager.py:405
@@ -429,7 +430,6 @@ msgid "Please wait…"
 msgstr "Attendere…"
 
 #: ../JWLManager.py:2113
-#, fuzzy
 msgid "Merging"
 msgstr "Unire"
 
@@ -799,4 +799,3 @@ msgstr "Note disposte"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NESSUN TITOLO"
-
