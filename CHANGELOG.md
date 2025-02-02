@@ -4,7 +4,11 @@
 
 ### Added
 
+- Added option to merge from the File menu (in addition to drag-and-drop and double-clicking)
+
 ### Changed
+
+- Small change in export file header to only show source archive name (not whole path)
 
 ### Fixed
 
