@@ -9,6 +9,7 @@
 ### Changed
 
 - Small change in export file header to only show source archive name (not whole path)
+- Updated translations
 
 ### Fixed
 
