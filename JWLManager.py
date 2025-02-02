@@ -924,10 +924,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 else:
                     return QFileDialog.getExistingDirectory(self, _('Export directory'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
 
-        def create_xlsx(fields, item_list):
+        def create_xlsx(fields, item_list, category=None):
             last_field = fields[-1]
             wb = Workbook(fname)
-            wb.set_properties({'comments': _('Exported from')+f' {current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
+            wb.set_properties({'title': category, 'comments': _('Exported from')+f' {current_archive} '+_('by')+f' {APP} ({VERSION})\n'+_('on')+f" {datetime.now().strftime('%Y-%m-%d @ %H:%M:%S')}"})
             bold = wb.add_format({'bold': True})
             ws = wb.add_worksheet(APP)
             ws.write_row(row=0, col=0, cell_format=bold, data=fields)
@@ -987,7 +987,7 @@ class Window(QMainWindow, Ui_MainWindow):
             item_list = get_annotations()
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
-                create_xlsx(fields, item_list)
+                create_xlsx(fields, item_list, '{ANNOTATIONS}')
             elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as f:
                     f.write(export_header('{ANNOTATIONS}'))
@@ -1204,7 +1204,7 @@ class Window(QMainWindow, Ui_MainWindow):
             item_list = get_notes()
             if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
-                create_xlsx(fields, item_list)
+                create_xlsx(fields, item_list, '{NOTES=}')
             elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as f:
                     f.write(export_header('{NOTES=}'))
