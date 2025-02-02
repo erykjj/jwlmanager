@@ -875,6 +875,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def archive_saved(self):
         self.modified = False
         self.actionSave.setEnabled(False)
+        self.save_filename = self.current_archive
         self.status_label.setStyleSheet('font: normal;')
         self.statusBar.showMessage(' '+_('Saved'), 4000)
 
