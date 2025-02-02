@@ -4,7 +4,7 @@
 
 These are due to the fact the the app is not signed with a valid certificate, which is too expensive for me to purchase just for this one (open-source) project. If you receive one of these alerts, you can safely choose "More info" and "Run anyway". *Apparently*, you only need to this once.
 
-As to **virus alerts**, have a look here. These are the virus scan results for one of my Windows executable packages (an older one, true, but feel free to scan any more recent one): https://www.virustotal.com/gui/file/757c78220affad753af1d624331351516cffa96d8a81c32a805622c187771023/detection
+As to **virus alerts**, have a look here. These are the virus scan results for one of my Windows executable packages (an older one, true, but feel free to scan any more recent one): https://www.virustotal.com/gui/url/a4d7c3dc2e1508de336963389e4c362af723ae38e7154d9f3d0897bfb8e67df0/detection
 
 You'll notice the great majority of anti-virus products report is as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. So why do some report trojans and such? Well...
 
