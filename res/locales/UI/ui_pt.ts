@@ -313,7 +313,7 @@
         <location filename="main_window.ui" line="816"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
-        <translation>Curto</translation>
+        <translation>Curtos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="827"/>
@@ -327,7 +327,7 @@
         <location filename="main_window.ui" line="830"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation>Completo</translation>
+        <translation>Completos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1010"/>
@@ -365,7 +365,7 @@
         <location filename="main_window.ui" line="799"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation>Código</translation>
+        <translation>Códigos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="802"/>
@@ -450,7 +450,7 @@
         <location filename="main_window.ui" line="966"/>
         <source>Polski</source>
         <oldsource>&amp;Polski</oldsource>
-        <translation type="unfinished">Polski</translation>
+        <translation>Polski</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="969"/>
@@ -515,7 +515,7 @@
         <location filename="main_window.ui" line="874"/>
         <source>English</source>
         <oldsource>&amp;English</oldsource>
-        <translation type="unfinished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="877"/>
@@ -526,7 +526,7 @@
         <location filename="main_window.ui" line="885"/>
         <source>Español</source>
         <oldsource>E&amp;spañol</oldsource>
-        <translation type="unfinished">Español</translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="888"/>
@@ -537,7 +537,7 @@
         <location filename="main_window.ui" line="896"/>
         <source>Deutsch</source>
         <oldsource>&amp;Deutsch</oldsource>
-        <translation type="unfinished">Deutsch</translation>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="899"/>
@@ -548,7 +548,7 @@
         <location filename="main_window.ui" line="907"/>
         <source>Français</source>
         <oldsource>&amp;Français</oldsource>
-        <translation type="unfinished">Français</translation>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="910"/>
@@ -559,13 +559,13 @@
         <location filename="main_window.ui" line="918"/>
         <source>Português</source>
         <oldsource>P&amp;ortuguês</oldsource>
-        <translation type="unfinished">Português</translation>
+        <translation>Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
         <source>Italiano</source>
         <oldsource>&amp;Italiano</oldsource>
-        <translation type="unfinished">Italiano</translation>
+        <translation>Italiano</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="932"/>
