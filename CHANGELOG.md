@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [7.1.0] - 2025-02-02
+### Added
+
 - Added option to merge from the File menu (in addition to drag-and-drop and double-clicking)
 - Added ability to **import Notes and Annotations `.xlsx` files through drag-and-drop**
 
@@ -16,9 +26,6 @@
 
 - Minor fixes
 
-### Removed
-
-____
 ## [7.0.0] - 2025-01-28
 
 - Thanks to: @glenmwright, @AnatolyOn for testing and bug reports
@@ -828,6 +835,8 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[7.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.0
+[7.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.0.0
 [6.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.2
 [6.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.1
 [6.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.0
