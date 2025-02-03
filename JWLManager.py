@@ -212,7 +212,6 @@ class Window(QMainWindow, Ui_MainWindow):
     def dropEvent(self, event):
         file = event.mimeData().urls()[0].toLocalFile()
         suffix = Path(file).suffix
-        # TODO: handle '.xlsx' drag-and-drop
         if suffix == '.jwlibrary':
             self.check_file(file)
         elif not self.combo_category.isEnabled():
@@ -231,6 +230,17 @@ class Window(QMainWindow, Ui_MainWindow):
             elif header == r'{HIGHLIGHTS}':
                 self.import_items(file, _('Highlights'))
             elif regex.search('{NOTES=', header):
+                self.import_items(file, _('Notes'))
+            else:
+                QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
+        elif suffix == '.xlsx':
+            annotations_columns = {'PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'}
+            notes_columns = {'CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'}
+            df = pd.read_excel(file)
+            columns = set(df.columns)
+            if  annotations_columns.issubset(columns):
+                self.import_items(file, _('Annotations'))
+            elif notes_columns.issubset(columns):
                 self.import_items(file, _('Notes'))
             else:
                 QMessageBox.warning(self, _('Error'), _('File "{}" not recognized!').format(file), QMessageBox.Cancel)
