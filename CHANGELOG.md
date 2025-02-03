@@ -5,6 +5,7 @@
 ### Added
 
 - Added option to merge from the File menu (in addition to drag-and-drop and double-clicking)
+- Added ability to **import Notes and Annotations `.xlsx` files through drag-and-drop**
 
 ### Changed
 
