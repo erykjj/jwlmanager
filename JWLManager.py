@@ -595,6 +595,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_import.setEnabled(enabled)
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
+            self.actionMerge.setEnabled(enabled)
             self.actionReindex.setEnabled(enabled)
             self.actionObscure.setEnabled(enabled)
             self.actionSort.setEnabled(enabled)
@@ -785,7 +786,6 @@ class Window(QMainWindow, Ui_MainWindow):
             with ZipFile(archive,'r') as zipped:
                 zipped.extractall(TMP_PATH)
             self.file_loaded()
-            self.actionMerge.setEnabled(True)
             return True
         except:
             return None
