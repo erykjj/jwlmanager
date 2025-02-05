@@ -37,7 +37,6 @@ from PySide6.QtGui import QAction, QFont
 from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from datetime import datetime, timezone
-from filehash import FileHash
 from functools import partial
 from pathlib import Path
 from PIL import Image
@@ -49,7 +48,7 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
-import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, hashlib, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 
@@ -57,6 +56,8 @@ PROJECT_PATH = Path(__file__).resolve().parent
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
 
+def sha256hash(file: str) -> str:
+    return hashlib.sha256(open(file, "rb").read()).hexdigest()
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, archive=''):
@@ -852,8 +853,7 @@ class Window(QMainWindow, Ui_MainWindow):
             m['creationDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
             m['userDataBackup']['lastModifiedDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-            sha256hash = FileHash('sha256')
-            m['userDataBackup']['hash'] = sha256hash.hash_file(f'{TMP_PATH}/{DB_NAME}')
+            m['userDataBackup']['hash'] = sha256hash(f'{TMP_PATH}/{DB_NAME}')
             m['userDataBackup']['databaseName'] = DB_NAME
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
@@ -1387,7 +1387,6 @@ class Window(QMainWindow, Ui_MainWindow):
             expcon.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             expcon.commit()
             expcon.close()
-            sha256hash = FileHash('sha256')
             m = {
                 'name': APP,
                 'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
@@ -1397,7 +1396,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     'lastModifiedDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
                     'deviceName': f'{APP}_{VERSION}',
                     'databaseName': 'userData.db',
-                    'hash': sha256hash.hash_file(f'{playlist_path}/userData.db'),
+                    'hash': sha256hash(f'{playlist_path}/userData.db'),
                     'schemaVersion': 14 } }
             with open(f'{playlist_path}/manifest.json', 'w') as json_file:
                     json.dump(m, json_file, indent=None, separators=(',', ':'))
@@ -2789,14 +2788,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 current_files = [x[2] for x in rows]
                 current_hashes = [x[4] for x in rows]
 
-                sha256hash = FileHash('sha256')
                 result = 0
                 for fl in files:
                     f = fl[0]
                     mime = fl[1]
                     ext = fl[2]
                     name = Path(f).name
-                    hash256 = sha256hash.hash_file(f)
+                    hash256 = sha256hash(f)
                     if hash256 not in current_hashes: # new file to be added
                         # add original file with non-clashing file name
                         current_hashes.append(hash256)
@@ -2812,7 +2810,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         i = Image.open(f'{TMP_PATH}/{thumb_name}')
                         i.thumbnail((250, 250))
                         i.save(f'{TMP_PATH}/{thumb_name}')
-                        thash = sha256hash.hash_file(f'{TMP_PATH}/{thumb_name}')
+                        thash = sha256hash(f'{TMP_PATH}/{thumb_name}')
                         con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
                     else: # file alread in archive
