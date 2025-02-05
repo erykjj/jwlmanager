@@ -4,6 +4,8 @@
 
 ### Added
 
+- Standard Python packaging instructions (`pyproject.toml`)
+
 ### Changed
 
 ### Fixed

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jwlmanager"
+description = "A tool to manage JW Library backups"
+readme = "README.md"
+requires-python = ">=3.6"
+license = { file = "LICENSE" }
+authors = [{ name = "Eryk Kopczyński", email = "eryk.j.kopczynski@gmail.com" }]
+dynamic = ["version"]
+dependencies = [
+  "openpyxl",
+  "pandas==2.2.*",
+  "pillow",
+  "puremagic",
+  "PySide6",
+  "regex",
+  "requests",
+  "shiboken6",
+  "XlsxWriter",
+]
+
+[project.gui-scripts]
+jwlmanager = "JWLManager:main"
+
+[tool.hatch.version]
+path = "JWLManager.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["JWLManager.py", "res"]
