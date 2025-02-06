@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-02-06 17:36-0500\n"
-"PO-Revision-Date: 2025-02-02 13:26+0000\n"
+"PO-Revision-Date: 2025-02-06 23:14+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.10-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:127 JWLManager.py:428 JWLManager.py:432 JWLManager.py:650
@@ -523,26 +524,23 @@ msgstr "Suppression. Être patient…"
 
 #: JWLManager.py:2990
 msgid "Clean"
-msgstr ""
+msgstr "Nettoyer"
 
 #: JWLManager.py:2990
-#, fuzzy
 msgid ""
 "Are you sure you want to\n"
 "CLEAN the text fields?"
 msgstr ""
 "Êtes-vous sûr de vouloir\n"
-"MASQUER tous les champs de texte ?"
+"NETTOYER les champs de texte ?"
 
 #: JWLManager.py:2993
-#, fuzzy
 msgid "Cleaning. Please wait…"
-msgstr "Suppression. Être patient…"
+msgstr "Nettoyage. Être patient…"
 
 #: JWLManager.py:3009
-#, fuzzy
 msgid "items cleaned"
-msgstr "éléments supprimés"
+msgstr "éléments nettoyés"
 
 #: JWLManager.py:3066
 msgid "Mask"
@@ -801,4 +799,3 @@ msgstr "Notes triées"
 
 #~ msgid "NO TITLE"
 #~ msgstr "AUCUN TITRE"
-
