@@ -18,7 +18,7 @@ ____
 
 ### Changed
 
-- Replaced external FileHash library with hashlib
+- Replaced external FileHash library with hashlib (thank you, @yajo)
 
 ### Fixed
 
