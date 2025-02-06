@@ -8,6 +8,8 @@
 
 ### Changed
 
+- Replaced external FileHash library with hashlib
+
 ### Fixed
 
 - Fixed some UI strings not being translated
