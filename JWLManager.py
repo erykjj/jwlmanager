@@ -294,7 +294,16 @@ class Window(QMainWindow, Ui_MainWindow):
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
-        text.setText(f'{APP} {VERSION}\n{platform()}\n\n{tb_text}')
+        archive = Path(self.current_archive).name if self.current_archive else _('NEW ARCHIVE')
+        manifest = "\n".join([
+            f"\n{archive}:",
+            f"  name: {self.manifest['name']}",
+            f"  creationDate: {self.manifest['creationDate']}",
+            f"  lastModifiedDate: {self.manifest['userDataBackup']['lastModifiedDate']}",
+            f"  deviceName: {self.manifest['userDataBackup']['deviceName']}",
+            f"  schemaVersion: {self.manifest['userDataBackup']['schemaVersion']}"
+        ])
+        text.setText(f'{APP} {VERSION}\n{platform()}\n{manifest}\n\n{tb_text}')
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
         button = QDialogButtonBox(QDialogButtonBox.Abort)
@@ -741,7 +750,7 @@ class Window(QMainWindow, Ui_MainWindow):
             pass
         with ZipFile(PROJECT_PATH / 'res/blank','r') as zipped:
             zipped.extractall(TMP_PATH)
-        m = {
+        self.manifest = {
             'name': APP,
             'creationDate': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
             'version': 1,
@@ -753,7 +762,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'hash': '',
                 'schemaVersion': 14 } }
         with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
-                json.dump(m, json_file, indent=None, separators=(',', ':'))
+                json.dump(self.manifest, json_file, indent=None, separators=(',', ':'))
         self.file_loaded()
         self.actionMerge.setEnabled(False)
 
@@ -785,6 +794,8 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive,'r') as zipped:
                 zipped.extractall(TMP_PATH)
+            with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
+                self.manifest = json.load(json_file)
             self.file_loaded()
             return True
         except:
