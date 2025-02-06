@@ -30,9 +30,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="181"/>
-        <source>&amp;Grouping:</source>
-        <oldsource>Grouping:</oldsource>
-        <translation>Группировка:</translation>
+        <source>Grouping:</source>
+        <oldsource>&amp;Grouping:</oldsource>
+        <translation type="unfinished">Группировка:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="216"/>
@@ -41,9 +41,9 @@
     </message>
     <message>
         <location filename="main_window.ui" line="232"/>
-        <source>Categor&amp;y:</source>
-        <oldsource>Category:</oldsource>
-        <translation>Категория:</translation>
+        <source>Category:</source>
+        <oldsource>Categor&amp;y:</oldsource>
+        <translation type="unfinished">Категория:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="255"/>
@@ -295,31 +295,23 @@
     </message>
     <message>
         <location filename="main_window.ui" line="799"/>
-        <source>&amp;Code</source>
-        <oldsource>Code</oldsource>
+        <source>Code</source>
+        <oldsource>&amp;Code</oldsource>
         <translation type="unfinished">Коды</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="813"/>
-        <source>&amp;Short</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="816"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
-        <translation>Короткие</translation>
+        <translation type="unfinished">Короткие</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="827"/>
-        <source>&amp;Full</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="main_window.ui" line="830"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation>Полные</translation>
+        <translation type="unfinished">Полные</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1010"/>
@@ -370,38 +362,38 @@
     </message>
     <message>
         <location filename="main_window.ui" line="874"/>
-        <source>&amp;English</source>
-        <oldsource>English</oldsource>
+        <source>English</source>
+        <oldsource>&amp;English</oldsource>
         <translation type="unfinished">English</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="885"/>
-        <source>E&amp;spañol</source>
-        <oldsource>Español</oldsource>
+        <source>Español</source>
+        <oldsource>E&amp;spañol</oldsource>
         <translation type="unfinished">Español</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="896"/>
-        <source>&amp;Deutsch</source>
-        <oldsource>Deutsch</oldsource>
+        <source>Deutsch</source>
+        <oldsource>&amp;Deutsch</oldsource>
         <translation type="unfinished">Deutsch</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="907"/>
-        <source>&amp;Français</source>
-        <oldsource>Français</oldsource>
+        <source>Français</source>
+        <oldsource>&amp;Français</oldsource>
         <translation type="unfinished">Français</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="918"/>
-        <source>P&amp;ortuguês</source>
-        <oldsource>Português</oldsource>
+        <source>Português</source>
+        <oldsource>P&amp;ortuguês</oldsource>
         <translation type="unfinished">Português</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="929"/>
-        <source>&amp;Italiano</source>
-        <oldsource>Italiano</oldsource>
+        <source>Italiano</source>
+        <oldsource>&amp;Italiano</oldsource>
         <translation type="unfinished">Italiano</translation>
     </message>
     <message>
