@@ -9,6 +9,7 @@
 ### Changed
 
 - Enable/disable some menu options based on archive being loaded or not
+- Updated translations
 
 ### Fixed
 
