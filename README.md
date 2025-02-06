@@ -19,7 +19,9 @@ You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip 
 
 See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc. The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*` .
 
-The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
+The state of the application (including the current language) is preserved in a config file. You can delete that file to start with default settings. The location depends on your OS:
+- On Linux and other Unix-like systems, it will be typically found in `~/.config/JWLManager/settings.conf`.
+- On Windows, it will be typically found in `%USERPROFILE%\.config\JWLManager\settings.conf`.
 
 You can force the GUI to launch in a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as...
 - Linux terminal: `python3 JWLManager.py -es`

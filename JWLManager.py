@@ -46,6 +46,7 @@ from random import randint
 from tempfile import mkdtemp
 from time import time
 from traceback import format_exception
+from xdg_base_dirs import xdg_config_home, xdg_cache_home
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
@@ -3284,21 +3285,15 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
 def set_settings_path():
-    if getattr(sys, 'frozen', False):
-        application_path = os.path.dirname(sys.executable)
-    else:
-        try:
-            application_path = os.path.dirname(os.path.realpath(__file__))
-        except NameError:
-            application_path = os.getcwd()
-    settings_path = application_path+'/'+APP+'.conf'
+    settings_path = xdg_config_home() / APP / "settings.conf"
     global LOCK_FILE
-    LOCK_FILE = application_path+'/'+'.JWLManager.lock'
+    LOCK_FILE = xdg_cache_home() / APP / ".JWLManager.lock"
     if not os.path.exists(settings_path) and os.path.exists(LOCK_FILE):
         os.remove(LOCK_FILE)
-    return QSettings(settings_path, QSettings.Format.IniFormat)
+    return QSettings(str(settings_path), QSettings.Format.IniFormat)
 
 def write_lockfile(file):
+    LOCK_FILE.parent.mkdirs(parents=True, exist_ok=True)
     with open(LOCK_FILE, 'w') as lockfile:
         lockfile.write(file)
 

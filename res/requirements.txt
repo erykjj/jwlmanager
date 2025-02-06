@@ -7,4 +7,5 @@ pillow
 puremagic
 regex
 requests
+xdg-base-dirs
 XlsxWriter
