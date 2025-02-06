@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added info about the current archive to the crash-box
+
 ### Changed
 
 ### Fixed
