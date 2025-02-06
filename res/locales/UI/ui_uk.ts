@@ -330,12 +330,12 @@
     <message>
         <location filename="main_window.ui" line="1026"/>
         <source>&amp;Clean</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Очистити</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1029"/>
         <source>Clean hidden characters</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити приховані символи</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="800"/>
