@@ -1,6 +1,6 @@
 ## Operation
 ######
-Open a `.jwlibrary` backup archive to see the Annotations (the editable text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
+Open a `.jwlibrary` backup archive to see the Annotations (the editable "comment" text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
 ######
 If you **drag-and-drop** (or double-click) an archive into the app when another archive is already opened, you will have the option to "Open" it (replacing the current one) or "Merge". If you choose to **merge**, *all* the records (Annotations, Bookmarks, Highlights, Notes and Playlists) from this second archive will be added to the already opened one, *over-writing* any that may be the same (eg., a note at the same location and with the same title). Keep in mind that by merging *you don't have any control* over which records to import. Also, *merging is always "additive"*: for example, if you deleted a note in the original archive and import another that still has that note, the note will be restored; or, if you deleted it in the archive you are merging but it still exists in the original archive, it will remain. Thus, it is preferable to export the items you want from the second archive and import them into the first in two steps (using the `Export` and `Import` buttons).
 ######
@@ -148,14 +148,18 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
 ######
 ### UTILITIES
 ######
+### Clean
+######
+When you copy-and-paste into Notes and Annotations, you may end up with invisible characters being included: non-breaking spaces, narrow- or wide-spaces, and joiners. All of these are used to enforce paragraph formatting in rich-text documents. This function remove these characters in *all* Notes and Annotations that contain them. This is a **one-way procedure**! Make sure you keep your 'official' backup!
+######
 ### Mask
 ######
 If you need to *share* your complete archive (for diagnostic purposes, etc.) but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm, view the notes in the Data Viewer. Only tags are not obscured. This is a **dangerous, destructive, one-way procedure**! Make sure you keep your 'official' backup!
-#####
+######
 ### Reindex
 ######
 This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take up to a minute, depending on the number of records the database contains. It does not need to be run more than once in a while.
-#####
+######
 ### Sort
 ######
 When a specific tag is selected in the JW Library app's "Personal Study" (Notes and Tags) section, the displayed notes can be arranged manually. This function restores all notes to their "natural" order (based on `NoteId`).
