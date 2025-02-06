@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed some UI strings not being translated
+
 ### Removed
 
 ____
