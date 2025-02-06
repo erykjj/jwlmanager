@@ -2951,6 +2951,59 @@ class Window(QMainWindow, Ui_MainWindow):
             self.regroup(False, message)
 
 
+    def clean_items(self):
+
+        def clean(txt):
+            txt = regex.sub(spaces, ' ', txt)
+            txt = regex.sub(joiners, '', txt)
+            return txt
+
+        def clean_annotations():
+            count = 0
+            for value, item in con.execute('SELECT Value, TextTag FROM InputField;').fetchall():
+                if regex.search(combined, value or ''):
+                    count += 1
+                    con.execute('UPDATE InputField SET Value = ? WHERE TextTag = ?;', (clean(value), item))
+            return count
+
+        def clean_notes():
+            count = 0
+            for title, content, item in con.execute('SELECT Title, Content, NoteId FROM Note;').fetchall():
+                if regex.search(combined, (title or '') + (content or '')):
+                    count += 1
+                    if title:
+                        title = clean(title)
+                    if content:
+                        content = clean(content)
+                    con.execute('UPDATE Note SET Title = ?, Content = ? WHERE NoteId = ?;', (title, content, item))
+            return count
+
+        reply = QMessageBox.warning(self, _('Clean'), _('Are you sure you want to\nCLEAN the text fields?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.No:
+            return
+        self.statusBar.showMessage(' '+_('Cleaning. Please wait…'))
+        app.processEvents()
+        spaces = regex.compile(r'[\p{Zs}--\x20]', regex.V1)
+        joiners = regex.compile(r'[\p{Zl}\p{Zp}]')
+        combined = regex.compile(r'[[\p{Zl}\p{Zp}\p{Zs}]--[\x20]]', regex.V1)
+        try:
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; BEGIN;")
+            result = clean_annotations()
+            result += clean_notes()
+            con.commit()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        message = f' {result} '+_('items cleaned')
+        self.statusBar.showMessage(message, 4000)
+        if result > 0:
+            self.archive_modified()
+            self.trim_db()
+            self.regroup(False, message)
+
     def obscure_items(self):
 
         def obscure_text(str):
