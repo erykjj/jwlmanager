@@ -56,8 +56,6 @@ PROJECT_PATH = Path(__file__).resolve().parent
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
 
-def sha256hash(file: str) -> str:
-    return hashlib.sha256(open(file, "rb").read()).hexdigest()
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, archive=''):
@@ -3379,6 +3377,9 @@ def read_resources(lng):
     publications = pd.concat([pubs, extras], ignore_index=True)
     favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
     con.close()
+
+def sha256hash(file: str) -> str:
+    return hashlib.sha256(open(file, "rb").read()).hexdigest()
 
 if __name__ == "__main__":
     settings = set_settings_path()
