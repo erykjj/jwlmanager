@@ -4,7 +4,11 @@
 
 ### Added
 
+- Added option to **clean invisible characters** in Annotations and Notes (titles and content)
+
 ### Changed
+
+- Enable/disable some menu options based on archive being loaded or not
 
 ### Fixed
 
