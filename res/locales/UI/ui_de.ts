@@ -331,8 +331,8 @@
     </message>
     <message>
         <location filename="main_window.ui" line="966"/>
-        <source>&amp;Polski</source>
-        <oldsource>Polski</oldsource>
+        <source>Polski</source>
+        <oldsource>&amp;Polski</oldsource>
         <translation type="unfinished">Polski</translation>
     </message>
     <message>
