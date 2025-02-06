@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [7.1.1] - 2025-02-06
+### Added
+
 - Added info about the current archive to the crash-box
 
 ### Changed
@@ -14,9 +24,6 @@
 
 - Fixed some UI strings not being translated
 
-### Removed
-
-____
 ## [7.1.0] - 2025-02-02
 ### Added
 
@@ -841,6 +848,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[7.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.1
 [7.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.0
 [7.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.0.0
 [6.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v6.1.2
