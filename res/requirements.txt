@@ -1,6 +1,5 @@
 PySide6
 shiboken6
-filehash
 openpyxl
 pandas==2.2.*
 pillow
