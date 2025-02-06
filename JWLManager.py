@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v7.1.1'
+VERSION = 'v7.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -77,6 +77,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionQuit.triggered.connect(self.clean_up)
             self.actionSave.triggered.connect(self.save_file)
             self.actionSave_As.triggered.connect(self.save_as_file)
+            self.actionClean.triggered.connect(self.clean_items)
             self.actionObscure.triggered.connect(self.obscure_items)
             self.actionReindex.triggered.connect(self.reindex_db)
             self.actionSort.triggered.connect(self.sort_notes)
@@ -400,6 +401,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
         self.button_export.setEnabled(self.selected_items)
+        self.actionClean.setEnabled(self.int_total)
+        self.actionObscure.setEnabled(self.int_total)
+        self.actionReindex.setEnabled(self.int_total)
+        self.actionSort.setEnabled(self.int_total)
+        self.actionExpand_All.setEnabled(self.int_total)
+        self.actionCollapse_All.setEnabled(self.int_total)
+        self.actionSelect_All.setEnabled(self.int_total)
+        self.actionUnselect_All.setEnabled(self.int_total)
 
 
     def switchboard(self, selection):
