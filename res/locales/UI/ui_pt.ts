@@ -328,12 +328,12 @@
     <message>
         <location filename="main_window.ui" line="1026"/>
         <source>&amp;Clean</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Limpar</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1029"/>
         <source>Clean hidden characters</source>
-        <translation type="unfinished"></translation>
+        <translation>Remover caracteres ocultos</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="967"/>
