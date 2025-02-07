@@ -9,6 +9,7 @@
 ### Changed
 
 - Enable/disable some menu options based on archive being loaded or not
+- Adjusted width of category and grouping drop-downs
 - Updated translations
 
 ### Fixed
