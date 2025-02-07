@@ -150,7 +150,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
 ######
 ### Clean
 ######
-When you copy-and-paste into Notes and Annotations, you may end up with invisible characters being included: non-breaking spaces, narrow- or wide-spaces, and joiners. All of these are used to enforce paragraph formatting in rich-text documents. This function remove these characters in *all* Notes and Annotations that contain them. This is a **one-way procedure**! Make sure you keep your 'official' backup!
+When you copy-and-paste into Notes and Annotations, you may end up with invisible characters being included: non-breaking spaces, narrow- or wide-spaces, and joiners. All of these are used to enforce paragraph formatting in rich-text documents. This function remove these characters in *all* Notes and Annotations that contain them. This is a **one-way procedure**! Make sure you keep a backup until you're certain this is what you wanted to do.
 ######
 ### Mask
 ######
