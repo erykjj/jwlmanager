@@ -38,6 +38,7 @@ from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox
 
 from datetime import datetime, timezone
 from functools import partial
+from hashlib import sha256
 from pathlib import Path
 from PIL import Image
 from platform import platform
@@ -48,7 +49,7 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
-import argparse, gettext, glob, hashlib, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 
@@ -3441,7 +3442,7 @@ def read_resources(lng):
     con.close()
 
 def sha256hash(file: str) -> str:
-    return hashlib.sha256(open(file, "rb").read()).hexdigest()
+    return sha256(open(file, "rb").read()).hexdigest()
 
 if __name__ == "__main__":
     settings = set_settings_path()
