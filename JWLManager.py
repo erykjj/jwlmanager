@@ -866,12 +866,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def zip_file(self):
 
         def update_manifest():
+            t = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 m = json.load(json_file)
             m['name'] = APP
-            m['creationDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            m['creationDate'] = t
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
-            m['userDataBackup']['lastModifiedDate'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+            m['userDataBackup']['lastModifiedDate'] = t
             m['userDataBackup']['hash'] = sha256hash(f'{TMP_PATH}/{DB_NAME}')
             m['userDataBackup']['databaseName'] = DB_NAME
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
