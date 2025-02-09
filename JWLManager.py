@@ -38,6 +38,7 @@ from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox
 
 from datetime import datetime, timezone
 from functools import partial
+from glob import glob
 from hashlib import sha256
 from pathlib import Path
 from PIL import Image
@@ -49,7 +50,7 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
-import argparse, gettext, glob, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import pandas as pd
 
 
@@ -753,7 +754,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.save_filename = ''
         self.current_archive = ''
         try:
-            for f in glob.glob(f'{TMP_PATH}/*', recursive=True):
+            for f in glob(f'{TMP_PATH}/*', recursive=True):
                 os.remove(f)
         except:
             pass
@@ -796,7 +797,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.setEnabled(False)
         self.status_label.setStyleSheet('font: normal;')
         try:
-            for f in glob.glob(f'{TMP_PATH}/*', recursive=True):
+            for f in glob(f'{TMP_PATH}/*', recursive=True):
                 os.remove(f)
         except:
             pass
@@ -3140,7 +3141,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 thumbs = list(map(lambda x: x[0], con.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
                 ind = list(map(lambda x: x[0], con.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
                 ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
-                for file in glob.glob(pth + '/*'):
+                for file in glob(pth + '/*'):
                     f = Path(file).name
                     if (f not in thumbs) and (f not in ind):
                         try:
