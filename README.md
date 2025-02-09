@@ -81,6 +81,6 @@ My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib
 ____
 #### Footnotes:
 [^#]: Requirements: Linux, MS Windows 10/11, macOS 13 "Ventura" and newer
-[^*]: German needs revision; Japanese needs to be completed; other languages also welcome: [Weblate](https://hosted.weblate.org/engage/jwlmanager/).
+[^*]: Available: Deutsch, English, español, français, italiano, Polski, Português, Pусский, українська. German needs revision; Japanese needs to be completed; other languages also welcome: [Weblate](https://hosted.weblate.org/engage/jwlmanager/).
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: See [`/res/requirements.txt`](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt).
