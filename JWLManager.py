@@ -2973,7 +2973,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def clean(txt):
             txt = regex.sub(spaces, ' ', txt)
             txt = regex.sub(joiners, '', txt)
-            return txt
+            return txt.replace('\r', '')
 
         def clean_annotations():
             count = 0
