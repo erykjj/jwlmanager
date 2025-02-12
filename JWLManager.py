@@ -959,9 +959,14 @@ class Window(QMainWindow, Ui_MainWindow):
                     fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.xlsx', _('MS Excel files')+' (*.xlsx)')[0]
                     if Path(fname).suffix != '.xlsx':
                         fname += '.xlsx'
+                    self.format = 'xlsx'
                     return fname
                 elif form == 'txt':
-                    return QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
+                    fname = QFileDialog.getSaveFileName(self, _('Export file'), f'{self.working_dir}/JWL_{category}_{now}.txt', _('Text files')+' (*.txt)')[0]
+                    if Path(fname).suffix != '.txt':
+                        fname += '.txt'
+                    self.format = 'txt'
+                    return fname
                 else:
                     return QFileDialog.getExistingDirectory(self, _('Export directory'), f'{self.working_dir}/', QFileDialog.ShowDirsOnly)
 
