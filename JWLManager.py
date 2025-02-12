@@ -976,7 +976,7 @@ class Window(QMainWindow, Ui_MainWindow):
             for index, item in enumerate(item_list):
                 row = map(lambda field_id: item.get(field_id, ''), fields)
                 ws.write_row(row=index+1, col=0, data=row)
-                ws.write_string(row=index+1, col=len(fields)-1, string=item_list[index][last_field]) # overwrite any that may have been formatted as URLs
+                ws.write_string(row=index+1, col=len(fields)-1, string=item_list[index][last_field].replace(r'\r', '')) # overwrite any that may have been formatted as URLs
             ws.freeze_panes(1, 0)
             ws.set_column(0, 2, 20)
             ws.set_column(3, len(fields)-1, 12)
