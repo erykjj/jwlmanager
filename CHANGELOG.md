@@ -5,6 +5,7 @@
 ### Added
 
 - Added option to **clean invisible characters** in Annotations and Notes (titles and content)
+- Set preferred format (`txt` vs `xlsx`) on export
 
 ### Changed
 
@@ -13,6 +14,8 @@
 - Updated translations
 
 ### Fixed
+
+- Sanitize Excel export by removing `\r` from Note content field (thank you, @glenmwright for reporting)
 
 ### Removed
 
