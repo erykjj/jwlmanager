@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [7.2.0] - 2025-02-13
+### Added
+
 - Added option to **clean invisible characters** in Annotations and Notes (titles and content)
 - Set preferred format (`txt` vs `xlsx`) on export
 
@@ -17,9 +27,6 @@
 
 - Sanitize export to Excel by removing carriage returns ('\r') from content fields (NOTE and VALUE) (thank you, @glenmwright for reporting)
 
-### Removed
-
-____
 ## [7.1.1] - 2025-02-06
 ### Added
 
@@ -857,6 +864,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[7.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.2.0
 [7.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.1
 [7.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.0
 [7.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.0.0
