@@ -15,7 +15,7 @@
 
 ### Fixed
 
-- Sanitize export to Excel by removing `\r` from content fields (NOTE and VALUE) (thank you, @glenmwright for reporting)
+- Sanitize export to Excel by removing carriage returns ('\r') from content fields (NOTE and VALUE) (thank you, @glenmwright for reporting)
 
 ### Removed
 
