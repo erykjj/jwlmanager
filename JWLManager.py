@@ -3143,9 +3143,9 @@ class Window(QMainWindow, Ui_MainWindow):
         def reindex_playlists():
 
             def clean_media():
-                thumbs = list(map(lambda x: x[0], con.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()))
-                ind = list(map(lambda x: x[0], con.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()))
-                ind = ind + ['userData.db', 'manifest.json', 'default_thumbnail.png']
+                thumbs = {row[0] for row in con.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()}
+                ind = {row[0] for row in con.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()}
+                ind.update(['userData.db', 'manifest.json', 'default_thumbnail.png'])
                 for file in glob(pth + '/*'):
                     f = Path(file).name
                     if (f not in thumbs) and (f not in ind):
