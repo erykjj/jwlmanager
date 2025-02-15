@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Refined trimming and reindexing functions
+
 ### Fixed
 
 ### Removed
