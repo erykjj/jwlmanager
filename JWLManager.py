@@ -3156,7 +3156,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 if self.interactive:
                     progress_dialog.setValue(progress_dialog.value() + 1)
 
-            con.execute('DELETE FROM TagMap WHERE PlaylistItemId IS NOT NULL AND PlaylistItemId NOT IN ( SELECT PlaylistItemId FROM PlaylistItem );')
             make_table('PlaylistItem')
             update_table('PlaylistItem', 'PlaylistItemId')
             update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
@@ -3165,14 +3164,11 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('TagMap', 'PlaylistItemId')
             con.execute('DROP TABLE CrossReference;')
 
-            con.execute('DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN ( SELECT IndependentMediaId FROM IndependentMedia );')
             make_table('IndependentMedia')
             update_table('IndependentMedia', 'IndependentMediaId')
             update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
             con.execute('DROP TABLE CrossReference;')
 
-            con.execute('DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
-            con.execute('DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );')
             make_table('PlaylistItemMarker')
             update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
             update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
