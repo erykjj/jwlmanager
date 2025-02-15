@@ -3284,42 +3284,44 @@ class Window(QMainWindow, Ui_MainWindow):
                 PRAGMA journal_mode = 'OFF';
                 PRAGMA foreign_keys = 'OFF';
 
-                DELETE FROM Note WHERE (Title IS NULL OR Title = '')
-                AND (Content IS NULL OR Content = '');
+                DELETE FROM Note WHERE
+                    COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
 
-                DELETE FROM TagMap WHERE NoteId IS NOT NULL AND NoteId
-                NOT IN (SELECT NoteId FROM Note);
-                DELETE FROM Tag WHERE TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
+                DELETE FROM TagMap WHERE
+                    NoteId IS NOT NULL AND NoteId NOT IN (SELECT NoteId FROM Note);
+                DELETE FROM TagMap WHERE
+                    PlaylistItemId IS NOT NULL AND PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM Tag WHERE
+                    TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
-                DELETE FROM UserMark WHERE LocationId NOT IN (SELECT LocationId FROM Location WHERE BookNumber IS NOT NULL OR DocumentId IS NOT NULL);
-                DELETE FROM BlockRange WHERE UserMarkId NOT IN
-                (SELECT UserMarkId FROM UserMark);
-                DELETE FROM UserMark WHERE UserMarkId NOT IN
-                (SELECT UserMarkId FROM BlockRange) AND UserMarkId NOT IN
-                (SELECT UserMarkId FROM Note WHERE UserMarkId NOT NULL);
+                DELETE FROM UserMark WHERE
+                    LocationId NOT IN (SELECT LocationId FROM Location)
+                    OR (UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange)
+                        AND UserMarkId NOT IN (SELECT UserMarkId FROM Note));
+                DELETE FROM BlockRange WHERE
+                    UserMarkId NOT IN (SELECT UserMarkId FROM UserMark);
 
-                DELETE FROM Location WHERE LocationId NOT IN
-                (SELECT LocationId FROM UserMark) AND LocationId NOT IN
-                (SELECT LocationId FROM Note WHERE LocationId IS NOT NULL)
-                AND LocationId NOT IN (SELECT LocationId FROM TagMap
-                WHERE LocationId IS NOT NULL) AND LocationId NOT IN
-                (SELECT LocationId FROM Bookmark) AND LocationId NOT IN 
-                (SELECT PublicationLocationId FROM Bookmark)
-                AND LocationId NOT IN (SELECT LocationId FROM InputField)
-                AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
+                DELETE FROM PlaylistItem WHERE
+                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM TagMap);
+                DELETE FROM PlaylistItemMarker WHERE
+                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemLocationMap WHERE
+                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE
+                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE
+                    IndependentMediaId NOT IN (SELECT IndependentMediaId FROM IndependentMedia);
+                DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );
+                DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );
 
-                DELETE FROM UserMark WHERE LocationId NOT IN
-                (SELECT LocationId FROM Location);
-
-                DELETE FROM PlaylistItem WHERE PlaylistItemId NOT IN
-                (SELECT PlaylistItemId FROM TagMap
-                WHERE PlaylistItemId IS NOT NULL);
-                DELETE FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId NOT IN
-                (SELECT PlaylistItemId FROM PlaylistItem);
-                DELETE FROM PlaylistItemLocationMap WHERE PlaylistItemId NOT IN
-                (SELECT PlaylistItemId FROM PlaylistItem);
-                DELETE FROM PlaylistItemMarker WHERE PlaylistItemId NOT IN
-                (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM Location WHERE
+                    LocationId NOT IN (SELECT LocationId FROM UserMark)
+                    AND LocationId NOT IN (SELECT LocationId FROM Note)
+                    AND LocationId NOT IN (SELECT LocationId FROM TagMap)
+                    AND LocationId NOT IN (SELECT LocationId FROM Bookmark)
+                    AND LocationId NOT IN (SELECT PublicationLocationId FROM Bookmark)
+                    AND LocationId NOT IN (SELECT LocationId FROM InputField)
+                    AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
 
                 PRAGMA foreign_keys = 'ON';
                 VACUUM;
