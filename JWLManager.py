@@ -3280,6 +3280,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 PRAGMA journal_mode = 'OFF';
                 PRAGMA foreign_keys = 'OFF';
 
+                DELETE FROM InputField WHERE
+                    COALESCE(Value, '');
+
                 DELETE FROM Note WHERE
                     COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
 
