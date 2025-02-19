@@ -3281,7 +3281,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 PRAGMA foreign_keys = 'OFF';
 
                 DELETE FROM InputField WHERE
-                    COALESCE(Value, '');
+                    COALESCE(Value, '') = '';
 
                 DELETE FROM Note WHERE
                     COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
