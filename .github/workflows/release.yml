@@ -1,4 +1,4 @@
-name: 'Draft Release v1.0.1'
+name: 'Draft Release v1.0.2'
 
 on:
   push:
@@ -22,6 +22,8 @@ jobs:
     name: Create Release Draft
     needs: [linux, windows, macos]
     runs-on: ubuntu-latest
+    outputs:
+      changelog-section: ${{ steps.extract.outputs.changelog_section }}
     env:
       TAG: ${{ github.ref_name }}
     steps:
@@ -43,9 +45,32 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: MacAPP
-    - name: Extract release notes
-      id: extract-release-notes
-      uses: ffurrer2/extract-release-notes@v2
+    - name: Extract section from changelog
+      id: extract
+      env:
+        CHANGELOG_FILE: "CHANGELOG.md"
+      run: |
+        if [[ ! -f "$CHANGELOG_FILE" ]]; then
+          echo "Error: File '$CHANGELOG_FILE' not found!"
+          exit 1
+        fi
+        changelog_section=$(awk '
+        /^## / { h2_count++ } 
+        h2_count == 2 && !/^## / && !/^$/ { in_section = 1 } 
+        h2_count == 3 { in_section = 0 } 
+        in_section { 
+            if (/^[[:space:]]*$/) { 
+                empty_buffer = empty_buffer $0 "\n" 
+            } else { 
+                printf "%s", empty_buffer 
+                empty_buffer = "" 
+                print 
+            } 
+        }
+        ' "$CHANGELOG_FILE")
+        echo "changelog_section<<EOF" >> $GITHUB_OUTPUT
+        echo "$changelog_section" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
     - name: Create release
       uses: softprops/action-gh-release@v2
       with:
@@ -54,7 +79,7 @@ jobs:
         draft: true
         prerelease: false
         body: |
-          ${{ steps.extract-release-notes.outputs.release_notes }}
+          ${{ steps.extract.outputs.changelog_section }}
           ____
           You can download the latest source script and execute it from the commandline, or try these self-contained packages, which don't require the installation of Python or any dependencies:
           - Linux:
