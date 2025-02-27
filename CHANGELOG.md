@@ -14,6 +14,7 @@
 ### Fixed
 
 - Fixed statusbar message not clearing
+- Fixed dis/enable triggers for some menu items
 
 ### Removed
 
