@@ -635,58 +635,78 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def add_node(parent, label, data):
                 child = QTreeWidgetItem(parent)
-                child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
-                child.setCheckState(0, Qt.Unchecked)
+                child.setFlags(child.flags() | Qt.ItemFlag.ItemIsAutoTristate | Qt.ItemFlag.ItemIsUserCheckable)
+                child.setCheckState(0, Qt.CheckState.Unchecked)
                 child.setText(0, str(label[0]))
-                child.setData(1, Qt.DisplayRole, data)
-                child.setTextAlignment(1, Qt.AlignCenter)
+                child.setData(1, Qt.ItemDataRole.DisplayRole, data)
+                child.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
                 return child
 
-            def traverse(df, idx, parent):
-                if len(idx) > 0:
-                    filter = idx[0]
-                    for i, df in df.group_by(filter):
-                        app.processEvents()
-                        self.leaves[parent] = []
-                        child = add_node(parent, i, df.shape[0])
-                        self.leaves[child] = df['Id'].to_list()
-                        traverse(df, idx[1:], child)
+            def pregroup(df, filters):
+                if not filters:
+                    return df
+                filter = filters[0]
+                grouped = df.group_by(filter).agg(pl.len().alias('count'))
+                groups = {}
+                for row in grouped.iter_rows(named=True):
+                    group_value = row[filter]
+                    if group_value is None:
+                        continue
+                    filtered_df = df.filter(pl.col(filter).is_not_null() & (pl.col(filter) == group_value))
+                    subgroups = pregroup(filtered_df, filters[1:])
+                    groups[group_value] = {'count': row['count'], 'data': filtered_df, 'subgroups': subgroups}
+                return groups
+
+            def traverse(groups, filters, parent):
+                if not filters:
+                    return
+                for group_value, group_data in groups.items():
+                    app.processEvents()
+                    self.leaves[parent] = []
+                    child = add_node(parent, (group_value,), group_data['count'])
+                    self.leaves[child] = group_data['data']['Id'].to_list()
+                    traverse(group_data['subgroups'], filters[1:], child)
 
             def define_views(category):
                 if category == _('Bookmarks'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
-                        _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
-                        _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
-                        _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ] }
+                        _('Type'): ['Type', 'Title', 'Language', 'Detail1'],
+                        _('Title'): ['Title', 'Language', 'Detail1', 'Detail2'],
+                        _('Language'): ['Language', 'Title', 'Detail1', 'Detail2'],
+                        _('Year'): ['Year', 'Title', 'Language', 'Detail1']
+                    }
                 elif category == _('Favorites'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Language' ],
-                        _('Title'): [ 'Title', 'Language' ],
-                        _('Language'): [ 'Language', 'Title' ],
-                        _('Year'): [ 'Year', 'Title', 'Language' ] }
+                        _('Type'): ['Type', 'Title', 'Language'],
+                        _('Title'): ['Title', 'Language'],
+                        _('Language'): ['Language', 'Title'],
+                        _('Year'): ['Year', 'Title', 'Language']
+                    }
                 elif category == _('Playlists'):
-                    views = { _('Title'): [ 'Tags', 'Detail1' ], }
+                    views = {_('Title'): ['Tags', 'Detail1']}
                 elif category == _('Highlights'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
-                        _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
-                        _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
-                        _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
-                        _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
+                        _('Type'): ['Type', 'Title', 'Language', 'Detail1'],
+                        _('Title'): ['Title', 'Language', 'Detail1', 'Detail2'],
+                        _('Language'): ['Language', 'Title', 'Detail1', 'Detail2'],
+                        _('Year'): ['Year', 'Title', 'Language', 'Detail1'],
+                        _('Color'): ['Color', 'Title', 'Language', 'Detail1']
+                    }
                 elif category == _('Notes'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Language', 'Detail1' ],
-                        _('Title'): [ 'Title', 'Language', 'Detail1', 'Detail2' ],
-                        _('Language'): [ 'Language', 'Title', 'Detail1', 'Detail2' ],
-                        _('Year'): [ 'Year', 'Title', 'Language', 'Detail1' ],
-                        _('Tag'): [ 'Tags', 'Title', 'Language', 'Detail1' ],
-                        _('Color'): [ 'Color', 'Title', 'Language', 'Detail1' ] }
+                        _('Type'): ['Type', 'Title', 'Language', 'Detail1'],
+                        _('Title'): ['Title', 'Language', 'Detail1', 'Detail2'],
+                        _('Language'): ['Language', 'Title', 'Detail1', 'Detail2'],
+                        _('Year'): ['Year', 'Title', 'Language', 'Detail1'],
+                        _('Tag'): ['Tags', 'Title', 'Language', 'Detail1'],
+                        _('Color'): ['Color', 'Title', 'Language', 'Detail1']
+                    }
                 elif category == _('Annotations'):
                     views = {
-                        _('Type'): [ 'Type', 'Title', 'Detail1', 'Detail2' ],
-                        _('Title'): [ 'Title', 'Detail1', 'Detail2' ],
-                        _('Year'): [ 'Year', 'Title', 'Detail1', 'Detail2' ] }
+                        _('Type'): ['Type', 'Title', 'Detail1', 'Detail2'],
+                        _('Title'): ['Title', 'Detail1', 'Detail2'],
+                        _('Year'): ['Year', 'Title', 'Detail1', 'Detail2']
+                    }
                 return views
 
             if self.title_format == 'code':
@@ -696,12 +716,12 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 title = 'Full'
             self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
-            views = define_views(category)
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
+            views = define_views(category)
             filters = views[grouping]
-            traverse(self.current_data, filters, self.treeWidget)
-
+            precomputed_groups = pregroup(self.current_data, filters)
+            traverse(precomputed_groups, filters, self.treeWidget)
 
         if same_data is not True:
             same_data = False
