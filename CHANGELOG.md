@@ -4,11 +4,16 @@
 
 ### Added
 
+- Optimized treeview building code (a bit faster)
+
 ### Changed
 
+- Switched from Pandas to Polars (fewer dependencies)
 - Refined trimming and reindexing functions
 
 ### Fixed
+
+- Fixed statusbar message not clearing
 
 ### Removed
 
