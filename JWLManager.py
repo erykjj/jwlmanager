@@ -464,14 +464,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 get_playlists()
 
         def process_code(code, issue):
-            if code == 'ws' and issue == 0:  # Worldwide Security book - same code as simplified Watchtower
+            if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
                 code = 'ws-'
             elif not code:
                 code = ''
             elif regex.match(code_jwb, code):
                 code = 'jwb-'
             yr = ''
-            dated = regex.search(code_yr, code)  # Year included in code
+            dated = regex.search(code_yr, code) # Year included in code
             if dated:
                 prefix = dated.group(1)
                 suffix = dated.group(2)
@@ -487,7 +487,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
         def process_detail(symbol, book, chapter, issue, year):
-            if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}:  # Bible appendix notes, etc.
+            if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}: # Bible appendix notes, etc.
                 detail1 = _('* OTHER *')
             else:
                 detail1 = None
@@ -515,14 +515,13 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def merge_df(df):
             df = df.join(publications.lazy(), on='Symbol', how='left')
-            df = df.with_columns([
-                pl.col('Full').fill_null(pl.col('Symbol')),
-                pl.col('Short').fill_null(pl.col('Symbol')),
-                pl.col('Type').fill_null(_('Other')),
-                pl.col('Year').fill_null(pl.col('Year_y')).fill_null(_('* NO YEAR *'))
-            ])
+            df.col('Full') = df.col('Full').fill_nan(df.col('Symbol'))
+            df.col('Short') = df.col('Short').fill_nan(df.col('Symbol'))
+            df.col('Type') = df.col('Type').fill_nan(_('Other'))
+            df.col('Year') = df.col('Year_y').fill_nan(df.col('Year_y')).fill_nan(_('* NO YEAR *'))
+
             df = df.drop(['Year_x', 'Year_y'])
-            df = df.with_columns(pl.col('Year').cast(pl.Utf8).str.replace('.0', ''))
+            df.col('Year') = df.col('Year').cast(df.Utf8).str.replace('.0', '')
             return df
 
         def get_annotations():
@@ -605,10 +604,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 lst.append(rec)
             playlists = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Tags', 'Year', 'Detail1'])
             self.current_data = merge_df(playlists.lazy()).collect()
-
-        code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
-        code_jwb = regex.compile(r'jwb-\d+$')
-        get_data()
 
         def enable_options(enabled):
             self.button_import.setEnabled(enabled)
@@ -1517,7 +1512,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(items, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return df
 
             def update_db(df):
@@ -1545,7 +1540,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(item_list, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
@@ -1819,7 +1814,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(items, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return df
 
             def update_db(df):
@@ -1938,7 +1933,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(item_list, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
@@ -3422,64 +3417,35 @@ def get_language():
     return lng
 
 def read_resources(lng):
+
     def load_bible_books(lng):
-        # Fetch Bible books data and store in a dictionary
-        query = f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};'
-        result = con.execute(query).fetchall()
-        for row in result:
+        for row in con.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
             bible_books[row[0]] = row[1]
 
     def load_languages():
-        # Fetch language data and populate dictionaries
-        query = 'SELECT Language, Name, Code, Symbol FROM Languages;'
-        result = con.execute(query).fetchall()
-        ui_lang = None
-        for row in result:
+        for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
             lang_name[row[0]] = row[1]
             lang_symbol[row[0]] = row[3]
             if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
 
-    # Global variables
     global _, bible_books, favorites, lang_name, lang_symbol, publications
 
-    # Initialize translation and dictionaries
     _ = tr[lng].gettext
     lang_name = {}
     lang_symbol = {}
     bible_books = {}
 
-    # Connect to the SQLite database
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
-
-    # Load languages and Bible books
     ui_lang = load_languages()
     load_bible_books(ui_lang)
 
-    # Fetch publications and extras data using Polars
-    pubs_query = f"""
-        SELECT Symbol, ShortTitle AS Short, Title AS Full, Year, [Group] AS Type
-        FROM Publications p
-        JOIN Types USING (Type, Language)
-        WHERE Language = {ui_lang};
-    """
-    extras_query = f"""
-        SELECT Symbol, ShortTitle AS Short, Title AS Full, Year, [Group] AS Type
-        FROM Extras p
-        JOIN Types USING (Type, Language)
-        WHERE Language = {ui_lang};
-    """
-    pubs = pl.read_database(pubs_query, con)
-    extras = pl.read_database(extras_query, con)
+    pubs = pl.read_database((f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con), con)
+    extras = pl.read_database((f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con), con)
 
-    # Combine publications and extras into a single DataFrame
     publications = pl.concat([pubs, extras])
-
-    # Fetch favorites data
     favorites = pl.read_database("SELECT * FROM Favorites;", con)
-
-    # Close the database connection
     con.close()
 
 def sha256hash(file: str) -> str:
