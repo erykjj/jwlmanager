@@ -4,11 +4,11 @@
 
 ### Added
 
-- Optimized treeview building code (a bit faster)
 
 ### Changed
 
 - Switched from Pandas to Polars (fewer dependencies)
+- Slightly optimized treeview building code (a bit faster)
 - Refined trimming and reindexing functions
 
 ### Fixed
