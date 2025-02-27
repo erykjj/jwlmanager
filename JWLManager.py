@@ -729,6 +729,7 @@ class Window(QMainWindow, Ui_MainWindow):
             msg = message + '… '
         else:
             msg = ' '
+        start = time()
         self.statusBar.showMessage(msg+_('Processing…'))
         enable_options(False)
         app.processEvents()
@@ -736,7 +737,6 @@ class Window(QMainWindow, Ui_MainWindow):
         grouping = self.combo_grouping.currentText()
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
         code_jwb = regex.compile(r'jwb-\d+$')
-        start = time()
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
@@ -753,7 +753,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         delta = 4000 - (time()-start) * 1000
-        if message:
+        if message and delta > 0:
             self.statusBar.showMessage(msg, delta)
         else:
             self.statusBar.showMessage('')
