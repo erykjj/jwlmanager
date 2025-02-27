@@ -514,10 +514,8 @@ class Window(QMainWindow, Ui_MainWindow):
             return detail1, year, detail2
 
         def merge_df(df):
-            # pl.Config.set_tbl_cols(-1)
-            # pl.Config.set_tbl_rows(50)
-            # print("Before Join - df:")
-            # print(df)
+            pl.Config.set_tbl_cols(-1)
+            # print(df.schema) #DEBUG
             df = df.join(publications, on='Symbol', how='left')
             df = df.with_columns([
                 pl.col('Full').fill_null(pl.col('Symbol')),
@@ -526,8 +524,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 pl.col('Year').fill_null(pl.col('Year_right')).fill_null(_('* NO YEAR *'))
             ])
             df = df.drop(['Year_right'])
-            # print("After fill_null - df:")
-            # print(df)
+            # print(df) #DEBUG
             return df
 
         def get_annotations():
