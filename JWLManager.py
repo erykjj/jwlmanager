@@ -607,10 +607,8 @@ class Window(QMainWindow, Ui_MainWindow):
             schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
             notes = pl.DataFrame(lst, schema=schema, orient='row')
             notes = merge_df(notes)
-            # notes = merge_df(notes)
             i_notes = load_independent()
-            notes = pl.concat([i_notes, notes])
-            self.current_data = notes
+            self.current_data = pl.concat([i_notes, notes])
 
         def get_playlists():
             lst = []
