@@ -510,21 +510,24 @@ class Window(QMainWindow, Ui_MainWindow):
             if not detail1 and year:
                 detail1 = year
             if not year:
-                year = _('* YEAR UNCERTAIN *')
+                year = None
             return detail1, year, detail2
 
         def merge_df(df):
-            df = df.with_columns(pl.col('Symbol').cast(pl.Utf8))
-            # publications = publications.with_columns(pl.col('Symbol').cast(pl.Utf8))
-            df = df.join(publications.lazy(), on='Symbol', how='left')
+            # pl.Config.set_tbl_cols(-1)
+            # pl.Config.set_tbl_rows(50)
+            # print("Before Join - df:")
+            # print(df)
+            df = df.join(publications, on='Symbol', how='left')
             df = df.with_columns([
                 pl.col('Full').fill_null(pl.col('Symbol')),
                 pl.col('Short').fill_null(pl.col('Symbol')),
                 pl.col('Type').fill_null(_('Other')),
-                pl.coalesce(pl.col('Year'), pl.col('Year_right')).fill_null(_('* NO YEAR *')).alias('Year')
+                pl.col('Year').fill_null(pl.col('Year_right')).fill_null(_('* NO YEAR *'))
             ])
             df = df.drop(['Year_right'])
-            df = df.with_columns(pl.col('Year').cast(pl.Utf8).str.replace('.0', ''))
+            # print("After fill_null - df:")
+            # print(df)
             return df
 
         def get_annotations():
@@ -536,8 +539,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[0]
                 rec = [item, lng, code, year, detail1, detail2]
                 lst.append(rec)
-            annotations = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
-            self.current_data = merge_df(annotations.lazy()).collect()
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
+            annotations = pl.DataFrame(lst, schema=schema, orient='row' )
+            self.current_data = merge_df(annotations)
 
         def get_bookmarks():
             lst = []
@@ -548,8 +552,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            bookmarks = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
-            self.current_data = merge_df(bookmarks.lazy()).collect()
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
+            bookmarks = pl.DataFrame(lst, schema=schema, orient='row' )
+            self.current_data = merge_df(bookmarks)
 
         def get_favorites():
             lst = []
@@ -560,8 +565,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            favorites = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
-            self.current_data = merge_df(favorites.lazy()).collect()
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
+            favorites = pl.DataFrame(lst, schema=schema, orient='row' )
+            self.current_data = merge_df(favorites)
 
         def get_highlights():
             lst = []
@@ -573,8 +579,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code, col, year, detail1, detail2]
                 lst.append(rec)
-            highlights = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2'], orient='row' )
-            self.current_data = merge_df(highlights.lazy()).collect()
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
+            highlights = pl.DataFrame(lst, schema=schema, orient='row' )
+            self.current_data = merge_df(highlights)
 
         def get_notes():
 
@@ -591,14 +598,16 @@ class Window(QMainWindow, Ui_MainWindow):
             lst = []
             for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
+
                 code, year = process_code(row[2], row[3])
                 detail1, year, detail2 = process_detail(row[2], row[4], row[5], row[3], year)
                 col = process_color(row[6] or 0)
                 note = [row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail1, detail2]
                 lst.append(note)
             schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
-            notes = pl.DataFrame(lst, schema=schema, orient='row' )
-            notes = merge_df(notes.lazy()).collect()
+            notes = pl.DataFrame(lst, schema=schema, orient='row')
+            notes = merge_df(notes)
+            # notes = merge_df(notes)
             i_notes = load_independent()
             notes = pl.concat([i_notes, notes])
             self.current_data = notes
@@ -608,8 +617,9 @@ class Window(QMainWindow, Ui_MainWindow):
             for row in con.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;').fetchall():
                 rec = [row[0], None, _('* OTHER *'), row[1], '', row[3]]
                 lst.append(rec)
-            playlists = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Tags', 'Year', 'Detail1'], orient='row' )
-            self.current_data = merge_df(playlists.lazy()).collect()
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Tags': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8}
+            playlists = pl.DataFrame(lst, schema=schema, orient='row' )
+            self.current_data = merge_df(playlists)
 
         def enable_options(enabled):
             self.button_import.setEnabled(enabled)
