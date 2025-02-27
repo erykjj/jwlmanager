@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v7.3.0'
+VERSION = 'v8.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -51,7 +51,7 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
-import pandas as pd
+import polars as pl
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -151,7 +151,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.theme = ThemeManager()
         self.theme.set_theme(app, self.mode)
         self.theme.update_icons(self, self.mode)
-        pd.set_option('future.no_silent_downcasting', True)
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.check_lockfile)
         self.timer.start(1000)
@@ -238,7 +237,7 @@ class Window(QMainWindow, Ui_MainWindow):
         elif suffix == '.xlsx':
             annotations_columns = {'PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'}
             notes_columns = {'CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'}
-            df = pd.read_excel(file)
+            df = pl.read_excel(file)
             columns = set(df.columns)
             if  annotations_columns.issubset(columns):
                 self.import_items(file, _('Annotations'))
@@ -465,14 +464,14 @@ class Window(QMainWindow, Ui_MainWindow):
                 get_playlists()
 
         def process_code(code, issue):
-            if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
+            if code == 'ws' and issue == 0:  # Worldwide Security book - same code as simplified Watchtower
                 code = 'ws-'
             elif not code:
                 code = ''
             elif regex.match(code_jwb, code):
                 code = 'jwb-'
             yr = ''
-            dated = regex.search(code_yr, code) # Year included in code
+            dated = regex.search(code_yr, code)  # Year included in code
             if dated:
                 prefix = dated.group(1)
                 suffix = dated.group(2)
@@ -488,7 +487,7 @@ class Window(QMainWindow, Ui_MainWindow):
             return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
         def process_detail(symbol, book, chapter, issue, year):
-            if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}: # Bible appendix notes, etc.
+            if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}:  # Bible appendix notes, etc.
                 detail1 = _('* OTHER *')
             else:
                 detail1 = None
@@ -514,17 +513,17 @@ class Window(QMainWindow, Ui_MainWindow):
                 year = _('* YEAR UNCERTAIN *')
             return detail1, year, detail2
 
-
         def merge_df(df):
-            df = pd.merge(df, publications, how='left', on=['Symbol'], sort=False)
-            df['Full'] = df['Full'].fillna(df['Symbol'])
-            df['Short'] = df['Short'].fillna(df['Symbol'])
-            df['Type'] = df[['Type']].fillna(_('Other'))
-            df['Year'] = df['Year_y'].fillna(df['Year_x']).fillna(_('* NO YEAR *'))
-            df = df.drop(['Year_x', 'Year_y'], axis=1)
-            df['Year'] = df['Year'].astype(str).str.replace('.0', '',regex=False)
+            df = df.join(publications.lazy(), on='Symbol', how='left')
+            df = df.with_columns([
+                pl.col('Full').fill_null(pl.col('Symbol')),
+                pl.col('Short').fill_null(pl.col('Symbol')),
+                pl.col('Type').fill_null(_('Other')),
+                pl.col('Year').fill_null(pl.col('Year_y')).fill_null(_('* NO YEAR *'))
+            ])
+            df = df.drop(['Year_x', 'Year_y'])
+            df = df.with_columns(pl.col('Year').cast(pl.Utf8).str.replace('.0', ''))
             return df
-
 
         def get_annotations():
             lst = []
@@ -533,10 +532,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
                 item = row[0]
-                rec = [ item, lng, code, year, detail1, detail2 ]
+                rec = [item, lng, code, year, detail1, detail2]
                 lst.append(rec)
-            annotations = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2' ])
-            self.current_data = merge_df(annotations)
+            annotations = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            self.current_data = merge_df(annotations.lazy()).collect()
 
         def get_bookmarks():
             lst = []
@@ -545,10 +544,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], row[5], row[6], row[3], year)
                 item = row[4]
-                rec = [ item, lng, code or _('* OTHER *'), year, detail1, detail2 ]
+                rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            bookmarks = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2' ])
-            self.current_data = merge_df(bookmarks)
+            bookmarks = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            self.current_data = merge_df(bookmarks.lazy()).collect()
 
         def get_favorites():
             lst = []
@@ -557,10 +556,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 code, year = process_code(row[1], row[3])
                 detail1, year, detail2 = process_detail(row[1], None, None, row[3], year)
                 item = row[4]
-                rec = [ item, lng, code or _('* OTHER *'), year, detail1, detail2 ]
+                rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            favorites = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol','Year', 'Detail1', 'Detail2' ])
-            self.current_data = merge_df(favorites)
+            favorites = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            self.current_data = merge_df(favorites.lazy()).collect()
 
         def get_highlights():
             lst = []
@@ -570,45 +569,46 @@ class Window(QMainWindow, Ui_MainWindow):
                 detail1, year, detail2 = process_detail(row[1], row[7], row[8], row[3], year)
                 col = process_color(row[6] or 0)
                 item = row[4]
-                rec = [ item, lng, code, col, year, detail1, detail2 ]
+                rec = [item, lng, code, col, year, detail1, detail2]
                 lst.append(rec)
-            highlights = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2' ])
-            self.current_data = merge_df(highlights)
+            highlights = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2'])
+            self.current_data = merge_df(highlights.lazy()).collect()
 
         def get_notes():
-
             def load_independent():
                 lst = []
                 for row in con.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;").fetchall():
                     col = row[1] or 0
                     yr = row[3][0:4]
-                    note = [ row[0], _('* NO LANGUAGE *'), _('* OTHER *'), process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *') ]
+                    note = [row[0], _('* NO LANGUAGE *'), _('* OTHER *'), process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *')]
                     lst.append(note)
-                return pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1',  'Short', 'Full', 'Type'])
+                return pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Short', 'Full', 'Type'])
 
             lst = []
             for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
-
                 code, year = process_code(row[2], row[3])
                 detail1, year, detail2 = process_detail(row[2], row[4], row[5], row[3], year)
                 col = process_color(row[6] or 0)
-                note = [ row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail1, detail2 ]
+                note = [row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail1, detail2]
                 lst.append(note)
-            notes = pd.DataFrame(lst, columns=[ 'Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Detail2' ])
-            notes = merge_df(notes)
+            notes = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Detail2'])
+            notes = merge_df(notes.lazy()).collect()
             i_notes = load_independent()
-            notes = pd.concat([i_notes, notes], axis=0, ignore_index=True)
+            notes = pl.concat([i_notes, notes])
             self.current_data = notes
 
         def get_playlists():
             lst = []
             for row in con.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;').fetchall():
-                rec = [ row[0], None, _('* OTHER *'), row[1], '', row[3] ]
+                rec = [row[0], None, _('* OTHER *'), row[1], '', row[3]]
                 lst.append(rec)
-            playlists = pd.DataFrame(lst, columns=['Id', 'Language', 'Symbol',  'Tags', 'Year', 'Detail1'])
-            self.current_data = merge_df(playlists)
+            playlists = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Tags', 'Year', 'Detail1'])
+            self.current_data = merge_df(playlists.lazy()).collect()
 
+        code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
+        code_jwb = regex.compile(r'jwb-\d+$')
+        get_data()
 
         def enable_options(enabled):
             self.button_import.setEnabled(enabled)
@@ -1517,7 +1517,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pd.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(items, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return df
 
             def update_db(df):
@@ -1545,7 +1545,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pd.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(item_list, columns=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
@@ -1559,7 +1559,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pd.read_excel(file)
+                df = pl.read_excel(file)
                 count = update_db(df)
             return count
 
@@ -1819,7 +1819,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pd.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(items, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return df
 
             def update_db(df):
@@ -1839,13 +1839,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_usermark(attribs, location_id):
                     if int(attribs['COLOR']) == 0:
                         return None
-                    if pd.notna(attribs['VS']):
+                    if pl.is_not_nan(attribs['VS']):
                         block_type = 2
                         identifier = attribs['VS']
                     else:
                         block_type = 1
                         identifier = attribs['BLOCK']
-                    if pd.notna(attribs['RANGE']):
+                    if pl.is_not_nan(attribs['RANGE']):
                         ns, ne = str(attribs['RANGE']).split('-')
                         fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
                     else:
@@ -1883,7 +1883,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         sql = 'Title = "" AND Content = ?'
                         attrib = attribs['NOTE']
                     if location_id:
-                        if pd.notnull(attribs['BLOCK']):
+                        if pl.is_not_null(attribs['BLOCK']):
                             blk = f"BlockIdentifier = {attribs['BLOCK']}"
                         else:
                             blk = 'BlockIdentifier IS NULL'
@@ -1892,13 +1892,13 @@ class Window(QMainWindow, Ui_MainWindow):
                         result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE {sql} AND BlockType = 0;', (attrib,)).fetchone()
                     if result:
                         unique_id = result[0]
-                        modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else result[1]
-                        created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else result[2]
+                        modified = attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else result[1]
+                        created = attribs['CREATED'] if pl.is_not_null(attribs['CREATED']) else result[2]
                         con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
                     else:
                         unique_id = uuid.uuid1()
-                        created = attribs['CREATED'] if pd.notnull(attribs['CREATED']) else (attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-                        modified = attribs['MODIFIED'] if pd.notnull(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                        created = attribs['CREATED'] if pl.is_not_null(attribs['CREATED']) else (attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+                        modified = attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
                         con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
@@ -1912,22 +1912,22 @@ class Window(QMainWindow, Ui_MainWindow):
                 for i, row in df.iterrows():
                     try:
                         count += 1
-                        if pd.notna(row['BK']): # Bible note
+                        if pl.is_not_nan(row['BK']): # Bible note
                             location_id = add_scripture_location(row)
                             usermark_id = add_usermark(row, location_id)
-                            if pd.notna(row['BLOCK']): # Bible book title
+                            if pl.is_not_nan(row['BLOCK']): # Bible book title
                                 row['BLOCK'] = 1
                                 block_type = 1
-                            elif pd.notna(row['VS']): # regular note
+                            elif pl.is_not_nan(row['VS']): # regular note
                                 block_type = 2
                                 row['BLOCK'] = row['VS']
                             else: # top of chapter note
                                 block_type = 0
                             update_note(row, location_id, block_type, usermark_id)
-                        elif pd.notna(row['DOC']): # publication note
+                        elif pl.is_not_nan(row['DOC']): # publication note
                             location_id = add_publication_location(row)
                             usermark_id = add_usermark(row, location_id)
-                            block_type = 1 if pd.notna(row['BLOCK']) else 0
+                            block_type = 1 if pl.is_not_nan(row['BLOCK']) else 0
                             update_note(row, location_id, block_type, usermark_id)
                         else: # independent note
                             update_note(row, None, 0, None)
@@ -1938,7 +1938,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pd.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(item_list, columns=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
@@ -1952,7 +1952,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pd.read_excel(file)
+                df = pl.read_excel(file)
                 count = update_db(df)
             return count
 
@@ -3422,31 +3422,64 @@ def get_language():
     return lng
 
 def read_resources(lng):
-
     def load_bible_books(lng):
-        for row in con.execute(f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};').fetchall():
+        # Fetch Bible books data and store in a dictionary
+        query = f'SELECT Number, Name FROM BibleBooks WHERE Language = {lng};'
+        result = con.execute(query).fetchall()
+        for row in result:
             bible_books[row[0]] = row[1]
 
     def load_languages():
-        for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
+        # Fetch language data and populate dictionaries
+        query = 'SELECT Language, Name, Code, Symbol FROM Languages;'
+        result = con.execute(query).fetchall()
+        ui_lang = None
+        for row in result:
             lang_name[row[0]] = row[1]
             lang_symbol[row[0]] = row[3]
             if row[2] == lng:
                 ui_lang = row[0]
         return ui_lang
 
+    # Global variables
     global _, bible_books, favorites, lang_name, lang_symbol, publications
+
+    # Initialize translation and dictionaries
     _ = tr[lng].gettext
     lang_name = {}
     lang_symbol = {}
     bible_books = {}
+
+    # Connect to the SQLite database
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
+
+    # Load languages and Bible books
     ui_lang = load_languages()
     load_bible_books(ui_lang)
-    pubs = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
-    extras = pd.read_sql_query(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
-    publications = pd.concat([pubs, extras], ignore_index=True)
-    favorites = pd.read_sql_query("SELECT * FROM Favorites;", con)
+
+    # Fetch publications and extras data using Polars
+    pubs_query = f"""
+        SELECT Symbol, ShortTitle AS Short, Title AS Full, Year, [Group] AS Type
+        FROM Publications p
+        JOIN Types USING (Type, Language)
+        WHERE Language = {ui_lang};
+    """
+    extras_query = f"""
+        SELECT Symbol, ShortTitle AS Short, Title AS Full, Year, [Group] AS Type
+        FROM Extras p
+        JOIN Types USING (Type, Language)
+        WHERE Language = {ui_lang};
+    """
+    pubs = pl.read_database(pubs_query, con)
+    extras = pl.read_database(extras_query, con)
+
+    # Combine publications and extras into a single DataFrame
+    publications = pl.concat([pubs, extras])
+
+    # Fetch favorites data
+    favorites = pl.read_database("SELECT * FROM Favorites;", con)
+
+    # Close the database connection
     con.close()
 
 def sha256hash(file: str) -> str:
