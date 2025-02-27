@@ -536,7 +536,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[0]
                 rec = [item, lng, code, year, detail1, detail2]
                 lst.append(rec)
-            annotations = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            annotations = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
             self.current_data = merge_df(annotations.lazy()).collect()
 
         def get_bookmarks():
@@ -548,7 +548,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            bookmarks = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            bookmarks = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
             self.current_data = merge_df(bookmarks.lazy()).collect()
 
         def get_favorites():
@@ -560,7 +560,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code or _('* OTHER *'), year, detail1, detail2]
                 lst.append(rec)
-            favorites = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'])
+            favorites = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Year', 'Detail1', 'Detail2'], orient='row' )
             self.current_data = merge_df(favorites.lazy()).collect()
 
         def get_highlights():
@@ -573,7 +573,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 item = row[4]
                 rec = [item, lng, code, col, year, detail1, detail2]
                 lst.append(rec)
-            highlights = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2'])
+            highlights = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Year', 'Detail1', 'Detail2'], orient='row' )
             self.current_data = merge_df(highlights.lazy()).collect()
 
         def get_notes():
@@ -583,9 +583,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in con.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;").fetchall():
                     col = row[1] or 0
                     yr = row[3][0:4]
-                    note = [row[0], _('* NO LANGUAGE *'), _('* OTHER *'), process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *')]
+                    note = [row[0], _('* NO LANGUAGE *'), _('* OTHER *'), process_color(col), row[2] or _('* NO TAG *'), row[3] or '', yr, None, None, _('* OTHER *'), _('* OTHER *'), _('* INDEPENDENT *')]
                     lst.append(note)
-                return pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Short', 'Full', 'Type'])
+                schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8, 'Short': pl.Utf8, 'Full': pl.Utf8, 'Type': pl.Utf8}
+                return pl.DataFrame(lst, schema=schema, orient='row' )
 
             lst = []
             for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
@@ -595,7 +596,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 col = process_color(row[6] or 0)
                 note = [row[0], lng, code or _('* OTHER *'), col, row[7] or _('* NO TAG *'), row[8] or '', year, detail1, detail2]
                 lst.append(note)
-            notes = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Color', 'Tags', 'Modified', 'Year', 'Detail1', 'Detail2'])
+            schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
+            notes = pl.DataFrame(lst, schema=schema, orient='row' )
             notes = merge_df(notes.lazy()).collect()
             i_notes = load_independent()
             notes = pl.concat([i_notes, notes])
@@ -606,7 +608,7 @@ class Window(QMainWindow, Ui_MainWindow):
             for row in con.execute('SELECT PlaylistItemId, Name, Position, Label FROM PlaylistItem JOIN TagMap USING ( PlaylistItemId ) JOIN Tag t USING ( TagId ) WHERE t.Type = 2 ORDER BY Name, Position;').fetchall():
                 rec = [row[0], None, _('* OTHER *'), row[1], '', row[3]]
                 lst.append(rec)
-            playlists = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Tags', 'Year', 'Detail1'])
+            playlists = pl.DataFrame(lst, schema=['Id', 'Language', 'Symbol', 'Tags', 'Year', 'Detail1'], orient='row' )
             self.current_data = merge_df(playlists.lazy()).collect()
 
         def enable_options(enabled):
@@ -630,7 +632,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 child = QTreeWidgetItem(parent)
                 child.setFlags(child.flags() | Qt.ItemIsAutoTristate | Qt.ItemIsUserCheckable)
                 child.setCheckState(0, Qt.Unchecked)
-                child.setText(0, str(label))
+                child.setText(0, str(label[0]))
                 child.setData(1, Qt.DisplayRole, data)
                 child.setTextAlignment(1, Qt.AlignCenter)
                 return child
@@ -1516,7 +1518,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(items, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'], orient='row' )
                 return df
 
             def update_db(df):
@@ -1544,7 +1546,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'])
+                df = pl.DataFrame(item_list, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'], orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
@@ -1818,7 +1820,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(items, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'], orient='row' )
                 return df
 
             def update_db(df):
@@ -1937,7 +1939,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'])
+                df = pl.DataFrame(item_list, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'], orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
