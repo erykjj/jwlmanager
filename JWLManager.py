@@ -515,13 +515,14 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def merge_df(df):
             df = df.join(publications.lazy(), on='Symbol', how='left')
-            df.col('Full') = df.col('Full').fill_nan(df.col('Symbol'))
-            df.col('Short') = df.col('Short').fill_nan(df.col('Symbol'))
-            df.col('Type') = df.col('Type').fill_nan(_('Other'))
-            df.col('Year') = df.col('Year_y').fill_nan(df.col('Year_y')).fill_nan(_('* NO YEAR *'))
-
+            df = df.with_columns([
+                pl.col('Full').fill_nan(pl.col('Symbol')),
+                pl.col('Short').fill_nan(pl.col('Symbol')),
+                pl.col('Type').fill_nan(_('Other')),
+                pl.col('Year').fill_nan(pl.col('Year_y')).fill_nan(pl.col('Year_x')).fill_nan(_('* NO YEAR *'))
+            ])
             df = df.drop(['Year_x', 'Year_y'])
-            df.col('Year') = df.col('Year').cast(df.Utf8).str.replace('.0', '')
+            df = df.with_columns(pl.col('Year').cast(pl.Utf8).str.replace('.0', ''))
             return df
 
         def get_annotations():
@@ -574,6 +575,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_data = merge_df(highlights.lazy()).collect()
 
         def get_notes():
+
             def load_independent():
                 lst = []
                 for row in con.execute("SELECT NoteId Id, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n WHERE n.BlockType = 0 AND LocationId IS NULL GROUP BY n.NoteId;").fetchall():
@@ -3441,8 +3443,8 @@ def read_resources(lng):
     ui_lang = load_languages()
     load_bible_books(ui_lang)
 
-    pubs = pl.read_database((f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con), con)
-    extras = pl.read_database((f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con), con)
+    pubs = pl.read_database(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Publications p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
+    extras = pl.read_database(f"SELECT Symbol, ShortTitle Short, Title 'Full', Year, [Group] Type FROM Extras p JOIN Types USING (Type, Language) WHERE Language = {ui_lang};", con)
 
     publications = pl.concat([pubs, extras])
     favorites = pl.read_database("SELECT * FROM Favorites;", con)
