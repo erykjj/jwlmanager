@@ -514,14 +514,16 @@ class Window(QMainWindow, Ui_MainWindow):
             return detail1, year, detail2
 
         def merge_df(df):
+            df = df.with_columns(pl.col('Symbol').cast(pl.Utf8))
+            # publications = publications.with_columns(pl.col('Symbol').cast(pl.Utf8))
             df = df.join(publications.lazy(), on='Symbol', how='left')
             df = df.with_columns([
-                pl.col('Full').fill_nan(pl.col('Symbol')),
-                pl.col('Short').fill_nan(pl.col('Symbol')),
-                pl.col('Type').fill_nan(_('Other')),
-                pl.col('Year').fill_nan(pl.col('Year_y')).fill_nan(pl.col('Year_x')).fill_nan(_('* NO YEAR *'))
+                pl.col('Full').fill_null(pl.col('Symbol')),
+                pl.col('Short').fill_null(pl.col('Symbol')),
+                pl.col('Type').fill_null(_('Other')),
+                pl.coalesce(pl.col('Year'), pl.col('Year_right')).fill_null(_('* NO YEAR *')).alias('Year')
             ])
-            df = df.drop(['Year_x', 'Year_y'])
+            df = df.drop(['Year_right'])
             df = df.with_columns(pl.col('Year').cast(pl.Utf8).str.replace('.0', ''))
             return df
 
@@ -636,7 +638,7 @@ class Window(QMainWindow, Ui_MainWindow):
             def traverse(df, idx, parent):
                 if len(idx) > 0:
                     filter = idx[0]
-                    for i, df in df.groupby(filter):
+                    for i, df in df.group_by(filter):
                         app.processEvents()
                         self.leaves[parent] = []
                         child = add_node(parent, i, df.shape[0])
@@ -686,7 +688,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 title = 'Short'
             else:
                 title = 'Full'
-            self.current_data['Title'] = self.current_data[title]
+            self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
             views = define_views(category)
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
