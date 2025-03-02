@@ -134,6 +134,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.setAcceptDrops(True)
         self.status_label = QLabel()
         self.statusBar.addPermanentWidget(self.status_label, 0)
+        self.statusBar.setStyleSheet('font-weight: bold;')
         self.treeWidget.setSortingEnabled(True)
         self.treeWidget.sortByColumn(int(settings.value('JWLManager/sort', 1)), settings.value('JWLManager/direction', Qt.DescendingOrder))
         self.treeWidget.setColumnWidth(0, int(settings.value('JWLManager/column1', 500)))
