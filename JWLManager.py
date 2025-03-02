@@ -1536,7 +1536,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'], orient='row' )
+                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
+                df = pl.DataFrame(items, schema=schema, orient='row' )
                 return df
 
             def update_db(df):
@@ -1546,10 +1547,12 @@ class Window(QMainWindow, Ui_MainWindow):
                     result = con.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
                     return result[0]
 
-                df.fillna({'ISSUE': 0}, inplace=True)
-                df.fillna({'VALUE': ''}, inplace=True)
+                df = df.with_columns([
+                    pl.col('ISSUE').fill_null(0),
+                    pl.col('VALUE').fill_null('')
+                ])
                 count = 0
-                for i, row in df.iterrows():
+                for row in df.iter_rows():
                     try:
                         count += 1
                         location_id = add_location(row)
@@ -1564,14 +1567,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, schema=['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'], orient='row' )
+                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
+                df = pl.DataFrame(item_list, schema=schema, orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
-                        if df.empty:
+                        if df.is_empty():
                             return None
                         count = update_db(df)
                     else:
@@ -1838,7 +1842,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                df = pl.DataFrame(items, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'], orient='row' )
+                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Utf8, 'PUB': pl.Utf8, 'BK': pl.Utf8, 'CH': pl.Utf8, 'VS': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'BLOCK': pl.Utf8, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
+                df = pl.DataFrame(items, schema=schema, orient='row' )
                 return df
 
             def update_db(df):
@@ -1922,13 +1927,15 @@ class Window(QMainWindow, Ui_MainWindow):
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
 
-                df.fillna({'ISSUE': 0}, inplace=True)
-                df.fillna({'COLOR': 0}, inplace=True)
-                df.fillna({'TAGS': ''}, inplace=True)
-                df.fillna({'TITLE': ''}, inplace=True)
-                df.fillna({'NOTE': ''}, inplace=True)
+                df = df.with_columns([
+                    pl.col('ISSUE').fill_null(0),
+                    pl.col('COLOR').fill_null(0),
+                    pl.col('TAGS').fill_null(''),
+                    pl.col('TITLE').fill_null(''),
+                    pl.col('NOTE').fill_null('')
+                ])
                 count = 0
-                for i, row in df.iterrows():
+                for row in df.iter_rows():
                     try:
                         count += 1
                         if pl.is_not_nan(row['BK']): # Bible note
@@ -1957,14 +1964,15 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                df = pl.DataFrame(item_list, schema=['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'], orient='row' )
+                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Utf8, 'PUB': pl.Utf8, 'BK': pl.Utf8, 'CH': pl.Utf8, 'VS': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'BLOCK': pl.Utf8, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
+                df = pl.DataFrame(item_list, schema=schema, orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
                     if pre_import():
                         df = read_text()
-                        if df.empty:
+                        if df.is_empty():
                             return None
                         count = update_db(df)
                     else:
