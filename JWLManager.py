@@ -394,8 +394,10 @@ class Window(QMainWindow, Ui_MainWindow):
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
         for item in it:
             index = item.value()
-            for i in self.leaves.get(index):
-                selected.append(i)
+            ids = self.leaves.get(index)
+            if ids:
+                for i in ids:
+                    selected.append(i)
         return selected
 
     def tree_selection(self):
@@ -723,9 +725,9 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
             views = define_views(category)
-            timer = time()
+            timer = time()#DEBUG
             traverse(self.current_data, views[grouping], self.treeWidget)
-            print(time()-timer)
+            print(time()-timer)#DEBUG
 
         if same_data is not True:
             same_data = False
