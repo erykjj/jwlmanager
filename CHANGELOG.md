@@ -8,9 +8,10 @@
 ### Changed
 
 - Switched from Pandas to Polars (a bit larger, but with fewer dependencies)
-- Slightly optimized treeview building code (a bit faster)
+- Optimized treeview building code (much faster)
 - Refined trimming and reindexing functions
 - Made statusbar text bold
+- Made lockfile visible
 
 ### Fixed
 
