@@ -1,7 +1,7 @@
 PySide6
 shiboken6
 openpyxl
-pandas==2.2.*
+polars
 pillow
 puremagic
 regex
