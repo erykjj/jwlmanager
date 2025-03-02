@@ -708,7 +708,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
-            timer = time()
             if self.title_format == 'code':
                 title = 'Symbol'
             elif self.title_format == 'short':
@@ -722,7 +721,6 @@ class Window(QMainWindow, Ui_MainWindow):
             filters = views[grouping]
             precomputed_groups = pregroup(self.current_data, filters)
             traverse(precomputed_groups, filters, self.treeWidget)
-            print(time()-timer, time()-start)
 
         if same_data is not True:
             same_data = False
