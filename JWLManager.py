@@ -51,7 +51,6 @@ from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
-import duckdb
 import polars as pl
 
 
@@ -632,98 +631,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.menuLanguage.setEnabled(enabled)
 
         def build_tree():
-####
-            def generate_hierarchical_query(source_query, grouping_columns):
-                """
-                Generates a hierarchical grouping SQL query based on the source query and grouping columns.
-
-                Args:
-                    source_query (str): The source SQL query (e.g., your existing query with joins).
-                    grouping_columns (list): A list of columns to use for hierarchical grouping.
-
-                Returns:
-                    str: The generated SQL query.
-                """
-                # Base case: Top-level group
-                base_case = f"""
-                    SELECT
-                        {grouping_columns[0]} AS label,
-                        NULL AS parent_label,
-                        '{grouping_columns[0]}' AS group_type,
-                        {', '.join('NULL' for _ in grouping_columns[1:])} AS additional_columns,
-                        COUNT(*) AS count,
-                        GROUP_CONCAT(Id) AS ids
-                    FROM ({source_query}) AS derived_table
-                    GROUP BY {grouping_columns[0]}
-                """
-
-                # Recursive cases: Subgroups
-                recursive_cases = []
-                for i in range(1, len(grouping_columns)):
-                    recursive_case = f"""
-                        UNION ALL
-                        SELECT
-                            {grouping_columns[i]} AS label,
-                            {grouping_columns[i-1]} AS parent_label,
-                            '{grouping_columns[i]}' AS group_type,
-                            {', '.join(
-                                f'{grouping_columns[j]}' if j < i else 'NULL'
-                                for j in range(1, len(grouping_columns))
-                            )} AS additional_columns,
-                            COUNT(*) AS count,
-                            GROUP_CONCAT(Id) AS ids
-                        FROM ({source_query}) AS derived_table
-                        GROUP BY {', '.join(grouping_columns[:i+1])}
-                    """
-                    recursive_cases.append(recursive_case)
-
-                # Combine base case and recursive cases
-                recursive_cte = f"""
-                    WITH RECURSIVE hierarchy AS (
-                        {base_case}
-                        {' '.join(recursive_cases)}
-                    )
-                """
-
-                # Final selection
-                final_query = f"""
-                    {recursive_cte}
-                    SELECT
-                        label,
-                        parent_label,
-                        group_type,
-                        {', '.join(grouping_columns[1:])},
-                        count,
-                        ids
-                    FROM hierarchy
-                    ORDER BY
-                        CASE group_type
-                            {' '.join(f"WHEN '{col}' THEN {i+1}" for i, col in enumerate(grouping_columns))}
-                        END,
-                        label;
-                """
-
-                return final_query
-
-            def execute_hierarchical_query(df, grouping_columns):
-                """
-                Executes the hierarchical query using DuckDB and returns the results as a Polars DataFrame.
-                """
-                # Register the Polars DataFrame with DuckDB
-                con = duckdb.connect()
-                con.register('source_table', df)
-                
-                # Generate the hierarchical query
-                source_query = "SELECT * FROM source_table"
-                hierarchical_query = generate_hierarchical_query(source_query, grouping_columns)
-                
-                # Execute the query and fetch the results
-                result = con.execute(hierarchical_query).fetchdf()
-                
-                # Convert the result back to a Polars DataFrame
-                result_df = pl.from_pandas(result)
-                
-                return result_df
 
             def add_node(parent, label, data):
                 child = QTreeWidgetItem(parent)
@@ -734,26 +641,30 @@ class Window(QMainWindow, Ui_MainWindow):
                 child.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
                 return child
 
-            def build_tree_from_hierarchy(hierarchical_df, grouping_columns, parent=None):
-                """
-                Builds the TreeView from the hierarchical DataFrame.
-                """
-                if parent is None:
-                    parent = self.treeWidget
-                
-                for row in hierarchical_df.iter_rows(named=True):
+            def pregroup(df, filters):
+                if not filters:
+                    return df
+                filter = filters[0]
+                grouped = df.group_by(filter).agg(pl.len().alias('count'))
+                groups = {}
+                for row in grouped.iter_rows(named=True):
+                    group_value = row[filter]
+                    if group_value is None:
+                        continue
+                    filtered_df = df.filter(pl.col(filter).is_not_null() & (pl.col(filter) == group_value))
+                    subgroups = pregroup(filtered_df, filters[1:])
+                    groups[group_value] = {'count': row['count'], 'data': filtered_df, 'subgroups': subgroups}
+                return groups
+
+            def traverse(groups, filters, parent):
+                if not filters:
+                    return
+                for group_value, group_data in groups.items():
                     app.processEvents()
-                    
-                    # Add a node for the current group
-                    child = add_node(parent, (row['label'],), row['count'])
-                    self.leaves[child] = row['ids'].split(',')  # Convert comma-separated Ids to a list
-                    
-                    # Recurse into subgroups
-                    subgroup_df = hierarchical_df.filter(
-                        (pl.col('parent_label') == row['label']) & 
-                        (pl.col('group_type') == grouping_columns[grouping_columns.index(row['group_type']) + 1]
-                    )
-                    build_tree_from_hierarchy(subgroup_df, grouping_columns, child)
+                    self.leaves[parent] = []
+                    child = add_node(parent, (group_value,), group_data['count'])
+                    self.leaves[child] = group_data['data']['Id'].to_list()
+                    traverse(group_data['subgroups'], filters[1:], child)
 
             def define_views(category):
                 if category == _('Bookmarks'):
@@ -797,7 +708,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
-
             if self.title_format == 'code':
                 title = 'Symbol'
             elif self.title_format == 'short':
@@ -805,16 +715,12 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 title = 'Full'
             self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
-            grouping_columns = views[grouping]
-
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
-
-            hierarchical_df = execute_hierarchical_query(self.current_data, grouping_columns)
-            self.treeWidget.setUpdatesEnabled(False)
-            build_tree_from_hierarchy(hierarchical_df, grouping_columns)
-            self.treeWidget.setUpdatesEnabled(True)
-
+            views = define_views(category)
+            filters = views[grouping]
+            precomputed_groups = pregroup(self.current_data, filters)
+            traverse(precomputed_groups, filters, self.treeWidget)
 
         if same_data is not True:
             same_data = False
