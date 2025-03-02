@@ -3388,7 +3388,7 @@ def set_settings_path():
             application_path = os.getcwd()
     settings_path = application_path+'/'+APP+'.conf'
     global LOCK_FILE
-    LOCK_FILE = application_path+'/'+'.JWLManager.lock'
+    LOCK_FILE = application_path+'/'+'JWLManager.lock'
     if not os.path.exists(settings_path) and os.path.exists(LOCK_FILE):
         os.remove(LOCK_FILE)
     return QSettings(settings_path, QSettings.Format.IniFormat)
