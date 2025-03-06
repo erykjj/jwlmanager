@@ -4,13 +4,13 @@
 
 # JWLManager
 
-## Purpose
-
 This is a **multi-platform[^#] and multi-language[^*] application** for viewing and performing various operations on the *user* data (Annotations, Bookmarks, Favorites, Highlights, Notes and Playlists) stored in a *.jwlibrary* backup archive (created from within the **JW Library** app[^1]: Personal Study → Backup and Restore → Create a backup). A modified *.jwlibrary* archive can then be restored within the app.
 
 In addition to the main functions of **viewing, editing, exporting, importing and deleting**, the application can also clean up any residual/unused records from the database and re-index the various tables within the database. Items from different backups can be **merged** directly or by exporting the desired items (to a MS Excel spreadsheet or a custom text file) and importing them into an existent archive or into a new one.
 
 Keep in mind that the more items there are to be sorted into a tree structure, the longer it will take. Also, *do* keep a backup until you're convinced that all is well ;-)
+
+See [here](res/HELP.md) for an explanation of features and options.
 
 ![preview](res/JWLManager.gif)
 
@@ -68,10 +68,6 @@ interface language:
   -ru            Russian (Pусский)
   -uk            Ukrainian (українська)
 ```
-____
-## Operation
-
-See [here](res/HELP.md) for an explanation of how to use.
 
 ____
 ## Feedback, etc.
