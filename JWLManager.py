@@ -401,6 +401,7 @@ class Window(QMainWindow, Ui_MainWindow):
         return selected
 
     def tree_selection(self):
+        # TODO: execute once after all nested changes done
         self.selected_items = len(self.list_selected())
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
@@ -649,10 +650,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     current_parent = parent_item
                     for depth, value in enumerate(values):
                         if value is None:
-                            # node['count'] += len(id_list)
                             node['data']['Id'].extend(id_list)
-                            if 'item' in node:
-                                node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
                             if 'item' in node:
                                 self.leaves[node['item']] = node['data']['Id']
                             break
@@ -667,10 +665,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         node = node['items'][value]
                         current_parent = node['item']
                         node['count'] += len(id_list)
-                        node['data']['Id'].extend(id_list)
-                        node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
                         if depth == len(values) - 1:
+                            node['data']['Id'].extend(id_list)
                             self.leaves[node['item']] = node['data']['Id']
+                        node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
                 return tree
 
             def define_views(category):
