@@ -396,8 +396,7 @@ class Window(QMainWindow, Ui_MainWindow):
             index = item.value()
             ids = self.leaves.get(index)
             if ids:
-                for i in ids:
-                    selected.append(i)
+                selected.extend(ids)
         return selected
 
     def tree_selection(self):
