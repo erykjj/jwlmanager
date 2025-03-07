@@ -455,6 +455,11 @@ class Window(QMainWindow, Ui_MainWindow):
     def regroup(self, same_data=False, message=None):
 
         def get_data():
+            if cat in self.tree_cache and grp in self.tree_cache[cat]:
+                cached_data = self.tree_cache[cat][grp]['data']
+                self.current_data = cached_data
+                return self.current_data
+
             if category == _('Bookmarks'):
                 get_bookmarks()
             elif category == _('Favorites'):
@@ -467,6 +472,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 get_annotations()
             elif category == _('Playlists'):
                 get_playlists()
+
+            if cat not in self.tree_cache:
+                self.tree_cache[cat] = {}
+            self.tree_cache[cat][grp] = {'data': self.current_data}
+
+            return self.current_data
 
         def process_code(code, issue):
             if code == 'ws' and issue == 0: # Worldwide Security book - same code as simplified Watchtower
@@ -662,7 +673,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             child_item.setData(1, Qt.ItemDataRole.DisplayRole, 0)
                             child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
                             # NOTE: this adds a fraction of a second but activity is visible
-                            if current_parent == parent_item:
+                            if current_parent == self.treeWidget:
                                 app.processEvents()
                             node['items'][value] = {'count': 0, 'data': defaultdict(list), 'items': {}, 'item': child_item}
                         node = node['items'][value]
@@ -731,7 +742,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
-            # TODO: keep self.current_data in a dictionary as well
+            timer = time()  # DEBUG
+            self.current_data = self.tree_cache[cat][grp]['data']
             if self.title_format == 'code':
                 title = 'Symbol'
             elif self.title_format == 'short':
@@ -739,21 +751,21 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 title = 'Full'
             self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
+            self.tree_cache[cat][grp]['data'] = self.current_data
+
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
             views = define_views(category)
-            timer = time()#DEBUG
-            if cat in self.tree_cache and grp in self.tree_cache[cat]:
-                print(f'Cached tree: {cat} - {grp}')#DEBUG
-                tree = self.tree_cache[cat][grp]
+
+            if 'tree' in self.tree_cache[cat][grp]:
+                print(f'Cached tree: {cat} - {grp}')  # DEBUG
+                tree = self.tree_cache[cat][grp]['tree']
                 rebuild_cached(tree, self.treeWidget)
             else:
-                print(f'Build tree: {cat} - {grp}')#DEBUG
+                print(f'Build tree: {cat} - {grp}')  # DEBUG
                 tree = traverse(self.current_data, views[grouping], self.treeWidget)
-            if cat not in self.tree_cache:
-                self.tree_cache[cat] = {}
-                self.tree_cache[cat][grp] = tree
-            print(time()-timer)#DEBUG
+                self.tree_cache[cat][grp]['tree'] = tree
+            print(time() - timer)  # DEBUG
 
         if same_data is not True:
             same_data = False
@@ -774,8 +786,9 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
-            if not same_data:
-                get_data()
+            get_data()
+            # if not same_data:
+            #     get_data()
             self.leaves = {}
             self.treeWidget.clear()
             self.treeWidget.repaint()
