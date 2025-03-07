@@ -91,7 +91,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionTheme.triggered.connect(self.toggle_theme)
             self.menuTitle_View.triggered.connect(self.change_title)
             self.menuLanguage.triggered.connect(self.change_language)
-            self.combo_grouping.currentTextChanged.connect(self.regroup)
+            self.combo_grouping.currentTextChanged.connect(lambda: self.regroup(False))
             self.combo_category.currentTextChanged.connect(self.switchboard)
             self.treeWidget.itemChanged.connect(self.tree_selection)
             self.treeWidget.doubleClicked.connect(self.double_clicked)
@@ -331,7 +331,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def change_language(self):
         changed = False
         self.combo_grouping.blockSignals(True)
-        group = self.combo_grouping.currentText()
+        self.combo_category.blockSignals(True)
         for item in self.langChoices.actions():
             if item.isChecked() and (self.lang != item.toolTip()):
                 app.removeTranslator(translator[self.lang])
@@ -345,9 +345,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 translator[self.lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{self.lang}.qm')
             app.installTranslator(translator[self.lang])
             app.processEvents()
-            if self.combo_grouping.currentText() == group: # same word despite language change
-                self.regroup()
+            self.regroup(True)
         self.combo_grouping.blockSignals(False)
+        self.combo_category.blockSignals(False)
 
     def change_title(self):
         changed = False
@@ -417,7 +417,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionUnselect_All.setEnabled(self.actionUnselect_All.isEnabled() and self.int_total)
 
 
-    def switchboard(self, selection):
+    def switchboard(self, selection, new_data=False):
 
         def disable_options(lst=[], add=False, exp=False, imp=False, view=False):
             self.button_add.setVisible(add)
@@ -449,10 +449,10 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
             disable_options([1,2,3,4,5], True, True, True, False)
-        self.regroup()
+        self.regroup(new_data)
         self.combo_grouping.blockSignals(False)
 
-    def regroup(self, same_data=False, message=None):
+    def regroup(self, new_data=False, message=None):
 
         def get_data():
             if cat in self.tree_cache and grp in self.tree_cache[cat]:
@@ -767,8 +767,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.tree_cache[cat][grp]['tree'] = tree
             print(time() - timer)  # DEBUG
 
-        if same_data is not True:
-            same_data = False
+        if new_data:
+            self.tree_cache = {}
         if message:
             msg = message + '… '
         else:
@@ -787,8 +787,6 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             get_data()
-            # if not same_data:
-            #     get_data()
             self.leaves = {}
             self.treeWidget.clear()
             self.treeWidget.repaint()
@@ -892,7 +890,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.close()
         except:
             pass
-        self.switchboard(self.combo_category.currentText())
+        self.switchboard(self.combo_category.currentText(), True)
 
 
     def save_file(self):
@@ -2206,7 +2204,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
-        self.regroup(False, message)
+        self.regroup(True, message)
 
     def merge_items(self, file=''):
 
@@ -2242,7 +2240,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
-        self.regroup(False, message)
+        self.regroup(True, message)
 
 
     def data_viewer(self):
@@ -2393,7 +2391,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 message = f' {len(self.deleted_list)} '+_('items deleted')
                 self.statusBar.showMessage(message, 4000)
                 self.trim_db()
-                self.regroup(False, message)
+                self.regroup(True, message)
             self.archive_modified()
 
         def viewer_closed():
@@ -2945,7 +2943,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(message, 4000)
             self.archive_modified()
             self.trim_db()
-            self.regroup(False, message)
+            self.regroup(True, message)
 
     def delete_items(self):
 
@@ -3033,7 +3031,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(message, 4000)
             self.archive_modified()
             self.trim_db()
-            self.regroup(False, message)
+            self.regroup(True, message)
 
 
     def clean_items(self):
@@ -3303,7 +3301,7 @@ class Window(QMainWindow, Ui_MainWindow):
             message = ' '+_('Reindexed successfully')
             self.statusBar.showMessage(message, 4000)
             self.archive_modified()
-            self.regroup(False, message)
+            self.regroup(True, message)
 
     def sort_notes(self):
 
@@ -3336,7 +3334,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 4000)
         self.archive_modified()
         self.trim_db()
-        self.regroup(False, message)
+        self.regroup(True, message)
 
 
     def trim_db(self, con=None):
