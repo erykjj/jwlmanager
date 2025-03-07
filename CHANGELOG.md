@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added data and tree caching for faster data display
+
 
 ### Changed
 
