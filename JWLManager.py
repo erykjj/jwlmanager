@@ -121,6 +121,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item.toolTip() == self.lang:
                     item.setChecked(True)
             self.current_data = []
+            self.tree_cache = {}
 
         self.mode = settings.value('JWLManager/theme', 'light')
         self.format = settings.value('JWLManager/format', 'xlsx')
@@ -660,6 +661,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             child_item.setText(0, str(value))
                             child_item.setData(1, Qt.ItemDataRole.DisplayRole, 0)
                             child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
+                            # NOTE: this adds a fraction of a second but activity is visible
+                            if current_parent == parent_item:
+                                app.processEvents()
                             node['items'][value] = {'count': 0, 'data': defaultdict(list), 'items': {}, 'item': child_item}
                         node = node['items'][value]
                         current_parent = node['item']
@@ -669,6 +673,21 @@ class Window(QMainWindow, Ui_MainWindow):
                             self.leaves[node['item']] = node['data']['Id']
                         node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
                 return tree
+
+            def rebuild_cached(tree, parent_item):
+
+                def recurse(node, parent):
+                    for value, child_node in node['items'].items():
+                        child_item = QTreeWidgetItem(parent)
+                        child_item.setFlags(child_item.flags() | Qt.ItemFlag.ItemIsAutoTristate | Qt.ItemFlag.ItemIsUserCheckable)
+                        child_item.setCheckState(0, Qt.CheckState.Unchecked)
+                        child_item.setText(0, str(value))
+                        child_item.setData(1, Qt.ItemDataRole.DisplayRole, child_node['count'])
+                        child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
+                        recurse(child_node, child_item)
+                        if not child_node['items']:
+                            self.leaves[child_item] = child_node['data']['Id']
+                recurse(tree, parent_item)
 
             def define_views(category):
                 if category == _('Bookmarks'):
@@ -712,6 +731,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
+            # TODO: keep self.current_data in a dictionary as well
             if self.title_format == 'code':
                 title = 'Symbol'
             elif self.title_format == 'short':
@@ -723,7 +743,16 @@ class Window(QMainWindow, Ui_MainWindow):
             self.total.setText(f'**{self.int_total:,}**')
             views = define_views(category)
             timer = time()#DEBUG
-            traverse(self.current_data, views[grouping], self.treeWidget)
+            if cat in self.tree_cache and grp in self.tree_cache[cat]:
+                print(f'Cached tree: {cat} - {grp}')#DEBUG
+                tree = self.tree_cache[cat][grp]
+                rebuild_cached(tree, self.treeWidget)
+            else:
+                print(f'Build tree: {cat} - {grp}')#DEBUG
+                tree = traverse(self.current_data, views[grouping], self.treeWidget)
+            if cat not in self.tree_cache:
+                self.tree_cache[cat] = {}
+                self.tree_cache[cat][grp] = tree
             print(time()-timer)#DEBUG
 
         if same_data is not True:
@@ -738,6 +767,8 @@ class Window(QMainWindow, Ui_MainWindow):
         app.processEvents()
         category = self.combo_category.currentText()
         grouping = self.combo_grouping.currentText()
+        cat = self.combo_category.currentIndex()
+        grp = self.combo_grouping.currentIndex()
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
         code_jwb = regex.compile(r'jwb-\d+$')
         try:
