@@ -1572,7 +1572,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
+                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
                 df = pl.DataFrame(items, schema=schema, orient='row' )
                 return df
 
@@ -1588,7 +1588,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     pl.col('VALUE').fill_null('')
                 ])
                 count = 0
-                for row in df.iter_rows():
+                for row in df.iter_rows(named=True):
                     try:
                         count += 1
                         location_id = add_location(row)
@@ -1603,7 +1603,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
+                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
                 df = pl.DataFrame(item_list, schema=schema, orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
@@ -1878,7 +1878,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         QMessageBox.critical(self, _('Error!'), _('Notes')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{header}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
                         return None
-                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Utf8, 'PUB': pl.Utf8, 'BK': pl.Utf8, 'CH': pl.Utf8, 'VS': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'BLOCK': pl.Utf8, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
+                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Int64, 'PUB': pl.Utf8, 'BK': pl.Int64, 'CH': pl.Int64, 'VS': pl.Int64, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'BLOCK': pl.Int64, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
                 df = pl.DataFrame(items, schema=schema, orient='row' )
                 return df
 
@@ -1899,13 +1899,13 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_usermark(attribs, location_id):
                     if int(attribs['COLOR']) == 0:
                         return None
-                    if pl.is_not_nan(attribs['VS']):
+                    if attribs['VS'] is not None:
                         block_type = 2
                         identifier = attribs['VS']
                     else:
                         block_type = 1
                         identifier = attribs['BLOCK']
-                    if pl.is_not_nan(attribs['RANGE']):
+                    if attribs['RANGE'] is not None:
                         ns, ne = str(attribs['RANGE']).split('-')
                         fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
                     else:
@@ -1943,7 +1943,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         sql = 'Title = "" AND Content = ?'
                         attrib = attribs['NOTE']
                     if location_id:
-                        if pl.is_not_null(attribs['BLOCK']):
+                        if attribs['BLOCK'] is not None:
                             blk = f"BlockIdentifier = {attribs['BLOCK']}"
                         else:
                             blk = 'BlockIdentifier IS NULL'
@@ -1952,13 +1952,13 @@ class Window(QMainWindow, Ui_MainWindow):
                         result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE {sql} AND BlockType = 0;', (attrib,)).fetchone()
                     if result:
                         unique_id = result[0]
-                        modified = attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else result[1]
-                        created = attribs['CREATED'] if pl.is_not_null(attribs['CREATED']) else result[2]
+                        modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else result[1]
+                        created = attribs['CREATED'] if attribs['CREATED'] is not None else result[2]
                         con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
                     else:
                         unique_id = uuid.uuid1()
-                        created = attribs['CREATED'] if pl.is_not_null(attribs['CREATED']) else (attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
-                        modified = attribs['MODIFIED'] if pl.is_not_null(attribs['MODIFIED']) else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                        created = attribs['CREATED'] if attribs['CREATED'] is not None else (attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
+                        modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
                         con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
@@ -1971,25 +1971,25 @@ class Window(QMainWindow, Ui_MainWindow):
                     pl.col('NOTE').fill_null('')
                 ])
                 count = 0
-                for row in df.iter_rows():
+                for row in df.iter_rows(named=True):
                     try:
                         count += 1
-                        if pl.is_not_nan(row['BK']): # Bible note
+                        if row['BK'] is not None: # Bible note
                             location_id = add_scripture_location(row)
                             usermark_id = add_usermark(row, location_id)
-                            if pl.is_not_nan(row['BLOCK']): # Bible book title
+                            if row['BLOCK'] is not None: # Bible book title
                                 row['BLOCK'] = 1
                                 block_type = 1
-                            elif pl.is_not_nan(row['VS']): # regular note
+                            elif row['VS'] is not None: # regular note
                                 block_type = 2
                                 row['BLOCK'] = row['VS']
                             else: # top of chapter note
                                 block_type = 0
                             update_note(row, location_id, block_type, usermark_id)
-                        elif pl.is_not_nan(row['DOC']): # publication note
+                        elif row['DOC'] is not None: # publication note
                             location_id = add_publication_location(row)
                             usermark_id = add_usermark(row, location_id)
-                            block_type = 1 if pl.is_not_nan(row['BLOCK']) else 0
+                            block_type = 1 if row['BLOCK'] is not None else 0
                             update_note(row, location_id, block_type, usermark_id)
                         else: # independent note
                             update_note(row, None, 0, None)
@@ -2000,7 +2000,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return count
 
             if item_list:
-                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Utf8, 'PUB': pl.Utf8, 'BK': pl.Utf8, 'CH': pl.Utf8, 'VS': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Utf8, 'BLOCK': pl.Utf8, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
+                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Int64, 'PUB': pl.Utf8, 'BK': pl.Int64, 'CH': pl.Int64, 'VS': pl.Int64, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'BLOCK': pl.Int64, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
                 df = pl.DataFrame(item_list, schema=schema, orient='row' )
                 return update_db(df)
             if Path(file).suffix == '.txt':
@@ -2034,18 +2034,22 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def add_media(rec):
                     fn = rec[1]
-                    if rec[-1] in current_hashes and fn == current_media[current_hashes.index(rec[-1])][2] and rec[-1] == current_media[current_hashes.index(rec[-1])][4]: # exact same file (name and hash) already exists
-                        return fn, current_media[current_hashes.index(rec[-1])][0]
+                    hsh = rec[3]
+                    tg = rec[-1]
+                    print(tg, tag)#DEBUG
+                    # TODO: replace current file with new if hash exists?
+                    if hsh in current_hashes and fn == current_media[current_hashes.index(hsh)][2] and hsh == current_media[current_hashes.index(hsh)][4] and tg == tag: # exact same file (name and hash) already exists
+                        # return fn, None
+                        return fn, current_media[current_hashes.index(hsh)][0]
                     ext = 0
                     while os.path.isfile(TMP_PATH + '/' + fn):
                         ext += 1
                         fn = f'{rec[1]}_{ext}'
                     shutil.copy2(playlist_path + '/' + rec[1], TMP_PATH + '/' + fn)
-                    rec[1] = fn
                     current_media.append(fn)
-                    current_hashes.append(rec[-1])
+                    current_hashes.append(hsh)
                     media_id = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', rec).lastrowid
-                    return rec[1], media_id
+                    return fn, media_id
 
                 def add_tag(tag_id, item_id):
                     position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
@@ -2098,10 +2102,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     tag_id = tags[tag]
                     item_rec = list(row[1:7])
                     item_rec[0] = check_label(tag, item_rec[0])
-                    item_rec[5], media_id = add_media(list(row[8:12]))
+                    item_rec[5], media_id = add_media(list(row[8:19]))
                     item_id = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (item_rec)).lastrowid
                     for i in impcon.execute('SELECT * FROM PlaylistItemIndependentMediaMap LEFT JOIN IndependentMedia USING (IndependentMediaId) WHERE PlaylistItemId = ?;', (row[0],)).fetchall():
-                        rec, media_id = add_media(list(i[3:7]))
+                        rec, media_id = add_media(list(i[3:14]))
                         con.execute('INSERT OR REPLACE INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, i[2]))
                     add_tag(tag_id, item_id)
                     add_markers(row[0])
