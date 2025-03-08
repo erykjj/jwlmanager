@@ -401,7 +401,6 @@ class Window(QMainWindow, Ui_MainWindow):
         return selected
 
     def tree_selection(self):
-        # TODO: execute once after all nested changes done
         self.selected_items = len(self.list_selected())
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
@@ -758,11 +757,9 @@ class Window(QMainWindow, Ui_MainWindow):
             views = define_views(category)
 
             if 'tree' in self.tree_cache[cat][grp]:
-                print(f'Cached tree: {cat} - {grp}')  # DEBUG
                 tree = self.tree_cache[cat][grp]['tree']
                 rebuild_cached(tree, self.treeWidget)
             else:
-                print(f'Build tree: {cat} - {grp}')  # DEBUG
                 tree = traverse(self.current_data, views[grouping], self.treeWidget)
                 self.tree_cache[cat][grp]['tree'] = tree
             print(time() - timer)  # DEBUG
