@@ -2019,9 +2019,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist(n): 
+        def import_playlist(playlist_name): 
 
-            def update_db(n):
+            def update_db(playlist_name):
 
                 def check_label(tag, label):
                     name = label
@@ -2078,8 +2078,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 current_hashes = [x[4] for x in current_media]
                 current_labels = {}
                 tags = {}
-                if n:
-                    impcon.execute('UPDATE Tag SET Name = ? WHERE Type = 2;', (n,))
+                if playlist_name:
+                    impcon.execute('UPDATE Tag SET Name = ? WHERE Type = 2;', (playlist_name,))
                 for t in impcon.execute('SELECT Name FROM Tag WHERE Type = 2;').fetchall():
                     tag = t[0]
                     try:
@@ -2113,7 +2113,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 zipped.extractall(playlist_path)
             db = 'userData.db'
             impcon = sqlite3.connect(f'{playlist_path}/{db}')
-            count = update_db(n)
+            count = update_db(playlist_name)
             impcon.close()
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
@@ -2183,10 +2183,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = import_notes()
             elif category == _('Playlists'):
                 if Path(file).suffix == '.jwlplaylist':
-                    n = Path(file).stem
+                    playlist_name = Path(file).stem
                 else:
-                    n = None
-                count = import_playlist(n)
+                    playlist_name = None
+                count = import_playlist(playlist_name)
             con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             con.close()
