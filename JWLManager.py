@@ -2023,94 +2023,98 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db(playlist_name):
 
-                def existing_media(on, fn, hsh):
-                    existing_fn = hashes[hsh]
-                    if fn != existing_fn:
-                        con.execute('UPDATE IndependentMedia SET OriginalFileName = ?, FilePath = ? WHERE Hash = ?;', (on, fn, hsh))
-                        con.execute('UPDATE PlaylistItem SET ThumbnailFilePath = ? WHERE ThumbnailFilePath = ?;', (fn, existing_fn))
-                        os.rename(os.path.join(TMP_PATH, existing_fn), os.path.join(TMP_PATH, fn))
-                        hashes[hsh] = fn
-                    media_id = con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (hsh,)).fetchone()[0]
-                    return fn, media_id
+                def dict_factory(cursor, row):
+                    fields = [column[0] for column in cursor.description]
+                    return {key: value for key, value in zip(fields, row)}
 
-                def add_media(on, fn, mt, hsh):
-                    tmp = fn
+                def existing_media():
+                    existing_fn = hashes[row['Hash']]
+                    if row['FilePath'] != existing_fn:
+                        con.execute('UPDATE IndependentMedia SET OriginalFileName = ?, FilePath = ? WHERE Hash = ?;', (row['OriginalFilename'], row['FilePath'], row['Hash']))
+                        con.execute('UPDATE PlaylistItem SET ThumbnailFilePath = ? WHERE ThumbnailFilePath = ?;', (row['FilePath'], existing_fn))
+                        os.rename(os.path.join(TMP_PATH, existing_fn), os.path.join(TMP_PATH, row['FilePath']))
+                        hashes[row['Hash']] = row['FilePath']
+                    row['IndependentMediaId'] = con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (row['Hash'],)).fetchone()['IndependentMediaId']
+
+                def add_media():
+                    tmp = row['FilePath']
                     ext = 0
-                    while os.path.isfile(os.path.join(TMP_PATH, fn)):
+                    while os.path.isfile(os.path.join(TMP_PATH, row['FilePath'])):
                         ext += 1
-                        fn = f'{tmp}_{ext}'
-                    shutil.copy2(os.path.join(playlist_path, tmp), os.path.join(TMP_PATH, fn))
-                    media_id = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (on, fn, mt, hsh)).lastrowid
-                    hashes[hsh] = fn
-                    return fn, media_id
+                        row['FilePath'] = f'{tmp}_{ext}'
+                    shutil.copy2(os.path.join(playlist_path, tmp), os.path.join(TMP_PATH, row['FilePath']))
+                    hashes[row['Hash']] = row['FilePath']
+                    con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (row['OriginalFilename'], row['FilePath'], row['MimeType'], row['Hash']))
+                    row['IndependentMediaId'] = con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (row['Hash'],)).fetchone()['IndependentMediaId']
 
                 def add_item():
-                    con.execute('INSERT OR IGNORE INTO PlaylistItemAccuracy (Description) VALUES (?);', (Description,))
-                    accuracy_id = con.execute('SELECT PlaylistItemAccuracyId FROM PlaylistItemAccuracy WHERE Description = ?;', (Description,)).fetchone()[0]
-                    item_id = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (Label, StartTrim, EndTrim, accuracy_id, EndAction, FilePath)).lastrowid
-                    if Duration:
-                        con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, Duration))
-                    return item_id
+                    con.execute('INSERT OR IGNORE INTO PlaylistItemAccuracy (Description) VALUES (?);', (row['Description'],))
+                    accuracy_id = con.execute('SELECT PlaylistItemAccuracyId FROM PlaylistItemAccuracy WHERE Description = ?;', (row['Description'],)).fetchone()['PlaylistItemAccuracyId']
+                    con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (row['Label'], row['StartTrimOffsetTicks'], row['EndTrimOffsetTicks'], accuracy_id, row['EndAction'], row['FilePath']))
+                    row['PlaylistItemId'] = con.execute('SELECT PlaylistItemId FROM PlaylistItem WHERE Label = ? AND StartTrimOffsetTicks = ? AND EndTrimOffsetTicks = ? AND Accuracy = ? AND EndAction = ? AND ThumbnailFilePath = ?;', (row['Label'], row['StartTrimOffsetTicks'], row['EndTrimOffsetTicks'], accuracy_id, row['EndAction'], row['FilePath'])).fetchone()['PlaylistItemId']
+                    if row['DurationTicks']:
+                        con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (row['PlaylistItemId'], row['IndependentMediaId'], row['DurationTicks']))
 
                 def add_tag():
-                    if Name not in tags:
-                        tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (?, ?);', (2, Name)).lastrowid
-                        con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, 0))
-                        tags[Name] = tag_id
+                    if playlist not in tags:
+                        con.execute('INSERT INTO Tag (Type, Name) VALUES (2, ?);', (playlist,))
+                        tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()['TagId']
+                        con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row['PlaylistItemId'], tag_id, 0))
+                        tags[playlist] = tag_id['TagId']
                     else:
-                        tag_id = tags.get(Name)
-                        position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
-                        con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
+                        tag_id = tags.get(playlist)
+                        position = con.execute(f'SELECT ifnull(max(Position), -1) AS pos FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()['pos'] + 1
+                        con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row['PlaylistItemId'], tag_id, position['pos']))
 
                 def add_markers():
-                    if not StartTime:
+                    if not row.get('StartTimeTicks'):
                         return
-                    marker_id = con.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StarTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', (item_id, Label, StartTime, Duration, EndTransition)).lastrowid
-                    if VerseId:
-                        con.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, VerseId))
-                    if MepsDocumentId:
-                        con.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', (marker_id, MepsDocumentId, ParagraphIndex, MarkerIndex))
+                    con.execute('INSERT INTO PlaylistItemMarker (PlaylistItemId, Label, StarTimeTicks, DurationTicks, EndTransitionDurationTicks) VALUES (?, ?, ?, ?, ?);', (row['PlaylistItemId'], row['Label'], row['StartTimeTicks'], row['DurationTicks'], row['EndTransitionDurationTicks']))
+                    marker_id = con.execute('SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (row['PlaylistItemId'],)).fetchone()['PlaylistItemMarkerId']
+                    if row.get('VerseId'):
+                        con.execute('INSERT INTO PlaylistItemMarkerBibleVerseMap (PlaylistItemMarkerId, VerseId) VALUES (?, ?);', (marker_id, row['VerseId']))
+                    if row.get('MepsDocumentId'):
+                        con.execute('INSERT INTO PlaylistItemMarkerParagraphMap (PlaylistItemMarkerId, MepsDocumentId, ParagraphIndex, MarkerIndexWithinParagraph) VALUES (?, ?, ?, ?);', (marker_id, row['MepsDocumentId'], row['ParagraphIndex'], row['MarkerIndexWithinParagraph']))
 
-                def add_locations(): # FIX: get values from main JOIN query
-                    for row in impcon.execute('SELECT * FROM PlaylistItemLocationMap LEFT JOIN Location USING (LocationID) WHERE PlaylistItemId = ?;', (item_id,)).fetchall():
-                        bk, ch, doc, tk, iss, key, ln, tp, ti = row[4:13]
-                        if bk:
-                            try:
-                                location_id = con.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (bk, ch, key, ln, tp, ti)).lastrowid
-                            except:
-                                location_id = con.execute('SELECT LocationId FROM Location WHERE BookNumber = ? AND ChapterNumber = ? AND KeySymbol = ? AND MepsLanguage = ?;', (bk, ch, key, ln)).fetchone()[0]
-                        else:
-                            try:
-                                location_id = con.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (doc, tk, iss, key, ln, tp, ti)).lastrowid
-                            except:
-                                location_id = con.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (tk, iss, key, ln, tp)).fetchone()[0]
-                        con.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (item_id, location_id, row[2], row[3]))
+                def add_locations():
+                    if not row.get('LocationId'):
+                        return
+                    if row['BookNumber']:
+                        try:
+                            con.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (row['BookNumber'], row['ChapterNumber'], row['KeySymbol'], row['MepsLanguage'], row['Type'], row['Title']))
+                        except:
+                            pass
+                        location_id = con.execute('SELECT LocationId FROM Location WHERE BookNumber = ? AND ChapterNumber = ? AND KeySymbol = ? AND MepsLanguage = ?;', (row['BookNumber'], row['ChapterNumber'], row['KeySymbol'], row['MepsLanguage'])).fetchone()['LocationId']
+                    else:
+                        try:
+                            con.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (row['DocumentId'], row['Track'], row['IssueTagNumber'], row['KeySymbol'], row['MepsLanguage'], row['Type'], row['Title']))
+                        except:
+                            pass
+                        location_id = con.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (row['Track'], row['IssueTagNumber'], row['KeySymbol'], row['MepsLanguage'], row['Type'])).fetchone()['LocationId']
+                    con.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?);', (row['PlaylistItemId'], location_id, row['MajorMultimediaType'], row['BaseDurationTicks']))
 
+                con.row_factory = dict_factory
                 hashes = {}
                 for row in con.execute('SELECT FilePath, Hash FROM IndependentMedia GROUP BY FilePath;').fetchall():
-                    hashes[row[1]] = row[0]
+                    hashes[row['Hash']] = row['FilePath']
                 tags = {}
                 for row in con.execute('SELECT TagId, Name FROM TagMap LEFT JOIN Tag USING (TagId) WHERE TYPE = 2 GROUP BY TagId;').fetchall():
-                    tags[row[1]] = row[0]
-                sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId);'
+                    tags[row['Name']] = row['TagId']
+                sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemLocationMap USING (PlaylistItemId) LEFT JOIN Location USING (LocationId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId)'
                 count = 0
+                impcon.execute('pragma full_column_names=ON;')
+                impcon.row_factory = dict_factory #FIX: duplicate columns from other tables not included!!
                 for row in impcon.execute(sql).fetchall():
-                    Label, StartTrim, EndTrim = row[1:4]
-                    EndAction = row[5]
-                    Duration = row[8]
-                    Description = row[10]
-                    Name = playlist_name if playlist_name else row[17]
-                    Original, FilePath, MimeType, Hash = row[19:23]
-                    StartTime = row[25]
-                    EndTransition, VerseId, MepsDocumentId, ParagraphIndex, MarkerIndex = row[27:]
-                    if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ?;', (Name, Hash)).fetchone():
+                    print(row)
+                    playlist = playlist_name if playlist_name else row['Name']
+                    if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ?;', (playlist, row['Hash'])).fetchone():
                         continue
                     count += 1
-                    if Hash in hashes:
-                        FilePath, media_id = existing_media(Original, FilePath, Hash)
+                    if row.get('Hash') in hashes:
+                        existing_media()
                     else:
-                        FilePath, media_id = add_media(Original, FilePath, MimeType, Hash)
-                    item_id = add_item()
+                        add_media()
+                    row['PlaylistItemId'] = add_item()
                     add_markers()
                     add_tag()
                     add_locations()
