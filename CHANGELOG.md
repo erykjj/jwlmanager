@@ -6,7 +6,6 @@
 
 - Added data and tree caching for faster data display
 
-
 ### Changed
 
 - Switched from Pandas to Polars (a bit larger, but with fewer dependencies)
@@ -14,6 +13,7 @@
 - Refined trimming and reindexing functions
 - Made statusbar text bold
 - Made lockfile visible
+- Modified Playlist import to handle duplicates
 
 ### Fixed
 
