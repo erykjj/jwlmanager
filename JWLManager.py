@@ -742,7 +742,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
-            timer = time()  # DEBUG
+            # timer = time()  # DEBUG
             self.current_data = self.tree_cache[cat][grp]['data']
             if self.title_format == 'code':
                 title = 'Symbol'
@@ -763,7 +763,7 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 tree = traverse(self.current_data, views[grouping], self.treeWidget)
                 self.tree_cache[cat][grp]['tree'] = tree
-            print(time() - timer)  # DEBUG
+            # print(time() - timer)  # DEBUG
 
         if new_data:
             self.tree_cache = {}
@@ -1094,7 +1094,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     f.write(export_header('{ANNOTATIONS}'))
                     for item in item_list:
                         iss = '{ISSUE='+str(item['ISSUE'])+'}' if item['ISSUE'] else ''
-                        txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL'].strip()+'}===\n'+item['VALUE'].strip()
+                        txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE'].strip()
                         f.write(txt)
                     f.write('\n==={END}===')
             else: # 'md'
@@ -1292,8 +1292,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                             # FIX: getting wrong verse here??
-                            if item.get('NOTE') == 'Sería bueno que encontráramos la manera de aprovechar cualquier consejo que nos den ': #DEBUG
-                                print(item)
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -1595,7 +1593,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     try:
                         count += 1
                         location_id = add_location(row)
-                        con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?) ON CONFLICT (LocationId, TextTag) DO UPDATE SET Value = excluded.Value;', (location_id, row['LABEL'].strip(), row['VALUE'].strip()))
+                        con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?) ON CONFLICT (LocationId, TextTag) DO UPDATE SET Value = excluded.Value;', (location_id, row['LABEL'], row['VALUE'].strip()))
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
@@ -1932,10 +1930,10 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
                     if attribs.get('TITLE'):
-                        sql = 'Title = ?'
+                        sql = 'TRIM(Title) = ?'
                         attrib = attribs['TITLE'].strip()
                     else:
-                        sql = '(Title = "" OR Title IS NULL) AND Content = ?'
+                        sql = '(Title = "" OR Title IS NULL) AND TRIM(Content) = ?'
                         attrib = attribs['NOTE'].strip()
                     if location_id:
                         if attribs['BLOCK'] is not None:
@@ -1957,7 +1955,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         created = created[:19] + 'Z'
                         modified = modified[:19] + 'Z'
                         con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
-                        print((usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))# DEBUG
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
 
