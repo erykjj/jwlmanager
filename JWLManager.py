@@ -930,12 +930,12 @@ class Window(QMainWindow, Ui_MainWindow):
             m['creationDate'] = t
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
             m['userDataBackup']['lastModifiedDate'] = t
-            m['userDataBackup']['hash'] = sha256hash(f'{TMP_PATH}/{DB_NAME}')
             m['userDataBackup']['databaseName'] = DB_NAME
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
             con.commit()
             con.close()
+            m['userDataBackup']['hash'] = sha256hash(f'{TMP_PATH}/{DB_NAME}')
             with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
