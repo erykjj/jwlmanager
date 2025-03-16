@@ -1072,7 +1072,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in con.execute(sql).fetchall():
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1].rstrip() if row[1] else '* '+_('NO TEXT')+' *',
+                        'VALUE': row[1].strip() if row[1] else '* '+_('NO TEXT')+' *',
                         'DOC': row[2],
                         'PUB': row[4]
                     }
@@ -1094,7 +1094,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     f.write(export_header('{ANNOTATIONS}'))
                     for item in item_list:
                         iss = '{ISSUE='+str(item['ISSUE'])+'}' if item['ISSUE'] else ''
-                        txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL']+'}===\n'+item['VALUE']
+                        txt = '\n==={PUB='+item['PUB']+'}'+iss+'{DOC='+str(item['DOC'])+'}{LABEL='+item['LABEL'].strip()+'}===\n'+item['VALUE'].strip()
                         f.write(txt)
                     f.write('\n==={END}===')
             else: # 'md'
@@ -1249,7 +1249,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1] or '',
-                        'NOTE': row[2].rstrip() if row[2] else '',
+                        'NOTE': row[2].strip() if row[2] else '',
                         'TAGS': row[3] or '',
                         'LANG': row[4],
                         'BK': row[5],
@@ -1292,6 +1292,8 @@ class Window(QMainWindow, Ui_MainWindow):
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
                             # FIX: getting wrong verse here??
+                            if item.get('NOTE') == 'Sería bueno que encontráramos la manera de aprovechar cualquier consejo que nos den ': #DEBUG
+                                print(item)
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -1593,7 +1595,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     try:
                         count += 1
                         location_id = add_location(row)
-                        con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?) ON CONFLICT (LocationId, TextTag) DO UPDATE SET Value = excluded.Value;', (location_id, row['LABEL'], row['VALUE']))
+                        con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?) ON CONFLICT (LocationId, TextTag) DO UPDATE SET Value = excluded.Value;', (location_id, row['LABEL'].strip(), row['VALUE'].strip()))
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
@@ -1931,10 +1933,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
                     if attribs.get('TITLE'):
                         sql = 'Title = ?'
-                        attrib = attribs['TITLE']
+                        attrib = attribs['TITLE'].strip()
                     else:
                         sql = '(Title = "" OR Title IS NULL) AND Content = ?'
-                        attrib = attribs['NOTE']
+                        attrib = attribs['NOTE'].strip()
                     if location_id:
                         if attribs['BLOCK'] is not None:
                             blk = f"BlockIdentifier = {attribs['BLOCK']}"
@@ -2502,7 +2504,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item = {
                         'TYPE': row[0],
                         'TITLE': row[1] or '',
-                        'NOTE': row[2].rstrip() if row[2] else '',
+                        'NOTE': row[2].strip() if row[2] else '',
                         'TAGS': row[3],
                         'BK': row[5],
                         'CH': row[6],
@@ -2615,7 +2617,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in con.execute(sql).fetchall():
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1].rstrip() if row[1] else '',
+                        'VALUE': row[1].strip() if row[1] else '',
                         'DOC': row[2],
                         'PUB': row[4],
                         'ID': row[6]
