@@ -3353,43 +3353,42 @@ class Window(QMainWindow, Ui_MainWindow):
             if not con:
                 con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
+                BEGIN;
+
                 PRAGMA temp_store = 2;
                 PRAGMA journal_mode = 'OFF';
                 PRAGMA foreign_keys = 'OFF';
 
-                DELETE FROM InputField WHERE
-                    COALESCE(Value, '') = '';
+                -- Delete empty InputField and Note records
+                DELETE FROM InputField WHERE COALESCE(Value, '') = '';
+                DELETE FROM Note WHERE COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
 
-                DELETE FROM Note WHERE
-                    COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
+                -- Delete orphaned TagMap records
+                DELETE FROM TagMap WHERE
+                    (NoteId IS NOT NULL AND NoteId NOT IN (SELECT NoteId FROM Note))
+                    OR (PlaylistItemId IS NOT NULL AND PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem));
 
-                DELETE FROM TagMap WHERE
-                    NoteId IS NOT NULL AND NoteId NOT IN (SELECT NoteId FROM Note);
-                DELETE FROM TagMap WHERE
-                    PlaylistItemId IS NOT NULL AND PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                -- Delete unused Tags
                 DELETE FROM Tag WHERE
                     TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
+                -- Delete orphaned UserMark and BlockRange records
                 DELETE FROM UserMark WHERE
                     LocationId NOT IN (SELECT LocationId FROM Location)
                     OR (UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange)
                         AND UserMarkId NOT IN (SELECT UserMarkId FROM Note));
-                DELETE FROM BlockRange WHERE
-                    UserMarkId NOT IN (SELECT UserMarkId FROM UserMark);
+                DELETE FROM BlockRange WHERE UserMarkId NOT IN (SELECT UserMarkId FROM UserMark);
 
-                DELETE FROM PlaylistItem WHERE
-                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM TagMap);
-                DELETE FROM PlaylistItemMarker WHERE
-                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
-                DELETE FROM PlaylistItemLocationMap WHERE
-                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
-                DELETE FROM PlaylistItemIndependentMediaMap WHERE
-                    PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
-                DELETE FROM PlaylistItemIndependentMediaMap WHERE
-                    IndependentMediaId NOT IN (SELECT IndependentMediaId FROM IndependentMedia);
-                DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );
-                DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker );
+                -- Delete orphaned PlaylistItem and related records
+                DELETE FROM PlaylistItem WHERE PlaylistItemId NOT IN (SELECT PlaylistItemId FROM TagMap);
+                DELETE FROM PlaylistItemMarker WHERE PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemLocationMap WHERE PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId NOT IN (SELECT PlaylistItemId FROM PlaylistItem);
+                DELETE FROM PlaylistItemIndependentMediaMap WHERE IndependentMediaId NOT IN (SELECT IndependentMediaId FROM IndependentMedia);
+                DELETE FROM PlaylistItemMarkerBibleVerseMap WHERE PlaylistItemMarkerId NOT IN (SELECT PlaylistItemMarkerId FROM PlaylistItemMarker);
+                DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId NOT IN (SELECT PlaylistItemMarkerId FROM PlaylistItemMarker);
 
+                -- Delete unused Location records
                 DELETE FROM Location WHERE
                     LocationId NOT IN (SELECT LocationId FROM UserMark)
                     AND LocationId NOT IN (SELECT LocationId FROM Note)
@@ -3400,10 +3399,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
 
                 PRAGMA foreign_keys = 'ON';
+                COMMIT;
+
                 VACUUM;
                 """
             con.executescript(sql)
-            con.commit()
             if not con:
                 con.close()
         except Exception as ex:
