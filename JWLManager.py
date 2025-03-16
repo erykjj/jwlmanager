@@ -1579,9 +1579,11 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db(df):
 
                 def add_location(attribs):
-                    con.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, NULL, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'], attribs['DOC'], attribs['ISSUE'], attribs['PUB']))
-                    result = con.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute(f'INSERT INTO Location (DocumentId, IssueTagNumber, KeySymbol, MepsLanguage, Type) VALUES (?, ?, ?, NULL, 0);', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).lastrowid
+                    except:
+                        loc_id = con.execute(f'SELECT LocationId FROM Location WHERE DocumentId = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage IS NULL AND Type = 0;', (attribs['DOC'], attribs['ISSUE'], attribs['PUB'])).fetchone()[0]
+                    return loc_id
 
                 df = df.with_columns([
                     pl.col('ISSUE').fill_null(0),
@@ -1635,14 +1637,18 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def add_scripture_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[4], attribs[5], attribs[0], attribs[1], attribs[6], attribs[4], attribs[5], attribs[0], attribs[1]))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) VALUES (?, ?, ?, ?, ?);', (attribs[4], attribs[5], attribs[0], attribs[1], attribs[6])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()[0]
+                    return loc_id
 
                 def add_publication_location(attribs):
-                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[3], attribs[4], attribs[5], attribs[2], attribs[6], attribs[4], attribs[5], attribs[3], attribs[2], attribs[6]))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[4], attribs[5], attribs[3], attribs[2], attribs[6])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?);', (attribs[3], attribs[4], attribs[5], attribs[2], attribs[6])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[4], attribs[5], attribs[3], attribs[2], attribs[6])).fetchone()
+                    return loc_id
 
                 def add_bookmark(attribs, location_id):
                     con.execute('INSERT INTO Location (KeySymbol, MepsLanguage,Type) SELECT ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentId IS NULL);', (attribs[4], attribs[5], attribs[4], attribs[5]))
@@ -1697,8 +1703,10 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def tag_positions():
-                    con.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
-                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                    try:
+                        tag_id = con.execute("INSERT INTO Tag (Type, Name) VALUES (0, 'Favorite');").lastrowid
+                    except:
+                        tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
                     position = con.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
                     if position[0] != None:
                         return tag_id, position[0] + 1
@@ -1723,8 +1731,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             conditions.append(f'{col} = ?')
                             params.append(value)
-                    # sql = f"INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE {' AND '.join(conditions)});"
-                    # con.execute(sql, attribs+params)
                     sql = f"SELECT LocationId FROM Location WHERE {' AND '.join(conditions)};"
                     return con.execute(sql, params).fetchone()[0]
 
@@ -1771,19 +1777,22 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db():
 
                 def add_scripture_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12], attribs[10], attribs[11], attribs[6], attribs[7]))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) VALUES (?, ?, ?, ?, ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()[0]
+                    return loc_id
 
                 def add_publication_location(attribs):
-                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) SELECT ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12], attribs[10], attribs[11], attribs[9], attribs[8], attribs[12]))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()[0]
+                    return loc_id
 
                 def add_usermark(attribs, location_id):
                     unique_id = uuid.uuid1()
-                    con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5]))
-                    usermark_id = con.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
+                    usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5])).lastrowid
                     result = con.execute(f'SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = {attribs[1]} AND LocationId = {location_id};')
                     ns = int(attribs[2])
                     ne = int(attribs[3])
@@ -1885,16 +1894,20 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db(df):
 
                 def add_scripture_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
+                    try:
+                      loc_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) VALUES (?, ?, ?, ?, ?, 0);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
                     if attribs['HEADING']:
-                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
-                    return result
+                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], loc_id))
+                    return loc_id
 
                 def add_publication_location(attribs):
-                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
-                    result = con.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
-                    return result[0]
+                    try:
+                        loc_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) VALUES (?, ?, ?, ?, ?, 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'])).lastrowid
+                    except:
+                        loc_id = con.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()[0]
+                    return loc_id
 
                 def add_usermark(attribs, location_id):
                     if int(attribs['COLOR']) == 0:
@@ -1931,8 +1944,10 @@ class Window(QMainWindow, Ui_MainWindow):
                             tag = tag.strip()
                             if not tag:
                                 continue
-                            con.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
-                            tag_id = con.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
+                            try:
+                                tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (1, ?);', (tag,)).lastrowid
+                            except:
+                                tag_id = con.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
                             position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                             con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
@@ -2757,8 +2772,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     return ' ', ' '
 
             def tag_positions():
-                con.execute("INSERT INTO Tag (Type, Name) SELECT 0, 'Favorite' WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Type = 0 AND Name = 'Favorite');")
-                tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
+                try:
+                    tag_id = con.execute("INSERT INTO Tag (Type, Name) VALUES (0, 'Favorite');")
+                except:
+                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 0;').fetchone()[0]
                 position = con.execute(f'SELECT max(Position) FROM TagMap WHERE TagId = {tag_id};').fetchone()
                 if position[0] != None:
                     return tag_id, position[0] + 1
@@ -2766,9 +2783,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     return tag_id, 0
 
             def add_location(symbol, language):
-                con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) SELECT 0, ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1);', (symbol, language, symbol, language))
-                result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()
-                return result[0]
+                try:
+                    loc_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, Type) VALUES (0, ?, ?, 1);', (symbol, language)).lastrowid
+                except:
+                    loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = 0 AND Type = 1;', (symbol, language)).fetchone()[0]
+                return loc_id
 
             pub, lng = add_dialog()
             if pub == ' ' or lng == ' ':
@@ -2871,15 +2890,13 @@ class Window(QMainWindow, Ui_MainWindow):
                     position = con.execute(f'SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = {tag_id};').fetchone()[0] + 1
                     con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
-                # get/create tag; get all labels associated with it
                 try:
-                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Name = ? and Type = 2;', (playlist,)).fetchone()[0]
+                    con.execute('INSERT INTO Tag (Type, Name) VALUES (2, ?);', (playlist,))
+                    current_labels = []
+                except:
+                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Name = ? AND Type = 2;', (playlist,)).fetchone()[0]
                     rows = con.execute('SELECT Label FROM PlaylistItem LEFT JOIN TagMap USING (PlaylistItemId) WHERE TagId = ?;', (tag_id,)).fetchall()
                     current_labels  = [x[0] for x in rows]
-                except:
-                    con.execute('INSERT INTO Tag (Type, Name) SELECT 2, ?;', (playlist,))
-                    tag_id = con.execute('SELECT TagId FROM Tag WHERE Type = 2 AND Name = ?;', (playlist,)).fetchone()[0]
-                    current_labels = []
 
                 rows = con.execute('SELECT * FROM IndependentMedia;').fetchall()
                 current_files = [x[2] for x in rows]
