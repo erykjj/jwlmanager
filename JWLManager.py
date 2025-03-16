@@ -2717,7 +2717,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 def set_edition():
                     lng = language.currentText()
                     publication.clear()
-                    publication.addItems(sorted(favorites.loc[favorites['Lang'] == lng]['Short']))
+                    filtered = favorites.filter(pl.col('Lang') == lng).select('Short')
+                    publication.addItems(sorted(filtered['Short'].to_list()))
 
                 dialog = QDialog(self)
                 dialog.setWindowTitle(_('Add Favorite'))
@@ -2769,8 +2770,9 @@ class Window(QMainWindow, Ui_MainWindow):
             pub, lng = add_dialog()
             if pub == ' ' or lng == ' ':
                 return False, ' '+_('Nothing added!')
-            language = int(favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Language'].values[0])
-            publication = favorites.loc[(favorites.Short == pub) & (favorites.Lang == lng), 'Symbol'].values[0]
+            filtered = favorites.filter((pl.col('Short') == pub) & (pl.col('Lang') == lng))
+            language = int(filtered['Language'].item())
+            publication = filtered['Symbol'].item()
             location = add_location(publication, language)
             result = con.execute(f"SELECT TagMapId FROM TagMap WHERE LocationId = {location} AND TagId = (SELECT TagId FROM Tag WHERE Name = 'Favorite');").fetchone()
             if result:
