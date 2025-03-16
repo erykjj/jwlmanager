@@ -1877,10 +1877,8 @@ class Window(QMainWindow, Ui_MainWindow):
             def update_db(df):
 
                 def add_scripture_location(attribs):
-                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
-                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
-                    if attribs['HEADING']:
-                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? AND Type = 0);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
                     return result
 
                 def add_publication_location(attribs):
