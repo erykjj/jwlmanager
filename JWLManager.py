@@ -1849,7 +1849,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     attribs = {}
                     for (key, value) in regex.findall('{(.*?)=(.*?)}', line):
                         attribs[key] = value
-                    attribs['HEADING'] = attribs.get('HEADING') or None
                     return attribs
 
                 count = 0
@@ -1947,6 +1946,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         unique_id = result[0]
                         modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else result[1]
                         created = attribs['CREATED'] if attribs['CREATED'] is not None else result[2]
+                        created = created[:19] + 'Z'
+                        modified = modified[:19] + 'Z'
                         con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
                     else:
                         unique_id = uuid.uuid1()
@@ -2000,7 +2001,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
-                with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
+                with open(file, 'r', encoding='utf-8') as import_file:
                     if pre_import():
                         df = read_text()
                         if df.is_empty():
