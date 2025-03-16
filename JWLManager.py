@@ -1881,22 +1881,17 @@ class Window(QMainWindow, Ui_MainWindow):
                 return df
 
             def update_db(df):
-
                 def add_scripture_location(attribs):
-                    try:
-                      loc_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) VALUES (?, ?, ?, ?, ?, 0);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'])).lastrowid
-                    except:
-                        loc_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
+                    con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
+                    result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
                     if attribs['HEADING']:
-                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], loc_id))
-                    return loc_id
+                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
+                    return result
 
                 def add_publication_location(attribs):
-                    try:
-                        loc_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) VALUES (?, ?, ?, ?, ?, 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'])).lastrowid
-                    except:
-                        loc_id = con.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()[0]
-                    return loc_id
+                    con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0);', (attribs['ISSUE'], attribs['PUB'], attribs['LANG'], attribs['DOC'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC']))
+                    result = con.execute('SELECT LocationId from Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['ISSUE'], attribs['DOC'])).fetchone()
+                    return result[0]
 
                 def add_usermark(attribs, location_id):
                     if int(attribs['COLOR']) == 0:
