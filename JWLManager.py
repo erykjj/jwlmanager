@@ -1291,7 +1291,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&pub={item['PUB']}&bible={item['Reference']}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
-                            # FIX: getting wrong verse here??
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -1879,6 +1878,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_scripture_location(attribs):
                     con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Title, Type) SELECT ?, ?, ?, ?, ?, 0 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? AND Type = 0);', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'], attribs['HEADING'], attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH']))
                     result = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ? AND Type = 0;', (attribs['PUB'], attribs['LANG'], attribs['BK'], attribs['CH'])).fetchone()[0]
+                    if attribs.get('HEADING'):
+                        attribs['HEADING'] = attribs['HEADING'].split(':')[0]
+                        con.execute('UPDATE Location SET Title = ? WHERE LocationId = ?;', (attribs['HEADING'], result))
                     return result
 
                 def add_publication_location(attribs):
