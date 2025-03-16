@@ -20,6 +20,7 @@
 - Fixed statusbar message not clearing
 - Fixed dis/enable triggers for some menu items
 - Fixed double tree-build on language change
+- Generate hash after last db update
 
 ### Removed
 
