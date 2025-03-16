@@ -1594,10 +1594,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     try:
                         count += 1
                         location_id = add_location(row)
-                        if con.execute(f'SELECT * FROM InputField WHERE LocationId = ? AND TextTag = ?;', (location_id, row['LABEL'])).fetchone():
-                            con.execute(f'UPDATE InputField SET Value = ? WHERE LocationId = ? AND TextTag = ?;', (row['VALUE'], location_id, row['LABEL']))
-                        else:
-                            con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?);', (location_id,row['LABEL'], row['VALUE']))
+                        con.execute(f'INSERT INTO InputField (LocationId, TextTag, Value) VALUES (?, ?, ?) ON CONFLICT (LocationId, TextTag) DO UPDATE SET Value = excluded.Value;', (location_id, row['LABEL'], row['VALUE']))
                     except:
                         QMessageBox.critical(self, _('Error!'), _('Annotations')+'\n\n'+_('Error on import!\n\nFaulting entry')+f': #{count}', QMessageBox.Abort)
                         con.execute('ROLLBACK;')
@@ -1653,10 +1650,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_bookmark(attribs, location_id):
                     con.execute('INSERT INTO Location (KeySymbol, MepsLanguage,Type) SELECT ?, ?, 1 WHERE NOT EXISTS (SELECT 1 FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentId IS NULL);', (attribs[4], attribs[5], attribs[4], attribs[5]))
                     publication_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber IS NULL AND DocumentID IS NULL;', (attribs[4], attribs[5])).fetchone()[0]
-                    try:
-                        con.execute(f'INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?);', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
-                    except:
-                        con.execute(f"UPDATE Bookmark SET LocationId = ?, Title = ?, Snippet = ?, BlockType = ?, BlockIdentifier = ? WHERE PublicationLocationId = ? AND Slot = ?;", (location_id, attribs[8], attribs[9], attribs[10], attribs[11], publication_id, attribs[7]))
+                    con.execute('INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (PublicationLocationId, Slot) DO UPDATE SET LocationId = excluded.LocationId, Title = excluded.Title, Snippet = excluded.Snippet, BlockType = excluded.BlockType, BlockIdentifier = excluded.BlockIdentifier;', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
 
                 count = 0
                 for line in import_file:
