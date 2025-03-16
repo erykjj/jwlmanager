@@ -21,6 +21,7 @@
 - Fixed dis/enable triggers for some menu items
 - Fixed double tree-build on language change
 - Generate hash after last db update
+- Fixed exporting/importing where notes/annotations have leading or trailing spaces
 
 ### Removed
 
