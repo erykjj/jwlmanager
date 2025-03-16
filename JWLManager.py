@@ -143,6 +143,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(1, int(settings.value('JWLManager/column2', 30)))
         self.treeWidget.setExpandsOnDoubleClick(False)
         self.button_add.setVisible(False)
+        self.actionSave_As.setEnabled(True)
         self.resize(settings.value('Main_Window/size', QSize(680, 500)))
         self.move(settings.value('Main_Window/position', center()))
         self.viewer_window = QDialog(self)
@@ -955,7 +956,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.modified = True
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
-        self.actionSave_As.setEnabled(True)
         self.status_label.setStyleSheet('font: italic;')
 
     def archive_saved(self):
@@ -1291,6 +1291,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&pub={item['PUB']}&bible={item['Reference']}"
                             if not item.get('HEADING'):
                                 item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
+                            # FIX: getting wrong verse here??
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -1932,7 +1933,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         sql = 'Title = ?'
                         attrib = attribs['TITLE']
                     else:
-                        sql = 'Title = "" AND Content = ?'
+                        sql = '(Title = "" OR Title IS NULL) AND Content = ?'
                         attrib = attribs['NOTE']
                     if location_id:
                         if attribs['BLOCK'] is not None:
@@ -1951,7 +1952,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         unique_id = uuid.uuid1()
                         created = attribs['CREATED'] if attribs['CREATED'] is not None else (attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
                         modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                        created = created[:19] + 'Z'
+                        modified = modified[:19] + 'Z'
                         con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
+                        print((usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))# DEBUG
                     note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
                     process_tags(note_id, attribs['TAGS'])
 
