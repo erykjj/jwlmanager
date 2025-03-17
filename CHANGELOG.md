@@ -15,6 +15,7 @@
 - Made lockfile visible
 - Modified Playlist import to handle duplicates
 - Updated publications catalog
+- Improved adding Favorites
 
 ### Fixed
 
