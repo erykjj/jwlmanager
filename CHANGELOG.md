@@ -4,12 +4,22 @@
 
 ### Added
 
-- Added data and tree caching for faster data display
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [8.0.0] - 2025-03-18
+### Added
+
+- **Data and tree caching** for faster data display
 
 ### Changed
 
-- Switched from Pandas to Polars (a bit larger, but with fewer dependencies)
-- Optimized treeview building code (much faster)
+- **Switched from Pandas to Polars** (a bit larger, but with fewer dependencies)
+- **Optimized treeview building code** (much faster)
 - Refined trimming and reindexing functions
 - Made statusbar text bold
 - Made lockfile visible
@@ -22,13 +32,10 @@
 - Fixed statusbar message not clearing
 - Fixed dis/enable triggers for some menu items
 - Fixed double tree-build on language change
-- Generate hash after last db update
+- Generate hash *after* last db update
 - Fixed exporting/importing where notes/annotations have leading or trailing spaces
 - Fixed verses being included in Bible location titles
 
-### Removed
-
-____
 ## [7.2.0] - 2025-02-13
 ### Added
 
@@ -882,6 +889,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[8.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.0
 [7.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.2.0
 [7.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.1
 [7.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.0
