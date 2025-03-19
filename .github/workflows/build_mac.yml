@@ -27,9 +27,11 @@ jobs:
         python-version: '3.11'
     - name: Install dependencies
       run: |
+        python3 -m venv .venv
+        source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r res/requirements.txt
-        pip install pyinstaller
+        pip install pyinstaller==5.13
         pip install pyinstaller-hooks-contrib
     - name: Build with Pyinstaller
       run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
