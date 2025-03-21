@@ -6,4 +6,5 @@ pillow
 puremagic
 regex
 requests
+xlsx2csv
 XlsxWriter
