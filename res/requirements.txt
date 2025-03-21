@@ -1,6 +1,5 @@
 PySide6
 shiboken6
-openpyxl
 polars
 pillow
 puremagic
