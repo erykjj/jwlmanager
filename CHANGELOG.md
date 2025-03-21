@@ -20,6 +20,7 @@ ____
 
 - **Switched from Pandas to Polars** (a bit larger, but with fewer dependencies)
 - **Optimized treeview building code** (much faster)
+- **Optimized SQL** for import/merge
 - Refined trimming and reindexing functions
 - Made statusbar text bold
 - Made lockfile visible
