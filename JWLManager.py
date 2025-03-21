@@ -241,7 +241,7 @@ class Window(QMainWindow, Ui_MainWindow):
         elif suffix == '.xlsx':
             annotations_columns = {'PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE'}
             notes_columns = {'CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE'}
-            df = pl.read_excel(file)
+            df = pl.read_excel(engine='xlsx2csv', source=file)
             columns = set(df.columns)
             if  annotations_columns.issubset(columns):
                 self.import_items(file, _('Annotations'))
@@ -1636,7 +1636,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pl.read_excel(file)
+                df = pl.read_excel(engine='xlsx2csv', source=file)
                 count = update_db(df)
             return count
 
@@ -2115,7 +2115,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pl.read_excel(file)
+                df = pl.read_excel(engine='xlsx2csv', source=file)
                 count = update_db(df)
             return count
 
