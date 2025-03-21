@@ -2297,7 +2297,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif category == _('Playlists'):
                 flt = _('JW Library playlists')+' (*.jwlplaylist *.jwlibrary)'
             else:
-                if self.format == 'xlxs':
+                if self.format == 'xlsx':
                     flt = _('MS Excel files')+' (*.xlsx);;'+_('Text files')+' (*.txt)'
                 else:
                     flt = _('Text files')+' (*.txt);;'+_('MS Excel files')+' (*.xlsx)'
