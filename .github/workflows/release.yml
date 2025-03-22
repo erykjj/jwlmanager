@@ -20,7 +20,7 @@ jobs:
       TAG:  ${{ github.ref_name }}
   release:
     name: Create Release Draft
-    needs: [linux, windows, macos]
+    needs: [linux, windows, macos, macos-old]
     runs-on: ubuntu-latest
     outputs:
       changelog-section: ${{ steps.extract.outputs.changelog_section }}
@@ -45,6 +45,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: MacAPP
+    - name: Download MacAPP-old
+      uses: actions/download-artifact@v4
+      with:
+        name: MacAPP-old
     - name: Extract section from changelog
       id: extract
       env:
@@ -88,9 +92,12 @@ jobs:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
           - macOS 13/14:
+            - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
+          - macOS 15:
             - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
           JWLManager_${{ github.ref_name }}
           JWLManager_${{ github.ref_name }}.exe
           JWLManager_${{ github.ref_name }}.zip
           JWLManager_${{ github.ref_name }}.app.zip
+          JWLManager_${{ github.ref_name }}-macOS13.app.zip
