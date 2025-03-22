@@ -22,9 +22,10 @@ ____
 - **Optimized treeview building code** (much faster)
 - **Optimized SQL** for import/merge
 - **Disabled Reindex** utility (of limited benefit)
-- Refined trimming and reindexing functions
+- Refined trimming functions
 - Made statusbar text bold
-- Made lockfile visible
+- Made lockfile (in executable directory) visible
+  - If app exits *uncleanly*, manually delete `JWLManager.lock`
 - Modified Playlist import to handle duplicates
 - Updated publications catalog
 - Improved adding Favorites
