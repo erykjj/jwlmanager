@@ -156,10 +156,6 @@ When you copy-and-paste into Notes and Annotations, you may end up with invisibl
 ######
 If you need to *share* your complete archive (for diagnostic purposes, etc.) but have some personal or confidential information, you can use this option to obfuscate the text fields in your archive. The length of the text remains the same, leaving all numbers and punctuation in place, but alphabetic characters are over-written with meaningless expressions such as 'obscured', 'yada', 'bla', 'gibberish' or 'børk'. To confirm, view the notes in the Data Viewer. Only tags are not obscured. This is a **dangerous, destructive, one-way procedure**! Make sure you keep your 'official' backup!
 ######
-### Reindex
-######
-This function cleans up and re-orders the records in the archive database. It is not strictly required, though it *may* streamline and speed it up slightly. The process itself may take up to a minute, depending on the number of records the database contains. It does not need to be run more than once in a while.
-######
 ### Sort
 ######
 When a specific tag is selected in the JW Library app's "Personal Study" (Notes and Tags) section, the displayed notes can be arranged manually. This function restores all notes to their "natural" order (based on `NoteId`).
