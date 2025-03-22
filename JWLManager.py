@@ -408,14 +408,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
         self.button_export.setEnabled(self.selected_items)
-        self.actionClean.setEnabled(self.actionClean.isEnabled() and self.int_total)
-        self.actionObscure.setEnabled(self.actionObscure.isEnabled() and self.int_total)
-        # self.actionReindex.setEnabled(self.actionReindex.isEnabled() and self.int_total)
-        self.actionSort.setEnabled(self.actionSort.isEnabled() and self.int_total)
-        self.actionExpand_All.setEnabled(self.actionExpand_All.isEnabled() and self.int_total)
-        self.actionCollapse_All.setEnabled(self.actionCollapse_All.isEnabled() and self.int_total)
-        self.actionSelect_All.setEnabled(self.actionSelect_All.isEnabled() and self.int_total)
-        self.actionUnselect_All.setEnabled(self.actionUnselect_All.isEnabled() and self.int_total)
 
 
     def switchboard(self, selection, new_data=False):
@@ -436,10 +428,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.combo_grouping.blockSignals(True)
         if selection == _('Notes'):
-            self.combo_grouping.setCurrentText(_('Type'))
+            # self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
-            # self.combo_grouping.setCurrentText(_('Type'))
             disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
             disable_options([4,5], False, True, True, False)
@@ -955,6 +946,17 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
         self.status_label.setStyleSheet('font: italic;')
+        self.button_delete.setEnabled(self.int_total)
+        self.button_view.setEnabled(self.int_total)
+        self.button_export.setEnabled(self.int_total)
+        self.actionClean.setEnabled(self.actionClean.isEnabled() and self.int_total)
+        self.actionObscure.setEnabled(self.actionObscure.isEnabled() and self.int_total)
+        # self.actionReindex.setEnabled(self.actionReindex.isEnabled() and self.int_total)
+        self.actionSort.setEnabled(self.actionSort.isEnabled() and self.int_total)
+        self.actionExpand_All.setEnabled(self.actionExpand_All.isEnabled() and self.int_total)
+        self.actionCollapse_All.setEnabled(self.actionCollapse_All.isEnabled() and self.int_total)
+        self.actionSelect_All.setEnabled(self.actionSelect_All.isEnabled() and self.int_total)
+        self.actionUnselect_All.setEnabled(self.actionUnselect_All.isEnabled() and self.int_total)
 
     def archive_saved(self):
         self.modified = False
@@ -2354,9 +2356,9 @@ class Window(QMainWindow, Ui_MainWindow):
             message = f' {category}: {count} '+_('items imported/updated')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
-            self.archive_modified()
             self.trim_db()
             self.regroup(True, message)
+            self.archive_modified()
 
     def merge_items(self, file=''):
 
@@ -2392,9 +2394,9 @@ class Window(QMainWindow, Ui_MainWindow):
             message = f' {count} '+_('items merged')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
-            self.archive_modified()
             self.trim_db()
             self.regroup(True, message)
+            self.archive_modified()
 
 
     def data_viewer(self):
@@ -3093,9 +3095,9 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         if result > 0:
             self.statusBar.showMessage(message, 4000)
-            self.archive_modified()
             self.trim_db()
             self.regroup(True, message)
+            self.archive_modified()
 
     def delete_items(self):
 
@@ -3181,9 +3183,9 @@ class Window(QMainWindow, Ui_MainWindow):
         if result > 0:
             message = f' {result} '+_('items deleted')
             self.statusBar.showMessage(message, 4000)
-            self.archive_modified()
             self.trim_db()
             self.regroup(True, message)
+            self.archive_modified()
 
 
     def clean_items(self):
@@ -3235,9 +3237,9 @@ class Window(QMainWindow, Ui_MainWindow):
         message = f' {result} '+_('items cleaned')
         self.statusBar.showMessage(message, 4000)
         if result > 0:
-            self.archive_modified()
             self.trim_db()
             self.regroup(False, message)
+            self.archive_modified()
 
     def obscure_items(self):
 
@@ -3311,9 +3313,9 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         message = ' '+_('Data masked')
         self.statusBar.showMessage(message, 4000)
-        self.archive_modified()
         self.trim_db()
         self.regroup(False, message)
+        self.archive_modified()
 
     def reindex_db(self, con=None, pth=None):
 
@@ -3452,8 +3454,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.interactive:
             message = ' '+_('Reindexed successfully')
             self.statusBar.showMessage(message, 4000)
-            self.archive_modified()
             self.regroup(True, message)
+            self.archive_modified()
 
     def sort_notes(self):
 
@@ -3484,9 +3486,9 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         message = ' '+_('Notes reordered')
         self.statusBar.showMessage(message, 4000)
-        self.archive_modified()
         self.trim_db()
         self.regroup(True, message)
+        self.archive_modified()
 
 
     def trim_db(self, con=None):
