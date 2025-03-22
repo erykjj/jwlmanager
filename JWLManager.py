@@ -1429,7 +1429,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = con.execute(f'SELECT PlaylistItemId FROM TagMap WHERE PlaylistItemId IN {items} ORDER BY TagId, Position;').fetchall()
                 pos = 0
                 for row in rows:
-                    expcon.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
+                    expcon.execute('INSERT OR IGNORE INTO TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (row[0], 1, pos))
                     pos += 1
 
                 rows = con.execute(f'SELECT * FROM PlaylistItemIndependentMediaMap WHERE PlaylistItemId IN {items};').fetchall()
