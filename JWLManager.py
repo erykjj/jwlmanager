@@ -51,7 +51,7 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import ZipFile, ZIP_DEFLATED
 
-import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid, xlsx2csv
 import polars as pl
 
 
