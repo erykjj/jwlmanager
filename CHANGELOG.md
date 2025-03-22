@@ -38,6 +38,7 @@ ____
 - Fixed exporting/importing where notes/annotations have leading or trailing spaces
 - Fixed verses being included in Bible location titles
 - Fixed preferred `xlsx` format not remembered
+- Fixed Playlist export with same items
 
 ## [7.2.0] - 2025-02-13
 ### Added
