@@ -1861,8 +1861,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, ?, 0, '{unique_id}', ?);", (usermark_id, attribs[4], location_id, attribs[5]))
                     else:
                         usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', ?);", (attribs[4], location_id, attribs[5])).lastrowid
-                        # usermark_id = con.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
-
                     rows = con.execute('SELECT * FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE Identifier = ? AND LocationId = ?;', (attribs[1], location_id)).fetchall()
                     ns = int(attribs[2])
                     ne = int(attribs[3])
