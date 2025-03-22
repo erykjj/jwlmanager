@@ -2053,16 +2053,16 @@ class Window(QMainWindow, Ui_MainWindow):
                             blk = f"BlockIdentifier = {attribs['BLOCK']}"
                         else:
                             blk = 'BlockIdentifier IS NULL'
-                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE LocationId = ? AND {sql} AND {blk} AND BlockType = ?;', (location_id, attrib, block_type)).fetchone()
+                        result = con.execute(f'SELECT NoteId, LastModified, Created FROM Note WHERE LocationId = ? AND {sql} AND {blk} AND BlockType = ?;', (location_id, attrib, block_type)).fetchone()
                     else:
-                        result = con.execute(f'SELECT Guid, LastModified, Created FROM Note WHERE {sql} AND BlockType = 0;', (attrib,)).fetchone()
+                        result = con.execute(f'SELECT NoteId, LastModified, Created FROM Note WHERE {sql} AND BlockType = 0;', (attrib,)).fetchone()
                     if result:
-                        unique_id = result[0]
+                        note_id = result[0]
                         modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else result[1]
                         created = attribs['CREATED'] if attribs['CREATED'] is not None else result[2]
                         created = created[:19] + 'Z'
                         modified = modified[:19] + 'Z'
-                        con.execute(f"UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE Guid = '{unique_id}';", (usermark_id, attribs['NOTE'], modified, created))
+                        con.execute('UPDATE Note SET UserMarkId = ?, Content = ?, LastModified = ?, Created = ? WHERE NoteId = ?;', (usermark_id, attribs['NOTE'], modified, created, note_id))
                     else:
                         unique_id = uuid.uuid1()
                         created = attribs['CREATED'] if attribs['CREATED'] is not None else (attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'))
