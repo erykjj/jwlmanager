@@ -1908,7 +1908,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     results = len(con.execute(f"SELECT NoteId FROM Note WHERE Title GLOB '{title_char}*';").fetchall())
                     if results < 1:
                         return
-                    answer = QMessageBox.warning(None, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    answer = QMessageBox.warning(self, _('Warning'), f'{results} '+_('notes starting with')+f' "{title_char}" '+_('WILL BE DELETED before importing.\n\nProceed with deletion? (NO to skip)'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
                     if answer == QMessageBox.Yes:
                         con.execute(f"DELETE FROM Note WHERE Title GLOB '{title_char}*';")
 
