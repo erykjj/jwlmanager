@@ -23,6 +23,7 @@ ____
 - **Optimized SQL** for import/merge
 - **Disabled Reindex** utility (of limited benefit)
 - Refined trimming functions
+  - Trim done on save only
 - Made statusbar text bold
 - Made lockfile (in executable directory) visible
   - If app exits *uncleanly*, manually delete `JWLManager.lock`
