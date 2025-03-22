@@ -18,6 +18,7 @@ ____
 
 ### Changed
 
+- Moved up to Python 3.13 for Linux and Windows builds, and Python 3.12 for macOS builds
 - **Switched from Pandas to Polars** (a bit larger, but with fewer dependencies)
 - **Optimized treeview building code** (much faster)
 - **Optimized SQL** for import/merge
