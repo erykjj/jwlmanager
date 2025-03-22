@@ -28,9 +28,12 @@ You can force the GUI to launch in a language by appending the corresponding lan
 - Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
 - macOS Terminal: `open -a JWLManager.app --args -es`
 
-If you have Python3 installed on your system and can install some of the required libraries/dependencies[^2], [download](https://github.com/erykjj/jwlmanager/releases/latest) and extract the latest release source code; then execute to run (from inside JWLManager folder):
+If you have Python3.11+ installed on your system and can install some of the required dependencies[^2], you can simply clone it:
 
 ```
+git clone --depth 1 https://github.com/erykjj/jwlmanager.git
+cd jwlmanager
+pip install -r res/requirements.txt
 python3 JWLManager.py
 ```
 
@@ -74,7 +77,7 @@ ____
 
 Feel free to get in touch and post any [issues](https://github.com/erykjj/jwlmanager/issues) and/or [suggestions](https://github.com/erykjj/jwlmanager/discussions).
 
-My other *JW Library* project: [**JWPubLib**](https://github.com/erykjj/jwpublib)
+My other *JW Library* projects: [**JWPubLib**](https://github.com/erykjj/jwpublib) and [**jwlFusion**](https://github.com/erykjj/jwlFusion)
 
 ____
 #### Footnotes:
