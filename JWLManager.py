@@ -672,7 +672,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             child_item.setText(0, str(value))
                             child_item.setData(1, Qt.ItemDataRole.DisplayRole, 0)
                             child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
-                            # NOTE: this adds a fraction of a second but activity is visible
                             if current_parent == self.treeWidget:
                                 app.processEvents()
                             node['items'][value] = {'count': 0, 'data': defaultdict(list), 'items': {}, 'item': child_item}
@@ -742,7 +741,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     }
                 return views
 
-            # timer = time()  # DEBUG
             self.current_data = self.tree_cache[cat][grp]['data']
             if self.title_format == 'code':
                 title = 'Symbol'
@@ -763,7 +761,6 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 tree = traverse(self.current_data, views[grouping], self.treeWidget)
                 self.tree_cache[cat][grp]['tree'] = tree
-            # print(time() - timer)  # DEBUG
 
         if new_data:
             self.tree_cache = {}
@@ -1764,7 +1761,6 @@ class Window(QMainWindow, Ui_MainWindow):
                     return favorite_list
 
                 def add_publication_location(attribs):
-                    # NOTE: not filling available_ids in this case
                     con.execute('INSERT OR IGNORE INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type) VALUES (?, ?, ?, ?, ?, ?);', attribs)
                     conditions = []
                     params = []
@@ -1788,7 +1784,11 @@ class Window(QMainWindow, Ui_MainWindow):
                             attribs = regex.split('\|', line.rstrip())
                             attribs = [None if attr == 'None' else attr for attr in attribs]
                             location_id = add_publication_location(attribs)
-                            con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
+                            if available_ids.get('TagMap'):
+                                tagmap_id = available_ids['TagMap'].pop()
+                                con.execute('INSERT INTO TagMap (TagMapId, LocationId, TagId, Position) VALUES (?, ?, ?, ?);', (tagmap_id, location_id, tag_id, position))
+                            else:
+                                con.execute('INSERT INTO TagMap (LocationId, TagId, Position) VALUES (?, ?, ?);', (location_id, tag_id, position))
                             position += 1
                         except:
                             QMessageBox.critical(self, _('Error!'), _('Favorites')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
@@ -2027,8 +2027,15 @@ class Window(QMainWindow, Ui_MainWindow):
                             tag = tag.strip()
                             if not tag:
                                 continue
-                            con.execute('INSERT INTO Tag (Type, Name) SELECT 1, ? WHERE NOT EXISTS (SELECT 1 FROM Tag WHERE Name = ?);', (tag, tag))
-                            tag_id = con.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()[0]
+                            existing_id = con.execute('SELECT TagId from Tag WHERE Name = ?;', (tag,)).fetchone()
+                            if existing_id:
+                                tag_id = existing_id[0]
+                            else:
+                                if available_ids.get('Tag'):
+                                    tag_id = available_ids['Tag'].pop()
+                                    con.execute('INSERT INTO Tag (TagId, Type, Name) VALUES (?, 1, ?);', (tag_id, tag))
+                                else:
+                                    tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (1, ?);', (tag,)).lastrowid
                             position = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
                             con.execute('INSERT Into TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position))
 
@@ -2059,8 +2066,11 @@ class Window(QMainWindow, Ui_MainWindow):
                         modified = attribs['MODIFIED'] if attribs['MODIFIED'] is not None else datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
                         created = created[:19] + 'Z'
                         modified = modified[:19] + 'Z'
-                        con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
-                    note_id = con.execute(f"SELECT NoteId from Note WHERE Guid = '{unique_id}';").fetchone()[0]
+                        if available_ids.get('Note'):
+                            note_id = available_ids['Note'].pop()
+                            con.execute(f"INSERT INTO Note (NoteId, Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES (?, '{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (note_id, usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created))
+                        else:
+                            note_id = con.execute(f"INSERT INTO Note (Guid, UserMarkId, LocationId, Title, Content, BlockType, BlockIdentifier, LastModified, Created) VALUES ('{unique_id}', ?, ?, ?, ?, ?, ?, ?, ?);", (usermark_id, location_id, attribs['TITLE'], attribs['NOTE'], block_type, attribs['BLOCK'], modified, created)).lastrowid
                     process_tags(note_id, attribs['TAGS'])
 
                 df = df.with_columns([
@@ -2180,8 +2190,11 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         t_ti = tags.get(playlist)
                         position = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (t_ti,)).fetchone()[0] + 1
-                    # CHECK: check if exists?
-                    con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (pi_pii, t_ti, position))
+                    if available_ids.get('TagMap'):
+                        tagmap_id = available_ids['TagMap'].pop()
+                        con.execute('INSERT INTO TagMap (TagMapId, PlaylistItemId, TagId, Position) SELECT ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE TagMapId = ? AND PlaylistItemId = ? AND TagId = ? AND Position = ?);', (tagmap_id, pi_pii, t_ti, position, tagmap_id, pi_pii, t_ti, position))
+                    else:
+                        con.execute('INSERT INTO TagMap (PlaylistItemId, TagId, Position) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM TagMap WHERE PlaylistItemId = ? AND TagId = ? AND Position = ?);', (pi_pii, t_ti, position, pi_pii, t_ti, position))
 
                 def add_markers():
                     if not pim_stt:
@@ -2227,12 +2240,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 tags = {}
                 for row in con.execute('SELECT TagId, Name FROM TagMap LEFT JOIN Tag USING (TagId) WHERE TYPE = 2 GROUP BY TagId;').fetchall():
                     tags[row[1]] = row[0]
-                # col = ['pi_pii', 'pi_l', 'pi_stot', 'pi_etot', 'pi_a', 'pi_ea', 'pi_tfp', 'pilm_li', 'pilm_mmt', 'pilm_bdt', 'l_bn', 'l_cn', 'l_di', 'l_tr', 'l_itn', 'l_ks', 'l_ml', 'l_tp', 'l_t', 'piimm_imi', 'piimm_dt', 'pia_piai', 'pia_d', 'tm_tmi', 'tm_li', 'tm_ni', 'tm_ti', 'tm_p', 't_t', 't_n', 'im_imi', 'im_of', 'im_fp', 'im_mt', 'im_h', 'pim_pimi', 'pim_l', 'pim_stt', 'pim_dt', 'pim_etdt', 'pimbvm_vi', 'pimpm_mdi', 'pimpm_pi', 'pimpm_miwp'] # DEBUG
                 sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemLocationMap USING (PlaylistItemId) LEFT JOIN Location USING (LocationId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId)'
                 count = 0
                 for row in impcon.execute(sql).fetchall():
                     pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, _, piimm_dt, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
-                    # print(dict(zip(col, row))) # DEBUG
                     playlist = playlist_name if playlist_name else t_n
                     if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ?;', (playlist, im_h)).fetchone():
                         continue
