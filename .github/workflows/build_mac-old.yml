@@ -1,4 +1,4 @@
-name: 'Build Mac package for macOS 13 & 14 v1.0.3'
+name: 'Build for macOS 13 & 14 v1.0.3'
 
 on:
   workflow_call:
@@ -15,7 +15,7 @@ on:
         type: string
 
 jobs:
-  macos-old:
+  macold:
     name: Build macOS APP
     runs-on: macos-13
     steps:
