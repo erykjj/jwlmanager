@@ -1,4 +1,4 @@
-name: 'Build Mac package v1.0.3'
+name: 'Build Mac package for macOS 13 & 14 v1.0.3'
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
 jobs:
   macos:
     name: Build macOS APP
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -41,4 +41,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MacAPP
-        path: dist/JWLManager_${{ inputs.TAG }}.app.zip
+        path: dist/JWLManager_${{ inputs.TAG }}-macOS13.app.zip
