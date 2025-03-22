@@ -14,8 +14,12 @@ jobs:
     uses: ./.github/workflows/build_win.yml
     with:
       TAG:  ${{ github.ref_name }}
-  macOS:
+  macos:
     uses: ./.github/workflows/build_mac.yml
+    with:
+      TAG:  ${{ github.ref_name }}
+  macold:
+    uses: ./.github/workflows/build_mac-old.yml
     with:
       TAG:  ${{ github.ref_name }}
   release:
