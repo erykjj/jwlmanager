@@ -95,10 +95,9 @@ jobs:
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - macOS 13/14:
-            - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
-          - macOS 15:
-            - Zipped app: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+          - macOS:
+            - 13/14: [JWLManager_${{ github.ref_name }}-macOS13.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
+            - 15: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
         files: |
           JWLManager_${{ github.ref_name }}
           JWLManager_${{ github.ref_name }}.exe
