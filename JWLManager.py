@@ -929,6 +929,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
         update_manifest()
+        self.trim_db()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
                 files = os.listdir(TMP_PATH)
@@ -2356,7 +2357,7 @@ class Window(QMainWindow, Ui_MainWindow):
             message = f' {category}: {count} '+_('items imported/updated')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
-            self.trim_db()
+            
             self.regroup(True, message)
             self.archive_modified()
 
@@ -2394,7 +2395,6 @@ class Window(QMainWindow, Ui_MainWindow):
             message = f' {count} '+_('items merged')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
-            self.trim_db()
             self.regroup(True, message)
             self.archive_modified()
 
@@ -2546,7 +2546,6 @@ class Window(QMainWindow, Ui_MainWindow):
             if len(self.deleted_list) > 0:
                 message = f' {len(self.deleted_list)} '+_('items deleted')
                 self.statusBar.showMessage(message, 4000)
-                self.trim_db()
                 self.regroup(True, message)
             self.archive_modified()
 
@@ -3095,7 +3094,6 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         if result > 0:
             self.statusBar.showMessage(message, 4000)
-            self.trim_db()
             self.regroup(True, message)
             self.archive_modified()
 
@@ -3183,7 +3181,6 @@ class Window(QMainWindow, Ui_MainWindow):
         if result > 0:
             message = f' {result} '+_('items deleted')
             self.statusBar.showMessage(message, 4000)
-            self.trim_db()
             self.regroup(True, message)
             self.archive_modified()
 
@@ -3237,7 +3234,6 @@ class Window(QMainWindow, Ui_MainWindow):
         message = f' {result} '+_('items cleaned')
         self.statusBar.showMessage(message, 4000)
         if result > 0:
-            self.trim_db()
             self.regroup(False, message)
             self.archive_modified()
 
@@ -3313,7 +3309,6 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         message = ' '+_('Data masked')
         self.statusBar.showMessage(message, 4000)
-        self.trim_db()
         self.regroup(False, message)
         self.archive_modified()
 
@@ -3427,7 +3422,6 @@ class Window(QMainWindow, Ui_MainWindow):
     #         self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
     #         app.processEvents()
     #         progress_dialog = init_progress()
-    #         self.trim_db()
     #     if not pth:
     #         pth = TMP_PATH
     #     try:
@@ -3445,7 +3439,6 @@ class Window(QMainWindow, Ui_MainWindow):
     #         if self.interactive:
     #             con.close()
     #         else:
-    #             self.trim_db(con)
     #     except Exception as ex:
     #         self.crash_box(ex)
     #         progress_dialog.close()
@@ -3486,15 +3479,13 @@ class Window(QMainWindow, Ui_MainWindow):
             sys.exit()
         message = ' '+_('Notes reordered')
         self.statusBar.showMessage(message, 4000)
-        self.trim_db()
         self.regroup(True, message)
         self.archive_modified()
 
 
-    def trim_db(self, con=None):
+    def trim_db(self):
         try:
-            if not con:
-                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
                 BEGIN;
 
@@ -3547,8 +3538,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 VACUUM;
                 """
             con.executescript(sql)
-            if not con:
-                con.close()
+            con.close()
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
