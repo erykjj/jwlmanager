@@ -15,7 +15,7 @@ on:
         type: string
 
 jobs:
-  macos:
+  macos-old:
     name: Build macOS APP
     runs-on: macos-13
     steps:
@@ -40,5 +40,5 @@ jobs:
     - name: Upload APP
       uses: actions/upload-artifact@v4
       with:
-        name: MacAPP
+        name: MacAPP-old
         path: dist/JWLManager_${{ inputs.TAG }}-macOS13.app.zip
