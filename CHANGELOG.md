@@ -32,7 +32,7 @@ ____
 ### Fixed
 
 - Fixed statusbar message not clearing
-- Fixed dis/enable triggers for some menu items
+- Fixed dis/enable triggers for buttons and menu items
 - Fixed double tree-build on language change
 - Generate hash *after* last db update
 - Fixed exporting/importing where notes/annotations have leading or trailing spaces
