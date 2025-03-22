@@ -427,10 +427,17 @@ class Window(QMainWindow, Ui_MainWindow):
                     self.combo_grouping.setCurrentText(_('Type'))
 
         self.combo_grouping.blockSignals(True)
+        if self.combo_category.currentIndex() not in self.tree_cache:
+            new = True
+        else:
+            new = False
         if selection == _('Notes'):
-            # self.combo_grouping.setCurrentText(_('Type'))
+            if new:
+                self.combo_grouping.setCurrentText(_('Type'))
             disable_options([], False, True, True, True)
         elif selection == _('Highlights'):
+            if new:
+                self.combo_grouping.setCurrentText(_('Type'))
             disable_options([4], False, True, True, False)
         elif selection == _('Bookmarks'):
             disable_options([4,5], False, True, True, False)
