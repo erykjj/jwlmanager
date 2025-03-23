@@ -1192,7 +1192,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         return t
                     left = m.group(1)
                     l = 33 - len(left)
-                    m = regex.search(f'\s(\w.{{0,{l}}})$', t)
+                    m = regex.search(rf'\s(\w.{{0,{l}}})$', t)
                     if not m:
                         t = left + ' […]'
                     else:
@@ -1709,7 +1709,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if '|' in line:
                         try:
                             count += 1
-                            attribs = regex.split('\|', line.rstrip())
+                            attribs = regex.split(r'\|', line.rstrip())
                             for i in [0,1,2,9,11]:
                                 if attribs[i] == 'None':
                                     attribs[i] = None
@@ -1792,7 +1792,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if ('|' in line) and (line.strip() not in favorite_list):
                         try:
                             count += 1
-                            attribs = regex.split('\|', line.rstrip())
+                            attribs = regex.split(r'\|', line.rstrip())
                             attribs = [None if attr == 'None' else attr for attr in attribs]
                             location_id = add_publication_location(attribs)
                             if available_ids.get('TagMap'):
@@ -1885,7 +1885,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if regex.match(r'^(\d+\|){6}', line):
                         try:
                             count += 1
-                            attribs = regex.split('\|', line.rstrip().replace('None', ''))
+                            attribs = regex.split(r'\|', line.rstrip().replace('None', ''))
                             if attribs[6]:
                                 location_id = add_scripture_location(attribs)
                             else:
