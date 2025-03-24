@@ -82,7 +82,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.actionSave_As.triggered.connect(self.save_as_file)
             self.actionClean.triggered.connect(self.clean_items)
             self.actionObscure.triggered.connect(self.obscure_items)
-            # self.actionReindex.triggered.connect(self.reindex_db)
             self.actionSort.triggered.connect(self.sort_notes)
             self.actionExpand_All.triggered.connect(self.expand_all)
             self.actionCollapse_All.triggered.connect(self.collapse_all)
@@ -634,7 +633,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
             self.actionMerge.setEnabled(enabled)
-            # self.actionReindex.setEnabled(enabled)
             self.actionObscure.setEnabled(enabled)
             self.actionSort.setEnabled(enabled)
             self.actionClean.setEnabled(enabled)
@@ -959,7 +957,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_export.setEnabled(self.int_total)
         self.actionClean.setEnabled(self.actionClean.isEnabled() and self.int_total)
         self.actionObscure.setEnabled(self.actionObscure.isEnabled() and self.int_total)
-        # self.actionReindex.setEnabled(self.actionReindex.isEnabled() and self.int_total)
         self.actionSort.setEnabled(self.actionSort.isEnabled() and self.int_total)
         self.actionExpand_All.setEnabled(self.actionExpand_All.isEnabled() and self.int_total)
         self.actionCollapse_All.setEnabled(self.actionCollapse_All.isEnabled() and self.int_total)
@@ -1470,7 +1467,6 @@ class Window(QMainWindow, Ui_MainWindow):
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
             item_list = playlist_export()
-            # self.reindex_db(expcon, playlist_path)
             expcon.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
             expcon.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             expcon.commit()
@@ -3315,144 +3311,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(message, 4000)
         self.regroup(False, message)
         self.archive_modified()
-
-    # def reindex_db(self, con=None, pth=None):
-
-    #     def init_progress():
-    #         progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 28, parent=self)
-    #         progress_dialog.setWindowModality(Qt.WindowModal)
-    #         progress_dialog.setWindowTitle(_('Reindexing'))
-    #         progress_dialog.setWindowFlag(Qt.FramelessWindowHint)
-    #         progress_dialog.setModal(True)
-    #         progress_dialog.setMinimumDuration(0)
-    #         return progress_dialog
-
-    #     def make_table(table):
-    #         con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
-
-    #     def update_table(table, field):
-    #         app.processEvents()
-    #         con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-    #         if self.interactive:
-    #             progress_dialog.setValue(progress_dialog.value() + 1)
-
-    #     def reindex_notes():
-    #         make_table('Note')
-    #         update_table('Note', 'NoteId')
-    #         update_table('TagMap', 'NoteId')
-    #         con.execute('DROP TABLE CrossReference;')
-    #         con.execute('UPDATE Note SET LastModified = LastModified || "Z" WHERE LastModified IS NOT NULL AND LastModified NOT LIKE "%Z"')
-    #         con.execute('UPDATE Note SET Created = Created || "Z" WHERE Created IS NOT NULL AND Created NOT LIKE "%Z"') 
-
-    #     def reindex_bookmarks():
-    #         make_table('Bookmark')
-    #         update_table('Bookmark', 'BookmarkId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #     def reindex_highlights():
-    #         make_table('UserMark')
-    #         update_table('UserMark', 'UserMarkId')
-    #         update_table('Note', 'UserMarkId')
-    #         update_table('BlockRange', 'UserMarkId')
-    #         con.execute('DROP TABLE CrossReference;')
-    #         make_table('BlockRange')
-    #         update_table('BlockRange', 'BlockRangeId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #     def reindex_playlists():
-
-    #         def clean_media():
-    #             thumbs = {row[0] for row in con.execute('SELECT ThumbnailFilePath FROM PlaylistItem;').fetchall()}
-    #             ind = {row[0] for row in con.execute('SELECT FilePath FROM IndependentMedia JOIN PlaylistItemIndependentMediaMap USING (IndependentMediaId)').fetchall()}
-    #             ind.update(['userData.db', 'manifest.json', 'default_thumbnail.png'])
-    #             for file in glob(pth + '/*'):
-    #                 f = Path(file).name
-    #                 if (f not in thumbs) and (f not in ind):
-    #                     try:
-    #                         os.remove(pth + '/' + f)
-    #                     except:
-    #                         pass
-    #             if self.interactive:
-    #                 progress_dialog.setValue(progress_dialog.value() + 1)
-
-    #         make_table('PlaylistItem')
-    #         update_table('PlaylistItem', 'PlaylistItemId')
-    #         update_table('PlaylistItemIndependentMediaMap', 'PlaylistItemId')
-    #         update_table('PlaylistItemLocationMap', 'PlaylistItemId')
-    #         update_table('PlaylistItemMarker', 'PlaylistItemId')
-    #         update_table('TagMap', 'PlaylistItemId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #         make_table('IndependentMedia')
-    #         update_table('IndependentMedia', 'IndependentMediaId')
-    #         update_table('PlaylistItemIndependentMediaMap','IndependentMediaId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #         make_table('PlaylistItemMarker')
-    #         update_table('PlaylistItemMarker', 'PlaylistItemMarkerId')
-    #         update_table('PlaylistItemMarkerBibleVerseMap', 'PlaylistItemMarkerId')
-    #         update_table('PlaylistItemMarkerParagraphMap', 'PlaylistItemMarkerId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #         clean_media()
-
-    #     def reindex_tags():
-    #         make_table('TagMap')
-    #         update_table('TagMap', 'TagMapId')
-    #         con.execute('DROP TABLE CrossReference;')
-    #         make_table('Tag')
-    #         update_table('Tag', 'TagId')
-    #         update_table('TagMap', 'TagId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #     def reindex_locations():
-    #         make_table('Location')
-    #         update_table('Location', 'LocationId')
-    #         update_table('Note', 'LocationId')
-    #         update_table('InputField', 'LocationId')
-    #         update_table('UserMark', 'LocationId')
-    #         update_table('Bookmark', 'LocationId')
-    #         update_table('Bookmark', 'PublicationLocationId')
-    #         update_table('TagMap', 'LocationId')
-    #         update_table('PlaylistItemLocationMap', 'LocationId')
-    #         con.execute('DROP TABLE CrossReference;')
-
-    #     self.interactive = False
-    #     if not con:
-    #         self.interactive = True
-    #         reply = QMessageBox.information(self, _('Reindex'), _('This may take a few seconds.\nProceed?'), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-    #         if reply == QMessageBox.No:
-    #             return
-    #         self.statusBar.showMessage(' '+_('Reindexing. Please wait…'))
-    #         app.processEvents()
-    #         progress_dialog = init_progress()
-    #     if not pth:
-    #         pth = TMP_PATH
-    #     try:
-    #         if self.interactive:
-    #             con = sqlite3.connect(f'{pth}/{DB_NAME}')
-    #         con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
-    #         reindex_notes()
-    #         reindex_tags()
-    #         reindex_playlists()
-    #         reindex_highlights()
-    #         reindex_bookmarks()
-    #         reindex_locations()
-    #         con.executescript("PRAGMA foreign_keys = 'ON'; VACUUM;")
-    #         con.commit()
-    #         if self.interactive:
-    #             con.close()
-    #         else:
-    #     except Exception as ex:
-    #         self.crash_box(ex)
-    #         progress_dialog.close()
-    #         self.clean_up()
-    #         sys.exit()
-    #     if self.interactive:
-    #         message = ' '+_('Reindexed successfully')
-    #         self.statusBar.showMessage(message, 4000)
-    #         self.regroup(True, message)
-    #         self.archive_modified()
 
     def sort_notes(self):
 
