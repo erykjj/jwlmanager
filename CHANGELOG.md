@@ -42,6 +42,7 @@ ____
 - Fixed verses being included in Bible location titles
 - Fixed preferred `xlsx` format not remembered
 - Fixed Playlist export with same items
+- Fixed export of empty Annotations
 
 ## [7.2.0] - 2025-02-13
 ### Added
