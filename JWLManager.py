@@ -1058,10 +1058,9 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def get_annotations(all=False):
                 item_list = []
+                where = "WHERE Value <> '' AND Value IS NOT NULL"
                 if not all:
-                    where = f'WHERE LocationId IN {items}'
-                else:
-                    where = ''
+                    where += f' AND LocationId IN {items}'
                 sql = f'''
                     SELECT TextTag,
                         Value,
@@ -1080,7 +1079,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in con.execute(sql).fetchall():
                     item = {
                         'LABEL': row[0],
-                        'VALUE': row[1].strip() if row[1] else '* '+_('NO TEXT')+' *',
+                        'VALUE': row[1].strip(),
                         'DOC': row[2],
                         'PUB': row[4]
                     }
