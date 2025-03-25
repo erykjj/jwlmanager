@@ -1826,7 +1826,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db():
 
-                def add_scripture_location(attribs):
+                def add_scripture_location(attribs): # CHECK: too many locations are being added!!
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
                     if existing_id:
                         location_id = existing_id[0]
@@ -1838,7 +1838,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             location_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) VALUES (?, ?, ?, ?, ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12])).lastrowid
                     return location_id
 
-                def add_publication_location(attribs):
+                def add_publication_location(attribs): # CHECK: too many locations are being added!!
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
                     if existing_id:
                         location_id = existing_id[0]
@@ -2146,14 +2146,15 @@ class Window(QMainWindow, Ui_MainWindow):
                         hashes[im_h] = im_fp
                     return con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (im_h,)).fetchone()[0]
 
-                def add_media(im_imi, im_of, im_fp, im_mt, im_h, thumbs = False):
+                def add_media(im_imi, im_of, im_fp, im_mt, im_h):
                     tmp = im_fp
                     ext = 0
-                    while not thumbs and os.path.isfile(os.path.join(TMP_PATH, im_fp)):
-                        ext += 1
-                        im_fp = f'{tmp}_{ext}'
-                    shutil.copy2(os.path.join(playlist_path, tmp), os.path.join(TMP_PATH, im_fp))
-                    hashes[im_h] = im_fp
+                    if im_h not in hashes:
+                        while os.path.isfile(os.path.join(TMP_PATH, im_fp)):
+                            ext += 1
+                            im_fp = f'{tmp}_{ext}'
+                        shutil.copy2(os.path.join(playlist_path, tmp), os.path.join(TMP_PATH, im_fp))
+                        hashes[im_h] = im_fp
                     existing_id = con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (im_h,)).fetchone()
                     if existing_id:
                         im_imi = existing_id[0]
@@ -2167,7 +2168,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 def add_thumbnails(original_pii, pi_pii):
                     for row in impcon.execute('SELECT p.DurationTicks, i.IndependentMediaId, i.OriginalFilename, i.FilePath, i.MimeType, i.Hash FROM PlaylistItemIndependentMediaMap p LEFT JOIN IndependentMedia i USING (IndependentMediaId) WHERE p.PlaylistItemId = ?;', (original_pii,)).fetchall():
-                        im_imi = add_media(*row[1:], thumbs = True)
+                        im_imi = add_media(*row[1:])
                         con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?) ON CONFLICT(PlaylistItemId, IndependentMediaId) DO UPDATE SET DurationTicks = excluded.DurationTicks;', (pi_pii, im_imi, row[0]))
 
                 def add_item():
