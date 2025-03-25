@@ -2133,7 +2133,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_playlist(playlist_name): 
+        def import_playlist(playlist_name):
 
             def update_db(playlist_name):
 
@@ -2146,11 +2146,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         hashes[im_h] = im_fp
                     return con.execute('SELECT IndependentMediaId FROM IndependentMedia WHERE Hash = ?;', (im_h,)).fetchone()[0]
 
-                def add_media():
-                    nonlocal im_fp
+                def add_media(im_imi, im_of, im_fp, im_mt, im_h, thumbs = False):
                     tmp = im_fp
                     ext = 0
-                    while os.path.isfile(os.path.join(TMP_PATH, im_fp)):
+                    while not thumbs and os.path.isfile(os.path.join(TMP_PATH, im_fp)):
                         ext += 1
                         im_fp = f'{tmp}_{ext}'
                     shutil.copy2(os.path.join(playlist_path, tmp), os.path.join(TMP_PATH, im_fp))
@@ -2166,6 +2165,11 @@ class Window(QMainWindow, Ui_MainWindow):
                             im_imi = con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (im_of, im_fp, im_mt, im_h)).lastrowid
                     return im_imi
 
+                def add_thumbnails(original_pii, pi_pii):
+                    for row in impcon.execute('SELECT p.DurationTicks, i.IndependentMediaId, i.OriginalFilename, i.FilePath, i.MimeType, i.Hash FROM PlaylistItemIndependentMediaMap p LEFT JOIN IndependentMedia i USING (IndependentMediaId) WHERE p.PlaylistItemId = ?;', (original_pii,)).fetchall():
+                        im_imi = add_media(*row[1:], thumbs = True)
+                        con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?) ON CONFLICT(PlaylistItemId, IndependentMediaId) DO UPDATE SET DurationTicks = excluded.DurationTicks;', (pi_pii, im_imi, row[0]))
+
                 def add_item():
                     con.execute('INSERT OR IGNORE INTO PlaylistItemAccuracy (Description) VALUES (?);', (pia_d,))
                     pia_piai = con.execute('SELECT PlaylistItemAccuracyId FROM PlaylistItemAccuracy WHERE Description = ?;', (pia_d,)).fetchone()[0]
@@ -2178,8 +2182,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute('INSERT INTO PlaylistItem (PlaylistItemId, Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?, ?);', (pi_pii, pi_l, pi_stot, pi_etot, pia_piai, pi_ea, im_fp))
                         else:
                             pi_pii = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (pi_l, pi_stot, pi_etot, pia_piai, pi_ea, im_fp)).lastrowid
-                    if piimm_dt:
-                        con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?) ON CONFLICT(PlaylistItemId, IndependentMediaId) DO UPDATE SET DurationTicks = excluded.DurationTicks;', (pi_pii, im_imi, piimm_dt))
                     return pi_pii
 
                 def add_tag():
@@ -2244,10 +2246,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 tags = {}
                 for row in con.execute('SELECT TagId, Name FROM TagMap LEFT JOIN Tag USING (TagId) WHERE TYPE = 2 GROUP BY TagId;').fetchall():
                     tags[row[1]] = row[0]
-                sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemLocationMap USING (PlaylistItemId) LEFT JOIN Location USING (LocationId) LEFT JOIN PlaylistItemIndependentMediaMap USING (PlaylistItemId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId)'
+                sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemLocationMap USING (PlaylistItemId) LEFT JOIN Location USING (LocationId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId)'
                 count = 0
                 for row in impcon.execute(sql).fetchall():
-                    pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, _, piimm_dt, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
+                    pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
                     playlist = playlist_name if playlist_name else t_n
                     if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ?;', (playlist, im_h)).fetchone():
                         continue
@@ -2255,8 +2257,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     if im_h in hashes:
                         im_imi = existing_media()
                     else:
-                        im_imi = add_media()
+                        im_imi = add_media(im_imi, im_of, im_fp, im_mt, im_h)
+                    original_pii = pi_pii
                     pi_pii = add_item()
+                    add_thumbnails(original_pii, pi_pii)
                     add_markers()
                     add_tag()
                     add_locations()
