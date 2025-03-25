@@ -1826,7 +1826,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def update_db():
 
-                def add_scripture_location(attribs): # CHECK: too many locations are being added!!
+                def add_scripture_location(attribs):
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[10], attribs[11], attribs[6], attribs[7])).fetchone()
                     if existing_id:
                         location_id = existing_id[0]
@@ -1838,15 +1838,16 @@ class Window(QMainWindow, Ui_MainWindow):
                             location_id = con.execute('INSERT INTO Location (KeySymbol, MepsLanguage, BookNumber, ChapterNumber, Type) VALUES (?, ?, ?, ?, ?);', (attribs[10], attribs[11], attribs[6], attribs[7], attribs[12])).lastrowid
                     return location_id
 
-                def add_publication_location(attribs): # CHECK: too many locations are being added!!
+                def add_publication_location(attribs):
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND IssueTagNumber = ? AND DocumentId = ? AND Type = ?;', (attribs[10], attribs[11], attribs[9], attribs[8], attribs[12])).fetchone()
                     if existing_id:
                         location_id = existing_id[0]
-                    if available_ids.get('Location'):
-                        location_id = available_ids['Location'].pop()
-                        con.execute('INSERT INTO Location (LocationId, IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?, ?);', (location_id, attribs[9], attribs[10], attribs[11], attribs[8], attribs[12]))
                     else:
-                        location_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12])).lastrowid
+                        if available_ids.get('Location'):
+                            location_id = available_ids['Location'].pop()
+                            con.execute('INSERT INTO Location (LocationId, IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?, ?);', (location_id, attribs[9], attribs[10], attribs[11], attribs[8], attribs[12]))
+                        else:
+                            location_id = con.execute('INSERT INTO Location (IssueTagNumber, KeySymbol, MepsLanguage, DocumentId, Type) VALUES (?, ?, ?, ?, ?);', (attribs[9], attribs[10], attribs[11], attribs[8], attribs[12])).lastrowid
                     return location_id
 
                 def add_usermark(attribs, location_id):
