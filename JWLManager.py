@@ -2012,14 +2012,13 @@ class Window(QMainWindow, Ui_MainWindow):
                             con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (usermark_id, attribs['COLOR'], location_id))
                         else:
                             usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id)).lastrowid
-                            # usermark_id = con.execute(f"SELECT UserMarkId FROM UserMark WHERE UserMarkGuid = '{unique_id}';").fetchone()[0]
                     if not ns:
                         return usermark_id
                     existing_id = con.execute(f"SELECT BlockRangeId FROM BlockRange WHERE BlockType = ? AND Identifier = ? AND StartToken = ? AND EndToken = ? AND UserMarkId = ?;", (block_type, identifier, ns, ne, usermark_id)).fetchone()
                     if not existing_id:
                         if available_ids.get('BlockRange'):
                             blockrange_id = available_ids['BlockRange'].pop()
-                            con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, ns, ne, usermark_id))
+                            con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, ns, ne, usermark_id))
                         else:
                             con.execute('INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
                     return usermark_id
