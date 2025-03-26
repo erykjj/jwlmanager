@@ -31,6 +31,7 @@ ____
 - Modified Playlist import to handle duplicates
 - Updated publications catalog
 - Improved adding Favorites
+- Updated Help/usage instructions
 
 ### Fixed
 
