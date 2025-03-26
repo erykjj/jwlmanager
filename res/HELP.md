@@ -4,6 +4,8 @@ Open a `.jwlibrary` backup archive to see the Annotations (the editable "comment
 ######
 If you **drag-and-drop** (or double-click) an archive into the app when another archive is already opened, you will have the option to "Open" it (replacing the current one) or "Merge". If you choose to **merge**, *all* the records (Annotations, Bookmarks, Highlights, Notes and Playlists) from this second archive will be added to the already opened one, *over-writing* any that may be the same (eg., a note at the same location and with the same title). Keep in mind that by merging *you don't have any control* over which records to import. Also, *merging is always "additive"*: for example, if you deleted a note in the original archive and import another that still has that note, the note will be restored; or, if you deleted it in the archive you are merging but it still exists in the original archive, it will remain. Thus, it is preferable to export the items you want from the second archive and import them into the first in two steps (using the `Export` and `Import` buttons).
 ######
+When an instance of JWLManager is open, a `JWLManager.lock` file is created where the JWLManager executable is found. If, for some reason, the app exits *uncleanly*, manually delete this lockfile.
+######
 The state of the application (size, position, language, and various selection choices) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 ######
 Notes that are not associated with any publication (created directly in the Personal Study space), are listed as `* OTHER *` and with `* NO LANGUAGE *`. Notes that aren't tagged will be listed as `* NO TAG *`.
