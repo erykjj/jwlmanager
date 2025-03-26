@@ -64,11 +64,11 @@ Exporting of **Bookmarks** and **Highlights** is also possible - not so much wit
 ######
 **Playlists** are imported from `.jwlplaylist` archives (containing a single list; the name of the archive defines the playlist name) *and* `.jwlibrary` archives (using the `Import` button only; drag-and-drop will open the archive instead of importing all the playlists it contains).
 ######
-You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file with the **Notes**, **Highlights** or **Annotations** to import. You can use the file produced by exporting, or you can create your own. The Higlights file is a CSV text file with a `{HIGHLIGHTS}` header. The Annotations file must start with `{ANNOTATIONS}` on the first line. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line.
-######
-Editing or manually creating a **Bookmarks** or **Highlights** import file is *not* recommended. Exported Bookmarks and Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
+You can work with the exported MS Excel file (reusing the column headings) or use a special **UTF-8 encoded** text file. These special CSV text files must start with a header on the first line: `{ANNOTATIONS}`, `{BOOKMARKS}`, `{FAVORITES}` or `{HIGHLIGHTS}`. You can simply **drag-and-drop the import text files** into the app as long as they have the correct header line. Editing or manually creating a **Bookmarks** or **Highlights** import file is *not* recommended. Exported Bookmarks and Highlights can be merged into another archive. Any conflicting/duplicate entries will be replaced and *overlapping highlights will be combined and the color changed to the one being imported* (this can affect the final number).
 ######
 #### Importing Notes
+######
+Notes can be imported from an MS Excel file or a custom text format file. In both cases, duplicate Notes are not added twice, and this will affect the final number.
 ######
 The `{NOTES=}` attribute in the first line is *required* to identify a Notes export/import file, and provides a convenient way to delete any notes that have titles starting with a special character (for example, `{NOTES=»}`). This is to avoid creating duplicate notes if the title has changed. When set, all notes with titles starting with this character will be deleted *before* notes from the file are imported. Otherwise, *notes with the same title and at the same 'location' will be over-written*, but those where the title was modified even slightly will create an almost duplicate note. (Notes with an empty title will be compared by content; if there is even a tiny difference, a new note will be added.)
 ######
