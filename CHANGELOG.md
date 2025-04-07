@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed exporting Bookmarks containing "|" character
+
 ### Removed
 
 ____
