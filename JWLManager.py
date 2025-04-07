@@ -1124,7 +1124,7 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 where = ''
             item_list = []
-            for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, b.Title, Snippet, BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) {where};').fetchall():
+            for row in con.execute(f'SELECT l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, l.KeySymbol, l.MepsLanguage, l.Type, Slot, REPLACE(b.Title, "|", "¦"), REPLACE(Snippet, "|", "¦"), BlockType, BlockIdentifier FROM Bookmark b LEFT JOIN Location l USING (LocationId) {where};').fetchall():
                 item = '|'.join(str(x) if x is not None else 'None' for x in row)
                 item_list.append(item)
             if fname:
@@ -1654,6 +1654,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     return False
 
             def update_db():
+
                 def add_scripture_location(attribs):
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
                     if existing_id:
