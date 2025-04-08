@@ -9,6 +9,7 @@
 ### Fixed
 
 - Fixed exporting Bookmarks containing "|" character
+- Fixed incomplete SQL on Note import
 
 ### Removed
 
