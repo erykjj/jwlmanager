@@ -2010,7 +2010,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         unique_id = uuid.uuid1()
                         if available_ids.get('UserMark'):
                             usermark_id = available_ids['UserMark'].pop()
-                            con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (usermark_id, attribs['COLOR'], location_id))
+                            con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, ?, 0, '{unique_id}', 1);", (usermark_id, attribs['COLOR'], location_id))
                         else:
                             usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id)).lastrowid
                     if not ns:
@@ -3070,7 +3070,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             thumb_name = con.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
 
                     result += 1
-                    item_id = con.execute('INSERT INTO PlaylistItem (Label, StartTrimOffsetTicks, EndTrimOffsetTicks, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?, ?, ?);', (check_label(name), None, None, 1, 1, thumb_name)).lastrowid
+                    item_id = con.execute('INSERT INTO PlaylistItem (Label, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?);', (check_label(name), 1, 1, thumb_name)).lastrowid
                     current_labels.append(name)
                     con.execute('INSERT INTO PlaylistItemIndependentMediaMap (PlaylistItemId, IndependentMediaId, DurationTicks) VALUES (?, ?, ?);', (item_id, media_id, 40000000))
 
