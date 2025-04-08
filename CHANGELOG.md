@@ -8,12 +8,15 @@
 
 ### Fixed
 
-- Fixed exporting Bookmarks containing "|" character
-- Fixed incomplete SQL on Note import
-
 ### Removed
 
 ____
+## [8.0.1] - 2025-04-08
+### Fixed
+
+- Fixed exporting Bookmarks containing "|" character
+- Fixed incomplete SQL on Note import
+
 ## [8.0.0] - 2025-03-26
 ### Added
 
@@ -901,6 +904,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[8.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.1
 [8.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.0
 [7.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.2.0
 [7.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v7.1.1
