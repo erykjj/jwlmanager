@@ -1,5 +1,5 @@
-PySide6
-shiboken6
+PySide6==6.8.*
+shiboken6==6.8.*
 polars
 pillow
 puremagic
