@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [8.0.2] - 2025-04-08
+### Changed
+
+- Locked PySide6 to v6.8 until breaking changes in v6.9 are resolved
+
 ## [8.0.1] - 2025-04-08
 ### Fixed
 
@@ -904,6 +909,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[8.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.2
 [8.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.1
 [8.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.0
 [7.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v7.2.0
