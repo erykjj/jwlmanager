@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [8.1.0] - 2025-04-15
+### Changed
+
+- Handle block ranges on Note import
+
 ## [8.0.2] - 2025-04-08
 ### Changed
 
@@ -909,6 +914,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[8.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.1.0
 [8.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.2
 [8.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.1
 [8.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.0
