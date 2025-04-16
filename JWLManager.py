@@ -2006,17 +2006,19 @@ class Window(QMainWindow, Ui_MainWindow):
                     if attribs['RANGE'] is None:
                         return usermark_id
                     ns, ne = map(int, str(attribs['RANGE']).split('-'))
-                    min_st = []
-                    max_et = []
+                    min_st = [ns]
+                    max_et = [ne]
                     for row in con.execute('SELECT BlockRangeId, StartToken, EndToken FROM BlockRange JOIN UserMark USING (UserMarkId) WHERE LocationId = ? AND Identifier = ? AND StartToken <= ? AND EndToken >= ?', (location_id, identifier, ne, ns)).fetchall():
                         min_st.append(row[1])
                         max_et.append(row[2])
                         con.execute('DELETE FROM BlockRange WHERE BlockRangeId = ?;', (row[0],))
+                    ns = min(min_st)
+                    ne = max(max_et)
                     if available_ids.get('BlockRange'):
                         blockrange_id = available_ids['BlockRange'].pop()
-                        con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, min(min_st), max(max_et), usermark_id))
+                        con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, ns, ne, usermark_id))
                     else:
-                        con.execute('INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, min(min_st), max(max_et), usermark_id))
+                        con.execute('INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
                     return usermark_id
 
                 def update_note(attribs, location_id, block_type, usermark_id):
