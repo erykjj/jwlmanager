@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v8.0.2'
+VERSION = 'v8.1.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1997,31 +1997,28 @@ class Window(QMainWindow, Ui_MainWindow):
                     else:
                         block_type = 1
                         identifier = attribs['BLOCK']
+                    ns = None
                     if attribs['RANGE'] is not None:
-                        ns, ne = str(attribs['RANGE']).split('-')
-                        fields = f' AND StartToken = {int(ns)} AND EndToken = {int(ne)}'
+                        ns, ne = map(int, str(attribs['RANGE']).split('-'))
+                        existing_id = con.execute('SELECT UserMarkId, BlockRangeId, StartToken, EndToken FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE LocationId = ? AND Identifier = ? AND (MAX(StartToken, ?) <= MIN(EndToken, ?));', (location_id, identifier, ns, ne)).fetchone()
+                        if existing_id:
+                            usermark_id = existing_id[0]
+                            blockrange_id = existing_id[1]
+                            con.execute('UPDATE BlockRange SET StartToken = ?, EndToken = ? WHERE BlockRangeId = ?;', (min(ns, existing_id[2]), max(ne, existing_id[3]), blockrange_id))
+                            return usermark_id
+                    unique_id = uuid.uuid1()
+                    if available_ids.get('UserMark'):
+                        usermark_id = available_ids['UserMark'].pop()
+                        con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, ?, 0, '{unique_id}', 1);", (usermark_id, attribs['COLOR'], location_id))
                     else:
-                        fields = ''
-                        ns = None
-                    existing_id = con.execute(f"SELECT UserMarkId FROM UserMark JOIN BlockRange USING (UserMarkId) WHERE ColorIndex = ? AND LocationId = ? AND Identifier = ? {fields};", (attribs['COLOR'], location_id, identifier)).fetchone()
-                    if existing_id:
-                        usermark_id = existing_id[0]
-                    else:
-                        unique_id = uuid.uuid1()
-                        if available_ids.get('UserMark'):
-                            usermark_id = available_ids['UserMark'].pop()
-                            con.execute(f"INSERT INTO UserMark (UserMarkId, ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, ?, 0, '{unique_id}', 1);", (usermark_id, attribs['COLOR'], location_id))
-                        else:
-                            usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id)).lastrowid
+                        usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (attribs['COLOR'], location_id)).lastrowid
                     if not ns:
                         return usermark_id
-                    existing_id = con.execute(f"SELECT BlockRangeId FROM BlockRange WHERE BlockType = ? AND Identifier = ? AND StartToken = ? AND EndToken = ? AND UserMarkId = ?;", (block_type, identifier, ns, ne, usermark_id)).fetchone()
-                    if not existing_id:
-                        if available_ids.get('BlockRange'):
-                            blockrange_id = available_ids['BlockRange'].pop()
-                            con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, ns, ne, usermark_id))
-                        else:
-                            con.execute('INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
+                    if available_ids.get('BlockRange'):
+                        blockrange_id = available_ids['BlockRange'].pop()
+                        con.execute('INSERT INTO BlockRange (BlockRangeId, BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?, ?);', (blockrange_id, block_type, identifier, ns, ne, usermark_id))
+                    else:
+                        con.execute('INSERT INTO BlockRange (BlockType, Identifier, StartToken, EndToken, UserMarkId) VALUES (?, ?, ?, ?, ?);', (block_type, identifier, ns, ne, usermark_id))
                     return usermark_id
 
                 def update_note(attribs, location_id, block_type, usermark_id):
