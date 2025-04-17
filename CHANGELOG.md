@@ -11,7 +11,7 @@
 ### Removed
 
 ____
-## [8.1.0] - 2025-04-15
+## [8.1.0] - 2025-04-17
 ### Changed
 
 - Handle block ranges on Note import
