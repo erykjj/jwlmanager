@@ -95,10 +95,11 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - note color (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) - optional (will be 0 = grey if not provided)
     - eg. `{COLOR=2}`
   - **RANGE**
-    - 0-based index of the tokens ("words") to highlight - optional
+    - one or more consecutive ranges to highlight, separated by semicolons - optional
+    - format: block identifier number (paragraph/verse) followed by 0-based index of the tokens ("words") to highlight
     - if not provided, note will be attached to start of verse/paragraph (no highlighting)
     - if no COLOR is provided (or `{COLOR=0}`), token range will be ingnored
-    - eg. `{RANGE=4-11}`
+    - eg. `{RANGE=1:4-11}`, `{RANGE=11:20-35;12:0-12}`
   - **LANG**
     - language (for Bible and publications notes) - optional (will be 0 = English if not provided)
     - eg. `{LANG=1}`
@@ -108,7 +109,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - eg. `{PUB=nwtsty}`
   - **HEADING**
     - specifies the heading/chapter title where note is placed (or Bible book and chapter) - optional
-    - this is included mostly for convenience; it may be blank, ~~and is regenerated correctly when the JW Library app displays the Notes~~
+    - this is included mostly for convenience; it may be blank
     - eg. `{HEADING=Genesis 1}`
 ######
 ##### Attributes for Bible notes
