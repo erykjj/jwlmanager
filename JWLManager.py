@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v8.1.0'
+VERSION = 'v8.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1229,8 +1229,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         n.LastModified Date,
                         n.Created,
                         u.ColorIndex,
-                        b.StartToken,
-                        b.EndToken,
+                        n.UserMarkId,
                         n.Guid
                     FROM Note n
                         LEFT JOIN
@@ -1239,10 +1238,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         )
                         LEFT JOIN
                         UserMark u USING (
-                            UserMarkId
-                        )
-                        LEFT JOIN
-                        BlockRange b USING (
                             UserMarkId
                         )
                     {where} 
@@ -1266,12 +1261,16 @@ class Window(QMainWindow, Ui_MainWindow):
                         'MODIFIED': row[12][:19],
                         'CREATED': row[13][:19],
                         'COLOR': row[14] or 0,
-                        'GUID': row[17]
+                        'GUID': row[16]
                     }
-                    if row[15] is not None:
-                        item['RANGE'] = f'{row[15]}-{row[16]}'
-                    else:
-                        item['RANGE'] = None
+                    item['RANGE'] = None
+                    if row[15]:
+                        rng = ''
+                        for br in con.execute('SELECT Identifier, StartToken, EndToken FROM BlockRange WHERE UserMarkId = ? ORDER BY Identifier, StartToken;', (row[15],)).fetchall():
+                            rng += f'{br[0]}:{br[1]}-{br[2]};'
+                        rng = rng.strip(';')
+                        if rng:
+                            item['RANGE'] = rng
                     if 'T' not in item['MODIFIED']:
                         item['MODIFIED'] = item['MODIFIED'][:10] + 'T00:00:00'
                     if 'T' not in item['CREATED']:
