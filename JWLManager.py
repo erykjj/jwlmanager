@@ -2080,7 +2080,8 @@ class Window(QMainWindow, Ui_MainWindow):
                     pl.col('COLOR').fill_null(0),
                     pl.col('TAGS').fill_null(''),
                     pl.col('TITLE').fill_null(''),
-                    pl.col('NOTE').fill_null('')
+                    pl.col('NOTE').fill_null(''),
+                    pl.col('HEADING').fill_null('')
                 ])
                 count = 0
                 for row in df.iter_rows(named=True):
