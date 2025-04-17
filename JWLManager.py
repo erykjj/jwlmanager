@@ -1268,7 +1268,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         'COLOR': row[14] or 0,
                         'GUID': row[17]
                     }
-                    if row[15]:
+                    if row[15] is not None:
                         item['RANGE'] = f'{row[15]}-{row[16]}'
                     else:
                         item['RANGE'] = None
