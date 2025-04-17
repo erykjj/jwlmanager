@@ -108,7 +108,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - eg. `{PUB=nwtsty}`
   - **HEADING**
     - specifies the heading/chapter title where note is placed (or Bible book and chapter) - optional
-    - this is included mostly for convenience; it may be blank, and is regenerated correctly when the JW Library app displays the Notes
+    - this is included mostly for convenience; it may be blank, ~~and is regenerated correctly when the JW Library app displays the Notes~~
     - eg. `{HEADING=Genesis 1}`
 ######
 ##### Attributes for Bible notes
