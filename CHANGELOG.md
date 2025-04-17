@@ -4,8 +4,6 @@
 
 ### Added
 
-- Added multi-par/verse highlights on Note export/import/merge
-
 ### Changed
 
 
@@ -14,6 +12,11 @@
 ### Removed
 
 ____
+## [8.2.0] - 2025-04-17
+### Added
+
+- Added multi-par/verse highlights on Note export/import/merge
+
 ## [8.1.0] - 2025-04-17
 ### Changed
 
