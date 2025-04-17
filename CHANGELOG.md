@@ -18,7 +18,7 @@ ____
 
 ### Fixed
 
-- Fixed NULL Location.Title resulting in Note links disappearing
+- Fixed NULL `Location.Title` resulting in Note links disappearing
   - This seems to have been the result of an update to JW Library, which used to "regenerate" these empty fields and now fails when they are NULL
 - Fixed 0-start range in Note export
 
