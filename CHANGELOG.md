@@ -4,7 +4,7 @@
 
 ### Added
 
-- Added multi-par/verse highlights on Note export
+- Added multi-par/verse highlights on Note export/import/merge
 
 ### Changed
 
