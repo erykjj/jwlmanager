@@ -16,6 +16,11 @@ ____
 
 - Handle block ranges on Note import
 
+### Fixed
+
+- Fixed NULL Location.Title resulting in Note links disappearing
+  - This seems to have been the result of an update to JW Library, which used to "regenerate" these empty fields and now fails when they are NULL
+
 ## [8.0.2] - 2025-04-08
 ### Changed
 
