@@ -3399,7 +3399,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     AND LocationId NOT IN (SELECT LocationId FROM PlaylistItemLocationMap);
 
                 -- Fix "missing" note links
-                UPDATE Location SET Title = "" Title IS NULL;
+                UPDATE Location SET Title = "" WHERE Title IS NULL;
 
                 PRAGMA foreign_keys = 'ON';
                 COMMIT;
