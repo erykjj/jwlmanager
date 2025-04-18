@@ -30,7 +30,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r res/requirements.txt
         pip install pyinstaller==6.12.*
-        pip install pyinstaller-hooks-contrib
+        pip install pyinstaller-hooks-contrib==2025.2
     - name: Build EXE with Pyinstaller
       run: |
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
