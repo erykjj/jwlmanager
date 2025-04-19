@@ -32,7 +32,7 @@ jobs:
         python -m pip install nuitka
     - name: Build with Pyinstaller
       run: |
-        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --msvc=latest --assume-yes-for-downloads JWLManager.py
+        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
         cd dist
         mv dist/JWLManager dist/JWLManager_${{ inputs.TAG }}
