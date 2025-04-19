@@ -28,8 +28,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r res/requirements.txt
-        pip install nuitka
+        python -m pip install -r res/requirements.txt
+        python -m pip install nuitka
     - name: Build EXE with Nuitka
       run: |
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --msvc=latest --assume-yes-for-downloads JWLManager.py
