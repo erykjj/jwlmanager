@@ -29,21 +29,26 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r res/requirements.txt
-        python -m pip install pyinstaller==6.12.*
-    - name: Build EXE with Pyinstaller
+    # - name: Build EXE with Pyinstaller
+    #   run: |
+    #     python -m pip install pyinstaller==6.12.*
+    #     pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
+    #     cd dist
+    #     ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
+    - name: Build EXE with Nuitka
       run: |
-        pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
-    - name: Rename EXE
+        python -m nuitka --mode=onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
+        mkdir dist
+        copy D:\a\jwlmanager\jwlmanager\JWLManager.exe dist\JWLManager_${{ inputs.TAG }}.exe
+    # - name: Build with Pyinstaller
+    #   run: |
+    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
+    #     cd dist
+    #     tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
+    - name: Build with Nuitka
       run: |
-        cd dist
-        ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
-    - name: Build with Pyinstaller
-      run: |
-        pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
-    - name: Rename & zip folder
-      run: |
-        cd dist
-        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
+        python -m nuitka --mode=standalone --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
+        tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
