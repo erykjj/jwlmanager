@@ -27,12 +27,12 @@ jobs:
         python-version: '3.13'
     - name: Install dependencies
       run: |
-        echo "::add-path::C:\msys64\mingw64\bin"
         python -m pip install --upgrade pip
         pip install -r res/requirements.txt
         pip install nuitka
     - name: Build EXE with Nuitka
       run: |
+        echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
         python -m nuitka --onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --mingw64 --clang JWLManager.py
     - name: Rename EXE
       run: |
