@@ -36,7 +36,6 @@ jobs:
     - name: Rename EXE
       run: |
         mkdir dist
-        cd dist
         cp D:\a\jwlmanager\jwlmanager\JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
     # - name: Build with Nuitka
     #   run: |
