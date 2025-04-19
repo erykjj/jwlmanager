@@ -32,7 +32,7 @@ jobs:
         python -m pip install nuitka
     - name: Build with Nuitka
       run: |
-        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --clang --assume-yes-for-downloads JWLManager.py
+        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
         cp JWLManager.onefile-build/JWLManager dist/JWLManager_${{ inputs.TAG }}
     - name: Upload BIN
