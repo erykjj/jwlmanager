@@ -1,4 +1,4 @@
-name: 'Build Linux package v1.0.2'
+name: 'Linux v1.1.0'
 
 on:
   workflow_call:
@@ -28,12 +28,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r res/requirements.txt
-        pip install pyinstaller
-        pip install pyinstaller-hooks-contrib
+        python -m pip install -r res/requirements.txt
+        python -m pip install pyinstaller
     - name: Build with Pyinstaller
       run: |
-        pyinstaller --clean --noconfirm .github/workflows/JWLManager.bin.spec
+        python -m pyinstaller --clean --noconfirm .github/workflows/JWLManager.bin.spec
         mv dist/JWLManager dist/JWLManager_${{ inputs.TAG }}
     - name: Upload BIN
       uses: actions/upload-artifact@v4
