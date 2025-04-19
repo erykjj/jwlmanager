@@ -33,14 +33,12 @@ jobs:
       run: |
         python -m pip install nuitka==2.6.5
         python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
-        pwd
-        ls
         mkdir dist
-        mv JWLManager.app dist/JWLManager_${{ inputs.TAG }}.app
-    # - name: Zip app
-    #   run: |
-    #     cd dist/
-    #     zip -r9 JWLManager_${{ inputs.TAG }}.app.zip JWLManager.app
+        mv JWLManager.app dist/
+    - name: Zip app
+      run: |
+        cd dist/
+        zip -r9 JWLManager_${{ inputs.TAG }}.app.zip JWLManager.app
     - name: Upload APP
       uses: actions/upload-artifact@v4
       with:
