@@ -30,12 +30,11 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install -r res/requirements.txt
         python -m pip install nuitka
-    - name: Build with Pyinstaller
+    - name: Build with Nuitka
       run: |
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
-        cd dist
-        mv dist/JWLManager dist/JWLManager_${{ inputs.TAG }}
+        cp JWLManager.onefile-build/JWLManager dist/JWLManager_${{ inputs.TAG }}
     - name: Upload BIN
       uses: actions/upload-artifact@v4
       with:
