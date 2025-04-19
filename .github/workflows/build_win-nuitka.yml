@@ -32,15 +32,14 @@ jobs:
         pip install nuitka
     - name: Build EXE with Nuitka
       run: |
-        echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
         python -m nuitka --onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --msvc=latest JWLManager.py
     - name: Rename EXE
       run: |
         cd dist
         ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
-    # - name: Build with Pyinstaller
+    # - name: Build with Nuitka
     #   run: |
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
+    #     python -m nuitka --mode=standalone --follow-imports --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --msvc=latest JWLManager.py
     # - name: Rename & zip folder
     #   run: |
     #     cd dist
