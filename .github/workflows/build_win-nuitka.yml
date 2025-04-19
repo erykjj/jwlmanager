@@ -32,7 +32,7 @@ jobs:
         python -m pip install nuitka==2.6.5
     - name: Build EXE with Nuitka
       run: |
-        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --msvc=latest --assume-yes-for-downloads JWLManager.py
+        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
     - name: Rename EXE
       run: |
         mkdir dist
