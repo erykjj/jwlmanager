@@ -1,4 +1,4 @@
-name: 'Build Windows packages v1.0.1'
+name: 'Build Windows v1.1.0'
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
 jobs:
   windows:
     name: Build Windows EXE & ZIP
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -28,9 +28,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r res/requirements.txt
-        pip install pyinstaller==6.12.*
-        pip install pyinstaller-hooks-contrib
+        python -m pip install -r res/requirements.txt
+        python -m pip install pyinstaller==6.12.*
     - name: Build EXE with Pyinstaller
       run: |
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
