@@ -36,7 +36,7 @@ jobs:
     - name: Rename EXE
       run: |
         mkdir dist
-        cp D:\a\jwlmanager\jwlmanager\JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
+        copy D:\a\jwlmanager\jwlmanager\JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
     # - name: Build with Nuitka
     #   run: |
     #     python -m nuitka --mode=standalone --follow-imports --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --msvc=latest JWLManager.py
