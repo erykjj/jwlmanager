@@ -1,4 +1,4 @@
-name: 'Draft Release v1.0.2'
+name: 'Draft Release v1.1.0'
 
 on:
   push:
@@ -89,7 +89,7 @@ jobs:
         body: |
           ${{ steps.extract.outputs.changelog_section }}
           ____
-          You can download the latest source script and execute it from the commandline, or try these self-contained packages, which don't require the installation of Python or any dependencies:
+          You can download the source script and execute it from the commandline, or use these self-contained packages, which don't require the installation of Python or any dependencies:
           - Linux:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
