@@ -51,7 +51,9 @@ jobs:
         mkdir dist
         python -m pip install nuitka==2.6.5
         python -m nuitka --mode=standalone --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
-        tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}.zip D:\a\jwlmanager\jwlmanager\JWLManager.dist
+        cd D:\a\jwlmanager\jwlmanager
+        tar.exe -a -c -f JWLManager.zip JWLManager.dist
+        copy D:\a\jwlmanager\jwlmanager\JWLManager.zip dist\JWLManager_${{ inputs.TAG }}.exe
     # - name: Upload EXE
     #   uses: actions/upload-artifact@v4
     #   with:
