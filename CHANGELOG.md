@@ -12,10 +12,10 @@
 ### Removed
 
 ____
-## [8.2.0] - 2025-04-17
+## [8.2.0] - 2025-04-19
 ### Added
 
-- Added multi-par/verse highlights on Note export/import/merge
+- Added multi-par/verse block-ranges (highlights) on Note export/import/merge
 
 ## [8.1.0] - 2025-04-17
 ### Changed
