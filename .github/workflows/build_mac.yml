@@ -24,14 +24,22 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.12'
+        # python-version: '3.12'
+        python-version: '3.13'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r res/requirements.txt
-        python -m pip install pyinstaller==5.13.*
-    - name: Build with Pyinstaller
-      run: pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
+    # - name: Build with Pyinstaller
+    #   run: |
+    #     python -m pip install pyinstaller==5.13.*
+    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
+    - name: Build with Nuitka
+      run: |
+        python -m pip install nuitka==2.6.5
+        python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
+        mkdir dist
+        mv JWLManager.app dist/
     - name: Zip app
       run: |
         cd dist/
