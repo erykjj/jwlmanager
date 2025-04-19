@@ -33,8 +33,10 @@ jobs:
     - name: Build with Nuitka
       run: |
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --clang --assume-yes-for-downloads JWLManager.py
+        pwd
+        ls -al
         mkdir dist
-        cp JWLManager.onefile-build/JWLManager.bin dist/JWLManager_${{ inputs.TAG }}
+        cp JWLManager.bin dist/JWLManager_${{ inputs.TAG }}
     - name: Upload BIN
       uses: actions/upload-artifact@v4
       with:
