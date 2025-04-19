@@ -33,7 +33,7 @@ jobs:
     - name: Build EXE with Nuitka
       run: |
         echo "PATH=$PATH:C:\msys64\mingw64\bin" >> $GITHUB_ENV
-        python -m nuitka --onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --mingw64 --clang JWLManager.py
+        python -m nuitka --onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --enable-plugin=pyside6 --msvc=latest JWLManager.py
     - name: Rename EXE
       run: |
         cd dist
