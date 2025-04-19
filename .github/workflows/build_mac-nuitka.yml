@@ -27,12 +27,12 @@ jobs:
         python-version: '3.13'
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r res/requirements.txt
+        pip install --upgrade pip
+        pip install -r res/requirements.txt
     - name: Build with Nuitka
       run:
-        python -m pip install nuitka==2.6.5
-        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
+        pip install nuitka==2.6.5
+        nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
         pwd
         ls -al
         mkdir dist
