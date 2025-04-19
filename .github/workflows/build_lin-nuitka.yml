@@ -1,0 +1,43 @@
+name: 'Build Linux with Nuitka v1.1.0'
+
+on:
+  workflow_call:
+    inputs:
+      TAG:
+        default: 'testing'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      TAG:
+        default: 'testing'
+        required: true
+        type: string
+
+jobs:
+  linux:
+    name: Build Linux BIN
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r res/requirements.txt
+        python -m pip install nuitka
+    - name: Build with Pyinstaller
+      run: |
+        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --msvc=latest --assume-yes-for-downloads JWLManager.py
+        mkdir dist
+        cd dist
+        mv dist/JWLManager dist/JWLManager_${{ inputs.TAG }}
+    - name: Upload BIN
+      uses: actions/upload-artifact@v4
+      with:
+        name: LinuxBIN
+        path: dist/JWLManager_${{ inputs.TAG }}
