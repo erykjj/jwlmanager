@@ -47,6 +47,7 @@ jobs:
     #     cd dist
     #     tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
     - name: Build with Nuitka
+      shell: cmd
       run: |
         if not exist dist mkdir dist
         python -m pip install nuitka
