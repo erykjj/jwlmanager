@@ -37,7 +37,7 @@ jobs:
     #     ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
     - name: Build EXE with Nuitka
       run: |
-        python -m pip install nuitka==2.6.5
+        python -m pip install nuitka
         python -m nuitka --mode=onefile --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
         mkdir dist
         copy D:\a\jwlmanager\jwlmanager\JWLManager.exe dist\JWLManager_${{ inputs.TAG }}.exe
@@ -49,7 +49,7 @@ jobs:
     - name: Build with Nuitka
       run: |
         mkdir dist
-        python -m pip install nuitka==2.6.5
+        python -m pip install nuitka
         python -m nuitka --mode=standalone --windows-console-mode=disable --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --msvc=latest --assume-yes-for-downloads JWLManager.py
         tar.exe -a -c -f dist\JWLManager_${{ inputs.TAG }}.zip -C "D:\a\jwlmanager\jwlmanager\JWLManager.dist" .
     - name: Upload EXE
