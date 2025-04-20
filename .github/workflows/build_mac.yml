@@ -36,7 +36,7 @@ jobs:
     #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
     - name: Build with Nuitka
       run: |
-        python -m pip install nuitka
+        python -m pip install nuitka==2.6.5
         python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.app dist/
