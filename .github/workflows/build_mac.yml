@@ -17,7 +17,7 @@ on:
 jobs:
   macos:
     name: Build macOS APP
-    runs-on: macos-latest
+    runs-on: macos-latest # macOS-15 Sequoia
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -40,10 +40,10 @@ jobs:
         python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --macos-target-arch=arm64 --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.app dist/
-        xattr -cr dist/JWLManager.app
     - name: Zip app
       run: |
         cd dist/
+        xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}.app.zip
     - name: Upload APP
       uses: actions/upload-artifact@v4
