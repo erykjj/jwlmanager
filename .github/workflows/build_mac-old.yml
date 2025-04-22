@@ -43,7 +43,7 @@ jobs:
     - name: Zip app
       run: |
         cd dist/
-        xattr -cr dist/JWLManager.app
+        xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-macOS13.app.zip
     - name: Upload APP
       uses: actions/upload-artifact@v4
