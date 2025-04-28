@@ -1,4 +1,4 @@
-# Feedback needed: https://github.com/erykjj/jwlmanager/issues/233
+# [Feedback needed](https://github.com/erykjj/jwlmanager/issues/233)
 
 [![Static Badge](https://img.shields.io/badge/mirror-orange?style=plastic&logo=gitlab&logoColor=orange&color=black)](https://gitlab.com/erykj/jwlmanager) [![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/erykjj/jwlmanager/total?style=plastic)](https://github.com/erykjj/jwlmanager/releases/latest) [![CodeQL scan](https://img.shields.io/github/actions/workflow/status/erykjj/jwlmanager/github-code-scanning%2Fcodeql?style=plastic)](https://github.com/erykjj/jwlmanager/actions?query=workflow%3ACodeQL) [![Static Badge](https://img.shields.io/badge/releases-orange?style=plastic&logo=rss&logoColor=orange&color=black)](https://github.com/erykjj/jwlmanager/releases.atom)
 
