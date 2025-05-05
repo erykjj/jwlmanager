@@ -1,4 +1,4 @@
-name: 'Build macOS 13 & 14 v1.1.0'
+name: 'Build macOS 13 & 14 v1.1.1'
 
 on:
   workflow_call:
@@ -43,7 +43,7 @@ jobs:
     - name: Zip app
       run: |
         cd dist/
-        xattr -cr JWLManager.app
+        xattr -dr com.apple.quarantine JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-macOS13.app.zip
     - name: Upload APP
       uses: actions/upload-artifact@v4
