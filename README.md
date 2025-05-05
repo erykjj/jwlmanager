@@ -32,10 +32,14 @@ If you have Python3.11+ installed on your system and can install some of the req
 git clone --depth 1 https://github.com/erykjj/jwlmanager.git
 cd jwlmanager
 pip install -r res/requirements.txt
+```
+
+Then...
+```
 python3 JWLManager.py
 ```
 
-Or, make it executable first and run directly:
+...or, make it executable first and run directly:
 
 ```
 chmod +x JWLManager.py
