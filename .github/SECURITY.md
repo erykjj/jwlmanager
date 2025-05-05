@@ -30,4 +30,9 @@ You can also try `xattr -dr com.apple.quarantine JWLManager.app` to remove the G
 
 ## Alternative
 
-Please keep in mind that I make these packages for convenience only. If they don't work, please try downloading the [*Source code (zip)*](https://github.com/erykjj/jwlmanager/releases/latest), and execute the Python script directly from within the unzipped folder via `python3 JWLManager.py`. Of course, this requires you have Python installed, along with the required dependencies.
+Please keep in mind that I make these packages for convenience only. If they don't work, please try cloning the source locally, and execute the Python script directly. Of course, you must have Python installed, along with the required dependencies.
+```
+git clone --depth 1 https://github.com/erykjj/jwlmanager.git
+cd jwlmanager
+pip install -r res/requirements.txt
+```
