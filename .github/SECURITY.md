@@ -26,6 +26,8 @@ You can open an app that isn’t allowed to open by manually overriding the sett
 The app is saved as an exception to your security settings, and you can open it in the future by double-clicking it, just as you can any authorized app.
 ```
 
+You can also try `xattr -dr com.apple.quarantine JWLManager.app` to remove the Gatekeeper quarantine flag.
+
 ## Alternative
 
 Please keep in mind that I make these packages for convenience only. If they don't work, please try downloading the [*Source code (zip)*](https://github.com/erykjj/jwlmanager/releases/latest), and execute the Python script directly from within the unzipped folder via `python3 JWLManager.py`. Of course, this requires you have Python installed, along with the required dependencies.
