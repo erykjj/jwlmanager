@@ -8,8 +8,13 @@
 
 - Updated German translations (thank you, Ullrich)
 - Updated catalog
+- Using PySide v6.9
+- Building stand-alone binaries for Linux and macOS with Nuitka v2.6.5 and Python 3.13
+  - Windows binaries are still Python 3.12 and Pyinstaller v5.13.2
 
 ### Fixed
+
+- Fixed typo in signal connection
 
 ### Removed
 
