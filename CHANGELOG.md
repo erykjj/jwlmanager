@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Updated German translations (thank you, Ullrich)
+- Updated catalog
 
 ### Fixed
 
