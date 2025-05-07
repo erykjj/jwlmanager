@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-02-06 17:36-0500\n"
-"PO-Revision-Date: 2025-02-06 23:14+0000\n"
+"PO-Revision-Date: 2025-05-07 18:13+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: de\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "Generated-By: Babel 2.16.0\n"
 
 #: JWLManager.py:127 JWLManager.py:428 JWLManager.py:432 JWLManager.py:650
@@ -199,7 +200,7 @@ msgstr "* KEINE SPRACHE *"
 
 #: JWLManager.py:583 JWLManager.py:594
 msgid "* NO TAG *"
-msgstr "* KEIN TAG *"
+msgstr "* KEIN STICHWORT *"
 
 #: JWLManager.py:583 JWLManager.py:1290
 msgid "* INDEPENDENT *"
@@ -225,7 +226,7 @@ msgstr "Tag"
 
 #: JWLManager.py:704 JWLManager.py:2477 JWLManager.py:2557
 msgid "Processing…"
-msgstr "Verarbeiten…"
+msgstr "Verarbeite…"
 
 #: JWLManager.py:741 JWLManager.py:853 JWLManager.py:2334
 msgid "Save"
@@ -314,7 +315,7 @@ msgstr "KEIN TEXT"
 
 #: JWLManager.py:1114
 msgid "UNTITLED"
-msgstr "UNTITLIERT"
+msgstr "OHNE ÜBERSCHRIFT"
 
 #: JWLManager.py:1446
 msgid "NOT exported!"
@@ -322,7 +323,7 @@ msgstr "NICHT exportiert!"
 
 #: JWLManager.py:1453
 msgid "Exporting. Please wait…"
-msgstr "Exportieren. Bitte warten…"
+msgstr "Exportiere. Bitte warten…"
 
 #: JWLManager.py:1475
 msgid "items exported"
@@ -333,8 +334,8 @@ msgid ""
 "Wrong import file format:\n"
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
-"Falsches Format für die Datei importieren:\n"
-"Fehlende {ANNOTATIONS} Taglinie"
+"Fehlerhafte Importdatei:\n"
+"Kopfzeile {ANNOTATIONS} fehlt"
 
 #: JWLManager.py:1509 JWLManager.py:1534 JWLManager.py:1603 JWLManager.py:1677
 #: JWLManager.py:1747 JWLManager.py:1811 JWLManager.py:1927
@@ -345,23 +346,23 @@ msgid ""
 msgstr ""
 "Fehler beim Import!\n"
 "\n"
-"Verwerfungseintritt"
+"Fehlerhafter Eintrag"
 
 #: JWLManager.py:1565
 msgid ""
 "Wrong import file format:\n"
 "Missing {BOOKMARKS} tag line"
 msgstr ""
-"Falsches Format für die Datei importieren:\n"
-"Fehlende {BOOKMARKS} Taglinie"
+"Fehlerhafte Importdatei:\n"
+"Überschriften {BOOKMARKS} fehlen"
 
 #: JWLManager.py:1627
 msgid ""
 "Wrong import file format:\n"
 "Missing {FAVORITES} tag line"
 msgstr ""
-"Falsches Format für die Datei importieren:\n"
-"Fehlende {FAVORITES} Taglinie"
+"Fehlerhafte Importdatei:\n"
+"Kopfzeile {FAVORITES} fehlt"
 
 #: JWLManager.py:1701
 msgid ""
@@ -803,4 +804,3 @@ msgstr "Notizen sortiert"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-
