@@ -113,7 +113,7 @@ class HelpBox(QDialog):
         layout = QHBoxLayout(self)
         layout.addWidget(text)
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
-        self.finished.connect(self.hide())
+        self.finished.connect(self.hide)
 
 
 class MergeDialog(QDialog):
