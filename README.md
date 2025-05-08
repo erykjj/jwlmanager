@@ -17,7 +17,9 @@ ____
 
 You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included).
 
-See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc. The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*` .
+* See [here](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **Windows security alerts**, etc.
+* The Linux binary needs to be given execute permissions: `chmod +x JWLManager_*`
+* The macOS binary needs to have the Gatekeeper quarantine attribute removed: `xattr -dr com.apple.quarantine JWLManager.app`
 
 The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
