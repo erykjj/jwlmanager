@@ -8,7 +8,7 @@ As to **virus alerts**, have a look here. These are the virus scan results for o
 
 You'll notice the great majority of anti-virus products report is as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. The app is basically a Python 3 script, and I use [PyInstaller](https://pyinstaller.org/en/stable/) to package it up into a Windows executable. It's this process of compiling a script that some over-zealous anti-virus products *may* flag as dangerous.
 
-## **macOS** slow start
+## **macOS** slow start/no start
 
 Again, this is because the app package (code) isn't signed with an (expensive) Apple Developer certificate. [Some say](https://forums.macrumors.com/threads/big-sur-apps-slow-to-launch.2279325/post-29855622), the slow start (we're talking 10 to 20 seconds!) is due to the fact that the app is being sent to Apple for "verification". *Apparently*, the launch is much faster if the internet is disabled - **someone please confirm that**.
 
@@ -26,7 +26,7 @@ You can open an app that isn’t allowed to open by manually overriding the sett
 The app is saved as an exception to your security settings, and you can open it in the future by double-clicking it, just as you can any authorized app.
 ```
 
-You can also try `xattr -dr com.apple.quarantine JWLManager.app` to remove the Gatekeeper quarantine flag.
+You can also do this in a terminal to remove the Gatekeeper quarantine flag: `xattr -dr com.apple.quarantine JWLManager.app`
 
 ## Alternative
 
