@@ -89,12 +89,12 @@
     <message>
         <location filename="main_window.ui" line="350"/>
         <source>Import</source>
-        <translation>Einfuhr</translation>
+        <translation>Importieren</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="366"/>
         <source>Export</source>
-        <translation>Ausfuhr</translation>
+        <translation>Exportieren</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="382"/>
@@ -109,7 +109,7 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>&amp;Ausblick</translation>
+        <translation>Aufrufen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="480"/>
@@ -131,7 +131,7 @@
         <location filename="main_window.ui" line="532"/>
         <source>&amp;View</source>
         <oldsource>V&amp;iew</oldsource>
-        <translation>&amp;Ausblick</translation>
+        <translation>&amp;Ansicht</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="542"/>
@@ -157,7 +157,7 @@
     <message>
         <location filename="main_window.ui" line="595"/>
         <source>&amp;Utilities</source>
-        <translation>&amp;Nutzen</translation>
+        <translation>Dienst&amp;programme</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="621"/>
@@ -217,7 +217,7 @@
     <message>
         <location filename="main_window.ui" line="684"/>
         <source>&amp;About…</source>
-        <translation>&amp;Etwa…</translation>
+        <translation>&amp;Über…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="687"/>
@@ -242,12 +242,12 @@
     <message>
         <location filename="main_window.ui" line="729"/>
         <source>E&amp;xpand All</source>
-        <translation>Alles &amp;erweitern</translation>
+        <translation>Alles &amp;ausklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="732"/>
         <source>Expand all items</source>
-        <translation>Alle Artikel erweitern</translation>
+        <translation>Alle Artikel ausklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="735"/>
@@ -257,12 +257,12 @@
     <message>
         <location filename="main_window.ui" line="747"/>
         <source>&amp;Collapse All</source>
-        <translation>Alles &amp;zusammenbrechen</translation>
+        <translation>Alles &amp;einklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="750"/>
         <source>Collapse all items</source>
-        <translation>Alle Artikel zusammenbruch</translation>
+        <translation>Alle Artikel einklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="753"/>
@@ -272,7 +272,7 @@
     <message>
         <location filename="main_window.ui" line="765"/>
         <source>&amp;Select All</source>
-        <translation>Alles &amp;auszuwählen</translation>
+        <translation>Alles aus&amp;zuwählen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="768"/>
@@ -317,7 +317,7 @@
         <location filename="main_window.ui" line="831"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation>Volt</translation>
+        <translation>Voll</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1011"/>
@@ -332,7 +332,7 @@
     <message>
         <location filename="main_window.ui" line="1026"/>
         <source>&amp;Clean</source>
-        <translation>Rei&amp;nigen</translation>
+        <translation>&amp;Bereinigung</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1029"/>
@@ -349,7 +349,7 @@
         <location filename="main_window.ui" line="993"/>
         <source>&amp;Theme</source>
         <oldsource>T&amp;heme</oldsource>
-        <translation>&amp;Thema</translation>
+        <translation>&amp;Darstellung</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="996"/>
@@ -364,12 +364,12 @@
     <message>
         <location filename="main_window.ui" line="803"/>
         <source>Use publication code as title</source>
-        <translation>Nutzung Publikation Code da Titel</translation>
+        <translation>Publikationscodes</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="820"/>
         <source>Use short publication title</source>
-        <translation>Nutzung kurz Publikation Titel</translation>
+        <translation>Kurzbezeichnung</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="861"/>
@@ -433,7 +433,7 @@
     <message>
         <location filename="main_window.ui" line="956"/>
         <source>&amp;Sort</source>
-        <translation>&amp;Sorte</translation>
+        <translation>&amp;Sortieren</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="959"/>
@@ -462,7 +462,7 @@
     <message>
         <location filename="main_window.ui" line="834"/>
         <source>Use full publication title</source>
-        <translation>Nutzung voll Publikation Titel</translation>
+        <translation>Vollständiger Name</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="843"/>
