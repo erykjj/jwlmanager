@@ -113,7 +113,7 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>&amp;Widzieć</translation>
+        <translation>Widzieć</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="480"/>
