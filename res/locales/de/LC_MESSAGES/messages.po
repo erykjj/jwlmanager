@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-02-06 17:36-0500\n"
-"PO-Revision-Date: 2025-05-07 22:47+0000\n"
-"Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: de\n"
+"PO-Revision-Date: 2025-05-12 15:03+0000\n"
+"Last-Translator: Ullrich Kleemann <ulli5@yahoo.de>\n"
 "Language-Team: de <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: JWLManager.py:127 JWLManager.py:428 JWLManager.py:432 JWLManager.py:650
@@ -29,11 +30,11 @@ msgstr "Hilfe"
 
 #: JWLManager.py:168
 msgid "Open or Merge"
-msgstr "Öffnen oder Zusammenführen"
+msgstr "Öffnen oder zusammenführen"
 
 #: JWLManager.py:170
 msgid "Open archive or merge with current?"
-msgstr "Archiv öffnen oder mit dem aktuellen zusammenführen?"
+msgstr "Date öffnen oder mit der aktuellen zusammenführen?"
 
 #: JWLManager.py:171
 msgid "Open"
@@ -49,7 +50,7 @@ msgstr "Schließen"
 
 #: JWLManager.py:195
 msgid "Save before quitting?"
-msgstr "Speichern bevor schließen?"
+msgstr "Vor dem Beenden speichern?"
 
 #: JWLManager.py:218 JWLManager.py:235 JWLManager.py:246 JWLManager.py:248
 msgid "Error"
@@ -57,7 +58,7 @@ msgstr "Fehler"
 
 #: JWLManager.py:218
 msgid "No archive has been opened!"
-msgstr "Kein Ordner wurde geöffnet!"
+msgstr "Es wurde keine Datei geöffnet!"
 
 #: JWLManager.py:220 JWLManager.py:443 JWLManager.py:462 JWLManager.py:660
 #: JWLManager.py:949 JWLManager.py:1468 JWLManager.py:2086 JWLManager.py:2113
@@ -103,11 +104,11 @@ msgstr "Datei \"{}\" wurde nicht erkannt!"
 
 #: JWLManager.py:278
 msgid "update available!"
-msgstr "update verfügbar!"
+msgstr "Update verfügbar!"
 
 #: JWLManager.py:280
 msgid "Latest version"
-msgstr "Letzte Version"
+msgstr "Neueste Version"
 
 #: JWLManager.py:282
 msgid "Error while checking for updates!"
@@ -126,7 +127,7 @@ msgstr "Ups! Etwas ist schief gelaufen…"
 
 #: JWLManager.py:293
 msgid "Take note of what you were doing and"
-msgstr "Notieren Sie, was Sie getan haben und"
+msgstr "Halte fest was du getan hast und"
 
 #: JWLManager.py:293
 msgid "inform the developer"
@@ -134,7 +135,7 @@ msgstr "informiere den Entwickler"
 
 #: JWLManager.py:297 JWLManager.py:750 JWLManager.py:1452
 msgid "NEW ARCHIVE"
-msgstr "NEUES VERZEICHNIS"
+msgstr "Neue Datei"
 
 #: JWLManager.py:308
 msgid "The app will terminate."
@@ -200,7 +201,7 @@ msgstr "* KEINE SPRACHE *"
 
 #: JWLManager.py:583 JWLManager.py:594
 msgid "* NO TAG *"
-msgstr "* KEIN STICHWORT *"
+msgstr "* KEIN SCHLAGWORT (TAG)*"
 
 #: JWLManager.py:583 JWLManager.py:1290
 msgid "* INDEPENDENT *"
@@ -222,7 +223,7 @@ msgstr "Farbe"
 
 #: JWLManager.py:675
 msgid "Tag"
-msgstr "Tag"
+msgstr "Schlagwort (Tag)"
 
 #: JWLManager.py:704 JWLManager.py:2477 JWLManager.py:2557
 msgid "Processing…"
@@ -234,11 +235,11 @@ msgstr "Speichern"
 
 #: JWLManager.py:741
 msgid "Save current archive?"
-msgstr "Das Verzeichnis speichern?"
+msgstr "Die Datei speichern?"
 
 #: JWLManager.py:779 JWLManager.py:788
 msgid "Open archive"
-msgstr "Verzeichnis öffnen"
+msgstr "Datei öffnen"
 
 #: JWLManager.py:779 JWLManager.py:788 JWLManager.py:846 JWLManager.py:848
 msgid "JW Library archives"
@@ -246,7 +247,7 @@ msgstr "JW Library Dateien"
 
 #: JWLManager.py:846 JWLManager.py:848
 msgid "Save archive"
-msgstr "Verzeichnis speichern"
+msgstr "Datei speichern"
 
 #: JWLManager.py:850 JWLManager.py:2336
 msgid "NOT saved!"
@@ -258,7 +259,7 @@ msgid ""
 "Are you absolutely sure you want to replace the original?"
 msgstr ""
 "Es wird empfohlen, unter einem anderen Namen zu speichern.\n"
-"Sind Sie absolut sicher, dass Sie das Original ersetzen möchten?"
+"Sind Sie absolut sicher, dass Sie das Original überschreiben möchten?"
 
 #: JWLManager.py:908 JWLManager.py:2349
 msgid "Saved"
@@ -299,7 +300,7 @@ msgstr "Exportverzeichnis"
 
 #: JWLManager.py:968 JWLManager.py:984
 msgid "Exported from"
-msgstr "Exportiert von"
+msgstr "Exportiert aus"
 
 #: JWLManager.py:968 JWLManager.py:984
 msgid "by"
@@ -307,7 +308,7 @@ msgstr "von"
 
 #: JWLManager.py:968 JWLManager.py:984
 msgid "on"
-msgstr "auf"
+msgstr "nach"
 
 #: JWLManager.py:1012
 msgid "NO TEXT"
@@ -327,7 +328,7 @@ msgstr "Exportiere. Bitte warten…"
 
 #: JWLManager.py:1475
 msgid "items exported"
-msgstr "aufzeichnungen exportiert"
+msgstr "Elemente exportiert"
 
 #: JWLManager.py:1487
 #, python-brace-format
@@ -336,7 +337,7 @@ msgid ""
 "Missing {ANNOTATIONS} tag line"
 msgstr ""
 "Fehlerhafte Importdatei:\n"
-"Kopfzeile {ANNOTATIONS} fehlt"
+"Überschrift {ANNOTATIONS} fehlt"
 
 #: JWLManager.py:1509 JWLManager.py:1534 JWLManager.py:1603 JWLManager.py:1677
 #: JWLManager.py:1747 JWLManager.py:1811 JWLManager.py:1927
@@ -356,7 +357,7 @@ msgid ""
 "Missing {BOOKMARKS} tag line"
 msgstr ""
 "Fehlerhafte Importdatei:\n"
-"Überschriften {BOOKMARKS} fehlen"
+"Überschrift {BOOKMARKS} fehlt"
 
 #: JWLManager.py:1627
 #, python-brace-format
@@ -365,7 +366,7 @@ msgid ""
 "Missing {FAVORITES} tag line"
 msgstr ""
 "Fehlerhafte Importdatei:\n"
-"Kopfzeile {FAVORITES} fehlt"
+"Überschrift {FAVORITES} fehlt"
 
 #: JWLManager.py:1701
 #, python-brace-format
@@ -373,8 +374,8 @@ msgid ""
 "Wrong import file format:\n"
 "Missing {HIGHLIGHTS} tag line"
 msgstr ""
-"Falsches Format für die Datei importieren:\n"
-"Fehlende {HIGHLIGHTS} Taglinie"
+"Fehlerhafte Importdatei:\n"
+"Überschrift {HIGHLIGHTS} fehlt"
 
 #: JWLManager.py:1772 JWLManager.py:2601
 msgid "Warning"
@@ -390,9 +391,9 @@ msgid ""
 "\n"
 "Proceed with deletion? (NO to skip)"
 msgstr ""
-"WIRD GELÖSCHT vor dem Import.\n"
+"WIRD vor dem Import GELÖSCHT.\n"
 "\n"
-"Mit Eliminierung fortfahren? (NEIN, um zu stornieren)"
+"Mit Löschung fortfahren? (NEIN, um abzubrechen)"
 
 #: JWLManager.py:1783
 #, python-brace-format
@@ -400,8 +401,8 @@ msgid ""
 "Wrong import file format:\n"
 "Missing or malformed {NOTES=} attribute line"
 msgstr ""
-"Falsches Format für die Datei importieren:\n"
-"Fehlende oder missgebildete {NOTES=} Attributzeile"
+"Fehlerhafte Importdatei:\n"
+"Fehlende oder falsch geschriebene {NOTES=} Attributzeile"
 
 #: JWLManager.py:2093
 msgid "Import file"
@@ -413,15 +414,15 @@ msgstr "NICHT importiert!"
 
 #: JWLManager.py:2098
 msgid "Importing. Please wait…"
-msgstr "Importieren. Bitte warten…"
+msgstr "Import läuft. Bitte warten…"
 
 #: JWLManager.py:2129
 msgid "items imported/updated"
-msgstr "Aufzeichnungen importiert/aktualisiert"
+msgstr "Einträge werden importiert/aktualisiert"
 
 #: JWLManager.py:2138 JWLManager.py:3095
 msgid "Please wait…"
-msgstr "Bitte warten Sie…"
+msgstr "Bitte warten …"
 
 #: JWLManager.py:2140
 msgid "Merging"
@@ -429,7 +430,7 @@ msgstr "Zusammenführen"
 
 #: JWLManager.py:2146
 msgid "Merging. Please wait…"
-msgstr "Zusammenführen. Bitte warten…"
+msgstr "Einträge werden zusammengeführt. Bitte warten…"
 
 #: JWLManager.py:2163
 msgid "NOT merged!"
@@ -437,7 +438,7 @@ msgstr "NICHT zusammengeführt!"
 
 #: JWLManager.py:2165
 msgid "items merged"
-msgstr "aufzeichnungen zusammengeführt"
+msgstr "Einträge zusammengeführt"
 
 #: JWLManager.py:2219
 msgid "Data Editor"
@@ -445,11 +446,11 @@ msgstr "Dateneditor"
 
 #: JWLManager.py:2235
 msgid "Discard changes and close"
-msgstr "Änderungen deaktivieren und schließen"
+msgstr "Änderungen verwerfen und schließen"
 
 #: JWLManager.py:2236
 msgid "Confirm changes and close"
-msgstr "Änderungen bestätigen und schließen"
+msgstr "Änderungen übernehmen und schließen"
 
 #: JWLManager.py:2243 JWLManager.py:2477 JWLManager.py:2557
 msgid "Data Viewer"
@@ -457,7 +458,7 @@ msgstr "Datenbetrachter"
 
 #: JWLManager.py:2317 JWLManager.py:2956
 msgid "items deleted"
-msgstr "Datensätze gelöscht"
+msgstr "Elemente gelöscht"
 
 #: JWLManager.py:2601
 #, python-brace-format
@@ -478,7 +479,9 @@ msgstr "Zu Favoriten hinzufügen"
 
 #: JWLManager.py:2650
 msgid "Select the language and Bible edition to add:"
-msgstr "Wählen Sie die Sprache und die Bibelausgabe aus, um hinzuzufügen:"
+msgstr ""
+"Wähle die Sprache und die Bibel aus,\n"
+"die du hinzufügen möchtest:"
 
 #: JWLManager.py:2671
 msgid "Edition"
@@ -496,7 +499,7 @@ msgstr "Favorit für \"{}\" in {} existiert bereits."
 #: JWLManager.py:2705
 #, python-brace-format
 msgid "Added \"{}\" in {}"
-msgstr "Hinzugefügt \"{}\" in {}"
+msgstr "\"{}\" in {} hinzugefügt"
 
 #: JWLManager.py:2713
 msgid "Select images"
@@ -504,11 +507,11 @@ msgstr "Bilder auswählen"
 
 #: JWLManager.py:2725
 msgid "Add Images"
-msgstr "Bilder Hinzufügen"
+msgstr "Bilder hinzufügen"
 
 #: JWLManager.py:2728
 msgid "Select existing playlist or type name of new one:"
-msgstr "Ausgewählt existieren playlist oder typ Name neuer:"
+msgstr "Playlist auswählen oder eine neue anlegen:"
 
 #: JWLManager.py:2851
 msgid "items added"
@@ -524,32 +527,32 @@ msgid ""
 "Are you sure you want to\n"
 "DELETE these {} items?"
 msgstr ""
-"Bist du sicher, dass du das willst\n"
-"Diese {} Elemente löschen?"
+"Bist du sicher, dass du diese\n"
+"{} Elemente löschen willst?"
 
 #: JWLManager.py:2940
 msgid "Deleting. Please wait…"
-msgstr "Löschen. Bitte warten Sie…"
+msgstr "Am Löschen. Bitte warten …"
 
 #: JWLManager.py:2990
 msgid "Clean"
-msgstr "Reinigen"
+msgstr "Bereinigen"
 
 #: JWLManager.py:2990
 msgid ""
 "Are you sure you want to\n"
 "CLEAN the text fields?"
 msgstr ""
-"Bist du sicher, dass du das willst\n"
-"REINIGEN die Textfelder?"
+"Bist du sicher, dass du\n"
+"die Textfelder bereinigen willst?"
 
 #: JWLManager.py:2993
 msgid "Cleaning. Please wait…"
-msgstr "Reinigung. Bitte warten Sie…"
+msgstr "Am Bereinigen. Bitte warten …"
 
 #: JWLManager.py:3009
 msgid "items cleaned"
-msgstr "Datensätze gereinigt"
+msgstr "Datensätze bereinigt"
 
 #: JWLManager.py:3066
 msgid "Mask"
@@ -560,40 +563,40 @@ msgid ""
 "Are you sure you want to\n"
 "MASK all text fields?"
 msgstr ""
-"Bist du sicher, dass du das willst\n"
-"VERSCHLEIERN alle Textfelder?"
+"Bist du sicher, dass du\n"
+"alle Textfelder UNKENNTLICH MACHEN willst?"
 
 #: JWLManager.py:3069
 msgid "Masking. Please wait…"
-msgstr "Verschleiern. Bitte warten…"
+msgstr "Am Verschleiern. Bitte warten…"
 
 #: JWLManager.py:3086
 msgid "Data masked"
-msgstr "Daten erschleiern"
+msgstr "Daten verschleiert"
 
 #: JWLManager.py:3097
 msgid "Reindexing"
-msgstr "Reindexierung"
+msgstr "Am Ordnen der Daten"
 
 #: JWLManager.py:3200
 msgid "Reindex"
-msgstr "Reindex"
+msgstr "Daten ordnen"
 
 #: JWLManager.py:3200
 msgid ""
 "This may take a few seconds.\n"
 "Proceed?"
 msgstr ""
-"Dies darf einige Sekunden nehmen.\n"
-"Verfahr?"
+"Das kann einige Sekunden dauern.\n"
+"Willst du weitermachen?"
 
 #: JWLManager.py:3203
 msgid "Reindexing. Please wait…"
-msgstr "Reindexing. Bitte warten Sie…"
+msgstr "Ordne die Daten. Bitte warten …"
 
 #: JWLManager.py:3231
 msgid "Reindexed successfully"
-msgstr "Reindexed erfolgreich"
+msgstr "Dater erfolgreich geordnet"
 
 #: JWLManager.py:3248
 msgid "Reorder"
@@ -609,7 +612,7 @@ msgstr ""
 
 #: JWLManager.py:3251
 msgid "Reordering. Please wait…"
-msgstr "Sortierung. Bitte warten…"
+msgstr "Am Sortieren. Bitte warten…"
 
 #: JWLManager.py:3263
 msgid "Notes reordered"
@@ -813,4 +816,3 @@ msgstr "Notizen sortiert"
 
 #~ msgid "NO TITLE"
 #~ msgstr "NO TITLE"
-
