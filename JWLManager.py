@@ -3541,21 +3541,21 @@ def read_resources(lng):
 def sha256hash(file: str) -> str:
     return sha256(open(file, "rb").read()).hexdigest()
 
-if __name__ == "__main__":
-    print('sys.argv', sys.argv)#DEBUG
-    settings = set_settings_path()
-    lang = get_language(*sys.argv[1:])
-    read_resources(lang)
-    app = QApplication(sys.argv)
-    global translator
-    translator = {}
-    translator[lang] = QTranslator()
-    translator[lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{lang}.qm')
-    app.installTranslator(translator[lang])
-    font = QFont()
-    font.setPixelSize(16)
-    app.setFont(font)
-    app.setStyle('Fusion')
-    win = Window(sys.argv[-1])
-    win.show()
-    sys.exit(app.exec())
+# if __name__ == "__main__":
+print('sys.argv', sys.argv)#DEBUG
+settings = set_settings_path()
+lang = get_language(*sys.argv[1:])
+read_resources(lang)
+app = QApplication(sys.argv)
+global translator
+translator = {}
+translator[lang] = QTranslator()
+translator[lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{lang}.qm')
+app.installTranslator(translator[lang])
+font = QFont()
+font.setPixelSize(16)
+app.setFont(font)
+app.setStyle('Fusion')
+win = Window(sys.argv[-1])
+win.show()
+sys.exit(app.exec())
