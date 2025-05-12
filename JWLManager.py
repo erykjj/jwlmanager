@@ -3487,7 +3487,9 @@ def get_language(*argv):
     for k in sorted(available_languages.keys()):
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
-    args = vars(parser.parse_args())
+    print('argv', argv)#DEBUG
+    args = vars(parser.parse_args(argv))
+    print('args', args)#DEBUG
     lng = settings.value('JWLManager/language', 'en')
     for l in available_languages.keys():
         if args[l]:
@@ -3540,6 +3542,7 @@ def sha256hash(file: str) -> str:
     return sha256(open(file, "rb").read()).hexdigest()
 
 if __name__ == "__main__":
+    print('sys.argv', sys.argv)#DEBUG
     settings = set_settings_path()
     lang = get_language(*sys.argv[1:])
     read_resources(lang)
