@@ -25,7 +25,7 @@
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Tag</source>
-        <translation>Tag</translation>
+        <translation>Schlagwort/Tag</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="145"/>
@@ -73,7 +73,7 @@
     <message>
         <location filename="main_window.ui" line="275"/>
         <source>Annotations</source>
-        <translation>Annotationen</translation>
+        <translation>Kommentare</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="280"/>
@@ -84,7 +84,7 @@
         <location filename="main_window.ui" line="294"/>
         <source>Total:</source>
         <oldsource>Total: </oldsource>
-        <translation>Summe:</translation>
+        <translation>Gesamt:</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="350"/>
@@ -136,7 +136,7 @@
     <message>
         <location filename="main_window.ui" line="542"/>
         <source>Title display format</source>
-        <translation>Titelanzeigeformat</translation>
+        <translation>Titelanzeige</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="545"/>
@@ -162,17 +162,17 @@
     <message>
         <location filename="main_window.ui" line="621"/>
         <source>&amp;Open…</source>
-        <translation>&amp;Offen…</translation>
+        <translation>&amp;Öffnen…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="624"/>
         <source>Open an archive</source>
-        <translation>Offen ein Archiv</translation>
+        <translation>Datei öffnen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="627"/>
         <source>Ctrl+O</source>
-        <translation>Ctrl+O</translation>
+        <translation>Strg+O</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="639"/>
@@ -182,37 +182,37 @@
     <message>
         <location filename="main_window.ui" line="642"/>
         <source>Save archive</source>
-        <translation>Speichern das Archiv</translation>
+        <translation>Datei Speichern</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="645"/>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation>Strg+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="657"/>
         <source>&amp;Reindex</source>
-        <translation>&amp;Reindex</translation>
+        <translation>&amp;Bereinigen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="660"/>
         <source>Optimize database</source>
-        <translation>Datenbank optimieren</translation>
+        <translation>Datenbank bereinigen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="669"/>
         <source>&amp;Quit</source>
-        <translation>&amp;Verlass</translation>
+        <translation>&amp;Beenden</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="672"/>
         <source>Exit</source>
-        <translation>Ausgang</translation>
+        <translation>Beenden</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="675"/>
         <source>Ctrl+Q</source>
-        <translation>Ctrl+Q</translation>
+        <translation>Strg+Q</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="684"/>
@@ -222,7 +222,7 @@
     <message>
         <location filename="main_window.ui" line="687"/>
         <source>About…</source>
-        <translation>Etwa…</translation>
+        <translation>Über…</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="711"/>
@@ -237,7 +237,7 @@
     <message>
         <location filename="main_window.ui" line="717"/>
         <source>Ctrl+Alt+S</source>
-        <translation>Ctrl+Alt+S</translation>
+        <translation>Strg+Alt+S</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="729"/>
@@ -247,12 +247,12 @@
     <message>
         <location filename="main_window.ui" line="732"/>
         <source>Expand all items</source>
-        <translation>Alle Artikel ausklappen</translation>
+        <translation>Alle Einträge ausklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="735"/>
         <source>Ctrl+E</source>
-        <translation>Ctrl+E</translation>
+        <translation>Strg+E</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="747"/>
@@ -262,12 +262,12 @@
     <message>
         <location filename="main_window.ui" line="750"/>
         <source>Collapse all items</source>
-        <translation>Alle Artikel einklappen</translation>
+        <translation>Alle Einträge einklappen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="753"/>
         <source>Ctrl+C</source>
-        <translation>Ctrl+C</translation>
+        <translation>Strg+C</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="765"/>
@@ -277,12 +277,12 @@
     <message>
         <location filename="main_window.ui" line="768"/>
         <source>Select all items</source>
-        <translation>Alle Artikel auszuwählen</translation>
+        <translation>Alle Einträge auszuwählen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="771"/>
         <source>Ctrl+A</source>
-        <translation>Ctrl+A</translation>
+        <translation>Strg+A</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="783"/>
@@ -292,18 +292,18 @@
     <message>
         <location filename="main_window.ui" line="786"/>
         <source>Unselect all items</source>
-        <translation>Alle Artikel abwählen</translation>
+        <translation>Alle Einträge abwählen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="789"/>
         <source>Ctrl+Z</source>
-        <translation>Ctrl+Z</translation>
+        <translation>Strg+Z</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="800"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation>Codes</translation>
+        <translation>Code</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="814"/>
@@ -327,7 +327,7 @@
     <message>
         <location filename="main_window.ui" line="1014"/>
         <source>Merge another archive</source>
-        <translation>Ein anderes Archiv zusammenführen</translation>
+        <translation>Eine andere Datei integrieren</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1026"/>
@@ -354,12 +354,12 @@
     <message>
         <location filename="main_window.ui" line="996"/>
         <source>Toggle theme</source>
-        <translation>Thema umschalten</translation>
+        <translation>Darstellung umschalten</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="999"/>
         <source>Ctrl+T</source>
-        <translation>Ctrl+T</translation>
+        <translation>Strg+T</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="803"/>
@@ -472,12 +472,12 @@
     <message>
         <location filename="main_window.ui" line="846"/>
         <source>Create an empty archive</source>
-        <translation>Neues Archiv erstellen</translation>
+        <translation>Neue Datei erstellen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="849"/>
         <source>Ctrl+N</source>
-        <translation>Ctrl+N</translation>
+        <translation>Strg+N</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="864"/>
