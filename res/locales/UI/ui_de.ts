@@ -114,7 +114,7 @@
     <message>
         <location filename="main_window.ui" line="480"/>
         <source>Count</source>
-        <translation>Zählung</translation>
+        <translation>Anzahl</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="508"/>
