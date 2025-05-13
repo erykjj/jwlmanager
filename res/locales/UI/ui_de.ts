@@ -73,12 +73,12 @@
     <message>
         <location filename="main_window.ui" line="275"/>
         <source>Annotations</source>
-        <translation>Kommentare</translation>
+        <translation>Anmerkungen</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="280"/>
         <source>Playlists</source>
-        <translation>Wiedergabelisten</translation>
+        <translation>Playlists</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="294"/>
