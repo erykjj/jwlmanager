@@ -255,7 +255,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def help_box(self):
         help_file = 'HELP.md'
-        # if self.lang == 'de':
+        # if self.lang == 'de': # TODO: enable when available
         #     help_file = 'HILFE.md'
         with open(f'{PROJECT_PATH}/res/{help_file}', encoding='utf-8') as f:
             self.help_window.help_text.setMarkdown(f.read())
