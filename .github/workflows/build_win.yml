@@ -18,6 +18,9 @@ jobs:
   windows:
     name: Build Windows EXE & ZIP
     runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
     - name: Checkout
       uses: actions/checkout@v4

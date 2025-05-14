@@ -18,6 +18,9 @@ jobs:
   macold:
     name: Build macOS APP
     runs-on: macos-13 # Ventura
+    permissions:
+      contents: read
+      actions: write
     steps:
     - name: Checkout
       uses: actions/checkout@v4

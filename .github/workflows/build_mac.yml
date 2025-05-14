@@ -18,6 +18,9 @@ jobs:
   macos:
     name: Build macOS APP
     runs-on: macos-latest # macOS-15 Sequoia
+    permissions:
+      contents: read
+      actions: write
     steps:
     - name: Checkout
       uses: actions/checkout@v4

@@ -26,6 +26,9 @@ jobs:
     name: Create Release Draft
     needs: [linux, windows, macos, macold]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     outputs:
       changelog-section: ${{ steps.extract.outputs.changelog_section }}
     env:

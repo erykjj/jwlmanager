@@ -18,6 +18,9 @@ jobs:
   linux:
     name: Build Linux BIN
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     steps:
     - name: Checkout
       uses: actions/checkout@v4
