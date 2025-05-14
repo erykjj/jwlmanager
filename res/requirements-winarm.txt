@@ -1,0 +1,9 @@
+PySide6==6.9.*
+shiboken6==6.9.*
+polars-lts-cpu
+pillow
+puremagic
+regex
+requests
+xlsx2csv
+XlsxWriter
