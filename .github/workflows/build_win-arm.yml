@@ -37,19 +37,19 @@ jobs:
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
-        ren JWLManager.exe JWLManager_${{ inputs.TAG }}-winarm.exe
+        ren JWLManager.exe JWLManager_${{ inputs.TAG }}-arm.exe
     - name: Build with Pyinstaller
       run: |
         pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
         cd dist
-        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}-winarm.zip JWLManager
+        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}-arm.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
         name: WinarmEXE
-        path: dist/JWLManager_${{ inputs.TAG }}-winarm.exe
+        path: dist/JWLManager_${{ inputs.TAG }}-arm.exe
     - name: Upload ZIP
       uses: actions/upload-artifact@v4
       with:
         name: WinarmZIP
-        path: dist/JWLManager_${{ inputs.TAG }}-winarm.zip
+        path: dist/JWLManager_${{ inputs.TAG }}-arm.zip

@@ -104,15 +104,15 @@ jobs:
         body: |
           ${{ steps.extract.outputs.changelog_section }}
           ____
-          You can download the source script and execute it from the commandline, or use these self-contained packages, which don't require the installation of Python or any dependencies:
+          You can clone the repo or download the source script and execute it from the commandline, or use these self-contained packages, which don't require the installation of Python or any dependencies:
           - Linux:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - Windows 10/11 (Arm):
-            - Stand-alone: [JWLManager_${{ github.ref_name }}-winarm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-winarm.exe)
-            - Zipped folder: [JWLManager_${{ github.ref_name }}-winarm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-winarm.zip)
+          - Windows 10/11 (ARM):
+            - Stand-alone: [JWLManager_${{ github.ref_name }}-winarm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.exe)
+            - Zipped folder: [JWLManager_${{ github.ref_name }}-winarm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.zip)
           - macOS:
             - 13/14: [JWLManager_${{ github.ref_name }}-macOS13.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
             - 15: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
@@ -120,7 +120,7 @@ jobs:
           JWLManager_${{ github.ref_name }}
           JWLManager_${{ github.ref_name }}.exe
           JWLManager_${{ github.ref_name }}.zip
-          JWLManager_${{ github.ref_name }}-winarm.exe
-          JWLManager_${{ github.ref_name }}-winarm.zip
+          JWLManager_${{ github.ref_name }}-arm.exe
+          JWLManager_${{ github.ref_name }}-arm.zip
           JWLManager_${{ github.ref_name }}.app.zip
           JWLManager_${{ github.ref_name }}-macOS13.app.zip
