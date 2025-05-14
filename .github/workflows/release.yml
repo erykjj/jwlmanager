@@ -1,4 +1,4 @@
-name: 'Draft Release v1.1.0'
+name: 'Draft Release v1.2.0'
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
       TAG:  ${{ github.ref_name }}
   release:
     name: Create Release Draft
-    needs: [linux, windows, macos, macold]
+    needs: [linux, windows, winarm, macos, macold]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -36,23 +36,31 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Download LinuxBIN
+    - name: Download Linux binary
       uses: actions/download-artifact@v4
       with:
         name: LinuxBIN
-    - name: Download WindowsEXE
+    - name: Download Windows executable
       uses: actions/download-artifact@v4
       with:
         name: WindowsEXE
-    - name: Download WindowsZIP
+    - name: Download Windows zipped folder
       uses: actions/download-artifact@v4
       with:
         name: WindowsZIP
-    - name: Download MacAPP
+    - name: Download Windows-arm executable
+      uses: actions/download-artifact@v4
+      with:
+        name: WinarmEXE
+    - name: Download Windows-arm zipped folder
+      uses: actions/download-artifact@v4
+      with:
+        name: WinarmZIP
+    - name: Download macOS app
       uses: actions/download-artifact@v4
       with:
         name: MacAPP
-    - name: Download MacAPP-old
+    - name: Download macOS-old app
       uses: actions/download-artifact@v4
       with:
         name: MacAPP-old
@@ -98,6 +106,9 @@ jobs:
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+          - Windows 10/11 (Arm):
+            - Stand-alone: [JWLManager_${{ github.ref_name }}-winarm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-winarm.exe)
+            - Zipped folder: [JWLManager_${{ github.ref_name }}-winarm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-winarm.zip)
           - macOS:
             - 13/14: [JWLManager_${{ github.ref_name }}-macOS13.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
             - 15: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
@@ -105,5 +116,7 @@ jobs:
           JWLManager_${{ github.ref_name }}
           JWLManager_${{ github.ref_name }}.exe
           JWLManager_${{ github.ref_name }}.zip
+          JWLManager_${{ github.ref_name }}-winarm.exe
+          JWLManager_${{ github.ref_name }}-winarm.zip
           JWLManager_${{ github.ref_name }}.app.zip
           JWLManager_${{ github.ref_name }}-macOS13.app.zip
