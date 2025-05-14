@@ -16,7 +16,7 @@ on:
 
 jobs:
   winarm:
-    name: Build Windows EXE & ZIP
+    name: Build Windows-arm EXE & ZIP
     runs-on: windows-latest
     permissions:
       contents: read

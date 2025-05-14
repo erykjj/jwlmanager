@@ -14,6 +14,10 @@ jobs:
     uses: ./.github/workflows/build_win.yml
     with:
       TAG:  ${{ github.ref_name }}
+  winarm:
+    uses: ./.github/workflows/build_win-arm.yml
+    with:
+      TAG:  ${{ github.ref_name }}
   macos:
     uses: ./.github/workflows/build_mac.yml
     with:
