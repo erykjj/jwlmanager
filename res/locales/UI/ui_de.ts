@@ -25,7 +25,7 @@
     <message>
         <location filename="main_window.ui" line="140"/>
         <source>Tag</source>
-        <translation>Schlagwort/Tag</translation>
+        <translation>Tag</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="145"/>
