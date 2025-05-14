@@ -106,12 +106,10 @@ class HelpBox(QDialog):
         self.setMinimumSize(300, 300)
         self.resize(size)
         self.move(pos)
-        text = QTextEdit(self)
-        text.setReadOnly(True)
-        with open(_base_path+'/HELP.md', encoding='utf-8') as f:
-            text.setMarkdown(f.read())
+        self.help_text = QTextEdit(self)
+        self.help_text.setReadOnly(True)
         layout = QHBoxLayout(self)
-        layout.addWidget(text)
+        layout.addWidget(self.help_text)
         self.setWindowState((self.windowState() & ~Qt.WindowMinimized) | Qt.WindowActive)
         self.finished.connect(self.hide)
 
