@@ -254,6 +254,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def help_box(self):
+        help_file = 'HELP.md'
+        # if self.lang == 'de':
+        #     help_file = 'HILFE.md'
+        with open(f'{PROJECT_PATH}/res/{help_file}', encoding='utf-8') as f:
+            self.help_window.help_text.setMarkdown(f.read())
         self.help_window.show()
         self.help_window.raise_()
         self.help_window.activateWindow()
