@@ -109,13 +109,16 @@ jobs:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
-            - Zipped folder: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+            - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
           - Windows 10/11 (ARM):
             - Stand-alone: [JWLManager_${{ github.ref_name }}-arm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.exe)
             - Zipped folder: [JWLManager_${{ github.ref_name }}-arm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.zip)
           - macOS:
             - 13/14: [JWLManager_${{ github.ref_name }}-macOS13.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
-            - 15: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+            - 15[^2]: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+          ____
+          [^1]: Console enabled; can be launched from commandline with arguments. See `JWLManager.exe -h`.
+          [^2]: For 'Apple Silicon' ARM devices.
         files: |
           JWLManager_${{ github.ref_name }}
           JWLManager_${{ github.ref_name }}.exe
