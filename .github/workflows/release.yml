@@ -102,6 +102,8 @@ jobs:
         draft: true
         prerelease: false
         body: |
+          ### Feedback via polls requested: https://github.com/erykjj/jwlmanager/discussions
+
           ${{ steps.extract.outputs.changelog_section }}
           ____
           You can clone the repo or download the source script and execute it from the commandline, or use these self-contained packages, which don't require the installation of Python or any dependencies:
