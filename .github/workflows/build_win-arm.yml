@@ -1,4 +1,4 @@
-name: 'Build Windows v1.1.1'
+name: 'Build Windows ARM v1.1.1'
 
 on:
   workflow_call:
