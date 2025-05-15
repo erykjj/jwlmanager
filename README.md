@@ -27,8 +27,8 @@ The state of the application (including the current language) is preserved in a 
 
 You can force the GUI to launch in a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as...
 - Linux terminal: `python3 JWLManager.py -es`
-- Windows Comand Prompt (or shortcut): `JWLManager.exe -es`
-- macOS Terminal: `open -a JWLManager.app --args -es`
+- Windows command console (or shortcut): `JWLManager.exe -es`
+- macOS terminal: `open -a JWLManager.app --args -es`
 
 If you have Python3.11+ installed on your system and can install some of the required dependencies[^2], you can simply clone it:
 
