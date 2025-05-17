@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added Help file in German (thank you, Ullrich)
+
 ### Changed
 
 - Updated German translations (thank you, Ullrich)
@@ -13,6 +15,7 @@
 - Building stand-alone binaries for Linux and macOS with Nuitka v2.6.5 and Python 3.13
   - Windows binaries are still Python 3.12 and Pyinstaller v5.13.2
     - Added Windows for ARM binaries to work with Polars-lts-cpu (thank you, @kwanice)
+    - Windows zipped folder will launch a command console and responds to launching from commandline with arguments
 
 ### Fixed
 
