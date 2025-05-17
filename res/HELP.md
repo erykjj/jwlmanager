@@ -149,7 +149,7 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
     - `{COLOR=0}` (with/without `{RANGE=}`) → grey stickie (at start of paragraph/verse and no highlight)
 ######
 ######
-### UTILITIES
+### Utilities
 ######
 ### Clean
 ######
