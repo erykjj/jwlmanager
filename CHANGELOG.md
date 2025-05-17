@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [8.3.0] - 2025-05-17
+### Added
+
 - Added Help file in German (thank you, Ullrich)
 
 ### Changed
@@ -21,9 +31,6 @@
 
 - Fixed typo in signal connection
 
-### Removed
-
-____
 ## [8.2.0] - 2025-04-19
 ### Added
 
@@ -938,6 +945,8 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[8.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.3.0
+[8.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.2.0
 [8.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.1.0
 [8.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.2
 [8.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v8.0.1
