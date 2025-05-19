@@ -17,8 +17,8 @@
     },
     "extras": {
         "CO-invpw": {
-            "short": "Invito Congresso",
-            "long": "Invito al Congresso di Zona"
+            "short": "Invito congresso",
+            "long": "Invito al congresso di zona"
         },
         "S-196": {
             "short": "Utilizzare \"Vivere felice\"",
@@ -33,8 +33,8 @@
             "long": "Concordanza della Traduzione del Nuovo Mondo delle Sacre Scritture"
         },
         "co-r": {
-            "short": "Video Congresso",
-            "long": "Video Congresso"
+            "short": "Video congresso",
+            "long": "Video congresso"
         },
         "dx": {
             "short": "Indice",
@@ -49,12 +49,12 @@
             "long": "Video JW Broadcasting"
         },
         "jwb-": {
-            "short": "Adorazione Mattutina",
-            "long": "Video Adorazione mattutina"
+            "short": "Adorazione mattutina",
+            "long": "Video adorazione mattutina"
         },
         "jwbcov": {
-            "short": "Video musicali Congresso",
-            "long": "Video musicale Congresso di Zona"
+            "short": "Video musicali congresso",
+            "long": "Video musicali congresso di zona"
         },
         "ks10": {
             "short": "Pascete (ks)",
@@ -73,16 +73,16 @@
             "long": "Organizzazione per predicare il Regno e fare discepoli"
         },
         "osg": {
-            "short": "Video Canzoni",
-            "long": "Video Canzoni"
+            "short": "Video canzoni",
+            "long": "Video canzoni"
         },
         "pk": {
-            "short": "Video Diventa Amico di Dio",
+            "short": "Video Diventa amico di Dio",
             "long": "Video Diventa Amico di Geova"
         },
         "pkon": {
-            "short": "Video per bambini",
-            "long": "Video per bambini"
+            "short": "Video canzoni bambini",
+            "long": "Video cantici bambini"
         },
         "pt14": {
             "short": "Compi il tuo ministero",
@@ -101,7 +101,7 @@
             "long": "Informazioni aggiuntive a \"Pascete il Gregge di Dio\""
         },
         "sgd": {
-            "short": "Guida di studio della Bibbia",
+            "short": "Guida studio Bibbia",
             "long": "Una guida per lo studio della Parola di Dio"
         },
         "ws-": {
