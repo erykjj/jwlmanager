@@ -78,7 +78,7 @@
     <message>
         <location filename="main_window.ui" line="280"/>
         <source>Playlists</source>
-        <translation>Liste di riproduzione</translation>
+        <translation>Playlist</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="294"/>
@@ -109,7 +109,7 @@
     <message>
         <location filename="main_window.ui" line="414"/>
         <source>View</source>
-        <translation>Vedi</translation>
+        <translation>Visualizza</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="480"/>
@@ -242,7 +242,7 @@
     <message>
         <location filename="main_window.ui" line="729"/>
         <source>E&amp;xpand All</source>
-        <translation>&amp;Expandi Tutto</translation>
+        <translation>&amp;Espandi tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="732"/>
@@ -257,7 +257,7 @@
     <message>
         <location filename="main_window.ui" line="747"/>
         <source>&amp;Collapse All</source>
-        <translation>&amp;Riduci Tutto</translation>
+        <translation>&amp;Riduci tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="750"/>
@@ -272,7 +272,7 @@
     <message>
         <location filename="main_window.ui" line="765"/>
         <source>&amp;Select All</source>
-        <translation>&amp;Seleziona Tutto</translation>
+        <translation>&amp;Seleziona tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="768"/>
@@ -287,7 +287,7 @@
     <message>
         <location filename="main_window.ui" line="783"/>
         <source>&amp;Unselect All</source>
-        <translation>&amp;Deseleziona Tutto</translation>
+        <translation>&amp;Deseleziona tutto</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="786"/>
@@ -303,21 +303,21 @@
         <location filename="main_window.ui" line="800"/>
         <source>Code</source>
         <oldsource>&amp;Code</oldsource>
-        <translation>Siglas</translation>
+        <translation>Sigla</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="814"/>
         <location filename="main_window.ui" line="817"/>
         <source>Short</source>
         <oldsource>&amp;Short</oldsource>
-        <translation>Abbreviatos</translation>
+        <translation>Abbreviato</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="828"/>
         <location filename="main_window.ui" line="831"/>
         <source>Full</source>
         <oldsource>&amp;Full</oldsource>
-        <translation>Completos</translation>
+        <translation>Completo</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1011"/>
@@ -374,7 +374,7 @@
     <message>
         <location filename="main_window.ui" line="861"/>
         <source>&amp;Mask</source>
-        <translation>&amp;Offusca</translation>
+        <translation>&amp;Maschera</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="875"/>
@@ -433,7 +433,7 @@
     <message>
         <location filename="main_window.ui" line="956"/>
         <source>&amp;Sort</source>
-        <translation>&amp;Disporre</translation>
+        <translation>&amp;Ordinare</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="959"/>
