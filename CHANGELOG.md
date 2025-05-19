@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Improved Italian translations (thank you, Stefano)
+
 ### Fixed
 
 ### Removed
