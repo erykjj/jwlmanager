@@ -19,7 +19,7 @@ ____
 
 You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip if necessary) and launch the latest **Linux binary**, **Windows executable**, or **macOS app**. These are self-contained packages (with Python and dependencies included).
 
-### Important
+#### Important:
 
 * See the [SECURITY section](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc.
 * The **Linux** binary needs to be given execute permissions: `chmod +x JWLManager_*`
