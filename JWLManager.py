@@ -142,8 +142,8 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, int(settings.value('JWLManager/column1', 500)))
         self.treeWidget.setColumnWidth(1, int(settings.value('JWLManager/column2', 30)))
         self.treeWidget.setExpandsOnDoubleClick(False)
-        self.button_add.setVisible(False)
-        self.actionSave_As.setEnabled(True)
+        # self.button_add.setVisible(False)
+        # self.actionSave_As.setEnabled(True)
         self.resize(settings.value('Main_Window/size', QSize(680, 500)))
         self.move(settings.value('Main_Window/position', center()))
         self.viewer_window = QDialog(self)
@@ -411,17 +411,21 @@ class Window(QMainWindow, Ui_MainWindow):
         self.selected.setText(f'**{self.selected_items:,}**')
         self.button_delete.setEnabled(self.selected_items)
         self.button_view.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Annotations')))
+        self.button_color.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights')))
+        self.button_tag.setEnabled(self.selected_items and self.combo_category.currentText() == _('Notes'))
         self.button_export.setEnabled(self.selected_items)
 
 
     def switchboard(self, selection, new_data=False):
 
-        def disable_options(lst=[], add=False, exp=False, imp=False, view=False):
+        def disable_options(lst=[], add=False, exp=False, imp=False, view=False, col=False, tag=False):
             self.button_add.setVisible(add)
             self.button_view.setVisible(view)
             self.button_export.setVisible(exp)
             self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
+            self.button_color.setVisible(col)
+            self.button_tag.setVisible(tag)
             app.processEvents()
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
@@ -438,20 +442,20 @@ class Window(QMainWindow, Ui_MainWindow):
         if selection == _('Notes'):
             if new:
                 self.combo_grouping.setCurrentText(_('Type'))
-            disable_options([], False, True, True, True)
+            disable_options([], False, True, True, True, True, True)
         elif selection == _('Highlights'):
             if new:
                 self.combo_grouping.setCurrentText(_('Type'))
-            disable_options([4], False, True, True, False)
+            disable_options([4], False, True, True, False, True, False)
         elif selection == _('Bookmarks'):
-            disable_options([4,5], False, True, True, False)
+            disable_options([4,5], False, True, True, False, False, False)
         elif selection == _('Annotations'):
-            disable_options([2,4,5], False, True, True, True)
+            disable_options([2,4,5], False, True, True, True, False, False)
         elif selection == _('Favorites'):
-            disable_options([4,5], True, True, True, False)
+            disable_options([4,5], True, True, True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], True, True, True, False)
+            disable_options([1,2,3,4,5], True, True, True, False, False, False)
         self.regroup(new_data)
         self.combo_grouping.blockSignals(False)
 
