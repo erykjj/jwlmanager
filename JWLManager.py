@@ -33,7 +33,7 @@ from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, ThemeManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
-from PySide6.QtGui import QAction, QFont
+from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from collections import defaultdict
@@ -99,6 +99,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_add.clicked.connect(self.add_items)
             self.button_delete.clicked.connect(self.delete_items)
             self.button_view.clicked.connect(self.data_viewer)
+            self.button_color.clicked.connect(self.select_color)
+            self.button_tag.clicked.connect(self.tag_notes)
 
         def set_vars():
             self.total.setText('')
@@ -2876,6 +2878,29 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
+
+
+    def select_color(self):
+        color_menu = QMenu(self.button_color)
+        colors = {
+            1: (_('Yellow'), Qt.GlobalColor.yellow),
+            2: (_('Green'), Qt.GlobalColor.green),
+            3: (_('Blue'), Qt.GlobalColor.blue),
+            4: (_('Red'), Qt.GlobalColor.red),
+            5: (_('Orange'), QColor(255, 165, 0)),
+            6: (_('Purple'), QColor(128, 0, 128))
+        }
+        for num, (name, color) in colors.items():
+            pixmap = QPixmap(16, 16)
+            pixmap.fill(color)
+            icon = QIcon(pixmap)
+            action = color_menu.addAction(icon, name)
+            action.triggered.connect(lambda checked, n=num: self.color_selected(n))
+        color_menu.exec(self.button_color.mapToGlobal(
+            self.button_color.rect().bottomLeft()))
+
+    def tag_notes(self):
+        return
 
 
     def add_items(self):
