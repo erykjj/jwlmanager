@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v8.3.0'
+VERSION = 'v9.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -425,7 +425,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
             self.button_color.setVisible(col)
-            self.button_tag.setVisible(tag)
+            # self.button_tag.setVisible(tag)
+            self.button_tag.setVisible(False)
             app.processEvents()
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
@@ -2883,6 +2884,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def select_color(self):
         color_menu = QMenu(self.button_color)
         colors = {
+            0: (_('Grey'), Qt.GlobalColor.gray),
             1: (_('Yellow'), Qt.GlobalColor.yellow),
             2: (_('Green'), Qt.GlobalColor.green),
             3: (_('Blue'), Qt.GlobalColor.blue),
@@ -2900,8 +2902,48 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_color.rect().bottomLeft()))
 
     def set_color(self, color):
-        print(color)
-        return
+
+        def colorize(cat):
+            if cat == _('Highlights'):
+                sql = f'SELECT UserMarkId FROM BlockRange WHERE BlockRangeId IN {items};'
+            else:
+                for row in con.execute(f'SELECT NoteId, LocationId FROM Note WHERE LocationId IS NOT NULL AND UserMarkId IS NULL AND NoteId IN {items};').fetchall():
+                    unique_id = uuid.uuid1()
+                    usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (color, row[1])).lastrowid
+                    con.execute('UPDATE Note SET UserMarkId = ? WHERE NoteId = ?;', (usermark_id, row[0]))
+                sql = f'SELECT UserMarkId FROM Note WHERE UserMarkId IS NOT NULL AND NoteId IN {items};'
+            rows = con.execute(sql).fetchall()
+            ids = [x[0] for x in rows]
+            lst = str(ids).replace('[', '(').replace(']', ')')
+            con.execute(f'UPDATE UserMark SET ColorIndex = ? WHERE UserMarkId IN {lst};', (color,))
+            return len(ids)
+
+        category = self.combo_category.currentText()
+        if category == _('Highlights') and color == 0:
+            return
+        reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to change\n the COLOR of these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.No:
+            return
+        self.statusBar.showMessage(' '+_('Modifying. Please wait…'))
+        app.processEvents()
+        try:
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            # items = self.list_selected()
+            items = str(self.list_selected()).replace('[', '(').replace(']', ')')
+            result = colorize(category)
+            con.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        message = f' {result} '+_('items modified')
+        self.statusBar.showMessage(message, 4000)
+        if result > 0:
+            self.regroup(True, message)
+            self.archive_modified()
 
 
     def tag_notes(self):
