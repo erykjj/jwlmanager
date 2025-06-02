@@ -142,8 +142,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.treeWidget.setColumnWidth(0, int(settings.value('JWLManager/column1', 500)))
         self.treeWidget.setColumnWidth(1, int(settings.value('JWLManager/column2', 30)))
         self.treeWidget.setExpandsOnDoubleClick(False)
-        # self.button_add.setVisible(False)
-        # self.actionSave_As.setEnabled(True)
         self.resize(settings.value('Main_Window/size', QSize(680, 500)))
         self.move(settings.value('Main_Window/position', center()))
         self.viewer_window = QDialog(self)
