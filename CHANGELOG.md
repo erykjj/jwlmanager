@@ -4,11 +4,16 @@
 
 ### Added
 
+- Added **bulk color change** for Notes and Highlights
+
 ### Changed
 
+- Slight UI adjustments
 - Improved Italian translations (thank you, Stefano)
 
 ### Fixed
+
+- Some menu items were not disabled when nothing was loaded
 
 ### Removed
 
