@@ -103,7 +103,6 @@ class Window(QMainWindow, Ui_MainWindow):
         def set_vars():
             self.total.setText('')
             self.int_total = 0
-            self.selected_items = 0
             self.modified = False
             self.title_format = settings.value('JWLManager/title','short')
             options = { 'code': 0, 'short': 1, 'full': 2 }
@@ -641,7 +640,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def enable_options(enabled):
             self.menuLanguage.setEnabled(enabled)
             self.menuTitle_View.setEnabled(enabled)
-            enabled = enabled and self.selected_items
+            enabled = enabled and self.int_total
             self.button_import.setEnabled(enabled)
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
