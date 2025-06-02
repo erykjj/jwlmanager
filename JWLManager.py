@@ -2895,9 +2895,14 @@ class Window(QMainWindow, Ui_MainWindow):
             pixmap.fill(color)
             icon = QIcon(pixmap)
             action = color_menu.addAction(icon, name)
-            action.triggered.connect(lambda checked, n=num: self.color_selected(n))
+            action.triggered.connect(lambda _, n=num: self.set_color(n))
         color_menu.exec(self.button_color.mapToGlobal(
             self.button_color.rect().bottomLeft()))
+
+    def set_color(self, color):
+        print(color)
+        return
+
 
     def tag_notes(self):
         return
