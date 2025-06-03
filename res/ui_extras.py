@@ -29,7 +29,7 @@ from glob import glob
 from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
-from PySide6.QtGui import QAction, QIcon, QKeySequence, QPixmap, QShortcut
+from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QPainter, QPixmap, QShortcut
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 _base_path = path.dirname(__file__)
@@ -328,6 +328,39 @@ class DataViewer(QDialog):
         toolbar.setFixedHeight(32)
         toolbar.addWidget(self.return_button)
         toolbar.addWidget(self.accept_button)
+
+        self.color_action_group = QActionGroup(self.editor)
+        self.color_action_group.setExclusive(True)
+        toolbar.addSeparator()
+
+        colors = {
+            0: ('Grey', QColor('#808080')),
+            1: ('Yellow', QColor('#FAD929')),
+            2: ('Green', QColor('#81BD4F')),
+            3: ('Blue', QColor('#5EB4EF')),
+            4: ('Red', QColor('#DB5D8D')),
+            5: ('Orange', QColor('#FF862E')),
+            6: ('Purple', QColor('#7B57A7'))
+        }
+        self.color_actions = {}
+        for color_id, (color_name, qcolor) in colors.items():
+            pixmap = QPixmap(24, 24)
+            pixmap.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(pixmap)
+            painter.setBrush(qcolor)
+            painter.setPen(Qt.GlobalColor.black)
+            painter.drawEllipse(2, 2, 20, 20)
+            painter.end()
+
+            action = QAction(QIcon(pixmap), color_name, self.editor)
+            action.setCheckable(True)
+            action.setData(color_id)
+            if color_id == 0:  # Select grey by default
+                action.setChecked(True)
+
+            self.color_action_group.addAction(action)
+            toolbar.addAction(action)
+            self.color_actions[color_id] = action
 
         self.title = QPlainTextEdit(self.editor)
         self.title.setFixedHeight(65)
