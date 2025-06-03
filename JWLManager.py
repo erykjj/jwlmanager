@@ -2471,10 +2471,10 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
-            qss_class = self.note_item.text_box.property('background')
-            self.viewer_window.title.setProperty('background', qss_class)
+            qss_class = self.note_item.text_box.property('note')
+            self.viewer_window.title.setProperty('note', qss_class)
             self.viewer_window.title.setPlainText(self.note_item.title)
-            self.viewer_window.body.setProperty('background', qss_class)
+            self.viewer_window.body.setProperty('note', qss_class)
             self.viewer_window.body.setPlainText(self.note_item.body)
             app.processEvents()
             self.viewer_window.viewer_layout.setCurrentIndex(1)
