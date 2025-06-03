@@ -2422,22 +2422,18 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def body_changed():
             if self.viewer_window.body.toPlainText() == self.note_item.body:
-                # self.viewer_window.body.setStyleSheet('font: normal; color: #3d3d5c;')
                 self.viewer_window.body.setStyleSheet('font: normal;')
                 self.body_modified = False
             else:
-                # self.viewer_window.body.setStyleSheet('font: italic; color: #3d3d5c;')
                 self.viewer_window.body.setStyleSheet('font: italic;')
                 self.body_modified = True
             update_editor_toolbar()
 
         def title_changed():
             if self.viewer_window.title.toPlainText() == self.note_item.title:
-                # self.viewer_window.title.setStyleSheet('font: bold; color: #3d3d5c; font-size: 20px;')
                 self.viewer_window.title.setStyleSheet('font: bold; font-size: 20px;')
                 self.title_modified = False
             else:
-                # self.viewer_window.title.setStyleSheet('font: bold italic; color: #3d3d5c; font-size: 20px;')
                 self.viewer_window.title.setStyleSheet('font: bold italic; font-size: 20px;')
                 self.title_modified = True
             update_editor_toolbar()
@@ -2884,13 +2880,13 @@ class Window(QMainWindow, Ui_MainWindow):
     def select_color(self):
         color_menu = QMenu(self.button_color)
         colors = {
-            0: (_('Grey'), Qt.GlobalColor.gray),
-            1: (_('Yellow'), Qt.GlobalColor.yellow),
-            2: (_('Green'), Qt.GlobalColor.green),
-            3: (_('Blue'), Qt.GlobalColor.blue),
-            4: (_('Red'), Qt.GlobalColor.red),
-            5: (_('Orange'), QColor(255, 165, 0)),
-            6: (_('Purple'), QColor(128, 0, 128))
+            0: (_('Grey'), QColor('#808080')),
+            1: (_('Yellow'), QColor('#FAD929')),
+            2: (_('Green'), QColor('#81BD4F')),
+            3: (_('Blue'), QColor('#5EB4EF')),
+            4: (_('Red'), QColor('#DB5D8D')),
+            5: (_('Orange'), QColor('#FF862E')),
+            6: (_('Purple'), QColor('#7B57A7'))
         }
         for num, (name, color) in colors.items():
             pixmap = QPixmap(16, 16)
