@@ -2460,6 +2460,9 @@ class Window(QMainWindow, Ui_MainWindow):
             update_viewer_toolbar()
             go_back()
 
+        def change_color():
+            return
+
         def data_editor(counter):
             self.viewer_window.setWindowTitle(_('Data Editor'))
             self.note_item = self.viewer_items[counter]
@@ -2832,6 +2835,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.body.textChanged.connect(body_changed)
             self.viewer_window.escape_pressed.connect(escape_pressed)
             self.viewer_window.filter_box.textChanged.connect(filter_items)
+            self.viewer_window.color_action_group.triggered.connect(change_color)
 
         def escape_pressed():
             if self.viewer_window.viewer_layout.currentIndex() == 1:
