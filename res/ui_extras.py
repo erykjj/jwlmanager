@@ -334,13 +334,13 @@ class DataViewer(QDialog):
         toolbar.addSeparator()
 
         colors = {
-            0: ('Grey', QColor('#808080')),
-            1: ('Yellow', QColor('#FAD929')),
-            2: ('Green', QColor('#81BD4F')),
-            3: ('Blue', QColor('#5EB4EF')),
-            4: ('Red', QColor('#DB5D8D')),
-            5: ('Orange', QColor('#FF862E')),
-            6: ('Purple', QColor('#7B57A7'))
+            0: ('grey', QColor('#808080')),
+            1: ('yellow', QColor('#FAD929')),
+            2: ('green', QColor('#81BD4F')),
+            3: ('blue', QColor('#5EB4EF')),
+            4: ('red', QColor('#DB5D8D')),
+            5: ('orange', QColor('#FF862E')),
+            6: ('purple', QColor('#7B57A7'))
         }
         self.color_actions = {}
         for color_id, (color_name, qcolor) in colors.items():
@@ -354,9 +354,7 @@ class DataViewer(QDialog):
 
             action = QAction(QIcon(pixmap), color_name, self.editor)
             action.setCheckable(True)
-            action.setData(color_id)
-            if color_id == 0:  # Select grey by default
-                action.setChecked(True)
+            action.setData(color_name)
 
             self.color_action_group.addAction(action)
             toolbar.addAction(action)
