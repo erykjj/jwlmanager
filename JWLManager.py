@@ -2458,7 +2458,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
             self.note_item.update_note()
             color = self.viewer_window.title.property('note')
-            self.note_item.change_color(self.colors[color])
+            self.note_item.color = self.colors[color]
+            self.note_item.change_color()
             self.modified_list.append(self.note_item)
             update_viewer_toolbar()
             go_back()
@@ -2493,7 +2494,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 apply_color(self.note_color)
                 self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
                 self.viewer_window.color_action_group.setVisible(True)
-            else:
+            else: # TODO: also ignore INDEPENDENT notes
                 self.viewer_window.color_action_group.setVisible(False)
 
             app.processEvents()
@@ -2555,7 +2556,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def update_db():
 
             def update_notes():
-                for item in self.modified_list:
+                for item in self.modified_list: # TODO: update item.color
                     con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), item.idx))
                 for item in self.deleted_list:
                     con.execute('DELETE FROM Note WHERE NoteId = ?;', (item.idx,))
