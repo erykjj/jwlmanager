@@ -5,6 +5,7 @@
 ### Added
 
 - Added **bulk color change** for Notes and Highlights
+- Added **individual Note colo change** (via the Note Viewer/Editor)
 
 ### Changed
 
