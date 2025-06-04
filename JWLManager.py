@@ -2457,16 +2457,21 @@ class Window(QMainWindow, Ui_MainWindow):
             self.note_item.title = self.viewer_window.title.toPlainText().strip()
             self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
             self.note_item.update_note()
+            color = self.viewer_window.title.property('note')
+            self.note_item.change_color(self.colors[color])
             self.modified_list.append(self.note_item)
             update_viewer_toolbar()
             go_back()
 
-        def change_color(action):
-            color = action.data()
+        def apply_color(color):
             self.viewer_window.title.setProperty('note', color)
             self.viewer_window.body.setProperty('note', color)
             self.viewer_window.title.setStyleSheet(self.viewer_window.title.styleSheet())
             self.viewer_window.body.setStyleSheet(self.viewer_window.body.styleSheet())
+            
+        def change_color(action):
+            color = action.data()
+            apply_color(color)
             if color != self.note_color:
                 self.color_modified = True
             else:
@@ -2474,15 +2479,6 @@ class Window(QMainWindow, Ui_MainWindow):
             update_editor_toolbar()
 
         def data_editor(counter):
-            colors = {
-                'grey': 0,
-                'yellow': 1,
-                'green': 2,
-                'blue': 3,
-                'red': 4,
-                'orange': 5,
-                'purple': 6
-            }
             self.viewer_window.setWindowTitle(_('Data Editor'))
             self.note_item = self.viewer_items[counter]
             if self.note_item.meta:
@@ -2491,11 +2487,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
             self.note_color = self.note_item.text_box.property('note')
-            self.viewer_window.title.setProperty('note', self.note_color)
+            apply_color(self.note_color)
             self.viewer_window.title.setPlainText(self.note_item.title)
-            self.viewer_window.body.setProperty('note', self.note_color)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            self.viewer_window.color_actions[colors[self.note_color]].setChecked(True)
+            self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
 
             app.processEvents()
             self.viewer_window.viewer_layout.setCurrentIndex(1)
@@ -2880,6 +2875,14 @@ class Window(QMainWindow, Ui_MainWindow):
         self.title_modified = False
         self.body_modified = False
         self.color_modified = False
+        self.colors = {
+            'grey': 0,
+            'yellow': 1,
+            'green': 2,
+            'blue': 3,
+            'red': 4,
+            'orange': 5,
+            'purple': 6 }
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         connect_signals()
         self.viewer_window.filter_box.setPlaceholderText(_('Filter')+' (Ctrl+F)')
