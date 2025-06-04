@@ -61,6 +61,7 @@ DB_NAME = 'userData.db'
 
 
 class Window(QMainWindow, Ui_MainWindow):
+
     def __init__(self, archive=''):
         super().__init__()
 
@@ -190,6 +191,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 lockfile.truncate()
             if Path(file).suffix == '.jwlibrary':
                 self.check_file(file)
+
 
     def changeEvent(self, event):
         if event.type() == QEvent.LanguageChange:
@@ -396,6 +398,7 @@ class Window(QMainWindow, Ui_MainWindow):
         for item in QTreeWidgetItemIterator(self.treeWidget):
             item.value().setCheckState(0, Qt.Unchecked)
 
+
     def list_selected(self):
         selected = []
         it = QTreeWidgetItemIterator(self.treeWidget, QTreeWidgetItemIterator.Checked)
@@ -414,6 +417,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.button_color.setEnabled(self.selected_items and self.combo_category.currentText() in (_('Notes'), _('Highlights')))
         self.button_tag.setEnabled(self.selected_items and self.combo_category.currentText() == _('Notes'))
         self.button_export.setEnabled(self.selected_items)
+        self.actionUnselect_All.setEnabled(self.selected_items)
 
 
     def switchboard(self, selection, new_data=False):
@@ -422,7 +426,6 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_add.setVisible(add)
             self.button_view.setVisible(view)
             self.button_export.setVisible(exp)
-            self.button_import.setEnabled(imp)
             self.button_import.setVisible(imp)
             self.button_color.setVisible(col)
             # self.button_tag.setVisible(tag)
@@ -963,16 +966,12 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
         self.status_label.setStyleSheet('font: italic;')
-        self.button_delete.setEnabled(self.int_total)
-        self.button_view.setEnabled(self.int_total)
-        self.button_export.setEnabled(self.int_total)
         self.actionClean.setEnabled(self.actionClean.isEnabled() and self.int_total)
         self.actionObscure.setEnabled(self.actionObscure.isEnabled() and self.int_total)
         self.actionSort.setEnabled(self.actionSort.isEnabled() and self.int_total)
         self.actionExpand_All.setEnabled(self.actionExpand_All.isEnabled() and self.int_total)
         self.actionCollapse_All.setEnabled(self.actionCollapse_All.isEnabled() and self.int_total)
         self.actionSelect_All.setEnabled(self.actionSelect_All.isEnabled() and self.int_total)
-        self.actionUnselect_All.setEnabled(self.actionUnselect_All.isEnabled() and self.int_total)
 
     def archive_saved(self):
         self.modified = False
