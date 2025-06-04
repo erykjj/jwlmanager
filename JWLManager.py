@@ -2489,7 +2489,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.title.setReadOnly(True)
             self.viewer_window.title.setPlainText(self.note_item.title)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            if self.note_item.indep is False:
+            if not self.note_item.indep:
                 self.note_color = self.note_item.text_box.property('note')
                 apply_color(self.note_color)
                 self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
@@ -2556,8 +2556,18 @@ class Window(QMainWindow, Ui_MainWindow):
         def update_db():
 
             def update_notes():
-                for item in self.modified_list: # TODO: update item.color
-                    con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), item.idx))
+                for item in self.modified_list:
+                    if not item.indep:
+                        row = con.execute(f'SELECT LocationId, UserMarkId FROM Note WHERE NoteId = ?;', (item.idx,)).fetchone()
+                        usermark_id = row[1]
+                        if not usermark_id:
+                            unique_id = uuid.uuid1()
+                            usermark_id = con.execute(f"INSERT INTO UserMark (ColorIndex, LocationId, StyleIndex, UserMarkGuid, Version) VALUES (?, ?, 0, '{unique_id}', 1);", (item.color, row[0])).lastrowid
+                        else:
+                            con.execute(f'UPDATE UserMark SET ColorIndex = ? WHERE UserMarkId = ?;', (item.color, usermark_id))
+                        con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ?, UserMarkId = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), usermark_id, item.idx))
+                    else:
+                        con.execute('UPDATE Note SET Title = ?, Content = ?, LastModified = ? WHERE NoteId = ?;', (item.title, item.body, datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), item.idx))
                 for item in self.deleted_list:
                     con.execute('DELETE FROM Note WHERE NoteId = ?;', (item.idx,))
 
