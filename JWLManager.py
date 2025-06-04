@@ -2489,12 +2489,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.viewer_window.title.setReadOnly(True)
             self.viewer_window.title.setPlainText(self.note_item.title)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            if category == _('Notes'):
+            if self.note_item.indep is False:
                 self.note_color = self.note_item.text_box.property('note')
                 apply_color(self.note_color)
                 self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
                 self.viewer_window.color_action_group.setVisible(True)
-            else: # TODO: also ignore INDEPENDENT notes
+            else:
                 self.viewer_window.color_action_group.setVisible(False)
 
             app.processEvents()
@@ -2748,6 +2748,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"date: {item['MODIFIED']}\n"
                 if item.get('PUB'):
                     metadata += f"publication: {item['PUB']}-{item['LANG']} {item['ISSUE']}".strip() + '\n'
+                    indep = False
+                else:
+                    indep = True
                 if item.get('HEADING'):
                     metadata += f"document: {item['HEADING']}\n"
                 if item.get('Link'):
@@ -2769,7 +2772,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         lnk = item['Link']
                         meta += f"<br>{lnk}"
                     meta += '</tt></strong></small>'
-                note_box = ViewerItem(self, item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata)
+                note_box = ViewerItem(self, item['ID'], item['COLOR'], clean_text(item['TITLE']), clean_text(item['NOTE']), meta, metadata, indep)
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
                 self.viewer_items[counter] = note_box
@@ -2828,7 +2831,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 metadata += f"\ndocument: {item['DOC']}\n"
                 metadata += f"label: {item['LABEL']}"
                 title = f"{item['PUB']} {item['ISSUE']}\n{item['DOC']} — {item['LABEL']}"
-                note_box = ViewerItem(self, item['ID'], 0, title, clean_text(item['VALUE']), None, metadata)
+                note_box = ViewerItem(self, item['ID'], 0, title, clean_text(item['VALUE']), None, metadata, True)
                 note_box.label = item['LABEL']
                 note_box.edit_button.clicked.connect(partial(data_editor, counter))
                 note_box.delete_button.clicked.connect(partial(delete_single_item, counter))
