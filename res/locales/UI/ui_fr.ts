@@ -338,7 +338,7 @@
     <message>
         <location filename="main_window.ui" line="1046"/>
         <source>Ctrl+M</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+M</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="1058"/>
