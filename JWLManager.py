@@ -2486,11 +2486,15 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 self.viewer_window.meta.setHidden(True)
                 self.viewer_window.title.setReadOnly(True)
-            self.note_color = self.note_item.text_box.property('note')
-            apply_color(self.note_color)
             self.viewer_window.title.setPlainText(self.note_item.title)
             self.viewer_window.body.setPlainText(self.note_item.body)
-            self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
+            if category == _('Notes'):
+                self.note_color = self.note_item.text_box.property('note')
+                apply_color(self.note_color)
+                self.viewer_window.color_actions[self.colors[self.note_color]].setChecked(True)
+                self.viewer_window.color_action_group.setVisible(True)
+            else:
+                self.viewer_window.color_action_group.setVisible(False)
 
             app.processEvents()
             self.viewer_window.viewer_layout.setCurrentIndex(1)
