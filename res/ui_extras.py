@@ -388,7 +388,7 @@ class DataViewer(QDialog):
 
 
 class ViewerItem(QWidget):
-    def __init__(self, parent, idx, color, title, body, meta, metadata):
+    def __init__(self, parent, idx, color, title, body, meta, metadata, independent):
         super().__init__(parent)
         self.idx = idx
         self.label = None
@@ -397,6 +397,7 @@ class ViewerItem(QWidget):
         self.meta = meta
         self.metadata= metadata
         self.color = color
+        self.indep = independent
         theme = parent.theme
 
         self.note_widget = QFrame()
