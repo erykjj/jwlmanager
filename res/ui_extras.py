@@ -396,6 +396,7 @@ class ViewerItem(QWidget):
         self.title = title
         self.meta = meta
         self.metadata= metadata
+        self.color = color
         theme = parent.theme
 
         self.note_widget = QFrame()
@@ -437,7 +438,7 @@ class ViewerItem(QWidget):
         self.edit_button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.edit_button.setStyleSheet('border: 0px;')
 
-        self.change_color(color)
+        self.change_color()
 
         layout = QGridLayout(self.note_widget)
         layout.setSpacing(0)
@@ -472,7 +473,7 @@ class ViewerItem(QWidget):
         txt = '<h3><b>' + self.title + '</b></h3>' + self.body
         self.text_box.setText(txt.replace('\n', '<br>'))
 
-    def change_color(self, color):
+    def change_color(self):
         colors = {
             0: 'grey',
             1: 'yellow',
@@ -481,14 +482,15 @@ class ViewerItem(QWidget):
             4: 'red',
             5: 'orange',
             6: 'purple' }
-        self.text_box.setProperty('note', colors[color])
+        color = colors[self.color]
+        self.text_box.setProperty('note', color)
         self.text_box.setStyleSheet(self.text_box.styleSheet())
-        self.separator.setProperty('note', colors[color])
+        self.separator.setProperty('note', color)
         self.separator.setStyleSheet(self.separator.styleSheet())
-        self.delete_button.setProperty('note', colors[color])
+        self.delete_button.setProperty('note', color)
         self.delete_button.setStyleSheet(self.delete_button.styleSheet())
-        self.edit_button.setProperty('note', colors[color])
+        self.edit_button.setProperty('note', color)
         self.edit_button.setStyleSheet(self.edit_button.styleSheet())
         if self.meta:
-            self.meta_box.setProperty('note', colors[color])
+            self.meta_box.setProperty('note', color)
             self.meta_box.setStyleSheet(self.meta_box.styleSheet())
