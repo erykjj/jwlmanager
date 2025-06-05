@@ -2963,7 +2963,7 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         if category == _('Highlights') and color == 0:
             return
-        reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to change\n the COLOR of these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Color'), _('Are you sure you want to change\n the COLOR of these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Modifying. Please wait…'))
