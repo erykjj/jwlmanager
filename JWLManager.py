@@ -107,6 +107,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.total.setText('')
             self.int_total = 0
             self.modified = False
+            self.loaded = False
             self.title_format = settings.value('JWLManager/title','short')
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
@@ -644,18 +645,19 @@ class Window(QMainWindow, Ui_MainWindow):
         def enable_options(enabled):
             self.menuLanguage.setEnabled(enabled)
             self.menuTitle_View.setEnabled(enabled)
-            enabled = enabled and self.int_total
-            self.button_import.setEnabled(enabled)
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
-            self.actionMerge.setEnabled(enabled)
-            self.actionObscure.setEnabled(enabled)
-            self.actionSort.setEnabled(enabled)
-            self.actionClean.setEnabled(enabled)
-            self.actionExpand_All.setEnabled(enabled)
-            self.actionCollapse_All.setEnabled(enabled)
-            self.actionSelect_All.setEnabled(enabled)
-            self.actionUnselect_All.setEnabled(enabled)
+            self.button_import.setEnabled(enabled)
+            on = enabled and self.loaded
+            self.actionMerge.setEnabled(on)
+            self.actionObscure.setEnabled(on)
+            self.actionSort.setEnabled(on)
+            self.actionClean.setEnabled(on)
+            on = enabled and self.int_total
+            self.actionExpand_All.setEnabled(on)
+            self.actionCollapse_All.setEnabled(on)
+            self.actionSelect_All.setEnabled(on)
+            self.actionUnselect_All.setEnabled(on)
 
         def build_tree():
 
@@ -849,8 +851,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'schemaVersion': 14 } }
         with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(self.manifest, json_file, indent=None, separators=(',', ':'))
-        self.file_loaded()
-        self.actionMerge.setEnabled(False)
+        self.file_loaded(False)
 
 
     def merge_file(self):
@@ -887,11 +888,13 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             return None
 
-    def file_loaded(self):
+    def file_loaded(self, data=True):
         self.total.setText('**0**')
         self.selected.setText('**0**')
         self.unselect_all()
         self.modified = False
+        self.loaded = data
+        self.actionMerge.setEnabled(data)
         try:
             self.viewer_window.close()
         except:
@@ -963,6 +966,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def archive_modified(self):
         self.modified = True
+        self.loaded = True
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
         self.status_label.setStyleSheet('font: italic;')
