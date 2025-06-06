@@ -431,13 +431,14 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_color.setVisible(col)
             # self.button_tag.setVisible(tag)
             self.button_tag.setVisible(False)
-            app.processEvents()
+
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
             for item in lst:
                 self.combo_grouping.model().item(item).setEnabled(False)
                 if self.combo_grouping.currentText() == self.combo_grouping.itemText(item):
                     self.combo_grouping.setCurrentText(_('Type'))
+            app.processEvents()
 
         self.combo_grouping.blockSignals(True)
         if self.combo_category.currentIndex() not in self.tree_cache:
@@ -648,16 +649,20 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
             self.button_import.setEnabled(enabled)
+
             on = enabled and self.loaded
             self.actionMerge.setEnabled(on)
             self.actionObscure.setEnabled(on)
             self.actionSort.setEnabled(on)
             self.actionClean.setEnabled(on)
+            self.actionMerge.setEnabled(on)
+
             on = enabled and self.int_total
             self.actionExpand_All.setEnabled(on)
             self.actionCollapse_All.setEnabled(on)
             self.actionSelect_All.setEnabled(on)
-            self.actionUnselect_All.setEnabled(on)
+
+            self.tree_selection()
 
         def build_tree():
 
@@ -888,13 +893,12 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             return None
 
-    def file_loaded(self, data=True):
+    def file_loaded(self, archive_loaded=True):
         self.total.setText('**0**')
         self.selected.setText('**0**')
         self.unselect_all()
         self.modified = False
-        self.loaded = data
-        self.actionMerge.setEnabled(data)
+        self.loaded = archive_loaded
         try:
             self.viewer_window.close()
         except:
@@ -970,12 +974,6 @@ class Window(QMainWindow, Ui_MainWindow):
         self.actionSave.setEnabled(True)
         self.actionSave.setProperty('icon_name', 'save')
         self.status_label.setStyleSheet('font: italic;')
-        self.actionClean.setEnabled(self.actionClean.isEnabled() and self.int_total)
-        self.actionObscure.setEnabled(self.actionObscure.isEnabled() and self.int_total)
-        self.actionSort.setEnabled(self.actionSort.isEnabled() and self.int_total)
-        self.actionExpand_All.setEnabled(self.actionExpand_All.isEnabled() and self.int_total)
-        self.actionCollapse_All.setEnabled(self.actionCollapse_All.isEnabled() and self.int_total)
-        self.actionSelect_All.setEnabled(self.actionSelect_All.isEnabled() and self.int_total)
 
     def archive_saved(self):
         self.modified = False
