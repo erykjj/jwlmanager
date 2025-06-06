@@ -11,6 +11,7 @@
 
 - Slight UI adjustments
 - Improved Italian translations (thank you, Stefano)
+- Updated HELP file
 
 ### Fixed
 
