@@ -17,6 +17,7 @@
 ### Fixed
 
 - Adjusted some widget on/off controls
+- Fixed typo in signal connection
 
 ### Removed
 
