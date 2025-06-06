@@ -39,6 +39,11 @@ Wenn du Änderungen an der Sicherungsdatei speichern willst, wähle **Speichern 
 Zeigt die ausgewählten Notizen und Anmerkungen in einem **Datenbetrachter** an, der Titel und Text mit einem Filter durchsuchen, und das Ergebnis in einer Textdatei speichern kann. Du kann einzelne Einträge löschen oder im **Dateneditor** bearbeiten (Klick auf das Symbol mit Papier und Stift) . Du musst alle Änderungen im Editor und *zusätzlich* im Betrachter speichern, damit sie in die Datenbank übernommen werden. Natürlich musst du auch wie gewohnt die Datei speichern. Du kann mit den Schaltflächen (oder der `ESC` Taste) zurückgehen, ohne die Datenbank zu ändern.
 #####
 ######
+### Farbe
+######
+Du kannst die Farbe der ausgewählten **Notizen** und **Markierungen** pauschal ändern (alle bekommen die gleiche Farbe), oder die Farbe einzelner Notizen im **Dateneditor** individuell ändern. Unabhängige Notizen (solche, die keiner Publikation zugeordnet sind) *können nicht* eingefärbt werden; sie sind immer grau.
+#####
+######
 ### Hinzufügen
 ######
 Bei **Favoriten**, kann man damit eine Bibel hinzufügen, was in der JW Library selbst nicht möglich ist. Und bei **Playlists** kannst du *Bilder* ('bmp', 'gif', 'heic', 'jpg', 'png') zu einer Playlist hinzufügen oder eine neue Playlist anlegen.
