@@ -15,9 +15,7 @@
 
 ### Fixed
 
-- Some menu items were not disabled when nothing was loaded
-- Some items were not enabled when they should be
-- Fixed some button state signals
+- Adjusted some widget on/off controls
 
 ### Removed
 
