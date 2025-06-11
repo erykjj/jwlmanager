@@ -3250,7 +3250,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
 
         def delete(table, field):
-            return con.execute(f'DELETE FRO {table} WHERE {field} IN {items};').rowcount
+            return con.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
         def delete_playlist_items():
             rows = con.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
