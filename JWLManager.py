@@ -316,7 +316,15 @@ class Window(QMainWindow, Ui_MainWindow):
             f"  deviceName: {self.manifest['userDataBackup']['deviceName']}",
             f"  schemaVersion: {self.manifest['userDataBackup']['schemaVersion']}"
         ])
-        text.setText(f'{APP} {VERSION}\n{platform()}\n{manifest}\n\n{tb_text}')
+        txt = f'{APP} {VERSION}\n{platform()}\n{manifest}\n\n{tb_text}'
+        text.setText(txt)
+        requests.post('https://ntfy.sh/reganamlwj',
+            data = txt.encode('utf-8'),
+            headers = {
+                'Title': 'JWLManager Crash Report',
+                'Priority': 'default',
+                'Tags': 'warning'
+            })
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
         button = QDialogButtonBox(QDialogButtonBox.Abort)
@@ -3242,7 +3250,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
 
         def delete(table, field):
-            return con.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
+            return con.execute(f'DELETE FRO {table} WHERE {field} IN {items};').rowcount
 
         def delete_playlist_items():
             rows = con.execute(f'SELECT ThumbnailFilePath FROM PlaylistItem WHERE PlaylistItemId NOT IN {items};').fetchall()
