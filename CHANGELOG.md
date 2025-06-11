@@ -4,8 +4,19 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [9.0.0] - 2025-06-11
+### Added
+
 - Added **bulk color change** for Notes and Highlights
 - Added **individual Note color change** (via the Note Viewer/Editor)
+- Added crash reporting
 
 ### Changed
 
@@ -19,9 +30,6 @@
 - Adjusted some widget on/off controls
 - Fixed typo in signal connection
 
-### Removed
-
-____
 ## [8.3.0] - 2025-05-17
 ### Added
 
@@ -956,6 +964,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.0.0
 [8.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.3.0
 [8.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.2.0
 [8.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.1.0
