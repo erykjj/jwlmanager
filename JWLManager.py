@@ -49,7 +49,7 @@ from tempfile import mkdtemp
 from time import time
 from traceback import format_exception
 from xlsxwriter import Workbook
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import is_zipfile, ZipFile, ZIP_DEFLATED
 
 import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import polars as pl
@@ -866,6 +866,20 @@ class Window(QMainWindow, Ui_MainWindow):
                 json.dump(self.manifest, json_file, indent=None, separators=(',', ':'))
         self.file_loaded(False)
 
+    def check_validity(self, archive):
+        if is_zipfile(archive):
+            with ZipFile(archive) as zipped:
+                if 'manifest.json' in zipped.namelist():
+                    with zipped.open('manifest.json') as j:
+                        manifest = json.load(j)
+                        if manifest.get('userDataBackup'):
+                            schema = manifest['userDataBackup'].get('schemaVersion', 0)
+                            if schema == 14:
+                                return True
+                            QMessageBox.warning(self, _('Archive error'), APP + ' ' + _('cannot handle this old archive format.\nConvert it using JW Library.'), QMessageBox.Cancel)
+                            return False
+        QMessageBox.warning(self, _('Archive error'), Path(archive).stem + ' ' + _('is not a valid JW Library backup archive'), QMessageBox.Cancel)
+        return False
 
     def merge_file(self):
         fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
@@ -881,8 +895,10 @@ class Window(QMainWindow, Ui_MainWindow):
             if not fname[0]:
                 return False
             archive = fname[0]
-        self.current_archive = Path(archive)
         self.working_dir = Path(archive).parent
+        if not self.check_validity(archive):
+            return False
+        self.current_archive = Path(archive)
         self.status_label.setText(f'{Path(archive).stem}  ')
         self.actionSave.setEnabled(False)
         self.status_label.setStyleSheet('font: normal;')
@@ -3685,6 +3701,9 @@ if __name__ == "__main__":
     font.setPixelSize(16)
     app.setFont(font)
     app.setStyle('Fusion')
-    win = Window(sys.argv[-1])
+    if is_zipfile(sys.argv[-1]):
+        win = Window(sys.argv[-1])
+    else:
+        win = Window()
     win.show()
     sys.exit(app.exec())
