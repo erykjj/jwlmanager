@@ -4,6 +4,10 @@
 
 ### Added
 
+- Validity check for opened/merged archives
+  - only current (schema v14) archives are supported
+  - if you have an older backup archive (schema v8), import it into the JW Library app and export it again - backing up your current archive first, of course
+
 ### Changed
 
 ### Fixed
