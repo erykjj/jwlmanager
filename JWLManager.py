@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.0.0'
+VERSION = 'v9.1.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -867,6 +867,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.file_loaded(False)
 
     def check_validity(self, archive):
+        file = Path(archive).name
         if is_zipfile(archive):
             with ZipFile(archive) as zipped:
                 if 'manifest.json' in zipped.namelist():
@@ -876,9 +877,9 @@ class Window(QMainWindow, Ui_MainWindow):
                             schema = manifest['userDataBackup'].get('schemaVersion', 0)
                             if schema == 14:
                                 return True
-                            QMessageBox.warning(self, _('Archive error'), APP + ' ' + _('cannot handle this old archive format.\nConvert it using JW Library.'), QMessageBox.Cancel)
+                            QMessageBox.warning(self, file, APP + ' ' + _('cannot handle this old archive format.\nConvert it using JW Library.'), QMessageBox.Cancel)
                             return False
-        QMessageBox.warning(self, _('Archive error'), Path(archive).stem + ' ' + _('is not a valid JW Library backup archive'), QMessageBox.Cancel)
+        QMessageBox.warning(self, file, _('This is not a valid JW Library backup archive.'), QMessageBox.Cancel)
         return False
 
     def merge_file(self):
@@ -2416,6 +2417,8 @@ class Window(QMainWindow, Ui_MainWindow):
             progress_dialog.setMinimumDuration(0)
             return progress_dialog
 
+        if not self.check_validity(file):
+            return
         self.statusBar.showMessage(' '+_('Merging. Please wait…'))
         app.processEvents()
         try:
