@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-06-12 12:56-0400\n"
-"PO-Revision-Date: 2025-06-04 22:52+0000\n"
+"PO-Revision-Date: 2025-06-12 17:19+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: it\n"
 "Language-Team: it <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: JWLManager.py:135 JWLManager.py:448 JWLManager.py:458 JWLManager.py:462
@@ -239,10 +240,13 @@ msgid ""
 "cannot handle this old archive format.\n"
 "Convert it using JW Library."
 msgstr ""
+"non può gestire questo vecchio formato di archivio.\n"
+"\n"
+"Convertirlo usando JW Library."
 
 #: JWLManager.py:882
 msgid "This is not a valid JW Library backup archive."
-msgstr ""
+msgstr "Questo non è un archivio di backup JW Library valido."
 
 #: JWLManager.py:886 JWLManager.py:895
 msgid "Open archive"
@@ -839,4 +843,3 @@ msgstr "Note ordinate"
 
 #~ msgid "Reindexed successfully"
 #~ msgstr "Rendicizzazione completata"
-
