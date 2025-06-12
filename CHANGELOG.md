@@ -4,10 +4,6 @@
 
 ### Added
 
-- Validity check for opened/merged archives
-  - only current (schema v14) archives are supported
-  - if you have an older backup archive (schema v8), import it into the JW Library app and export it again - backing up your current archive first, of course
-
 ### Changed
 
 ### Fixed
@@ -15,6 +11,13 @@
 ### Removed
 
 ____
+## [9.1.0] - 2025-06-12
+### Added
+
+- Validity check for opened/merged archives
+  - only current (schema v14) archives are supported
+  - if you have an older backup archive (schema v8), import it into the JW Library app and export it again (backing up your current archive first, of course)
+
 ## [9.0.0] - 2025-06-11
 ### Added
 
@@ -968,6 +971,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.0
 [9.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.0.0
 [8.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.3.0
 [8.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.2.0
