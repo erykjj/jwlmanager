@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Updated translations
+
 ### Fixed
 
 ### Removed
