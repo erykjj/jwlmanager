@@ -877,7 +877,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             schema = manifest['userDataBackup'].get('schemaVersion', 0)
                             if schema == 14:
                                 return True
-                            QMessageBox.warning(self, file, APP + ' ' + _('cannot handle this old archive format.\nConvert it using JW Library.'), QMessageBox.Cancel)
+                            QMessageBox.warning(self, file, APP + ' ' + _('cannot handle this old archive format.\nYou can convert it using JW Library.'), QMessageBox.Cancel)
                             return False
         QMessageBox.warning(self, file, _('This is not a valid JW Library backup archive.'), QMessageBox.Cancel)
         return False
