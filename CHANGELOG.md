@@ -6,13 +6,20 @@
 
 ### Changed
 
-- Updated translations
-
 ### Fixed
 
 ### Removed
 
 ____
+## [9.1.1] - 2025-06-14
+### Changed
+
+- Updated translations
+
+### Fixed
+
+- Fixed crash adding images to playlist
+
 ## [9.1.0] - 2025-06-12
 ### Added
 
@@ -973,6 +980,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.1
 [9.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.0
 [9.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.0.0
 [8.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v8.3.0
