@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.0'
+VERSION = 'v9.1.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -3183,7 +3183,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     con.execute('INSERT Into TagMap (PlaylistItemId, TagId, Position) VALUES (?, ?, ?);', (item_id, tag_id, position))
 
                 try:
-                    con.execute('INSERT INTO Tag (Type, Name) VALUES (2, ?);', (playlist,))
+                    tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (2, ?);', (playlist,)).lastrowid
                     current_labels = []
                 except:
                     tag_id = con.execute('SELECT TagId FROM Tag WHERE Name = ? AND Type = 2;', (playlist,)).fetchone()[0]
