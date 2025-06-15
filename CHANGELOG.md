@@ -4,6 +4,8 @@
 
 ### Added
 
+- Added latest version check to crash report
+
 ### Changed
 
 ### Fixed
