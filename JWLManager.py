@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.1'
+VERSION = 'v9.2.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -316,7 +316,12 @@ class Window(QMainWindow, Ui_MainWindow):
             f"  deviceName: {self.manifest['userDataBackup']['deviceName']}",
             f"  schemaVersion: {self.manifest['userDataBackup']['schemaVersion']}"
         ])
-        txt = f'{APP} {VERSION}\n{platform()}\n{manifest}\n\n{tb_text}'
+        if not self.latest:
+            url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
+            headers = { 'X-GitHub-Api-Version': '2022-11-28' }
+            r = requests.get(url, headers=headers, timeout=5)
+            self.latest = json.loads(r.content.decode('utf-8'))['name']
+        txt = f'{APP} {VERSION} (latest: {self.latest})\n{platform()}\n{manifest}\n\n{tb_text}'
         text.setText(txt)
         requests.post('https://ntfy.sh/reganamlwj',
             data = txt.encode('utf-8'),
