@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.2.0'
+VERSION = 'v9.1.2'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -1340,8 +1340,11 @@ class Window(QMainWindow, Ui_MainWindow):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
                             item['VS'] = None
-                            par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&docid={item['DOC']}{par}"
+                            if item.get('LANG') is not None and item.get('DOC') is not None:
+                                par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
+                                item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&docid={item['DOC']}{par}"
+                            else:
+                                item['Link'] = None
                     item_list.append(item)
                 return item_list
 
@@ -2776,8 +2779,11 @@ class Window(QMainWindow, Ui_MainWindow):
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
-                            par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
-                            item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                            if item.get('LANG') is not None and item.get('DOC') is not None:
+                                par = f"&par={item['BLOCK']}" if item.get('BLOCK') else ''
+                                item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&docid={item['DOC']}{par}"
+                            else:
+                                item['Link'] = None
                             if row[9] and (row[9] > 10000000):
                                 item['ISSUE'] = process_issue(row[9])
                     item_list.append(item)
