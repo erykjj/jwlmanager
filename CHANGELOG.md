@@ -10,6 +10,8 @@
 
 ### Fixed
 
+- Added check for invalid values that could cause a crash
+
 ### Removed
 
 ____
