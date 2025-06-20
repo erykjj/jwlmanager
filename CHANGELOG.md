@@ -4,17 +4,22 @@
 
 ### Added
 
-- Added latest version check to crash report
-
 ### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [9.1.2] - 2025-06-20
+### Added
+
+- Added latest version check to crash report
 
 ### Fixed
 
 - Added check for invalid values that could cause a crash
 
-### Removed
-
-____
 ## [9.1.1] - 2025-06-14
 ### Changed
 
@@ -984,6 +989,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.2
 [9.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.1
 [9.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.0
 [9.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.0.0
