@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.2'
+VERSION = 'v9.1.3'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -880,7 +880,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         manifest = json.load(j)
                         if manifest.get('userDataBackup'):
                             schema = manifest['userDataBackup'].get('schemaVersion', 0)
-                            if schema == 14:
+                            if schema > 11:
                                 return True
                             QMessageBox.warning(self, file, APP + ' ' + _('cannot handle this old archive format.\nYou can convert it using JW Library.'), QMessageBox.Cancel)
                             return False
