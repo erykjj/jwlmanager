@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Dropped minimum schema requirements from 14 to 12
+
 ### Fixed
 
 ### Removed
