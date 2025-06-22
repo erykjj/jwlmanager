@@ -8,6 +8,7 @@
 
 - Dropped minimum schema requirements from 14 to 12
 - Updated translations
+- Forced older (2025.4.26) certifi module (required by requests) since 2025.6.15 wouldn't load on macOS
 
 ### Fixed
 
