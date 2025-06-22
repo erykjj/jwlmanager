@@ -11,6 +11,8 @@
 
 ### Fixed
 
+- Fixed Portuguese translation causing crash
+
 ### Removed
 
 ____
