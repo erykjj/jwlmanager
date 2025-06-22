@@ -6,6 +6,14 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [9.1.3] - 2025-06-22
+### Changed
+
 - Dropped minimum schema requirements from 14 to 12
 - Updated translations
 - Forced older (2025.4.26) certifi module (required by requests) since 2025.6.15 wouldn't load on macOS
@@ -14,9 +22,6 @@
 
 - Fixed Portuguese translation causing crash
 
-### Removed
-
-____
 ## [9.1.2] - 2025-06-20
 ### Added
 
@@ -995,6 +1000,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.3
 [9.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.2
 [9.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.1
 [9.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.0
