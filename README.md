@@ -29,7 +29,7 @@ You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip 
 
 The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
-You can force the GUI to launch in a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as...
+You can force the GUI to launch in a language by appending the corresponding language code parameter. So, if you want to start the app in Spanish, you would invoke it as…
 - Linux terminal: `python3 JWLManager.py -es`
 - Windows command console (or shortcut): `JWLManager.exe -es`
 - macOS terminal: `open -a JWLManager.app --args -es`
@@ -37,17 +37,24 @@ You can force the GUI to launch in a language by appending the corresponding lan
 If you have Python3.11+ installed on your system and can install some of the required dependencies[^2], you can simply clone it:
 
 ```
-git clone --depth 1 https://github.com/erykjj/jwlmanager.git
+git clone -b [version tag] --depth 1 https://github.com/erykjj/jwlmanager.git
 cd jwlmanager
+```
+then either:
+```
 pip install -r res/requirements.txt
 ```
+or (for ARM64 or "older" Intel CPUs):
+```
+pip install -r res/requirements-winarm.txt
+```
 
-Then...
+Then…
 ```
 python3 JWLManager.py
 ```
 
-...or, make it executable first and run directly:
+…or, make it executable first and run directly:
 
 ```
 chmod +x JWLManager.py
