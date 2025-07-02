@@ -112,7 +112,7 @@ jobs:
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
             - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
-          - Windows 10/11 (ARM):
+          - Windows 10/11 (ARM or older Intel CPUs that don't work with the above):
             - Stand-alone: [JWLManager_${{ github.ref_name }}-arm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.exe)
             - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}-arm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.zip)
           - macOS:
