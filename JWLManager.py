@@ -288,7 +288,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if comp is None:
                     text = f'<div style="text-align:center;"><small>'+'Pre-release'+'</small></div>'
                 elif comp:
-                    text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://github.com/erykjj/jwlmanager/releases/latest"><small><b>{self.latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
+                    text = f'<div style="text-align:center;"><a style="color:red; text-decoration:none;" href="https://tinyurl.com/jwlmanager/releases/latest"><small><b>{self.latest.lstrip("v")} '+_('update available!')+'</b></small></a></div>'
                 else:
                     text = f'<div style="text-align:center;"><small>'+_('Latest version')+'</small></div>'
             except:
@@ -303,7 +303,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
-        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://github.com/erykjj/jwlmanager/issues'>"+_('inform the developer')+"</a>:</p>")
+        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://tinyurl.com/jwlmanager/issues'>"+_('inform the developer')+"</a>:</p>")
         label1.setOpenExternalLinks(True)
         text = QTextEdit()
         text.setReadOnly(True)
