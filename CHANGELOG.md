@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Added code to catch invalid issue numbers which may throw an error
+
 ### Fixed
 
 ### Removed
