@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.3'
+VERSION = 'v9.1.4'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -528,11 +528,15 @@ class Window(QMainWindow, Ui_MainWindow):
         def process_color(col):
             return (_('Grey'), _('Yellow'), _('Green'), _('Blue'), _('Red'), _('Orange'), _('Purple'))[int(col)]
 
-        def process_detail(symbol, book, chapter, issue, year):
+        def process_detail(symbol, book, chapter, issue: int, year):
             if symbol in {'Rbi8', 'bi10', 'bi12', 'bi22', 'bi7', 'by', 'int', 'nwt', 'nwtsty', 'rh', 'sbi1', 'sbi2'}: # Bible appendix notes, etc.
                 detail1 = _('* OTHER *')
             else:
                 detail1 = None
+            try:
+                issue = int(issue)
+            except (ValueError, TypeError):
+                issue = 0
             if issue > 19000000:
                 y = str(issue)[0:4]
                 m = str(issue)[4:6]
