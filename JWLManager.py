@@ -534,9 +534,10 @@ class Window(QMainWindow, Ui_MainWindow):
             else:
                 detail1 = None
             if isinstance(issue, int) and issue > 19000000:
-                y = str(issue)[0:4]
-                m = str(issue)[4:6]
-                d = str(issue)[6:]
+                iss = str(issue)
+                y = iss[0:4]
+                m = iss[4:6]
+                d = iss[6:]
                 if d == '00':
                     detail1 = f'{y}-{m}'
                 else:
