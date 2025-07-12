@@ -533,11 +533,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 detail1 = _('* OTHER *')
             else:
                 detail1 = None
-            try:
-                issue = int(issue)
-            except (ValueError, TypeError):
-                issue = 0
-            if issue > 19000000:
+            if isinstance(issue, int) and issue > 19000000:
                 y = str(issue)[0:4]
                 m = str(issue)[4:6]
                 d = str(issue)[6:]
