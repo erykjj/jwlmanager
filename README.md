@@ -92,7 +92,7 @@ ____
 
 Feel free to get in touch and post any [issues and/or suggestions](https://github.com/erykjj/jwlmanager/issues).
 
-My other *JW Library* projects: [**JWPubLib**](https://github.com/erykjj/jwpublib) and [**jwlFusion**](https://github.com/erykjj/jwlFusion)
+My other *JW Library* project: [**jwlFusion**](https://github.com/erykjj/jwlFusion)
 
 ____
 #### Footnotes:
