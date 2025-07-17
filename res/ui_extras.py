@@ -77,7 +77,7 @@ class AboutBox(QDialog):
         self.update_label.setOpenExternalLinks(True)
 
         contact_label = QLabel(self)
-        text = text = f'<div style="text-align:center;"><small><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a><br><a style="color:#666699; text-decoration:none;" href="https://tinyurl.com/jwlmanager">{web}</small></a></div>'
+        text = text = f'<div style="text-align:center;"><small><a style="color:#666699; text-decoration:none;" href="mail-to:{contact}"><em>{contact}</em></a><br><a style="color:#666699; text-decoration:none;" href="{web}">{web}</small></a></div>'
         contact_label.setText(text)
         contact_label.setOpenExternalLinks(True)
 
