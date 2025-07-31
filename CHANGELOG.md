@@ -16,6 +16,16 @@
 ### Removed
 
 ____
+## [9.1.4] - 2025-07-30
+### Added
+
+- Added warning when an open Excel file may block export
+
+### Changed
+
+- Added code to catch invalid issue numbers which may throw an error
+- Updated publications catalog
+
 ## [9.1.3] - 2025-06-22
 ### Changed
 
@@ -1005,6 +1015,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.4]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.4
 [9.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.3
 [9.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.2
 [9.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.1
