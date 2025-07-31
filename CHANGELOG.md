@@ -4,12 +4,7 @@
 
 ### Added
 
-- Added warning when an open Excel file may block export
-
 ### Changed
-
-- Added code to catch invalid issue numbers which may throw an error
-- Updated publications catalog
 
 ### Fixed
 
