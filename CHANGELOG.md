@@ -6,13 +6,16 @@
 
 ### Changed
 
-- Forced older (2025.4.26) certifi module (required by requests) for all builds
-
 ### Fixed
 
 ### Removed
 
 ____
+## [9.1.5] - 2025-07-31
+### Changed
+
+- Forced older (2025.4.26) certifi module (required by requests) for all builds
+
 ## [9.1.4] - 2025-07-30
 ### Added
 
@@ -1012,6 +1015,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[9.1.5]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.5
 [9.1.4]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.4
 [9.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.3
 [9.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.2
