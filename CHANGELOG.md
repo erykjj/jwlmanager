@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Forced older (2025.4.26) certifi module (required by requests) for all builds
+
 ### Fixed
 
 ### Removed
