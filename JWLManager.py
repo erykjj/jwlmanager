@@ -282,7 +282,7 @@ class Window(QMainWindow, Ui_MainWindow):
             url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
             headers = { 'X-GitHub-Api-Version': '2022-11-28' }
             try:
-                r = requests.get(url, headers=headers, timeout=5)
+                r = requests.get(url, headers=headers, timeout=5, verify=False)
                 self.latest = json.loads(r.content.decode('utf-8'))['name']
                 comp = version_compare(VERSION, self.latest)
                 if comp is None:
@@ -319,11 +319,11 @@ class Window(QMainWindow, Ui_MainWindow):
         if not self.latest:
             url = 'https://api.github.com/repos/erykjj/jwlmanager/releases/latest'
             headers = { 'X-GitHub-Api-Version': '2022-11-28' }
-            r = requests.get(url, headers=headers, timeout=5)
+            r = requests.get(url, headers=headers, timeout=5, verify=False)
             self.latest = json.loads(r.content.decode('utf-8'))['name']
         txt = f'{APP} {VERSION} (latest: {self.latest})\n{platform()}\n{manifest}\n\n{tb_text}'
         text.setText(txt)
-        requests.post('https://ntfy.sh/reganamlwj',
+        requests.post('https://ntfy.sh/reganamlwj', verify=False,
             data = txt.encode('utf-8'),
             headers = {
                 'Title': 'JWLManager Crash Report',
