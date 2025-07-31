@@ -1088,7 +1088,12 @@ class Window(QMainWindow, Ui_MainWindow):
             ws.freeze_panes(1, 0)
             ws.set_column(0, 2, 20)
             ws.set_column(3, len(fields)-1, 12)
-            wb.close()
+            try:
+                wb.close()
+                return item_list
+            except:
+                QMessageBox.critical(self, _('Warning'), _('Is the file {}\nin use? Please close it and try again.').format(fname), QMessageBox.Cancel)
+                return []
 
         def export_header(category):
             # Note: invisible char on first line to force UTF-8 encoding
@@ -1135,7 +1140,7 @@ class Window(QMainWindow, Ui_MainWindow):
             item_list = get_annotations()
             if form == 'xlsx':
                 fields = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
-                create_xlsx(fields, item_list, '{ANNOTATIONS}')
+                item_list = create_xlsx(fields, item_list, '{ANNOTATIONS}')
             elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as f:
                     f.write(export_header('{ANNOTATIONS}'))
@@ -1354,7 +1359,7 @@ class Window(QMainWindow, Ui_MainWindow):
             item_list = get_notes()
             if form == 'xlsx':
                 fields = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'Reference', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'Link', 'TITLE', 'NOTE']
-                create_xlsx(fields, item_list, '{NOTES=}')
+                item_list = create_xlsx(fields, item_list, '{NOTES=}')
             elif form == 'txt':
                 with open(fname, 'w', encoding='utf-8') as f:
                     f.write(export_header('{NOTES=}'))
