@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-07-30 20:32-0400\n"
-"PO-Revision-Date: 2025-07-31 00:50+0000\n"
+"PO-Revision-Date: 2025-08-12 20:53+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
 "Language-Team: pt <LL@li.org>\n"
 "Language: pt\n"
@@ -221,7 +221,7 @@ msgstr "Cor"
 
 #: JWLManager.py:765
 msgid "Tag"
-msgstr "Etiqueta"
+msgstr "Tag"
 
 #: JWLManager.py:804 JWLManager.py:2800 JWLManager.py:2883
 msgid "Processing…"
