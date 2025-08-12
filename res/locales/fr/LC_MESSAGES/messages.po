@@ -9,13 +9,12 @@ msgstr ""
 "POT-Creation-Date: 2025-07-30 20:32-0400\n"
 "PO-Revision-Date: 2025-07-31 00:50+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: JWLManager.py:135 JWLManager.py:453 JWLManager.py:463 JWLManager.py:467
@@ -842,3 +841,4 @@ msgstr "Notes triées"
 
 #~ msgid "Reindexed successfully"
 #~ msgstr "Réindexé avec succès"
+
