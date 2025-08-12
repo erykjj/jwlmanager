@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.5'
+VERSION = 'v9.1.6'
 
 
 from res.ui_main_window import Ui_MainWindow
