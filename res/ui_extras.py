@@ -3,7 +3,7 @@
 """
   JWLManager module with Qt classes for UI components
 
-  MIT License:  Copyright (c) 2024 Eryk J.
+  MIT License:  Copyright (c) 2025 Eryk J.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ class CustomTreeWidget(QTreeWidget):
 
 
 class AboutBox(QDialog):
-    def __init__(self, parent, app, version):
+    def __init__(self, parent, app, version, core):
         super().__init__(parent)
 
         year = f'MIT ©{datetime.now().year}'
@@ -69,7 +69,7 @@ class AboutBox(QDialog):
 
         right_layout = QVBoxLayout()
         title_label = QLabel(self)
-        text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{app}</span></h2><p><small>{year} {owner}</small></p><h4>{version.lstrip("v")}</h4></div>'
+        text = f'<div style="text-align:center;"><h2><span style="color:#800080;">{app}</span></h2><p><small>{year} {owner}</small></p><p><strong>{version.lstrip("v")}</strong><small> (jwlCore {core})</small></p></div>'
         title_label.setText(text)
 
         self.update_label = QLabel(self)
