@@ -1703,7 +1703,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     QMessageBox.critical(self, _('Error!'), _('Wrong import file format:\nMissing {BOOKMARKS} tag line'), QMessageBox.Abort)
                     return False
 
-            def update_db():
+            def update_db(import_file, extended=False):
 
                 def add_scripture_location(attribs):
                     existing_id = con.execute('SELECT LocationId FROM Location WHERE KeySymbol = ? AND MepsLanguage = ? AND BookNumber = ? AND ChapterNumber = ?;', (attribs[4], attribs[5], attribs[0], attribs[1])).fetchone()
@@ -1750,32 +1750,100 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             con.execute('INSERT INTO Bookmark (LocationId, PublicationLocationId, Slot, Title, Snippet, BlockType, BlockIdentifier) VALUES (?, ?, ?, ?, ?, ?, ?);', (location_id, publication_id, attribs[7], attribs[8], attribs[9], attribs[10], attribs[11]))
 
+                def build_attribs_from_bkmk(bkmk):
+                    pub_loc_id, slot, title, snippet, block_type, block_id = bkmk
+                    attribs = [None] * 12
+                    attribs[7] = slot
+                    attribs[8] = title
+                    attribs[9] = snippet
+                    attribs[10] = block_type
+                    attribs[11] = block_id
+                    return attribs
+
+                # --- Load current bookmarks from DB ---
+                db_bookmarks = {}  # {pub_loc_id: {slot: bookmark_data_tuple}}
+                for row in con.execute(
+                    "SELECT PublicationLocationId, Slot, LocationId, Title, Snippet, BlockType, BlockIdentifier FROM Bookmark"
+                ):
+                    pub_loc_id, slot, *rest = row
+                    db_bookmarks.setdefault(pub_loc_id, {})[slot] = (pub_loc_id, slot, *rest)
+
+                # --- Build import bookmarks dictionary ---
+                import_bookmarks = {}  # {pub_loc_id: {slot: bookmark_data_tuple}}
+                displaced = []  # displaced DB entries if extended=True
+
                 count = 0
                 for line in import_file:
-                    if '|' in line:
-                        try:
-                            count += 1
-                            attribs = regex.split(r'\|', line.rstrip())
-                            for i in [0,1,2,9,11]:
-                                if attribs[i] == 'None':
-                                    attribs[i] = None
-                            if attribs[0]:
-                                location_id = add_scripture_location(attribs)
-                            else:
-                                location_id = add_publication_location(attribs)
-                            add_bookmark(attribs, location_id)
-                        except:
-                            QMessageBox.critical(self, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
-                            con.execute('ROLLBACK;')
-                            return None
+                    if "|" not in line:
+                        continue
+                    try:
+                        count += 1
+                        attribs = regex.split(r'\|', line.rstrip())
+                        for i in [0, 1, 2, 9, 11]:
+                            if attribs[i] == 'None':
+                                attribs[i] = None
+                        if attribs[0]:
+                            pub_loc_id = add_scripture_location(attribs)
+                        else:
+                            pub_loc_id = add_publication_location(attribs)
+
+                        slot = int(attribs[7])
+
+                        # If extended mode, track displaced DB entries
+                        if extended and pub_loc_id in db_bookmarks and slot in db_bookmarks[pub_loc_id]:
+                            displaced.append(db_bookmarks[pub_loc_id][slot])
+
+                        import_bookmarks.setdefault(pub_loc_id, {})[slot] = (
+                            pub_loc_id, slot, attribs[8], attribs[9], attribs[10], attribs[11]
+                        )
+                    except:
+                        QMessageBox.critical(self, _('Error!'), _('Bookmarks')+'\n\n'+_('Error on import!\n\nFaulting entry')+f' (#{count}):\n{line}', QMessageBox.Abort)
+                        con.execute('ROLLBACK;')
+                        return None
+
+                # --- Start with import’s slots, then fill from DB where empty ---
+                final_bookmarks = {}
+                for pub_loc_id in set(db_bookmarks.keys()) | set(import_bookmarks.keys()):
+                    final_bookmarks[pub_loc_id] = dict(import_bookmarks.get(pub_loc_id, {}))
+                    for slot, bkmk in db_bookmarks.get(pub_loc_id, {}).items():
+                        if slot not in final_bookmarks[pub_loc_id]:
+                            final_bookmarks[pub_loc_id][slot] = bkmk
+
+                # --- Relocate displaced bookmarks if extended mode ---
+                if extended:
+                    for bkmk in displaced:
+                        pub_loc_id, _, location_id, *_ = bkmk
+
+                        # Skip if location_id already exists for this pub_loc_id
+                        if any(loc_id == location_id for (_, _, loc_id, *_)
+                            in final_bookmarks.get(pub_loc_id, {}).values()):
+                            continue
+
+                        if pub_loc_id not in final_bookmarks:
+                            final_bookmarks[pub_loc_id] = {}
+
+                        used_slots = set(final_bookmarks[pub_loc_id].keys())
+
+                        # Place into first free slot
+                        for slot in range(9):  # adjust if max slots known
+                            if slot not in used_slots:
+                                final_bookmarks[pub_loc_id][slot] = bkmk
+                                break
+
+                # --- Apply all bookmarks using existing add_bookmark() ---
+                for pub_loc_id, slots in final_bookmarks.items():
+                    for slot, bkmk in slots.items():
+                        # bkmk: (pub_loc_id, slot, Title, Snippet, BlockType, BlockIdentifier)
+                        attribs = build_attribs_from_bkmk(bkmk)  # You must define this helper
+                        add_bookmark(attribs, pub_loc_id)
                 return count
 
             if item_list:
                 import_file = item_list
-                return update_db()
+                return update_db(import_file, True)
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
-                    count = update_db()
+                    count = update_db(import_file)
                     if not count:
                         return None
                 else:
