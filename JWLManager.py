@@ -1041,7 +1041,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.export_items('')
 
-    def export_items(self, form, con=None):
+    def export_items(self, form):
 
         def process_issue(i):
             issue = str(i)
@@ -1547,21 +1547,6 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return item_list
 
-        def export_all():
-            items = {}
-            functions = {
-                'bookmarks': export_bookmarks,
-                'highlights': export_highlights,
-                'favorites': export_favorites,
-                'annotations': export_annotations,
-                'notes': export_notes }
-            for item, func in functions.items():
-                items[item] = func(None)
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-            return items
-
-        if con: # coming from merge_items
-            return export_all()
         category = self.combo_category.currentText()
         fname = export_file(category, form)
         if not fname:
@@ -1597,7 +1582,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
 
-    def import_items(self, file='', category='', item_list=None):
+    def import_items(self, file='', category=''):
 
         def get_available_ids():
             available_ids = {}
@@ -1613,7 +1598,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 available_ids[table] = available[::-1]
             return available_ids
 
-        def import_annotations(item_list=None):
+        def import_annotations():
 
             def pre_import():
                 line = import_file.readline()
@@ -1679,10 +1664,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         return None
                 return count
 
-            if item_list:
-                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
-                df = pl.DataFrame(item_list, schema=schema, orient='row' )
-                return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
@@ -1699,7 +1680,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_bookmarks(item_list=None):
+        def import_bookmarks():
 
             def pre_import():
                 line = import_file.readline()
@@ -1776,9 +1757,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1788,7 +1766,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_favorites(item_list=None):
+        def import_favorites():
 
             def pre_import():
                 line = import_file.readline()
@@ -1859,9 +1837,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1871,7 +1846,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_highlights(item_list=None):
+        def import_highlights():
 
             def pre_import():
                 line = import_file.readline()
@@ -1950,9 +1925,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1962,7 +1934,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_notes(item_list=None):
+        def import_notes():
 
             def pre_import():
 
@@ -2173,10 +2145,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         return None
                 return count
 
-            if item_list:
-                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Int64, 'PUB': pl.Utf8, 'BK': pl.Int64, 'CH': pl.Int64, 'VS': pl.Int64, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'BLOCK': pl.Int64, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
-                df = pl.DataFrame(item_list, schema=schema, orient='row' )
-                return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8') as import_file:
@@ -2337,39 +2305,6 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
 
-        def import_all(items):
-            try:
-                count = import_bookmarks(items['bookmarks']) if items.get('bookmarks') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_highlights(items['highlights']) if items.get('highlights') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_favorites(items['favorites']) if items.get('favorites') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_annotations(items['annotations']) if items.get('annotations') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_notes(items['notes']) if items.get('notes') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_playlist(None)
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                return count
-            except:
-                self.progress_dialog.close()
-                return None
-
-        if item_list:
-            try:
-                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-                con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
-                available_ids = get_available_ids()
-                count = import_all(item_list)
-                con.execute("PRAGMA foreign_keys = 'ON';")
-                con.commit()
-                con.close()
-            except Exception as ex:
-                self.crash_box(ex)
-                self.clean_up()
-                sys.exit()
-            return count
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
