@@ -54,14 +54,13 @@ from zipfile import is_zipfile, ZipFile, ZIP_DEFLATED
 import argparse, ctypes, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import polars as pl
 
-from jwlcore import merge_databases, get_last_result, get_core_version, lib, CALLBACKTYPE
+from jwlcore import merge_databases, get_last_result, lib, CALLBACKTYPE
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
 CALLBACKTYPE = ctypes.CFUNCTYPE(None, ctypes.c_int)
-CORE_VERSION = regex.search(r'(\d+.*)', get_core_version()).group(1)
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -155,7 +154,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
-        self.about_window = AboutBox(self, app=APP, version=VERSION, core=CORE_VERSION)
+        self.about_window = AboutBox(self, app=APP, version=VERSION)
         self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
         self.merge_window = MergeDialog(self)
         self.theme = ThemeManager()
