@@ -4,6 +4,9 @@
 
 ### Added
 
+- Using jwlCore for merging
+  - standardized (and reproducible) results in JWLManager, jwlFusion (desktop) and jwlFusion App (Android)
+
 ### Changed
 
 ### Fixed

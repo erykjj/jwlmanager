@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v9.1.6'
+VERSION = 'v10.0.0'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -51,13 +51,16 @@ from traceback import format_exception
 from xlsxwriter import Workbook
 from zipfile import is_zipfile, ZipFile, ZIP_DEFLATED
 
-import argparse, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
+import argparse, ctypes, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import polars as pl
+
+from jwlcore import merge_databases, get_last_result, lib, CALLBACKTYPE
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
+CALLBACKTYPE = ctypes.CFUNCTYPE(None, ctypes.c_int)
 
 
 class Window(QMainWindow, Ui_MainWindow):
@@ -296,9 +299,11 @@ class Window(QMainWindow, Ui_MainWindow):
             self.about_window.update_label.setText(text)
         self.about_window.exec()
 
-    def crash_box(self, ex):
+    def crash_box(self, ex, msg=None):
         tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
+        if msg:
+            tb_text += f'\n{msg}'
         dialog = QDialog(self)
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
@@ -1035,7 +1040,7 @@ class Window(QMainWindow, Ui_MainWindow):
         else:
             self.export_items('')
 
-    def export_items(self, form, con=None):
+    def export_items(self, form):
 
         def process_issue(i):
             issue = str(i)
@@ -1541,21 +1546,6 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return item_list
 
-        def export_all():
-            items = {}
-            functions = {
-                'bookmarks': export_bookmarks,
-                'highlights': export_highlights,
-                'favorites': export_favorites,
-                'annotations': export_annotations,
-                'notes': export_notes }
-            for item, func in functions.items():
-                items[item] = func(None)
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-            return items
-
-        if con: # coming from merge_items
-            return export_all()
         category = self.combo_category.currentText()
         fname = export_file(category, form)
         if not fname:
@@ -1591,7 +1581,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage(f' {len(item_list)} ' +_('items exported'), 4000)
 
 
-    def import_items(self, file='', category='', item_list=None):
+    def import_items(self, file='', category=''):
 
         def get_available_ids():
             available_ids = {}
@@ -1607,7 +1597,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 available_ids[table] = available[::-1]
             return available_ids
 
-        def import_annotations(item_list=None):
+        def import_annotations():
 
             def pre_import():
                 line = import_file.readline()
@@ -1673,10 +1663,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         return None
                 return count
 
-            if item_list:
-                schema = {'PUB': pl.Utf8, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'LABEL': pl.Utf8, 'VALUE': pl.Utf8}
-                df = pl.DataFrame(item_list, schema=schema, orient='row' )
-                return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8', errors='namereplace') as import_file:
@@ -1693,7 +1679,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 count = update_db(df)
             return count
 
-        def import_bookmarks(item_list=None):
+        def import_bookmarks():
 
             def pre_import():
                 line = import_file.readline()
@@ -1770,9 +1756,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1782,7 +1765,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_favorites(item_list=None):
+        def import_favorites():
 
             def pre_import():
                 line = import_file.readline()
@@ -1853,9 +1836,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1865,7 +1845,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_highlights(item_list=None):
+        def import_highlights():
 
             def pre_import():
                 line = import_file.readline()
@@ -1944,9 +1924,6 @@ class Window(QMainWindow, Ui_MainWindow):
                             return None
                 return count
 
-            if item_list:
-                import_file = item_list
-                return update_db()
             with open(file, 'r', encoding='utf-8') as import_file:
                 if pre_import():
                     count = update_db()
@@ -1956,7 +1933,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     count = 0
             return count
 
-        def import_notes(item_list=None):
+        def import_notes():
 
             def pre_import():
 
@@ -2167,10 +2144,6 @@ class Window(QMainWindow, Ui_MainWindow):
                         return None
                 return count
 
-            if item_list:
-                schema = {'CREATED': pl.Utf8, 'MODIFIED': pl.Utf8, 'TAGS': pl.Utf8, 'COLOR': pl.Int64, 'RANGE': pl.Utf8, 'LANG': pl.Int64, 'PUB': pl.Utf8, 'BK': pl.Int64, 'CH': pl.Int64, 'VS': pl.Int64, 'ISSUE': pl.Int64, 'DOC': pl.Int64, 'BLOCK': pl.Int64, 'HEADING': pl.Utf8, 'TITLE': pl.Utf8, 'NOTE': pl.Utf8}
-                df = pl.DataFrame(item_list, schema=schema, orient='row' )
-                return update_db(df)
             if Path(file).suffix == '.txt':
                 self.format = 'txt'
                 with open(file, 'r', encoding='utf-8') as import_file:
@@ -2331,39 +2304,6 @@ class Window(QMainWindow, Ui_MainWindow):
             shutil.rmtree(playlist_path, ignore_errors=True)
             return count
 
-        def import_all(items):
-            try:
-                count = import_bookmarks(items['bookmarks']) if items.get('bookmarks') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_highlights(items['highlights']) if items.get('highlights') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_favorites(items['favorites']) if items.get('favorites') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_annotations(items['annotations']) if items.get('annotations') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_notes(items['notes']) if items.get('notes') else 0
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                count += import_playlist(None)
-                self.progress_dialog.setValue(self.progress_dialog.value() + 1)
-                return count
-            except:
-                self.progress_dialog.close()
-                return None
-
-        if item_list:
-            try:
-                con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-                con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'MEMORY'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
-                available_ids = get_available_ids()
-                count = import_all(item_list)
-                con.execute("PRAGMA foreign_keys = 'ON';")
-                con.commit()
-                con.close()
-            except Exception as ex:
-                self.crash_box(ex)
-                self.clean_up()
-                sys.exit()
-            return count
         if not file:
             category = self.combo_category.currentText()
             if category == _('Highlights') or category == _('Bookmarks') or category == _('Favorites'):
@@ -2423,7 +2363,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def merge_items(self, file=''):
 
         def init_progress():
-            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 10, parent=self)
+            progress_dialog = QProgressDialog(_('Please wait…'), None, 0, 15, parent=self)
             progress_dialog.setWindowModality(Qt.WindowModal)
             progress_dialog.setWindowTitle(_('Merging'))
             progress_dialog.setWindowFlag(Qt.FramelessWindowHint)
@@ -2431,25 +2371,37 @@ class Window(QMainWindow, Ui_MainWindow):
             progress_dialog.setMinimumDuration(0)
             return progress_dialog
 
+        def py_progress(val):
+            nonlocal count
+            count += val
+            self.progress_dialog.setValue(self.progress_dialog.value() + 1)
+
         if not self.check_validity(file):
             return
         self.statusBar.showMessage(' '+_('Merging. Please wait…'))
         app.processEvents()
+        count = 0
         try:
             self.progress_dialog = init_progress()
+            progress_cb = CALLBACKTYPE(py_progress)
+            lib.setProgressCallback(progress_cb)
             with ZipFile(file,'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
-            con = sqlite3.connect(f'{TMP_PATH}/merge/{DB_NAME}')
-            items = self.export_items(form=None, con=con)
-            count = self.import_items(item_list=items, file=file)
-            con.close()
+            res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge')
+            if res != 0:
+                count = 0
             shutil.rmtree(f'{TMP_PATH}/merge', ignore_errors=True)
         except Exception as ex:
-            self.crash_box(ex)
+            res = ''
+            try:
+                res += get_last_result()
+            except:
+                pass
+            self.crash_box(ex, res)
             self.progress_dialog.close()
             self.clean_up()
             sys.exit()
-        if count == None:
+        if count == 0:
             self.statusBar.showMessage(' '+_('NOT merged!'), 4000)
             return
         else:
