@@ -1,14 +1,34 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import platform
+from PyInstaller.utils.hooks import collect_data_files
+
+arch = platform.machine().lower()
+
+if arch in ("x86_64", "amd64"):
+    sqlite_dll = "libs/sqlite3_64.dll"
+    core_dll   = "libs/jwlCore-amd64.dll"
+elif arch in ("aarch64", "arm64"):
+    sqlite_dll = "libs/sqlite3_arm64.dll"
+    core_dll   = "libs/jwlCore-arm64.dll"
+else:
+    raise RuntimeError(f"Unsupported architecture: {arch}")
 
 block_cipher = None
-
 
 a = Analysis(
     ['../../JWLManager.py'],
     pathex=[],
-    binaries=[],
-    datas=[('../../res', 'res/'), ('../../libs', 'libs/'), ('../../CHANGELOG.md', '.'), ('../../LICENSE', '.'), ('../../README.md', '.') ],
+    binaries=[
+        (core_dll, 'libs'),
+        (sqlite_dll, 'libs'),
+    ],
+    datas=[
+        ('../../res', 'res/'),
+        ('../../CHANGELOG.md', '.'),
+        ('../../LICENSE', '.'),
+        ('../../README.md', '.')
+    ],
     hiddenimports=['xlsx2csv'],
     hookspath=[],
     hooksconfig={},
@@ -19,6 +39,7 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
+
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
@@ -39,6 +60,7 @@ exe = EXE(
     entitlements_file=None,
     icon=['../../res/icons/JWLManager.ico'],
 )
+
 coll = COLLECT(
     exe,
     a.binaries,
