@@ -20,8 +20,8 @@ a = Analysis(
     ['../../JWLManager.py'],
     pathex=['.'],
     binaries=[
-        (core_dll, 'libs'),
-        (sqlite_dll, 'libs'),
+        (core_dll, '.'),
+        (sqlite_dll, '.'),
     ],
     datas=[('../../res', 'res/')],
     hiddenimports=['xlsx2csv'],
