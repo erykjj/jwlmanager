@@ -8,7 +8,7 @@ a = Analysis(
     ['../../JWLManager.py'],
     pathex=['.'],
     binaries=[],
-    datas=[('../../res', 'res/')],
+    datas=[('../../res', 'res/'), ('../../libs', 'libs/')],
     hiddenimports=['xlsx2csv'],
     hookspath=[],
     hooksconfig={},
