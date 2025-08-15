@@ -3,14 +3,15 @@
 import platform
 from PyInstaller.utils.hooks import collect_data_files
 
-arch = platform.machine().lower()
+spec_dir = os.path.abspath(os.path.dirname(__file__))
 
+arch = platform.machine().lower()
 if arch in ("x86_64", "amd64"):
-    sqlite_dll = "libs/sqlite3_64.dll"
-    core_dll   = "libs/jwlCore-amd64.dll"
+    sqlite_dll = os.path.join(spec_dir, "libs", "sqlite3_64.dll")
+    core_dll   = os.path.join(spec_dir, "libs", "jwlCore-amd64.dll")
 elif arch in ("aarch64", "arm64"):
-    sqlite_dll = "libs/sqlite3_arm64.dll"
-    core_dll   = "libs/jwlCore-arm64.dll"
+    sqlite_dll = os.path.join(spec_dir, "libs", "sqlite3_arm64.dll")
+    core_dll   = os.path.join(spec_dir, "libs", "jwlCore-arm64.dll")
 else:
     raise RuntimeError(f"Unsupported architecture: {arch}")
 
