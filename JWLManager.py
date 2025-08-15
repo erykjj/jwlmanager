@@ -54,7 +54,7 @@ from zipfile import is_zipfile, ZipFile, ZIP_DEFLATED
 import argparse, ctypes, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import polars as pl
 
-from jwlcore import merge_database, get_last_result, get_core_version, lib, CALLBACKTYPE
+from jwlcore import merge_databases, get_last_result, get_core_version, lib, CALLBACKTYPE
 
 
 PROJECT_PATH = Path(__file__).resolve().parent
@@ -2388,7 +2388,7 @@ class Window(QMainWindow, Ui_MainWindow):
             lib.setProgressCallback(progress_cb)
             with ZipFile(file,'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
-            res = merge_database(f'{TMP_PATH}', f'{TMP_PATH}/merge')
+            res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge')
             if res != 0:
                 count = 0
             shutil.rmtree(f'{TMP_PATH}/merge', ignore_errors=True)
