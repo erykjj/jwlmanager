@@ -46,38 +46,13 @@ def _platform_lib_name(base="jwlCore"):
     else:
         raise OSError(f"Unsupported platform: {sysname}")
 
-def _candidate_dirs():
-    env = os.environ.get("JWLCORE_PATH")
-    if env:
-        yield env
-    # PyInstaller
-    if hasattr(sys, "_MEIPASS"):
-        yield sys._MEIPASS
-        yield os.path.join(sys._MEIPASS, "libs")
-    # Nuitka / normal
-    base = os.path.dirname(getattr(sys, "executable", "") if getattr(sys, "frozen", False) else __file__)
-    yield base
-    yield os.path.join(base, "libs")
-
-def _try_add_win_search_path(path):
-    if os.name == "nt":
-        try:
-            os.add_dll_directory(path)
-        except Exception:
-            pass
-
-def _find_lib():
-    name = _platform_lib_name()
-    for d in _candidate_dirs():
-        p = os.path.join(d, name)
-        if os.path.exists(p):
-            _try_add_win_search_path(os.path.dirname(p))
-            return p
-    raise FileNotFoundError(f"Could not find {name} in any of: "
-                            f"{', '.join(dict.fromkeys(_candidate_dirs()))}")
-
 def _load_lib():
-    path = _find_lib()
+    name = _platform_lib_name()
+    try:
+          base_path = sys._MEIPASS
+    except Exception:
+          base_path = os.path.abspath('.')
+    path = os.path.join(base_path, f'libs/{name}')
     kwargs = {}
     if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
         kwargs["mode"] = os.RTLD_LOCAL
