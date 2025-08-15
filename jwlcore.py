@@ -100,7 +100,7 @@ lib.getCoreVersion.argtypes = []
 lib.getCoreVersion.restype  = ctypes.c_char_p
 
 # Python wrappers
-def merge_database(path1: str, path2: str) -> int:
+def merge_databases(path1: str, path2: str) -> int:
     return lib.mergeDatabase(path1.encode("utf-8"), path2.encode("utf-8"))
 
 def get_last_result() -> str | None:
