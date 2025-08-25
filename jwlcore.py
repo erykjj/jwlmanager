@@ -51,8 +51,11 @@ def _load_lib():
     try:
         base_path = sys._MEIPASS
     except Exception:
-        base_path = os.path.abspath('.')
+        # base_path = os.path.abspath('.')
+        base_path = os.path.dirname(__file__)
+    print(base_path)
     path = os.path.join(base_path, f'libs/{name}')
+    print(path)
     kwargs = {}
     if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
         kwargs["mode"] = os.RTLD_LOCAL
