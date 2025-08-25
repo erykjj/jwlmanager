@@ -29,7 +29,6 @@ import ctypes, os, platform, sys
 def _platform_lib_name(base="jwlCore"):
     arch = platform.machine().lower()
     sysname = sys.platform
-
     if arch in ("x86_64", "amd64"):
         arch = "x86_64" if not sysname.startswith("win") else "amd64"
     elif arch in ("aarch64", "arm64"):
@@ -46,15 +45,24 @@ def _platform_lib_name(base="jwlCore"):
     else:
         raise OSError(f"Unsupported platform: {sysname}")
 
+def _get_base_path():
+    if "NUITKA_ONEFILE_TEMPDIR" in os.environ:
+        return os.environ["NUITKA_ONEFILE_TEMPDIR"]
+    if hasattr(sys, "_MEIPASS"):
+        return sys._MEIPASS
+    return os.path.abspath(".")
+
 def _load_lib():
     name = _platform_lib_name()
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath('.')
-    path = os.path.join(base_path, 'libs', name)
-    if not os.path.exists(path):
+    base_path = _get_base_path()
+    if sys.platform == "win32":
         path = os.path.join(base_path, name)
+    else:
+        path = os.path.join(base_path, name)
+        if not os.path.exists(path):
+            path = os.path.join(base_path, "libs", name)
+    if not os.path.exists(path):
+        raise OSError(f"Library not found: {path}")
     kwargs = {}
     if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
         kwargs["mode"] = os.RTLD_LOCAL
