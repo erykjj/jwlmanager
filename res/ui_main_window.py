@@ -26,7 +26,6 @@ class Ui_MainWindow(object):
         MainWindow.setMaximumSize(QSize(1600, 1200))
         MainWindow.setSizeIncrement(QSize(0, 0))
         icon = QIcon()
-        print(self.resource_path(f'res/icons/JWLManager.png'))
         icon.addFile(self.resource_path(f'res/icons/JWLManager.png'), QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
