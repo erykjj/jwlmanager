@@ -42,7 +42,7 @@ jobs:
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka==2.6.5
-        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --include-data-dir=libs=libs --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
+        python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.yml --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.bin dist/JWLManager_${{ inputs.TAG }}
     - name: Upload BIN
