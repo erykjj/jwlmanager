@@ -1,0 +1,24 @@
+- module-name: 'jwlcore.py'
+
+dlls:
+   - from_filenames:
+      relative_path: 'libs'
+      prefixes:
+         - 'jwlCore*'
+      suffixes:
+         - 'dll'
+      when: 'win32'
+   - from_filenames:
+      relative_path: 'libs'
+      prefixes:
+         - 'libjwlCore*'
+      suffixes:
+         - 'so'
+      when: 'linux'
+   - from_filenames:
+      relative_path: 'libs'
+      prefixes:
+         - 'libjwlCore*'
+      suffixes:
+         - 'dylib'
+      when: 'macos'
