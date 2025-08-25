@@ -1,25 +1,21 @@
-dlls:
-   - from_filenames:
-      relative_path: 'libs'
-      prefixes:
-         - 'jwlCore*'
-      suffixes:
-         - 'dll'
-      dest_path: 'libs'
-      when: 'win32'
-   - from_filenames:
-      relative_path: 'libs'
-      prefixes:
-         - 'libjwlCore*'
-      suffixes:
-         - 'so'
-      dest_path: 'libs'
+# yamllint disable rule:line-length
+# yamllint disable rule:indentation
+# yamllint disable rule:comments-indentation
+# yamllint disable rule:comments
+---
+- module-name: 'jwlcore'
+  dlls:
+    - from_filenames:
+        relative_path: 'libs'
+        prefixes:
+          - 'libjwlCore*'
+        suffixes:
+          - 'so'
       when: 'linux'
-   - from_filenames:
-      relative_path: 'libs'
-      prefixes:
-         - 'libjwlCore*'
-      suffixes:
-         - 'dylib'
-      dest_path: 'libs'
+    - from_filenames:
+        relative_path: 'libs'
+        prefixes:
+          - 'libjwlCore*'
+        suffixes:
+          - 'dylib'
       when: 'macos'
