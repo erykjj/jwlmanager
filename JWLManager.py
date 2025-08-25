@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v10.0.0'
+VERSION = 'v10.0.1'
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -54,9 +54,10 @@ from zipfile import is_zipfile, ZipFile, ZIP_DEFLATED
 import argparse, ctypes, gettext, json, puremagic, os, regex, requests, shutil, sqlite3, sys, uuid
 import polars as pl
 
-from jwlcore import merge_databases, get_last_result, lib, CALLBACKTYPE
+from jwlcore import merge_databases, get_core_version, get_last_result, lib, CALLBACKTYPE
 
 
+CORE_VERSION= get_core_version()
 PROJECT_PATH = Path(__file__).resolve().parent
 TMP_PATH = mkdtemp(prefix='JWLManager_')
 DB_NAME = 'userData.db'
@@ -3600,7 +3601,7 @@ def get_language():
     localedir = PROJECT_PATH / 'res/locales/'
 
     parser = argparse.ArgumentParser(description='Manage .jwlibrary backup archives')
-    parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION}', help='show version and exit')
+    parser.add_argument('-v', '--version', action='version', version=f'{APP} {VERSION} ({CORE_VERSION})', help='show version and exit')
     language_group = parser.add_argument_group('interface language', 'English by default')
     group = language_group.add_mutually_exclusive_group(required=False)
     parser.add_argument('archive', type=str, nargs='?', default=None, help='archive to open')
