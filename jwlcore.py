@@ -46,21 +46,16 @@ def _platform_lib_name(base="jwlCore"):
         raise OSError(f"Unsupported platform: {sysname}")
 
 def _get_base_path():
-    if "NUITKA_ONEFILE_TEMPDIR" in os.environ:
-        return os.environ["NUITKA_ONEFILE_TEMPDIR"]
     if hasattr(sys, "_MEIPASS"):
         return sys._MEIPASS
+    elif "NUITKA_ONEFILE_TEMPDIR" in os.environ:
+        return os.environ["NUITKA_ONEFILE_TEMPDIR"]
     return os.path.abspath(".")
 
 def _load_lib():
     name = _platform_lib_name()
     base_path = _get_base_path()
-    if sys.platform == "win32":
-        path = os.path.join(base_path, name)
-    else:
-        path = os.path.join(base_path, name)
-        if not os.path.exists(path):
-            path = os.path.join(base_path, "libs", name)
+    path = os.path.join(base_path, "libs", name)
     if not os.path.exists(path):
         raise OSError(f"Library not found: {path}")
     kwargs = {}
