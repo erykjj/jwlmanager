@@ -49,9 +49,9 @@ def _platform_lib_name(base="jwlCore"):
 def _load_lib():
     name = _platform_lib_name()
     try:
-          base_path = sys._MEIPASS
+        base_path = sys._MEIPASS
     except Exception:
-          base_path = os.path.abspath('.')
+        base_path = os.path.abspath('.')
     path = os.path.join(base_path, f'libs/{name}')
     kwargs = {}
     if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
