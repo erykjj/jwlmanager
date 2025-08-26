@@ -52,19 +52,13 @@ def _load_lib():
         base_path = sys._MEIPASS
     except Exception:
         base_path = os.path.dirname(__file__)
-    path = os.path.join(base_path, f'libs/{name}')
-
-    candidates = [
-        os.path.join(base_path, f'libs/{name}'),   # PyInstaller, direct run
-        os.path.join(base_path, name),             # Nuitka (root)
-    ]
-    for path in candidates:
-        if os.path.exists(path):
-            kwargs = {}
-            if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
-                kwargs["mode"] = os.RTLD_LOCAL
-            return ctypes.CDLL(path, **kwargs)
-    raise OSError(f"Could not find shared library {name} in {candidates}")
+    lib_path = os.path.join(base_path, "libs", name)
+    if os.path.exists(lib_path):
+        kwargs = {}
+        if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
+            kwargs["mode"] = os.RTLD_LOCAL
+        return ctypes.CDLL(lib_path, **kwargs)
+    raise OSError(f"Could not find shared library {name} at {lib_path}")
 
 lib = _load_lib()
 
