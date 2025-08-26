@@ -53,10 +53,18 @@ def _load_lib():
     except Exception:
         base_path = os.path.dirname(__file__)
     path = os.path.join(base_path, f'libs/{name}')
-    kwargs = {}
-    if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
-        kwargs["mode"] = os.RTLD_LOCAL
-    return ctypes.CDLL(path, **kwargs)
+
+    candidates = [
+        os.path.join(base_path, f'libs/{name}'),   # PyInstaller, direct run
+        os.path.join(base_path, name),             # Nuitka (root)
+    ]
+    for path in candidates:
+        if os.path.exists(path):
+            kwargs = {}
+            if hasattr(os, "RTLD_LOCAL") and sys.platform != "win32":
+                kwargs["mode"] = os.RTLD_LOCAL
+            return ctypes.CDLL(path, **kwargs)
+    raise OSError(f"Could not find shared library {name} in {candidates}")
 
 lib = _load_lib()
 
