@@ -11,13 +11,6 @@
           - 'libjwlCore*'
         suffixes:
           - 'so'
-        dest_path: 'libs'
-      when: 'linux'
-    - from_filenames:
-        relative_path: 'libs'
-        prefixes:
-          - 'libjwlCore*'
-        suffixes:
           - 'dylib'
         dest_path: 'libs'
-      when: 'macos'
+
