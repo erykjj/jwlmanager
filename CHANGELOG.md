@@ -10,6 +10,9 @@
 
 ### Changed
 
+- Enabled merging into empty/new archive
+  - slower than opening, but doable
+
 ### Fixed
 
 - Fixed one translation in Portuguese that might cause a crash
