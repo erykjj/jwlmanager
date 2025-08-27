@@ -16,7 +16,7 @@
 
 ### Fixed
 
-- Fixed one translation in Portuguese that might cause a crash
+- Fixed one translation in Portuguese that might cause a crash (in Tag view)
 
 ### Removed
 
