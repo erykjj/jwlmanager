@@ -669,13 +669,12 @@ class Window(QMainWindow, Ui_MainWindow):
             self.combo_grouping.setEnabled(enabled)
             self.combo_category.setEnabled(enabled)
             self.button_import.setEnabled(enabled)
+            self.actionMerge.setEnabled(enabled)
 
             on = enabled and self.loaded
-            self.actionMerge.setEnabled(on)
             self.actionObscure.setEnabled(on)
             self.actionSort.setEnabled(on)
             self.actionClean.setEnabled(on)
-            self.actionMerge.setEnabled(on)
 
             on = enabled and self.int_total
             self.actionExpand_All.setEnabled(on)
