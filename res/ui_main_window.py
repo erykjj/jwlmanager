@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(825, 795)
-        MainWindow.setMinimumSize(QSize(825, 795))
+        MainWindow.setMinimumSize(QSize(825, 495))
         MainWindow.setMaximumSize(QSize(1600, 1200))
         MainWindow.setSizeIncrement(QSize(0, 0))
         icon = QIcon()
@@ -146,7 +146,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
         self.centralwidget.setSizePolicy(sizePolicy)
-        self.centralwidget.setMinimumSize(QSize(728, 747))
+        self.centralwidget.setMinimumSize(QSize(728, 447))
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
 
@@ -294,7 +294,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.treeWidget.sizePolicy().hasHeightForWidth())
         self.treeWidget.setSizePolicy(sizePolicy2)
-        self.treeWidget.setMinimumSize(QSize(680, 641))
+        self.treeWidget.setMinimumSize(QSize(680, 341))
         self.treeWidget.setAlternatingRowColors(True)
         self.treeWidget.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.treeWidget.setAllColumnsShowFocus(True)
