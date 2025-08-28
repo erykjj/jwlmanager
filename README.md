@@ -21,7 +21,7 @@ You can [download](https://github.com/erykjj/jwlmanager/releases/latest) (unzip 
 
 * See the [SECURITY section](https://github.com/erykjj/jwlmanager/blob/master/.github/SECURITY.md) for information about **security alerts**, etc.
 * The **Linux** binary needs to be given execute permissions: `chmod +x JWLManager_*`
-* The **macOS** binary needs to have the Gatekeeper quarantine attribute removed: `xattr -dr com.apple.quarantine JWLManager.app`
+* The **macOS** binary needs to have all extended attributes (including the the Gatekeeper quarantine flag) removed with `xattr -cr JWLManager.app`
 
 The state of the application (including the current language) is preserved in a `JWLManager.conf` file created in the same directory as the app. You can delete that file to start with default settings.
 
