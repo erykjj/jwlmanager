@@ -26,7 +26,7 @@ You can open an app that isn’t allowed to open by manually overriding the sett
 The app is saved as an exception to your security settings, and you can open it in the future by double-clicking it, just as you can any authorized app.
 ```
 
-You can also do this in a terminal to remove the Gatekeeper quarantine flag: `xattr -dr com.apple.quarantine JWLManager.app`. If this doesn't help, remove all extended attributes with `xattr -cr JWLManager.app`.
+You can also do this in a terminal to remove all extended attributes (including the the Gatekeeper quarantine flag) with `xattr -cr JWLManager.app`.
 
 ## Alternative
 
