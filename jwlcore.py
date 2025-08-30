@@ -40,7 +40,7 @@ def _platform_lib_name(base="jwlCore"):
     if sysname.startswith("linux"):
         return f"lib{base}-{arch}.so"
     elif sysname == "darwin":
-        return f"lib{base}-{arch}.dylib"
+        return f"lib{base}.dylib"
     elif sysname == "win32":
         return f"{base}-{arch}.dll"
     else:
