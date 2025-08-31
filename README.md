@@ -57,8 +57,7 @@ python3 JWLManager.py
 chmod +x JWLManager.py
 ./JWLManager.py
 ```
-
-/<details>
+</details>
 
 If you use the `-h` flag, you'll see the following options:
 
