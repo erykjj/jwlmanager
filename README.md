@@ -32,8 +32,8 @@ You can force the GUI to launch in a language by appending the corresponding lan
 
 <details>
 <summary>[EXPAND] If you have Python 3.11+ installed…</summary>
-########
-Install the required dependencies[^2] and clone it:
+
+…install the required dependencies[^2] and clone it:
 
 ```
 git clone -b [version tag] --depth 1 https://github.com/erykjj/jwlmanager.git
