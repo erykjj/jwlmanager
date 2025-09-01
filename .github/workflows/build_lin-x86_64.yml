@@ -1,4 +1,4 @@
-name: 'Build Linux v1.1.4'
+name: 'Build Linux x86_64 v1.2.0'
 
 on:
   workflow_call:
