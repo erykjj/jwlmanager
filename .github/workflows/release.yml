@@ -7,23 +7,23 @@ on:
 
 jobs:
   linux:
-    uses: ./.github/workflows/build_lin.yml
+    uses: ./.github/workflows/build_lin-x86_64.yml
     with:
       TAG:  ${{ github.ref_name }}
   windows:
-    uses: ./.github/workflows/build_win.yml
+    uses: ./.github/workflows/build_win-amd64.yml
     with:
       TAG:  ${{ github.ref_name }}
   winarm:
-    uses: ./.github/workflows/build_win-arm.yml
+    uses: ./.github/workflows/build_win-arm64.yml
     with:
       TAG:  ${{ github.ref_name }}
   macos:
-    uses: ./.github/workflows/build_mac.yml
+    uses: ./.github/workflows/build_mac-arm64.yml
     with:
       TAG:  ${{ github.ref_name }}
   macold:
-    uses: ./.github/workflows/build_mac-old.yml
+    uses: ./.github/workflows/build_mac-x86_64.yml
     with:
       TAG:  ${{ github.ref_name }}
   release:
