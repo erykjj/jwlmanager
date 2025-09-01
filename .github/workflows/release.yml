@@ -1,4 +1,4 @@
-name: 'Draft Release v1.2.0'
+name: 'Draft Release v1.3.0'
 
 on:
   push:
@@ -102,30 +102,27 @@ jobs:
         draft: true
         prerelease: false
         body: |
-          ### Feedback via polls requested: https://github.com/erykjj/jwlmanager/discussions
-
           ${{ steps.extract.outputs.changelog_section }}
           ____
-          You can clone the repo or download the source script and execute it from the commandline, or use these self-contained packages, which don't require the installation of Python or any dependencies:
+          These self-contained packages don't require the installation of Python or any dependencies:
           - Linux:
-            - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }})
+            - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-x86_64)
           - Windows 10/11:
-            - Stand-alone: [JWLManager_${{ github.ref_name }}.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.exe)
-            - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.zip)
+            - Stand-alone: [JWLManager_${{ github.ref_name }}-amd64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-amd64.exe)
+            - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}-amd64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-amd64.zip)
           - Windows 10/11 (ARM or older Intel CPUs that don't work with the above):
-            - Stand-alone: [JWLManager_${{ github.ref_name }}-arm.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.exe)
-            - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}-arm.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm.zip)
+            - Stand-alone: [JWLManager_${{ github.ref_name }}-arm64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm64.exe)
+            - Zipped folder[^1]: [JWLManager_${{ github.ref_name }}-arm64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm64.zip)
           - macOS:
-            - 13/14: [JWLManager_${{ github.ref_name }}-macOS13.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-macOS13.app.zip)
-            - 15[^2]: [JWLManager_${{ github.ref_name }}.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}.app.zip)
+            - Intel (x86_64): [JWLManager_${{ github.ref_name }}-x86_64.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-x86_64.app.zip)
+            - Apple Silicon (arm64): [JWLManager_${{ github.ref_name }}-arm64.app.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm64.app.zip)
           ____
           [^1]: Console enabled; can be launched from commandline with arguments. See `JWLManager.exe -h`.
-          [^2]: For 'Apple Silicon' ARM devices.
         files: |
-          JWLManager_${{ github.ref_name }}
-          JWLManager_${{ github.ref_name }}.exe
-          JWLManager_${{ github.ref_name }}.zip
-          JWLManager_${{ github.ref_name }}-arm.exe
-          JWLManager_${{ github.ref_name }}-arm.zip
-          JWLManager_${{ github.ref_name }}.app.zip
-          JWLManager_${{ github.ref_name }}-macOS13.app.zip
+          JWLManager_${{ github.ref_name }}-x86_64
+          JWLManager_${{ github.ref_name }}-amd64.exe
+          JWLManager_${{ github.ref_name }}-amd64.zip
+          JWLManager_${{ github.ref_name }}-arm64.exe
+          JWLManager_${{ github.ref_name }}-arm64.zip
+          JWLManager_${{ github.ref_name }}-arm64.app.zip
+          JWLManager_${{ github.ref_name }}-x86_64.app.zip

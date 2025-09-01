@@ -1,4 +1,4 @@
-name: 'Build macOS 13 & 14 v1.1.4'
+name: 'Build macOS arm64 v1.2.0'
 
 on:
   workflow_call:
@@ -15,9 +15,9 @@ on:
         type: string
 
 jobs:
-  macold:
+  macos:
     name: Build macOS APP
-    runs-on: macos-13 # Ventura
+    runs-on: macos-latest # macOS-15 Sequoia
     permissions:
       contents: read
       actions: write
@@ -34,23 +34,19 @@ jobs:
         python -m pip install --upgrade certifi==2025.4.26
         python -m pip install -r res/requirements.txt
         python -m pip install --upgrade certifi==2025.4.26
-    # - name: Build with Pyinstaller
-    #   run: |
-    #     python -m pip install pyinstaller==5.13.*
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.app.spec
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka==2.6.5
-        python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+        python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --macos-target-arch=arm64 --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.app dist/
     - name: Zip app
       run: |
         cd dist/
         xattr -cr JWLManager.app
-        ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-macOS13.app.zip
+        ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-arm64.app.zip
     - name: Upload APP
       uses: actions/upload-artifact@v4
       with:
-        name: MacAPP-old
-        path: dist/JWLManager_${{ inputs.TAG }}-macOS13.app.zip
+        name: MacAPP
+        path: dist/JWLManager_${{ inputs.TAG }}-arm64.app.zip

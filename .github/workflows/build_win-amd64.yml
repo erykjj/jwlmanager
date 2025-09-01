@@ -1,4 +1,4 @@
-name: 'Build Windows v1.1.1'
+name: 'Build Windows amd64 v1.2.0'
 
 on:
   workflow_call:
@@ -39,19 +39,19 @@ jobs:
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
-        ren JWLManager.exe JWLManager_${{ inputs.TAG }}.exe
+        ren JWLManager.exe JWLManager_${{ inputs.TAG }}-amd64.exe
     - name: Build with Pyinstaller
       run: |
         pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
         cd dist
-        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}.zip JWLManager
+        tar.exe -a -c -f JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
         name: WindowsEXE
-        path: dist/JWLManager_${{ inputs.TAG }}.exe
+        path: dist/JWLManager_${{ inputs.TAG }}-amd64.exe
     - name: Upload ZIP
       uses: actions/upload-artifact@v4
       with:
         name: WindowsZIP
-        path: dist/JWLManager_${{ inputs.TAG }}.zip
+        path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
