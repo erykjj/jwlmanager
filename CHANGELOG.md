@@ -7,6 +7,7 @@
 - Using jwlCore for merging
   - standardized (and reproducible) results in JWLManager, jwlFusion (desktop) and jwlFusion App (Android)
   - Notes compared by GUID only
+- Added a startup pop-up for pre-release versions
 
 ### Changed
 
