@@ -169,7 +169,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_archive = ''
             self.new_file()
         if BETA:
-            QMessageBox.warning(self, _('Warning'), _('This is a pre-release.\nThank you for testing.\nPlease be careful.'), QMessageBox.Ok)
+            QMessageBox.warning(self, APP, _('This is a pre-release.\nThank you for testing.\nPlease be careful.'), QMessageBox.Ok)
 
 
     def check_file(self, file):
