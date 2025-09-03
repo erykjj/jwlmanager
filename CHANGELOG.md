@@ -14,6 +14,7 @@
 - Enabled merging into empty/new archive
   - slower than opening, but doable
 - Reduced minimum window size
+- Update resource catalog
 
 ### Fixed
 
