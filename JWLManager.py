@@ -27,6 +27,7 @@
 
 APP = 'JWLManager'
 VERSION = 'v10.0.1'
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -167,6 +168,8 @@ class Window(QMainWindow, Ui_MainWindow):
         if not (self.current_archive and self.load_file(self.current_archive)):
             self.current_archive = ''
             self.new_file()
+        if BETA:
+            QMessageBox.warning(self, _('Warning'), _('This is a pre-release.\nThank you for testing.\nPlease be careful.'), QMessageBox.Ok)
 
 
     def check_file(self, file):
