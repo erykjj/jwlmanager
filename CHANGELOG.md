@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [10.0.1] - 2025-09-06
+### Added
+
 - Using jwlCore for merging
   - standardized (and reproducible) results in JWLManager, jwlFusion (desktop) and jwlFusion App (Android)
   - Notes compared by GUID only
@@ -20,9 +30,6 @@
 
 - Fixed one translation in Portuguese that might cause a crash (in Tag view)
 
-### Removed
-
-____
 ## [9.1.5] - 2025-07-31
 ### Changed
 
@@ -1027,6 +1034,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[10.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.1
 [9.1.5]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.5
 [9.1.4]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.4
 [9.1.3]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.3
