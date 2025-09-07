@@ -32,7 +32,7 @@ You can force the GUI to launch in a language by appending the corresponding lan
 
 <details>
 <summary>[EXPAND] If you have Python 3.11+ installed…</summary>
-
+<br/>
 …install the required dependencies[^2] and clone it:
 
 ```
@@ -60,7 +60,7 @@ chmod +x JWLManager.py
 ./JWLManager.py
 ```
 </details>
-
+<br/>
 If you use the `-h` flag, you'll see the following options:
 
 ```
