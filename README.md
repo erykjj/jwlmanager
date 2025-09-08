@@ -31,8 +31,7 @@ You can force the GUI to launch in a language by appending the corresponding lan
 - macOS terminal: `open -a JWLManager.app --args -es`
 
 <details>
-<summary>[EXPAND] If you have Python 3.11+ installed…</summary>
-<br/>
+<summary>[EXPAND] If you have Python 3.11+ installed…</summary><br/>
 
 …install the required dependencies[^2] and clone it:
 
@@ -60,8 +59,8 @@ python3 JWLManager.py
 chmod +x JWLManager.py
 ./JWLManager.py
 ```
-</details>
-<br/>
+</details><br/>
+
 If you use the `-h` flag, you'll see the following options:
 
 ```
