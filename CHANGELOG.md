@@ -7,6 +7,8 @@
 ### Changed
 
 - Added "," as thousands separator in some instances
+- Updated jwlCore libs to v0.22.0
+  - more precise merge count
 
 ### Fixed
 
