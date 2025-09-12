@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Added "," as thousands separator in some instances
+
 ### Fixed
 
 ### Removed
