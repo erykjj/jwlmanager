@@ -6,15 +6,18 @@
 
 ### Changed
 
-- Added "," as thousands separator in some instances
-- Updated jwlCore libs to v0.22.0
-  - more precise merge count
-
 ### Fixed
 
 ### Removed
 
 ____
+## [10.0.3] - 2025-09-12
+### Changed
+
+- Added "," as thousands separator in some instances
+- Updated jwlCore libs to v0.22.0
+  - more precise merge count
+
 ## [10.0.2] - 2025-09-08
 ### Changed
 
@@ -1043,6 +1046,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[10.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.3
 [10.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.2
 [10.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.1
 [9.1.5]:https://github.com/erykjj/jwlmanager/releases/tag/v9.1.5
