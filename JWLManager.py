@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v10.0.1'
+VERSION = 'v10.0.3'
 BETA = False
 
 
@@ -2356,7 +2356,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' '+_('NOT imported!'), 4000)
             return
         else:
-            message = f' {category}: {count} '+_('items imported/updated')
+            message = f' {category}: {count:,} '+_('items imported/updated')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
             
@@ -2408,7 +2408,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(' ' + _('NOT merged!') + ' ' + get_last_result(), 6000)
             return
         else:
-            message = f' {count} '+_('items merged')
+            message = f' {count:,} '+_('items merged')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
             self.regroup(True, message)
@@ -2590,7 +2590,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 sys.exit()
             viewer_closed()
             if len(self.deleted_list) > 0:
-                message = f' {len(self.deleted_list)} '+_('items deleted')
+                message = f' {len(self.deleted_list):,} '+_('items deleted')
                 self.statusBar.showMessage(message, 4000)
                 self.regroup(True, message)
             self.archive_modified()
@@ -2880,7 +2880,7 @@ class Window(QMainWindow, Ui_MainWindow):
         selected = self.list_selected()
         self.filtered = len(selected)
         if len(selected) > 1500:
-            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
+            QMessageBox.critical(self, _('Warning'), _('You are trying to preview {:,} items.\nPlease select a smaller subset.').format(len(selected)), QMessageBox.Cancel)
             return
         try:
             self.viewer_window.close()
@@ -2964,7 +2964,7 @@ class Window(QMainWindow, Ui_MainWindow):
         category = self.combo_category.currentText()
         if category == _('Highlights') and color == 0:
             return
-        reply = QMessageBox.warning(self, _('Color'), _('Are you sure you want to change\n the COLOR of these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Color'), _('Are you sure you want to change\n the COLOR of these {:,} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Modifying. Please wait…'))
@@ -2982,7 +2982,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        message = f' {result} '+_('items modified')
+        message = f' {result:,} '+_('items modified')
         self.statusBar.showMessage(message, 4000)
         if result > 0:
             self.regroup(True, message)
@@ -3291,7 +3291,7 @@ class Window(QMainWindow, Ui_MainWindow):
             elif category == _('Playlists'):
                 return delete_playlist_items()
 
-        reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        reply = QMessageBox.warning(self, _('Delete'), _('Are you sure you want to\nDELETE these {:,} items?').format(self.selected_items), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.No:
             return
         self.statusBar.showMessage(' '+_('Deleting. Please wait…'))
@@ -3310,7 +3310,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         if result > 0:
-            message = f' {result} '+_('items deleted')
+            message = f' {result:,} '+_('items deleted')
             self.statusBar.showMessage(message, 4000)
             self.regroup(True, message)
             self.archive_modified()
@@ -3362,7 +3362,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
-        message = f' {result} '+_('items cleaned')
+        message = f' {result:,} '+_('items cleaned')
         self.statusBar.showMessage(message, 4000)
         if result > 0:
             self.regroup(False, message)
