@@ -6,6 +6,9 @@
 
 ### Changed
 
+- Updated jwlCore libs to v0.23.0
+  - Archive being merged always over-writes existing Notes, even if less recent
+
 ### Fixed
 
 ### Removed
