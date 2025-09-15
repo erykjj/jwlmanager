@@ -26,8 +26,8 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v10.0.3'
-BETA = False
+VERSION = 'v11.0.0'
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
