@@ -3008,23 +3008,41 @@ class Window(QMainWindow, Ui_MainWindow):
                 ORDER BY t.Name; """
             for row in con.execute(sql).fetchall():
                 tags[row[0]] = (row[1], row[2])
-            return len(selected), tags
+            return selected, tags
 
+        def tag_notes(items, tags):
+            if not tags:
+                return 0
+            counter = 0
+            for note_id in items:
+                for tag in tags:
+                    tag_id, name, count = tag
+                    if tag_id is None:
+                        result = con.execute('SELECT TagId FROM Tag WHERE Type = 1 AND Name = ?;', (name,)).fetchone()
+                        if result:
+                            tag_id = result[0]
+                        else:
+                            tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (1, ?);', (name,)).lastrowid
+                    if count == 0:
+                        row = con.execute('SELECT TagMapId FROM TagMap WHERE NoteId = ? AND TagId = ?;', (note_id, tag_id)).fetchone()
+                        if row:
+                            con.execute('DELETE FROM TagMap WHERE TagMapId = ?;', (row[0],))
+                            counter += 1
+                    else:
+                        position = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
+                        if con.execute('INSERT OR IGNORE INTO TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position)).rowcount > 0:
+                            counter += 1
+            return counter
 
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items, tags = get_notes()
-            tag_dialog = TagDialog(self, items, tags, self.tag_size)
-            tag_dialog.setWindowTitle(_('Tag') + f': {items:,} ' + _('Notes'))
+            tag_dialog = TagDialog(self, len(items), tags, self.tag_size)
+            tag_dialog.setWindowTitle(_('Tag') + f': {len(items):,} ' + _('Notes'))
             tag_dialog.exec()
-            print(tag_dialog.modified)#DEBUG
             self.tag_size = tag_dialog.size()
-            try:
-                self.viewer_window.close()
-            except:
-                pass
-            result = 0
+            result = tag_notes(items, tag_dialog.modified)
             con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             con.close()
