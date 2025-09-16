@@ -59,7 +59,7 @@ class AboutBox(QDialog):
         web = 'https://github.com/erykjj/jwlmanager'
         contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
 
-        self.setStyleSheet("QDialog {border:2px solid #5b3c88}")
+        self.setStyleSheet('QDialog {border:2px solid #5b3c88}')
         layout = QHBoxLayout(self)
         left_layout = QVBoxLayout()
         icon = QLabel(self)
@@ -152,83 +152,56 @@ class MergeDialog(QDialog):
 class TagDialog(QDialog):
 
     def __init__(self, parent, selected_count, tag_data, size):
-
         super().__init__(parent)
-        self.setWindowTitle(f"Tag {selected_count} Notes")
+        self.setWindowTitle(f'Tag {selected_count} Notes')
         self.setMinimumSize(300, 400)
         self.resize(size)
-
         self.selected_count = selected_count
         self.tag_data = tag_data
         self.names = []
-
-        self.PREV_STATE_ROLE = Qt.ItemDataRole.UserRole + 1
-        self.CHECK_PARTIAL = Qt.CheckState.PartiallyChecked
-        self.CHECK_CHECKED = Qt.CheckState.Checked
-        self.CHECK_UNCHECKED = Qt.CheckState.Unchecked
-
         self.list_widget = QListWidget()
         for tag, (name, count) in tag_data.items():
             self.names.append(name)
             item = QListWidgetItem()
-            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            flags = item.flags() | Qt.ItemFlag.ItemIsUserCheckable
+            if 0 < count < selected_count:
+                flags |= Qt.ItemFlag.ItemIsUserTristate
+            item.setFlags(flags)
             item.setData(Qt.ItemDataRole.UserRole, (tag, name, count))
-
             if count == 0:
                 state = Qt.CheckState.Unchecked
             elif count == selected_count:
                 state = Qt.CheckState.Checked
             else:
                 state = Qt.CheckState.PartiallyChecked
-
-            item.setText(f"{name} ({count})")
+            item.setText(f'{name} ({count})')
             item.setCheckState(state)
-            item.setData(self.PREV_STATE_ROLE, state)
-
             self.list_widget.addItem(item)
         self.list_widget.itemChanged.connect(self.handle_item_changed)
-
         layout = QVBoxLayout(self)
         layout.addWidget(self.list_widget)
-
         add_layout = QHBoxLayout()
         self.add_field = QLineEdit()
-        self.add_field.setPlaceholderText("New tag…")
-        add_btn = QPushButton("Add")
+        self.add_field.setPlaceholderText('New tag…')
+        add_btn = QPushButton('Add')
         add_btn.clicked.connect(self.add_tag)
         add_layout.addWidget(self.add_field)
         add_layout.addWidget(add_btn)
         layout.addLayout(add_layout)
-
-        apply_btn = QPushButton("Apply")
+        apply_btn = QPushButton('Apply')
         apply_btn.clicked.connect(self.apply_changes)
         layout.addWidget(apply_btn)
-        self._handling_change = False
 
     def handle_item_changed(self, item: QListWidgetItem):
-        if self._handling_change:
-            return
         _, name, original_count = item.data(Qt.ItemDataRole.UserRole)
-        prev = item.data(self.PREV_STATE_ROLE) or self.CHECK_UNCHECKED
-        if prev == self.CHECK_PARTIAL:
-            next_state = Qt.CheckState.Checked
-        elif prev == self.CHECK_CHECKED:
-            next_state = Qt.CheckState.Unchecked
-        elif original_count == 0:
-            next_state = Qt.CheckState.Checked
-        else:
-            next_state = Qt.CheckState.PartiallyChecked
-        self._handling_change = True
-        item.setCheckState(next_state)
-        if next_state == Qt.CheckState.Checked:
+        state = item.checkState()
+        if state == Qt.CheckState.Checked:
             new_count = self.selected_count
-        elif next_state == Qt.CheckState.Unchecked:
+        elif state == Qt.CheckState.Unchecked:
             new_count = 0
         else:
             new_count = original_count
-        item.setText(f"{name} ({new_count})")
-        item.setData(self.PREV_STATE_ROLE, next_state)
-        self._handling_change = False
+        item.setText(f'{name} ({new_count})')
 
     def add_tag(self):
         name = self.add_field.text().strip()
@@ -243,8 +216,7 @@ class TagDialog(QDialog):
         font.setItalic(True)
         item.setFont(font)
         item.setCheckState(Qt.CheckState.Checked)
-        item.setText(f"{name} ({self.selected_count})")
-        item.setData(self.PREV_STATE_ROLE, Qt.CheckState.Checked)
+        item.setText(f'{name} ({self.selected_count})')
         self.list_widget.addItem(item)
 
     def apply_changes(self):
@@ -253,11 +225,13 @@ class TagDialog(QDialog):
             item = self.list_widget.item(i)
             tag, name, original_count = item.data(Qt.ItemDataRole.UserRole)
             state = item.checkState()
-            if state == Qt.CheckState.Checked and original_count != self.selected_count:
+            if tag is None and state == Qt.CheckState.Checked:
+                modified.append((tag, name, self.selected_count))
+            elif state == Qt.CheckState.Checked and original_count != self.selected_count:
                 modified.append((tag, name, self.selected_count))
             elif state == Qt.CheckState.Unchecked and original_count != 0:
                 modified.append((tag, name, 0))
-        print("Result:", modified)
+        print('Result:', modified)
         self.accept()
 
 
