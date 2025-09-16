@@ -305,6 +305,45 @@ class Window(QMainWindow, Ui_MainWindow):
         self.about_window.exec()
 
     def crash_box(self, ex, msg=None):
+
+        def send_report():
+            subdlg = QDialog(dialog)
+            subdlg.setWindowTitle(_('Send crash report'))
+            subdlg.setMinimumSize(400, 200)
+
+            label = QLabel(_('Add details (what were you doing?):'))
+            commentEdit = QTextEdit()
+
+            subBtnBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+            subLayout = QVBoxLayout(subdlg)
+            subLayout.addWidget(label)
+            subLayout.addWidget(commentEdit)
+            subLayout.addWidget(subBtnBox)
+
+            def do_send():
+                user_comment = commentEdit.toPlainText().strip()
+                full_text = crash_info
+                if user_comment:
+                    full_text += f"\n\nUser comments:\n{user_comment}"
+                try:
+                    requests.post(
+                        'https://ntfy.sh/reganamlwj',
+                        data=full_text.encode('utf-8'),
+                        headers={
+                            'Title': 'JWLManager Crash Report',
+                            'Priority': 'default',
+                            'Tags': 'warning'
+                        }
+                    )
+                except Exception as e:
+                    print("Failed to send crash report:", e)
+                subdlg.accept()
+
+            subBtnBox.accepted.connect(do_send)
+            subBtnBox.rejected.connect(subdlg.reject)
+
+            subdlg.exec()
+
         tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
         tb_text = ''.join(tb_lines)
         if msg:
@@ -331,26 +370,22 @@ class Window(QMainWindow, Ui_MainWindow):
             headers = { 'X-GitHub-Api-Version': '2022-11-28' }
             r = requests.get(url, headers=headers, timeout=5)
             self.latest = json.loads(r.content.decode('utf-8'))['name']
-        txt = f'{APP} {VERSION} (latest: {self.latest})\n{platform()}\n{manifest}\n\n{tb_text}'
-        text.setText(txt)
-        requests.post('https://ntfy.sh/reganamlwj',
-            data = txt.encode('utf-8'),
-            headers = {
-                'Title': 'JWLManager Crash Report',
-                'Priority': 'default',
-                'Tags': 'warning'
-            })
+        crash_info = f'{APP} {VERSION} (latest: {self.latest})\n{platform()}\n{manifest}\n\n{tb_text}'
+        text.setText(crash_info)
+
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
-        button = QDialogButtonBox(QDialogButtonBox.Abort)
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Abort)
+        sendButton = QPushButton(_('Send crash report'))
         layout = QVBoxLayout(dialog)
         layout.addWidget(label1)
         layout.addWidget(text)
         layout.addWidget(label2)
-        layout.addWidget(button)
-        button.clicked.connect(dialog.close)
+        layout.addWidget(sendButton)
+        layout.addWidget(buttonBox)
+        buttonBox.rejected.connect(dialog.close)
+        sendButton.clicked.connect(send_report)
         dialog.exec()
-
 
     def toggle_theme(self):
         if self.mode == 'light':
@@ -3064,6 +3099,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con.executescript(sql)
 
         try:
+            raise('TEST ERROR')
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items, tags = get_notes()
