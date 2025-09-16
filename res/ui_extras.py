@@ -248,20 +248,16 @@ class TagDialog(QDialog):
         self.list_widget.addItem(item)
 
     def apply_changes(self):
-        # return/print structured result: ('apply_all'|'remove_all'|'leave_mixed')
-        result = []
+        modified = []
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             tag, name, original_count = item.data(Qt.ItemDataRole.UserRole)
             state = item.checkState()
-            if state == Qt.CheckState.Checked:
-                action = "apply_all"
-            elif state == Qt.CheckState.Unchecked:
-                action = "remove_all"
-            else:
-                action = "leave_mixed"
-            result.append((tag, name, action))
-        print("Result:", result)
+            if state == Qt.CheckState.Checked and original_count != self.selected_count:
+                modified.append((tag, name, self.selected_count))
+            elif state == Qt.CheckState.Unchecked and original_count != 0:
+                modified.append((tag, name, 0))
+        print("Result:", modified)
         self.accept()
 
 
