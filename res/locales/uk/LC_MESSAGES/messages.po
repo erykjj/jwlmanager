@@ -500,7 +500,7 @@ msgid ""
 "You are trying to preview {:,} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"Ви намагаєтесь переглянути {: } елементів.\n"
+"Ви намагаєтесь переглянути {:,} елементів.\n"
 "Будь ласка, виберіть меншу кількість."
 
 #: JWLManager.py:2945
@@ -514,7 +514,7 @@ msgid ""
 " the COLOR of these {:,} items?"
 msgstr ""
 "Вы уверены, что хотите изменить\n"
-"цвет этих {: } элементов?"
+"цвет этих {:,} элементов?"
 
 #: JWLManager.py:3009
 msgid "Modifying. Please wait…"
@@ -577,7 +577,7 @@ msgid ""
 "DELETE these {:,} items?"
 msgstr ""
 "Ви впевнені, що хочете\n"
-"ВИДАЛИТИ цих {: } елементів?"
+"ВИДАЛИТИ цих {:,} елементів?"
 
 #: JWLManager.py:3430
 msgid "Deleting. Please wait…"

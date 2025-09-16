@@ -500,7 +500,7 @@ msgid ""
 "You are trying to preview {:,} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"Próbujesz wyświetlić podgląd {: } elementów.\n"
+"Próbujesz wyświetlić podgląd {:,} elementów.\n"
 "Wybierz mniejszy podzbiór."
 
 #: JWLManager.py:2945
@@ -514,7 +514,7 @@ msgid ""
 " the COLOR of these {:,} items?"
 msgstr ""
 "Czy na pewno chcesz zmienić\n"
-"KOLOR tych {: } rekordów?"
+"KOLOR tych {:,} rekordów?"
 
 #: JWLManager.py:3009
 msgid "Modifying. Please wait…"
@@ -577,7 +577,7 @@ msgid ""
 "DELETE these {:,} items?"
 msgstr ""
 "Czy na pewno chcesz\n"
-"USUNĄĆ te {: } rekordy?"
+"USUNĄĆ te {:,} rekordy?"
 
 #: JWLManager.py:3430
 msgid "Deleting. Please wait…"
