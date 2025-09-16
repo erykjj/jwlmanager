@@ -219,7 +219,7 @@ class TagDialog(QDialog):
         self.names.append(name)
         item = QListWidgetItem()
         item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-        item.setData(Qt.ItemDataRole.UserRole, (None, name, 0))
+        item.setData(Qt.ItemDataRole.UserRole, (None, name, self.selected_count))
         font = item.font()
         font.setItalic(True)
         item.setFont(font)
