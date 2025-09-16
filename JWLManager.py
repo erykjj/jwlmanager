@@ -35,7 +35,7 @@ from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, 
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
 from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout,QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -310,10 +310,8 @@ class Window(QMainWindow, Ui_MainWindow):
             subdlg = QDialog(dialog)
             subdlg.setWindowTitle(_('Send crash report'))
             subdlg.setMinimumSize(400, 200)
-
-            label = QLabel(_('Add details (what were you doing?):'))
+            label = QLabel(_('Add details (what were you doing?)')+':')
             commentEdit = QTextEdit()
-
             subBtnBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
             subLayout = QVBoxLayout(subdlg)
             subLayout.addWidget(label)
@@ -322,9 +320,11 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def do_send():
                 user_comment = commentEdit.toPlainText().strip()
+                if len(user_comment) > 200:
+                    user_comment = user_comment[:200] + '…'
                 full_text = crash_info
                 if user_comment:
-                    full_text += f"\n\nUser comments:\n{user_comment}"
+                    full_text += f"\nUSER COMMENTS:\n{user_comment}"
                 try:
                     requests.post(
                         'https://ntfy.sh/reganamlwj',
@@ -336,12 +336,12 @@ class Window(QMainWindow, Ui_MainWindow):
                         }
                     )
                 except Exception as e:
-                    print("Failed to send crash report:", e)
+                    print("Failed to send crash report. Please file a GitHub issue:", e)
                 subdlg.accept()
+                dialog.close()
 
             subBtnBox.accepted.connect(do_send)
             subBtnBox.rejected.connect(subdlg.reject)
-
             subdlg.exec()
 
         tb_lines = format_exception(ex.__class__, ex, ex.__traceback__)
@@ -352,8 +352,14 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog.setMinimumSize(650, 375)
         dialog.setWindowTitle(_('Error!'))
         label1 = QLabel()
-        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://github.com/erykjj/jwlmanager/issues'>"+_('inform the developer')+"</a>:</p>")
+        label1.setText("<p style='text-align: left;'>"+_('Oops! Something went wrong…')+"</p></p><p style='text-align: left;'>"+_('Take note of what you were doing and')+" <a style='color: #666699;' href='https://github.com/erykjj/jwlmanager/issues'>"+_('inform the developer')+"</a></p>")
         label1.setOpenExternalLinks(True)
+        sendButton = QPushButton(_('Send crash report')+'…')
+        hlayout = QHBoxLayout()
+        hlayout.addWidget(label1)
+        spacer = QSpacerItem(10, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        hlayout.addSpacerItem(spacer)
+        hlayout.addWidget(sendButton)
         text = QTextEdit()
         text.setReadOnly(True)
         archive = Path(self.current_archive).name if self.current_archive else _('NEW ARCHIVE')
@@ -370,22 +376,20 @@ class Window(QMainWindow, Ui_MainWindow):
             headers = { 'X-GitHub-Api-Version': '2022-11-28' }
             r = requests.get(url, headers=headers, timeout=5)
             self.latest = json.loads(r.content.decode('utf-8'))['name']
-        crash_info = f'{APP} {VERSION} (latest: {self.latest})\n{platform()}\n{manifest}\n\n{tb_text}'
+        crash_info = f'\nSYSTEM INFO:\n{APP} {VERSION} (latest: {self.latest})\n{platform()}\n\nDATABASE:{manifest}\n\nERROR:\n{tb_text}'
         text.setText(crash_info)
-
         label2 = QLabel()
         label2.setText(_('The app will terminate.'))
         buttonBox = QDialogButtonBox(QDialogButtonBox.Abort)
-        sendButton = QPushButton(_('Send crash report'))
         layout = QVBoxLayout(dialog)
-        layout.addWidget(label1)
+        layout.addLayout(hlayout)
         layout.addWidget(text)
         layout.addWidget(label2)
-        layout.addWidget(sendButton)
         layout.addWidget(buttonBox)
         buttonBox.rejected.connect(dialog.close)
         sendButton.clicked.connect(send_report)
         dialog.exec()
+
 
     def toggle_theme(self):
         if self.mode == 'light':
@@ -3099,7 +3103,6 @@ class Window(QMainWindow, Ui_MainWindow):
             con.executescript(sql)
 
         try:
-            raise('TEST ERROR')
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items, tags = get_notes()
