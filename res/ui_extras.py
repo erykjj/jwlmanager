@@ -149,6 +149,27 @@ class MergeDialog(QDialog):
         self.accept()
 
 
+class TagListWidget(QListWidget):
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.RightButton:
+            item = self.itemAt(event.pos())
+            if item is not None and item.flags() & Qt.ItemFlag.ItemIsUserCheckable:
+                state = item.checkState()
+                if state == Qt.CheckState.Unchecked:
+                    if item.flags() & Qt.ItemFlag.ItemIsUserTristate:
+                        next_state = Qt.CheckState.PartiallyChecked
+                    else:
+                        next_state = Qt.CheckState.Checked
+                elif state == Qt.CheckState.PartiallyChecked:
+                    next_state = Qt.CheckState.Checked
+                else:
+                    next_state = Qt.CheckState.Unchecked
+                item.setCheckState(next_state)
+                return
+        super().mousePressEvent(event)
+
+
 class TagDialog(QDialog):
 
     def __init__(self, parent, selected_count, tag_data, size):
@@ -160,7 +181,7 @@ class TagDialog(QDialog):
         self.tag_data = tag_data
         self.names = []
         self.modified = []
-        self.list_widget = QListWidget()
+        self.list_widget = TagListWidget()
         for tag, (name, count) in tag_data.items():
             self.names.append(name)
             item = QListWidgetItem()
