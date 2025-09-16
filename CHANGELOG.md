@@ -4,7 +4,7 @@
 
 ### Added
 
-- Handle bulk tagging
+- Implement bulk tagging of Notes
 
 ### Changed
 
