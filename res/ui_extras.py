@@ -159,6 +159,7 @@ class TagDialog(QDialog):
         self.selected_count = selected_count
         self.tag_data = tag_data
         self.names = []
+        self.modified = []
         self.list_widget = QListWidget()
         for tag, (name, count) in tag_data.items():
             self.names.append(name)
@@ -182,8 +183,7 @@ class TagDialog(QDialog):
         layout.addWidget(self.list_widget)
         add_layout = QHBoxLayout()
         self.add_field = QLineEdit()
-        self.add_field.setPlaceholderText("New tag…")
-        self.add_field.returnPressed.connect(self.add_tag)  # Enter adds tag
+        self.add_field.returnPressed.connect(self.add_tag)
         add_btn = QPushButton()
         add_btn.setIcon(theme.icons['tag'])
         add_btn.clicked.connect(self.add_tag)
@@ -194,8 +194,7 @@ class TagDialog(QDialog):
         ok_btn = button_box.button(QDialogButtonBox.StandardButton.Ok)
         cancel_btn = button_box.button(QDialogButtonBox.StandardButton.Cancel)
         ok_btn.clicked.connect(self.apply_changes)
-        cancel_btn.clicked.connect(self.reject)
-        self.add_field.returnPressed.connect(self.add_tag)
+        cancel_btn.clicked.connect(self.cancel)
         button_layout = QHBoxLayout()
         button_layout.addWidget(ok_btn, alignment=Qt.AlignmentFlag.AlignLeft)
         button_layout.addWidget(cancel_btn, alignment=Qt.AlignmentFlag.AlignRight)
@@ -229,19 +228,22 @@ class TagDialog(QDialog):
         self.list_widget.addItem(item)
 
     def apply_changes(self):
-        modified = []
+        self.modified = []
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             tag, name, original_count = item.data(Qt.ItemDataRole.UserRole)
             state = item.checkState()
             if tag is None and state == Qt.CheckState.Checked:
-                modified.append((tag, name, self.selected_count))
+                self.modified.append((tag, name, self.selected_count))
             elif state == Qt.CheckState.Checked and original_count != self.selected_count:
-                modified.append((tag, name, self.selected_count))
+                self.modified.append((tag, name, self.selected_count))
             elif state == Qt.CheckState.Unchecked and original_count != 0:
-                modified.append((tag, name, 0))
-        print('Result:', modified)
+                self.modified.append((tag, name, 0))
         self.accept()
+
+    def cancel(self):
+        self.modified = []
+        self.reject()
 
 
 class ThemeManager:
