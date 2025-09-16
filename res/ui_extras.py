@@ -30,7 +30,7 @@ from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QPainter, QPixmap, QShortcut
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
 _base_path = path.dirname(__file__)
 
@@ -59,7 +59,7 @@ class AboutBox(QDialog):
         web = 'https://github.com/erykjj/jwlmanager'
         contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
 
-        self.setStyleSheet("QDialog {border:2px solid #5b3c88}")
+        self.setStyleSheet('QDialog {border:2px solid #5b3c88}')
         layout = QHBoxLayout(self)
         left_layout = QVBoxLayout()
         icon = QLabel(self)
@@ -147,6 +147,124 @@ class MergeDialog(QDialog):
     def merge_action(self):
         self.choice = 'merge'
         self.accept()
+
+
+class TagListWidget(QListWidget):
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.RightButton:
+            item = self.itemAt(event.pos())
+            if item is not None and item.flags() & Qt.ItemFlag.ItemIsUserCheckable:
+                state = item.checkState()
+                if state == Qt.CheckState.Unchecked:
+                    if item.flags() & Qt.ItemFlag.ItemIsUserTristate:
+                        next_state = Qt.CheckState.PartiallyChecked
+                    else:
+                        next_state = Qt.CheckState.Checked
+                elif state == Qt.CheckState.PartiallyChecked:
+                    next_state = Qt.CheckState.Checked
+                else:
+                    next_state = Qt.CheckState.Unchecked
+                item.setCheckState(next_state)
+                return
+        super().mousePressEvent(event)
+
+
+class TagDialog(QDialog):
+
+    def __init__(self, parent, selected_count, tag_data, size):
+        super().__init__(parent)
+        theme = parent.theme
+        self.setMinimumSize(300, 400)
+        self.resize(size)
+        self.selected_count = selected_count
+        self.tag_data = tag_data
+        self.names = []
+        self.modified = []
+        self.list_widget = TagListWidget()
+        for tag, (name, count) in tag_data.items():
+            self.names.append(name)
+            item = QListWidgetItem()
+            flags = item.flags() | Qt.ItemFlag.ItemIsUserCheckable
+            if 0 < count < selected_count:
+                flags |= Qt.ItemFlag.ItemIsUserTristate
+            item.setFlags(flags)
+            item.setData(Qt.ItemDataRole.UserRole, (tag, name, count))
+            if count == 0:
+                state = Qt.CheckState.Unchecked
+            elif count == selected_count:
+                state = Qt.CheckState.Checked
+            else:
+                state = Qt.CheckState.PartiallyChecked
+            item.setText(f'{name} ({count})')
+            item.setCheckState(state)
+            self.list_widget.addItem(item)
+        self.list_widget.itemChanged.connect(self.handle_item_changed)
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.list_widget)
+        add_layout = QHBoxLayout()
+        self.add_field = QLineEdit()
+        self.add_field.returnPressed.connect(self.add_tag)
+        add_btn = QPushButton()
+        add_btn.setIcon(theme.icons['tag'])
+        add_btn.clicked.connect(self.add_tag)
+        add_layout.addWidget(self.add_field)
+        add_layout.addWidget(add_btn)
+        layout.addLayout(add_layout)
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        ok_btn = button_box.button(QDialogButtonBox.StandardButton.Ok)
+        cancel_btn = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        ok_btn.clicked.connect(self.apply_changes)
+        cancel_btn.clicked.connect(self.cancel)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(ok_btn, alignment=Qt.AlignmentFlag.AlignLeft)
+        button_layout.addWidget(cancel_btn, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(button_layout)
+
+    def handle_item_changed(self, item: QListWidgetItem):
+        _, name, original_count = item.data(Qt.ItemDataRole.UserRole)
+        state = item.checkState()
+        if state == Qt.CheckState.Checked:
+            new_count = self.selected_count
+        elif state == Qt.CheckState.Unchecked:
+            new_count = 0
+        else:
+            new_count = original_count
+        item.setText(f'{name} ({new_count})')
+
+    def add_tag(self):
+        name = self.add_field.text().strip()
+        if not name or name in self.names:
+            return
+        self.add_field.clear()
+        self.names.append(name)
+        item = QListWidgetItem()
+        item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+        item.setData(Qt.ItemDataRole.UserRole, (None, name, self.selected_count))
+        font = item.font()
+        font.setItalic(True)
+        item.setFont(font)
+        item.setCheckState(Qt.CheckState.Checked)
+        item.setText(f'{name} ({self.selected_count})')
+        self.list_widget.addItem(item)
+
+    def apply_changes(self):
+        self.modified = []
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            tag, name, original_count = item.data(Qt.ItemDataRole.UserRole)
+            state = item.checkState()
+            if tag is None and state == Qt.CheckState.Checked:
+                self.modified.append((tag, name, self.selected_count))
+            elif state == Qt.CheckState.Checked and original_count != self.selected_count:
+                self.modified.append((tag, name, self.selected_count))
+            elif state == Qt.CheckState.Unchecked and original_count != 0:
+                self.modified.append((tag, name, 0))
+        self.accept()
+
+    def cancel(self):
+        self.modified = []
+        self.reject()
 
 
 class ThemeManager:

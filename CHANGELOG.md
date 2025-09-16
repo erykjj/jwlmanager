@@ -4,6 +4,8 @@
 
 ### Added
 
+- Implement bulk tagging of Notes
+
 ### Changed
 
 - Updated jwlCore libs to v0.23.0
