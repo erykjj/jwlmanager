@@ -34,14 +34,19 @@ The ***Ansicht*** Menü bietet zusätzliche Möglichkeiten (sie können auch dur
 Wenn du Änderungen an der Sicherungsdatei speichern willst, wähle **Speichern als...** und speichere unter einem neuen Namen. **Behalte immer deine originale** `.jwlibrary` Datei für den Fall, dass du nach einem Fehler den ursprünglichen Zustand wiederherstellen willst.
 #####
 ######
-### Aufrufen
+### Tag
 ######
-Zeigt die ausgewählten Notizen und Anmerkungen in einem **Datenbetrachter** an, der Titel und Text mit einem Filter durchsuchen, und das Ergebnis in einer Textdatei speichern kann. Du kann einzelne Einträge löschen oder im **Dateneditor** bearbeiten (Klick auf das Symbol mit Papier und Stift) . Du musst alle Änderungen im Editor und *zusätzlich* im Betrachter speichern, damit sie in die Datenbank übernommen werden. Natürlich musst du auch wie gewohnt die Datei speichern. Du kann mit den Schaltflächen (oder der `ESC` Taste) zurückgehen, ohne die Datenbank zu ändern.
+Du kannst Tags zu den ausgewählten **Notizen** hinzufügen oder daraus entfernen.
 #####
 ######
 ### Farbe
 ######
 Du kannst die Farbe der ausgewählten **Notizen** und **Markierungen** pauschal ändern (alle bekommen die gleiche Farbe), oder die Farbe einzelner Notizen im **Dateneditor** individuell ändern. Unabhängige Notizen (solche, die keiner Publikation zugeordnet sind) *können nicht* eingefärbt werden; sie sind immer grau.
+#####
+######
+### Aufrufen
+######
+Zeigt die ausgewählten Notizen und Anmerkungen in einem **Datenbetrachter** an, der Titel und Text mit einem Filter durchsuchen, und das Ergebnis in einer Textdatei speichern kann. Du kann einzelne Einträge löschen oder im **Dateneditor** bearbeiten (Klick auf das Symbol mit Papier und Stift) . Du musst alle Änderungen im Editor und *zusätzlich* im Betrachter speichern, damit sie in die Datenbank übernommen werden. Natürlich musst du auch wie gewohnt die Datei speichern. Du kann mit den Schaltflächen (oder der `ESC` Taste) zurückgehen, ohne die Datenbank zu ändern.
 #####
 ######
 ### Hinzufügen
