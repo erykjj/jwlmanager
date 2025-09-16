@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: JWLManager v3\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2025-09-16 22:07+0000\n"
-"PO-Revision-Date: 2025-07-31 00:50+0000\n"
+"PO-Revision-Date: 2025-09-16 22:33+0000\n"
 "Last-Translator: \"Eryk J.\" <infiniti@inventati.org>\n"
-"Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.14-dev\n"
 "Generated-By: Babel 2.17.0\n"
 
 #: JWLManager.py:140 JWLManager.py:501 JWLManager.py:511 JWLManager.py:515
@@ -33,6 +34,9 @@ msgid ""
 "Thank you for testing.\n"
 "Please be careful."
 msgstr ""
+"Il s'agit d'une version préliminaire.\n"
+"Merci de la tester.\n"
+"Soyez prudent."
 
 #: JWLManager.py:183
 msgid "Open or Merge"
@@ -124,11 +128,11 @@ msgstr "Erreur tout en vérifiant les mises à jour !"
 
 #: JWLManager.py:311 JWLManager.py:357
 msgid "Send crash report"
-msgstr ""
+msgstr "Envoyer rapport d'erreur"
 
 #: JWLManager.py:313
 msgid "Add details (what were you doing?)"
-msgstr ""
+msgstr "Ajouter des détails (que faisiez-vous ?)"
 
 #: JWLManager.py:353 JWLManager.py:1649 JWLManager.py:1671 JWLManager.py:1703
 #: JWLManager.py:1731 JWLManager.py:1796 JWLManager.py:1817 JWLManager.py:1876
@@ -490,12 +494,12 @@ msgid "items deleted"
 msgstr "éléments supprimés"
 
 #: JWLManager.py:2922
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "You are trying to preview {:,} items.\n"
 "Please select a smaller subset."
 msgstr ""
-"Vous essayez de prévisualiser {} articles.\n"
+"Vous essayez de prévisualiser {: } articles.\n"
 "Veuillez sélectionner un sous-ensemble plus petit."
 
 #: JWLManager.py:2945
@@ -503,13 +507,13 @@ msgid "Filter"
 msgstr "Filtre"
 
 #: JWLManager.py:3006
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Are you sure you want to change\n"
 " the COLOR of these {:,} items?"
 msgstr ""
 "Êtes-vous sûr·e de vouloir changer\n"
-"la COULEUR de ces {} éléments ?"
+"la COULEUR de ces {: } éléments ?"
 
 #: JWLManager.py:3009
 msgid "Modifying. Please wait…"
@@ -566,13 +570,13 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #: JWLManager.py:3427
-#, fuzzy, python-brace-format
+#, python-brace-format
 msgid ""
 "Are you sure you want to\n"
 "DELETE these {:,} items?"
 msgstr ""
 "Êtes-vous sûr·e de vouloir\n"
-"SUPPRIMER ces {} éléments ?"
+"SUPPRIMER ces {: } éléments ?"
 
 #: JWLManager.py:3430
 msgid "Deleting. Please wait…"
@@ -856,4 +860,3 @@ msgstr "Notes triées"
 
 #~ msgid "Reindexed successfully"
 #~ msgstr "Réindexé avec succès"
-
