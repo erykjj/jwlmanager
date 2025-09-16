@@ -4,6 +4,8 @@
 
 ### Added
 
+- Handle bulk tagging
+
 ### Changed
 
 - Updated jwlCore libs to v0.23.0
