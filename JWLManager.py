@@ -31,7 +31,7 @@ BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
-from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, ThemeManager, ViewerItem
+from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, TagDialog, ThemeManager, ViewerItem
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
 from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
@@ -142,6 +142,7 @@ class Window(QMainWindow, Ui_MainWindow):
         self.viewer_size = settings.value('Viewer/size', QSize(755, 500))
         self.help_pos = settings.value('Help/position', QPoint(50, 50))
         self.help_size = settings.value('Help/size', QSize(350, 400))
+        self.tag_size = settings.value('Tag/size', QSize(350, 400))
         self.setAcceptDrops(True)
         self.status_label = QLabel()
         self.statusBar.addPermanentWidget(self.status_label, 0)
@@ -169,7 +170,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.current_archive = ''
             self.new_file()
         if BETA:
-            QMessageBox.warning(self, APP, _('This is a pre-release.\nThank you for testing.\nPlease be careful.'), QMessageBox.Ok)
+            QMessageBox.warning(None, APP, _('This is a pre-release.\nThank you for testing.\nPlease be careful.'), QMessageBox.Ok)
 
 
     def check_file(self, file):
@@ -451,8 +452,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_export.setVisible(exp)
             self.button_import.setVisible(imp)
             self.button_color.setVisible(col)
-            # self.button_tag.setVisible(tag)
-            self.button_tag.setVisible(False)
+            self.button_tag.setVisible(tag)
 
             for item in range(6):
                 self.combo_grouping.model().item(item).setEnabled(True)
@@ -2972,7 +2972,6 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
-            # items = self.list_selected()
             items = str(self.list_selected()).replace('[', '(').replace(']', ')')
             result = colorize(category)
             con.execute("PRAGMA foreign_keys = 'ON';")
@@ -2990,7 +2989,52 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def tag_notes(self):
-        return
+
+        def get_notes():
+            selected = self.list_selected()
+            items = str(selected).replace('[', '(').replace(']', ')')
+            tags = {}
+            sql = f"""
+                SELECT t.TagId,
+                    t.Name,
+                    SUM(CASE WHEN tm.NoteId IN {items} THEN 1 ELSE 0 END) AS c
+                FROM Tag t
+                    LEFT JOIN
+                    TagMap tm USING (
+                    TagId
+                    )
+                WHERE t.Type = 1
+                GROUP BY t.TagId
+                ORDER BY t.Name; """
+            for row in con.execute(sql).fetchall():
+                tags[row[0]] = (row[1], row[2])
+            return len(selected), tags
+
+
+        try:
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            items, tags = get_notes()
+            tag_dialog = TagDialog(self, items, tags, self.tag_size)
+            tag_dialog.exec()
+            self.tag_size = tag_dialog.size()
+            try:
+                self.viewer_window.close()
+            except:
+                pass
+            result = 0
+            con.execute("PRAGMA foreign_keys = 'ON';")
+            con.commit()
+            con.close()
+        except Exception as ex:
+            self.crash_box(ex)
+            self.clean_up()
+            sys.exit()
+        message = f' {result:,} '+_('items modified')
+        self.statusBar.showMessage(message, 4000)
+        if result > 0:
+            self.regroup(True, message)
+            self.archive_modified()
 
 
     def add_items(self):
@@ -3563,6 +3607,7 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('Viewer/size', self.viewer_size)
         settings.setValue('Help/position', self.help_pos)
         settings.setValue('Help/size', self.help_size)
+        settings.setValue('Tag/size', self.tag_size)
         if os.path.exists(LOCK_FILE):
             os.remove(LOCK_FILE)
 
