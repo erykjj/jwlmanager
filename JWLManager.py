@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.0.0'
+VERSION = 'v11.0.0-beta'
 BETA = True
 
 
@@ -3103,7 +3103,6 @@ class Window(QMainWindow, Ui_MainWindow):
             con.executescript(sql)
 
         try:
-            raise('TEST ERROR')
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items, tags = get_notes()
