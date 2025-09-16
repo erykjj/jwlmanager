@@ -4,8 +4,8 @@
 
 ### Added
 
-- Implement bulk tagging of Notes
-- Added crash reporting (via ntfy.sh)
+- Implement bulk **tagging** of Notes
+- Added **crash reporting** (via ntfy.sh)
 
 ### Changed
 
