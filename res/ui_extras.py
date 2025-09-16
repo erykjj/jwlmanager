@@ -153,7 +153,7 @@ class TagDialog(QDialog):
 
     def __init__(self, parent, selected_count, tag_data, size):
         super().__init__(parent)
-        self.setWindowTitle(f'Tag {selected_count} Notes')
+        theme = parent.theme
         self.setMinimumSize(300, 400)
         self.resize(size)
         self.selected_count = selected_count
@@ -182,15 +182,24 @@ class TagDialog(QDialog):
         layout.addWidget(self.list_widget)
         add_layout = QHBoxLayout()
         self.add_field = QLineEdit()
-        self.add_field.setPlaceholderText('New tag…')
-        add_btn = QPushButton('Add')
+        self.add_field.setPlaceholderText("New tag…")
+        self.add_field.returnPressed.connect(self.add_tag)  # Enter adds tag
+        add_btn = QPushButton()
+        add_btn.setIcon(theme.icons['tag'])
         add_btn.clicked.connect(self.add_tag)
         add_layout.addWidget(self.add_field)
         add_layout.addWidget(add_btn)
         layout.addLayout(add_layout)
-        apply_btn = QPushButton('Apply')
-        apply_btn.clicked.connect(self.apply_changes)
-        layout.addWidget(apply_btn)
+        button_box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        ok_btn = button_box.button(QDialogButtonBox.StandardButton.Ok)
+        cancel_btn = button_box.button(QDialogButtonBox.StandardButton.Cancel)
+        ok_btn.clicked.connect(self.apply_changes)
+        cancel_btn.clicked.connect(self.reject)
+        self.add_field.returnPressed.connect(self.add_tag)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(ok_btn, alignment=Qt.AlignmentFlag.AlignLeft)
+        button_layout.addWidget(cancel_btn, alignment=Qt.AlignmentFlag.AlignRight)
+        layout.addLayout(button_layout)
 
     def handle_item_changed(self, item: QListWidgetItem):
         _, name, original_count = item.data(Qt.ItemDataRole.UserRole)
