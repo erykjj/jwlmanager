@@ -3034,6 +3034,35 @@ class Window(QMainWindow, Ui_MainWindow):
                             counter += 1
             return counter
 
+        def reindex_tags():
+
+            def make_table(table):
+                con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
+
+            def update_table(table, field):
+                app.processEvents()
+                con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+
+            make_table('TagMap')
+            update_table('TagMap', 'TagMapId')
+            con.execute('DROP TABLE CrossReference;')
+
+            make_table('Tag')
+            update_table('Tag', 'TagId')
+            update_table('TagMap', 'TagId')
+            con.execute('DROP TABLE CrossReference;')
+
+            sql = """
+                WITH Ranked AS (
+                    SELECT
+                        TagMapId,
+                        ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 AS NewPos
+                    FROM TagMap )
+                UPDATE TagMap
+                SET Position = (
+                    SELECT NewPos FROM Ranked WHERE Ranked.TagMapId = TagMap.TagMapId );"""
+            con.executescript(sql)
+
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
@@ -3043,6 +3072,7 @@ class Window(QMainWindow, Ui_MainWindow):
             tag_dialog.exec()
             self.tag_size = tag_dialog.size()
             result = tag_notes(items, tag_dialog.modified)
+            reindex_tags()
             con.execute("PRAGMA foreign_keys = 'ON';")
             con.commit()
             con.close()
