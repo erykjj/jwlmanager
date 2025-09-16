@@ -3016,8 +3016,9 @@ class Window(QMainWindow, Ui_MainWindow):
             con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
             items, tags = get_notes()
             tag_dialog = TagDialog(self, items, tags, self.tag_size)
-            tag_dialog.setWindowTitle(_('Tag') + f' {items:,} ' + _('Notes'))
+            tag_dialog.setWindowTitle(_('Tag') + f': {items:,} ' + _('Notes'))
             tag_dialog.exec()
+            print(tag_dialog.modified)#DEBUG
             self.tag_size = tag_dialog.size()
             try:
                 self.viewer_window.close()
