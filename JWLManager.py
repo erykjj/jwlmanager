@@ -3054,6 +3054,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return 0
             counter = 0
             for note_id in items:
+                changed = False
                 for tag in tags:
                     tag_id, name, count = tag
                     if tag_id is None:
@@ -3066,11 +3067,13 @@ class Window(QMainWindow, Ui_MainWindow):
                         row = con.execute('SELECT TagMapId FROM TagMap WHERE NoteId = ? AND TagId = ?;', (note_id, tag_id)).fetchone()
                         if row:
                             con.execute('DELETE FROM TagMap WHERE TagMapId = ?;', (row[0],))
-                            counter += 1
+                            changed = True
                     else:
                         position = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
                         if con.execute('INSERT OR IGNORE INTO TagMap (NoteId, TagId, Position) VALUES (?, ?, ?);', (note_id, tag_id, position)).rowcount > 0:
-                            counter += 1
+                            changed = True
+                if changed:
+                    counter += 1
             return counter
 
         def reindex_tags():
