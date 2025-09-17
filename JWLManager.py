@@ -3091,16 +3091,19 @@ class Window(QMainWindow, Ui_MainWindow):
             update_table('TagMap', 'TagId')
             con.execute('DROP TABLE CrossReference;')
 
-            sql = """
-                WITH Ranked AS (
-                    SELECT
-                        TagMapId,
-                        ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 AS NewPos
-                    FROM TagMap )
+            con.executescript("""
+                CREATE TABLE CrossReference (TagId INTEGER, Old INTEGER, New INTEGER);
+                INSERT INTO CrossReference (TagId, Old, New)
+                SELECT TagId, Position,
+                    ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1
+                FROM TagMap;
                 UPDATE TagMap
-                SET Position = (
-                    SELECT NewPos FROM Ranked WHERE Ranked.TagMapId = TagMap.TagMapId );"""
-            con.executescript(sql)
+                SET Position = (SELECT -New
+                                FROM CrossReference
+                                WHERE CrossReference.TagId = TagMap.TagId
+                                AND CrossReference.Old = TagMap.Position);
+                UPDATE TagMap SET Position = abs(Position);
+                DROP TABLE CrossReference;""")
 
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
