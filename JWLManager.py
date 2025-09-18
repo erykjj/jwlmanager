@@ -1366,9 +1366,13 @@ class Window(QMainWindow, Ui_MainWindow):
                         rng = rng.strip(';')
                         if rng:
                             item['RANGE'] = rng
-                    if 'T' not in item['MODIFIED']:
+                    if '-' not in item['CREATED'] or len(item['CREATED']) < 10:
+                        item['CREATED'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+                    elif 'T' not in item['MODIFIED']:
                         item['MODIFIED'] = item['MODIFIED'][:10] + 'T00:00:00'
-                    if 'T' not in item['CREATED']:
+                    if '-' not in item['MODIFIED'] or len(item['MODIFIED']) < 10:
+                        item['MODIFIED'] = item['CREATED']
+                    elif 'T' not in item['CREATED']:
                         item['CREATED'] = item['CREATED'][:10] + 'T00:00:00'
                     if row[9] and (row[9] > 10000000): # periodicals
                         item['ISSUE'] = row[9]
