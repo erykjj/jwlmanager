@@ -3078,13 +3078,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 available_pos[tag_id] = available
             return available_pos
 
-
-        def tag_notes(items, tags):
-            if not tags:
-                return 0
-
-            counter = 0
-
+        def delete_tags(items, tags):
             deleted_notes = set()
             for note_id in items:
                 for tag_id, name, count in tags:
@@ -3098,10 +3092,12 @@ class Window(QMainWindow, Ui_MainWindow):
                         tagmap_id, pos = row
                         con.execute('DELETE FROM TagMap WHERE TagMapId = ?;', (tagmap_id,))
                         deleted_notes.add(note_id)
+            return deleted_notes
 
+        def add_tags(items, tags, deleted_notes):
+            counter = 0
             available_pos = get_available_pos()
             available_ids = get_available_ids()
-
             for note_id in items:
                 changed = note_id in deleted_notes
                 for tag_id, name, count in tags:
@@ -3130,20 +3126,22 @@ class Window(QMainWindow, Ui_MainWindow):
                         changed = True
                 if changed:
                     counter += 1
-
             return counter
 
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF'; BEGIN;")
+            con.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF';")
             items, tags = get_notes()
             tag_dialog = TagDialog(self, len(items), tags, self.tag_size)
             tag_dialog.setWindowTitle(_('Tag') + f': {len(items):,} ' + _('Notes'))
             tag_dialog.exec()
             self.tag_size = tag_dialog.size()
-            result = tag_notes(items, tag_dialog.modified)
-            con.execute("PRAGMA foreign_keys = 'ON';")
-            con.commit()
+            result = 0
+            if tag_dialog.modified:
+                deleted_tags = delete_tags(items, tag_dialog.modified)
+                con.commit()
+                result = add_tags(items, tag_dialog.modified, deleted_tags)
+                con.commit()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
