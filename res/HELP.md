@@ -19,13 +19,13 @@ Clicking on the column headers allows for **sorting** the tree; clicking the sam
 ######
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
 ######
-* **Theme (Ctrl+T)** - toggle between light and dark mode
-* **Expand All (Ctrl+E)** - expand the tree to make all levels visible
+* **Theme (`Ctrl+T`)** - toggle between light and dark mode
+* **Expand All (`Ctrl+E`)** - expand the tree to make all levels visible
   * Note: **double-clicking** on an entry will expand (or collapse) all its sub-levels
-* **Collapse All (Ctrl+C)** - collapse all levels
-* **Select All (Ctrl+A)** - a quick way to select all entries
+* **Collapse All (`Ctrl+C`)** - collapse all levels
+* **Select All (`Ctrl+A`)** - a quick way to select all entries
   * Note: **right-clicking** on an entry will check/uncheck it and all its sub-levels
-* **Unselect All (Ctrl+Z)** - unselect everything
+* **Unselect All (`Ctrl+Z`)** - unselect everything
 * **Title View** - change how publication titles are displayed
   * **Code** - publication code
   * **Short** - abbreviated title
@@ -36,7 +36,7 @@ If you modify an archive and intend to use the results to re-import into JW Libr
 ######
 ### Tag
 ######
-You can add or remove tags to the selected **Notes**.
+You can add or remove tags to the selected **Notes**. `Ctrl+A` and `Ctrl+Z` work in this context to select and unselect all entries.
 #####
 ######
 ### Color
