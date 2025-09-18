@@ -19,13 +19,13 @@ Klicken auf die Spaltenüberschrift bewirkt das **sortieren** der Einträge; das
 ######
 The ***Ansicht*** Menü bietet zusätzliche Möglichkeiten (sie können auch durch eine Tastenkombination erreicht werden):
 ######
-* **Darstellung (Strg+T)** - dunklen und hellen Modus umschalten
-* **Alles ausklappen (Strg+E)** - macht alle Ebenen sichtbar
+* **Darstellung (`Strg+T`)** - dunklen und hellen Modus umschalten
+* **Alles ausklappen (`Strg+E`)** - macht alle Ebenen sichtbar
   * Hinweis: Ein **Doppelklick** klappt alle Unterebenen aus oder ein
-* **Alles einklappen (Strg+C)** - klappt alle Ebenen ein
-* **Alles Auswählen (Strg+A)** - Wählt alle Elemente aus
+* **Alles einklappen (`Strg+C`)** - klappt alle Ebenen ein
+* **Alles Auswählen (`Strg+A`)** - Wählt alle Elemente aus
   * Hinweis: Ein **Rechtsklick** auf ein Element klappt alle Unterebenen ein oder aus
-* **Alles abwählen (Strg+Z)** - entfernt jede Auswahl
+* **Alles abwählen (`Strg+Z`)** - entfernt jede Auswahl
 * **Titeldarstellung** - ändert die Darstellung des Publikationsnamens
   * **Code** - Publikationscode
   * **Kurz** - Kurzbezeichnung
@@ -36,7 +36,7 @@ Wenn du Änderungen an der Sicherungsdatei speichern willst, wähle **Speichern 
 ######
 ### Tag
 ######
-Du kannst Tags zu den ausgewählten **Notizen** hinzufügen oder daraus entfernen.
+Du kannst Tags zu den ausgewählten **Notizen** hinzufügen oder daraus entfernen. `Strg+A` und `Strg+A` funktionieren in diesem Zusammenhang, um alle Einträge auszuwählen bzw. die Auswahl aufzuheben.
 #####
 ######
 ### Farbe
