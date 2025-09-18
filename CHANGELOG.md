@@ -13,6 +13,7 @@
   - Archive being merged always over-writes existing Notes, even if less recent
 - Updated resource catalog
 - Updated translations
+- Updated HELP
 
 ### Fixed
 
