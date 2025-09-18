@@ -28,7 +28,7 @@ from os import path
 from glob import glob
 from datetime import datetime
 
-from PySide6.QtCore import QSize, Qt, Signal
+from PySide6.QtCore import QMimeData, QSize, Qt, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QPainter, QPixmap, QShortcut
 from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
 
@@ -220,6 +220,10 @@ class TagDialog(QDialog):
         button_layout.addWidget(ok_btn, alignment=Qt.AlignmentFlag.AlignLeft)
         button_layout.addWidget(cancel_btn, alignment=Qt.AlignmentFlag.AlignRight)
         layout.addLayout(button_layout)
+        select_all_shortcut = QShortcut(QKeySequence('Ctrl+A'), self)
+        select_all_shortcut.activated.connect(self.select_all)
+        unselect_all_shortcut = QShortcut(QKeySequence('Ctrl+Z'), self)
+        unselect_all_shortcut.activated.connect(self.unselect_all)
 
     def handle_item_changed(self, item: QListWidgetItem):
         _, name, original_count = item.data(Qt.ItemDataRole.UserRole)
@@ -231,6 +235,16 @@ class TagDialog(QDialog):
         else:
             new_count = original_count
         item.setText(f'{name} ({new_count})')
+
+    def select_all(self):
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            item.setCheckState(Qt.Checked)
+
+    def unselect_all(self):
+        for i in range(self.list_widget.count()):
+            item = self.list_widget.item(i)
+            item.setCheckState(Qt.Unchecked)
 
     def add_tag(self):
         name = self.add_field.text().strip()
