@@ -14,6 +14,7 @@
 - Updated resource catalog
 - Updated translations
 - Updated HELP
+- Ensure Note exports contain properly-formatted created and modified dates
 
 ### Fixed
 
