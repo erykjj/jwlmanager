@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [11.0.0] - 2025-09-21
+### Added
+
 - Implement bulk **tagging** of Notes
 - Added **crash reporting** (via ntfy.sh)
 - Added check for required columns on Excel import
@@ -17,11 +27,6 @@
 - Updated HELP
 - Ensure Note exports contain properly-formatted created and modified dates
 
-### Fixed
-
-### Removed
-
-____
 ## [10.0.3] - 2025-09-12
 ### Changed
 
@@ -1057,6 +1062,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.0.0
 [10.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.3
 [10.0.2]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.2
 [10.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.1
