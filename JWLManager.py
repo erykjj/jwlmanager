@@ -1721,7 +1721,12 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pl.read_excel(engine='xlsx2csv', source=file)
+                required_columns = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
+                try:
+                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                except:
+                    QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
+                    return 0
                 count = update_db(df)
             return count
 
@@ -2202,7 +2207,12 @@ class Window(QMainWindow, Ui_MainWindow):
                         count = 0
             else:
                 self.format = 'xlsx'
-                df = pl.read_excel(engine='xlsx2csv', source=file)
+                required_columns = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE']
+                try:
+                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                except:
+                    QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
+                    return 0
                 count = update_db(df)
             return count
 
