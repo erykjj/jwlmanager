@@ -6,6 +6,9 @@
 
 ### Changed
 
+- Updated jwlCore libs to v0.25.0
+  - Always merge InputField, even when empty (clearing target)
+
 ### Fixed
 
 ### Removed
