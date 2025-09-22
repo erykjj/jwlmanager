@@ -8,6 +8,7 @@
 
 - Updated jwlCore libs to v0.24.0
   - Fix problematic TagMap table merging
+  - Don't merge empty InputFields
   - Better exception handling/reporting
 
 ### Fixed
