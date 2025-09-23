@@ -415,10 +415,29 @@ class Window(QMainWindow, Ui_MainWindow):
                 translator[self.lang] = QTranslator()
                 translator[self.lang].load(f'{PROJECT_PATH}/res/locales/UI/qt_{self.lang}.qm')
             app.installTranslator(translator[self.lang])
+            try:
+                self.retranslate_viewer()
+            except:
+                pass
             app.processEvents()
             self.regroup(True)
         self.combo_grouping.blockSignals(False)
         self.combo_category.blockSignals(False)
+
+    def retranslate_viewer(self):
+        data = self.viewer_title_data
+        if self.viewer_state == 'viewer':
+            self.viewer_window.setWindowTitle(_('Data Viewer') + f': {data["filtered"]}/{data["total"]} ' + _('Notes'))
+        elif self.viewer_state == 'processing':
+            self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
+        elif self.viewer_state == 'editor':
+            self.viewer_window.setWindowTitle(_('Data Editor'))
+        self.viewer_window.txt_action.setToolTip(_('Download as text'))
+        self.viewer_window.discard_action.setText(_('Discard changes and close'))
+        self.viewer_window.confirm_action.setText(_('Confirm changes and close'))
+        self.viewer_window.return_action.setToolTip(_('Return'))
+        self.viewer_window.accept_action.setToolTip(_('Accept'))
+        self.viewer_window.filter_box.setPlaceholderText(_('Filter') + ' (Ctrl+F)')
 
     def change_title(self):
         changed = False
@@ -2533,6 +2552,7 @@ class Window(QMainWindow, Ui_MainWindow):
             update_editor_toolbar()
 
         def data_editor(counter):
+            self.viewer_state = 'editor'
             self.viewer_window.setWindowTitle(_('Data Editor'))
             self.note_item = self.viewer_items[counter]
             if self.note_item.meta:
@@ -2554,8 +2574,8 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.viewer_layout.setCurrentIndex(1)
 
         def update_viewer_toolbar():
-            self.viewer_window.discard_action.setText(_('Discard changes and close'))
-            self.viewer_window.confirm_action.setText(_('Confirm changes and close'))
+            self.viewer_window.discard_action.setText('')
+            self.viewer_window.confirm_action.setText('')
             self.viewer_window.confirm_action.setToolTip('✔')
             self.viewer_window.discard_action.setToolTip('✗')
             self.viewer_window.confirm_action.setEnabled(True)
@@ -2563,6 +2583,8 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def update_viewer_title():
             self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
+            self.viewer_state = 'viewer'
+            self.viewer_title_data = {'filtered': self.filtered, 'total': len(self.viewer_items) - len(self.deleted_list)}
 
         def delete_single_item(counter):
 
@@ -2809,6 +2831,7 @@ class Window(QMainWindow, Ui_MainWindow):
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
+            self.viewer_state = 'processing'
             for item in get_notes():
                 metadata = f"title: {clean_text(item['TITLE'])}\n"
                 metadata += f"date: {item['MODIFIED']}\n"
@@ -2892,6 +2915,7 @@ class Window(QMainWindow, Ui_MainWindow):
             counter = 1
             self.viewer_window.txt_action.setEnabled(False)
             self.viewer_window.setWindowTitle(_('Data Viewer') + ' — ' + _('Processing…'))
+            self.viewer_state = 'processing'
             for item in get_annotations():
                 metadata = f"publication: {item['PUB']} {item['ISSUE']}".strip()
                 metadata += f"\ndocument: {item['DOC']}\n"
@@ -2959,7 +2983,10 @@ class Window(QMainWindow, Ui_MainWindow):
             'purple': 6 }
         self.viewer_window = DataViewer(self.viewer_size, self.viewer_pos)
         connect_signals()
-        self.viewer_window.filter_box.setPlaceholderText(_('Filter')+' (Ctrl+F)')
+        self.viewer_window.filter_box.setPlaceholderText('')
+        self.viewer_state = 'viewer'
+        update_viewer_title()
+        self.retranslate_viewer()
         self.viewer_window.show()
         self.viewer_window.raise_()
         self.viewer_window.activateWindow()
