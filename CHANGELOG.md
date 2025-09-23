@@ -15,12 +15,12 @@ ____
 ### Changed
 
 - Updated jwlCore libs to v0.25.0
-  - *Always merge InputField, even when empty* (clearing target)
+  - **Always merge InputField, even when empty** (clearing target)
 - Adjusted Data Viewer filter box width
 
 ### Fixed
 
-- *Fixed various UI glitches*:
+- **Fixed various UI glitches**:
   - Fixed Annotations editing in Data Editor
   - Fixed application of color changes in Data Viewer
   - Retranslate Data Viewer on language change
