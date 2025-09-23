@@ -2614,19 +2614,22 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
 
         def filter_items():
-            for item in self.viewer_items.values():
-                if item in self.deleted_list:
-                    continue
-                if item.note_widget.isVisible():
-                    if (self.viewer_window.filter_box.text().lower() not in item.title.lower()) and (self.viewer_window.filter_box.text().lower() not in item.body.lower()):
-                        item.note_widget.setVisible(False)
-                        self.filtered -= 1
-                else:
-                    if (self.viewer_window.filter_box.text().lower() in item.title.lower()) or (self.viewer_window.filter_box.text().lower() in item.body.lower()):
-                        item.note_widget.setVisible(True)
-                        self.filtered += 1
-                app.processEvents()
-            update_viewer_title()
+            try:
+                for item in self.viewer_items.values():
+                    if item in self.deleted_list:
+                        continue
+                    if item.note_widget.isVisible():
+                        if (self.viewer_window.filter_box.text().lower() not in item.title.lower()) and (self.viewer_window.filter_box.text().lower() not in item.body.lower()):
+                            item.note_widget.setVisible(False)
+                            self.filtered -= 1
+                    else:
+                        if (self.viewer_window.filter_box.text().lower() in item.title.lower()) or (self.viewer_window.filter_box.text().lower() in item.body.lower()):
+                            item.note_widget.setVisible(True)
+                            self.filtered += 1
+                    app.processEvents()
+                update_viewer_title()
+            except:
+                pass
 
         def update_db():
 
