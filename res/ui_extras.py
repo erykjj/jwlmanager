@@ -413,7 +413,9 @@ class DataViewer(QDialog):
 
         self.filter_box = QLineEdit()
         self.filter_box.setClearButtonEnabled(True)
-        self.filter_box.setFixedWidth(225)
+        self.filter_box.setMinimumWidth(100)
+        self.filter_box.setMaximumWidth(225)
+        self.filter_box.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         shortcut = QShortcut(QKeySequence('Ctrl+F'), self)
         shortcut.activated.connect(self.filter_box.setFocus)
 
