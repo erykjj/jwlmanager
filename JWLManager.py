@@ -2504,12 +2504,15 @@ class Window(QMainWindow, Ui_MainWindow):
             self.color_modified = False
 
         def accept_change():
-            self.note_item.title = self.viewer_window.title.toPlainText().strip()
-            self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
+            if getattr(self.note_item, 'label', None) is not None: # Annotations
+                self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
+            else:  # Notes
+                self.note_item.title = self.viewer_window.title.toPlainText().strip()
+                self.note_item.body = self.viewer_window.body.toPlainText().rstrip()
+                color = self.viewer_window.title.property('note')
+                self.note_item.color = self.colors[color]
+                self.note_item.change_color()
             self.note_item.update_note()
-            color = self.viewer_window.title.property('note')
-            self.note_item.color = self.colors[color]
-            self.note_item.change_color()
             self.modified_list.append(self.note_item)
             update_viewer_toolbar()
             go_back()
