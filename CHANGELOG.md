@@ -6,6 +6,14 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [11.2.0] - 2025-09-23
+### Changed
+
 - Updated jwlCore libs to v0.25.0
   - *Always merge InputField, even when empty* (clearing target)
 - Adjusted Data Viewer filter box width
@@ -17,9 +25,6 @@
   - Fixed application of color changes in Data Viewer
   - Retranslate Data Viewer on language change
 
-### Removed
-
-____
 ## [11.1.0] - 2025-09-22
 ### Changed
 
@@ -1079,6 +1084,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.2.0
 [11.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.1.0
 [11.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.0.0
 [10.0.3]:https://github.com/erykjj/jwlmanager/releases/tag/v10.0.3
