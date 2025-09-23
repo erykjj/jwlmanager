@@ -615,15 +615,11 @@ class ViewerItem(QWidget):
             4: 'red',
             5: 'orange',
             6: 'purple' }
-        color = colors[self.color]
-        self.text_box.setProperty('note', color)
-        self.text_box.setStyleSheet(self.text_box.styleSheet())
-        self.separator.setProperty('note', color)
-        self.separator.setStyleSheet(self.separator.styleSheet())
-        self.delete_button.setProperty('note', color)
-        self.delete_button.setStyleSheet(self.delete_button.styleSheet())
-        self.edit_button.setProperty('note', color)
-        self.edit_button.setStyleSheet(self.edit_button.styleSheet())
-        if self.meta:
-            self.meta_box.setProperty('note', color)
-            self.meta_box.setStyleSheet(self.meta_box.styleSheet())
+        color = colors.get(self.color,'grey')
+        widgets = [self.text_box, self.separator, self.delete_button, self.edit_button]
+        if self.meta: widgets.append(self.meta_box)
+        for w in widgets:
+            w.setProperty('note',color)
+            w.style().unpolish(w)
+            w.style().polish(w)
+        self.setStyleSheet(f'QTextEdit[note="{color}"] {{background-color:{color};}} QFrame[note="{color}"] {{background-color:{color};}} QLabel[note="{color}"] {{color:{color};}} QPushButton[note="{color}"] {{background-color:{color};}}')
