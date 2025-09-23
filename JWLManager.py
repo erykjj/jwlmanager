@@ -331,7 +331,7 @@ class Window(QMainWindow, Ui_MainWindow):
                         data=full_text.encode('utf-8'),
                         headers={
                             'Title': 'JWLManager Crash Report',
-                            'Priority': 'high',
+                            'Priority': 'default',
                             'Tags': 'warning'
                         }
                     )
