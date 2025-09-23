@@ -11,6 +11,9 @@
 
 ### Fixed
 
+- Fixed Annotations editing in Data Editor
+- Fixed application of color changes in Data Viewer
+
 ### Removed
 
 ____
