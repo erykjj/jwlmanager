@@ -15,11 +15,7 @@ jobs:
     with:
       TAG:  ${{ github.ref_name }}
   windows:
-    uses: ./.github/workflows/build_win-amd64.yml
-    with:
-      TAG:  ${{ github.ref_name }}
-  winarm:
-    uses: ./.github/workflows/build_win-arm64.yml
+    uses: ./.github/workflows/build_win.yml
     with:
       TAG:  ${{ github.ref_name }}
   macos:
@@ -32,7 +28,7 @@ jobs:
       TAG:  ${{ github.ref_name }}
   release:
     name: Create Release Draft
-    needs: [linux, windows, winarm, macos, macold]
+    needs: [linux, windows, macos, macold]
     runs-on: ubuntu-latest
     outputs:
       changelog-section: ${{ steps.extract.outputs.changelog_section }}
