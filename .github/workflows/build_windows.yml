@@ -55,6 +55,7 @@ jobs:
       with:
         name: WindowsZIP
         path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
+
   winarm:
     name: Build Windows-arm64 EXE & ZIP
     runs-on: windows-latest

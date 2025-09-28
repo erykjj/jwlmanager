@@ -45,13 +45,12 @@ jobs:
         cd dist/
         xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-arm64.app.zip
-    - name: Upload APP
+    - name: Upload macOS-arm64 APP
       uses: actions/upload-artifact@v4
       with:
         name: MacAPP
         path: dist/JWLManager_${{ inputs.TAG }}-arm64.app.zip
 
-jobs:
   macold:
     name: Build macOS-x86_64 APP
     runs-on: macos-13 # Ventura
@@ -82,7 +81,7 @@ jobs:
         cd dist/
         xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-x86_64.app.zip
-    - name: Upload APP
+    - name: Upload macOS-x86_64 APP
       uses: actions/upload-artifact@v4
       with:
         name: MacAPP-old
