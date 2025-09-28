@@ -11,24 +11,20 @@ permissions:
 
 jobs:
   linux:
-    uses: ./.github/workflows/build_lin-x86_64.yml
+    uses: ./.github/workflows/build_linux.yml
     with:
       TAG:  ${{ github.ref_name }}
   windows:
-    uses: ./.github/workflows/build_win.yml
+    uses: ./.github/workflows/build_windows.yml
     with:
       TAG:  ${{ github.ref_name }}
   macos:
-    uses: ./.github/workflows/build_mac-arm64.yml
-    with:
-      TAG:  ${{ github.ref_name }}
-  macold:
-    uses: ./.github/workflows/build_mac-x86_64.yml
+    uses: ./.github/workflows/build_macOS.yml
     with:
       TAG:  ${{ github.ref_name }}
   release:
     name: Create Release Draft
-    needs: [linux, windows, macos, macold]
+    needs: [linux, windows, macos]
     runs-on: ubuntu-latest
     outputs:
       changelog-section: ${{ steps.extract.outputs.changelog_section }}

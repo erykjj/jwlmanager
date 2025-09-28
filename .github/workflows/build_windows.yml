@@ -16,7 +16,7 @@ on:
 
 jobs:
   windows:
-    name: Build Windows EXE & ZIP
+    name: Build Windows-amd64 EXE & ZIP
     runs-on: windows-latest
     permissions:
       contents: read
@@ -56,7 +56,7 @@ jobs:
         name: WindowsZIP
         path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
   winarm:
-    name: Build Windows-arm EXE & ZIP
+    name: Build Windows-arm64 EXE & ZIP
     runs-on: windows-latest
     permissions:
       contents: read

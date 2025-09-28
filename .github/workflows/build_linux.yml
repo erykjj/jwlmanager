@@ -16,7 +16,7 @@ on:
 
 jobs:
   linux:
-    name: Build Linux BIN
+    name: Build Linux x86_64 BIN
     runs-on: ubuntu-latest
     permissions:
       contents: read
