@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Include both amd64 and arm64 libs for Windows builds
+
 ### Fixed
 
 ### Removed
