@@ -14,9 +14,6 @@ on:
         required: true
         type: string
 
-permissions:
-  contents: read
-
 jobs:
   windows:
     name: Build Windows EXE & ZIP
