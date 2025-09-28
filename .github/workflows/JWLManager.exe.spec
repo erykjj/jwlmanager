@@ -5,23 +5,16 @@ from PyInstaller.utils.hooks import collect_data_files
 
 arch = platform.machine().lower()
 
-if arch in ('x86_64', 'amd64'):
-    sqlite_dll = '../../libs/sqlite3_64.dll'
-    core_dll   = '../../libs/jwlCore-amd64.dll'
-elif arch in ('aarch64', 'arm64'):
-    sqlite_dll = '../../libs/sqlite3_ARM.dll'
-    core_dll   = '../../libs/jwlCore-arm64.dll'
-else:
-    raise RuntimeError(f'Unsupported architecture: {arch}')
-
 block_cipher = None
 
 a = Analysis(
     ['../../JWLManager.py'],
     pathex=['.'],
     binaries=[
-        (core_dll, '.'),
-        (sqlite_dll, '.'),
+        ('../../libs/sqlite3_64.dll', '.'),
+        ('../../libs/jwlCore-amd64.dll', '.'),
+        ('../../libs/sqlite3_ARM.dll', '.'),
+        ('../../libs/jwlCore-arm64.dll', '.')
     ],
     datas=[('../../res', 'res/')],
     hiddenimports=['xlsx2csv'],
