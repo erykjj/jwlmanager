@@ -6,13 +6,16 @@
 
 ### Changed
 
-- Include both amd64 and arm64 libs for Windows builds
-
 ### Fixed
 
 ### Removed
 
 ____
+## [11.3.0] - 2025-09-28
+### Changed
+
+- Include both amd64 and arm64 libs for Windows builds
+
 ## [11.2.0] - 2025-09-23
 ### Changed
 
@@ -1086,6 +1089,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.0
 [11.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.2.0
 [11.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.1.0
 [11.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.0.0
