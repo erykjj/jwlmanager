@@ -5,6 +5,10 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   linux:
     uses: ./.github/workflows/build_lin-x86_64.yml
@@ -30,9 +34,6 @@ jobs:
     name: Create Release Draft
     needs: [linux, windows, winarm, macos, macold]
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
     outputs:
       changelog-section: ${{ steps.extract.outputs.changelog_section }}
     env:

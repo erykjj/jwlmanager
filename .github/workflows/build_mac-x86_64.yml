@@ -1,4 +1,4 @@
-name: 'Build macOS x86_64 v1.2.0'
+name: 'Build macOS x86_64 v1.3.0'
 
 on:
   workflow_call:
@@ -13,6 +13,9 @@ on:
         default: 'testing'
         required: true
         type: string
+
+permissions:
+  contents: read
 
 jobs:
   macold:
