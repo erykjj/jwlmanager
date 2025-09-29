@@ -22,48 +22,73 @@ jobs:
       contents: read
       actions: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v5
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r res/requirements.txt
-    - name: Build EXE with Nuitka
-      run: |
-        python -m pip install nuitka
-        python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-        mkdir dist
-        move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
-    - name: Build ZIP with Nuitka
-      run: |
-        python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-        cd dist
-        tar.exe -a -c -f ../dist/JWLManager_${{ inputs.TAG }}-amd64.zip .
-    # - name: Build EXE with Pyinstaller
-    #   run: |
-    #     python -m pip install pyinstaller
-    #     pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
-    #     cd dist
-    #     ren JWLManager.exe JWLManager_${{ inputs.TAG }}-amd64.exe
-    # - name: Build with Pyinstaller
-    #   run: |
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
-    #     cd dist
-    #     tar.exe -a -c -f JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager
-    - name: Upload EXE
-      uses: actions/upload-artifact@v4
-      with:
-        name: WindowsEXE
-        path: dist/JWLManager_${{ inputs.TAG }}-amd64.exe
-    - name: Upload ZIP
-      uses: actions/upload-artifact@v4
-      with:
-        name: WindowsZIP
-        path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Cache Nuitka
+        uses: actions/cache@v4
+        with:
+          path: .nuitka_cache
+          key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
+          restore-keys: |
+            ${{ runner.os }}-nuitka-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r res/requirements.txt
+          python -m pip install nuitka
+
+      - name: Build standalone
+        run: |
+          python -m nuitka --standalone ^
+            --windows-icon-from-ico=res/icons/JWLManager.ico ^
+            --include-data-dir=res=res ^
+            --user-package-configuration-file=.github/workflows/jwlCore.config ^
+            --include-module=xlsx2csv ^
+            --include-package-data=puremagic ^
+            --enable-plugin=pyside6 ^
+            --assume-yes-for-downloads ^
+            JWLManager.py
+
+      - name: Build onefile EXE from standalone
+        run: |
+          python -m nuitka --onefile ^
+            --remove-output ^
+            --standalone-dir=JWLManager.dist ^
+            JWLManager.py
+          mkdir dist
+          move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
+
+      - name: Build ZIP
+        run: |
+          mkdir dist
+          tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager.dist
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: WindowsEXE
+          path: dist/JWLManager_${{ inputs.TAG }}-amd64.exe
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WindowsZIP
+          path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
 
   winarm:
     name: Build Windows-arm64 EXE & ZIP
@@ -72,45 +97,70 @@ jobs:
       contents: read
       actions: write
     steps:
-    - name: Checkout
-      uses: actions/checkout@v5
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: '3.13'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install -r res/requirements-winarm.txt
-    - name: Build EXE with Nuitka
-      run: |
-        python -m pip install nuitka
-        python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-        mkdir dist
-        move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
-    - name: Build ZIP with Nuitka
-      run: |
-        python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-        cd JWLManager.dist
-        tar.exe -a -c -f ../dist/JWLManager_${{ inputs.TAG }}-arm64.zip .
-    # - name: Build EXE with Pyinstaller
-    #   run: |
-    #     python -m pip install pyinstaller
-    #     pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
-    #     cd dist
-    #     ren JWLManager.exe JWLManager_${{ inputs.TAG }}-arm64.exe
-    # - name: Build with Pyinstaller
-    #   run: |
-    #     pyinstaller --clean --noconfirm .github/workflows/JWLManager.zip.spec
-    #     cd dist
-    #     tar.exe -a -c -f JWLManager_${{ inputs.TAG }}-arm64.zip JWLManager
-    - name: Upload EXE
-      uses: actions/upload-artifact@v4
-      with:
-        name: WinarmEXE
-        path: dist/JWLManager_${{ inputs.TAG }}-arm64.exe
-    - name: Upload ZIP
-      uses: actions/upload-artifact@v4
-      with:
-        name: WinarmZIP
-        path: dist/JWLManager_${{ inputs.TAG }}-arm64.zip
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements-winarm.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Cache Nuitka
+        uses: actions/cache@v4
+        with:
+          path: .nuitka_cache
+          key: ${{ runner.os }}-nuitka-arm-${{ hashFiles('res/requirements-winarm.txt', 'JWLManager.py') }}
+          restore-keys: |
+            ${{ runner.os }}-nuitka-arm-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r res/requirements-winarm.txt
+          python -m pip install nuitka
+
+      - name: Build standalone
+        run: |
+          python -m nuitka --standalone ^
+            --windows-icon-from-ico=res/icons/JWLManager.ico ^
+            --include-data-dir=res=res ^
+            --user-package-configuration-file=.github/workflows/jwlCore.config ^
+            --include-module=xlsx2csv ^
+            --include-package-data=puremagic ^
+            --enable-plugin=pyside6 ^
+            --assume-yes-for-downloads ^
+            JWLManager.py
+
+      - name: Build onefile EXE from standalone
+        run: |
+          python -m nuitka --onefile ^
+            --remove-output ^
+            --standalone-dir=JWLManager.dist ^
+            JWLManager.py
+          mkdir dist
+          move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
+
+      - name: Build ZIP
+        run: |
+          mkdir dist
+          tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-arm64.zip JWLManager.dist
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: WinarmEXE
+          path: dist/JWLManager_${{ inputs.TAG }}-arm64.exe
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: WinarmZIP
+          path: dist/JWLManager_${{ inputs.TAG }}-arm64.zip
