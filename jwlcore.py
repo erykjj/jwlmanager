@@ -28,13 +28,12 @@ import ctypes, os, sys
 
 def _platform_lib_name(base="jwlCore"):
     sysname = sys.platform
-
     if sysname.startswith("linux"):
-        return f"lib{base}.so"
+        return f"lib{base}-x86_64.so"
     elif sysname == "darwin":
         return f"lib{base}.dylib"
     elif sysname == "win32":
-        return f"{base}.dll"
+        return f"{base}-amd64.dll"
     else:
         raise OSError(f"Unsupported platform: {sysname}")
 

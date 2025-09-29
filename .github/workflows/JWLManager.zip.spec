@@ -12,7 +12,7 @@ a = Analysis(
     pathex=[],
     binaries=[
         ('../../libs/sqlite3_64.dll', '.'),
-        ('../../libs/jwlCore.dll', '.')
+        ('../../libs/jwlCore-amd64.dll'.dll', '.')
     ],
     datas=[
         ('../../res', 'res/'),

@@ -36,7 +36,6 @@ jobs:
         python -m pip install --upgrade certifi==2025.4.26
     - name: Build EXE with Pyinstaller
       run: |
-        mv libs/jwlCore-amd64.dll libs/jwlCore.dll
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
@@ -78,7 +77,6 @@ jobs:
         python -m pip install --upgrade certifi==2025.4.26
     - name: Build EXE with Pyinstaller
       run: |
-        mv libs/jwlCore-amd64.dll libs/jwlCore.dll
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
