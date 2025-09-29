@@ -7,4 +7,4 @@ regex
 requests
 xlsx2csv
 XlsxWriter
-certifi
+certifi==2025.4.26
