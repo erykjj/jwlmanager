@@ -24,25 +24,17 @@
   SOFTWARE.
 """
 
-import ctypes, os, platform, sys
+import ctypes, os, sys
 
 def _platform_lib_name(base="jwlCore"):
-    arch = platform.machine().lower()
     sysname = sys.platform
 
-    if arch in ("x86_64", "amd64"):
-        arch = "x86_64" if not sysname.startswith("win") else "amd64"
-    elif arch in ("aarch64", "arm64"):
-        arch = "arm64"
-    else:
-        raise OSError(f"Unsupported architecture: {arch}")
-
     if sysname.startswith("linux"):
-        return f"lib{base}-{arch}.so"
+        return f"lib{base}.so"
     elif sysname == "darwin":
         return f"lib{base}.dylib"
     elif sysname == "win32":
-        return f"{base}-{arch}.dll"
+        return f"{base}.dll"
     else:
         raise OSError(f"Unsupported platform: {sysname}")
 
