@@ -1,4 +1,4 @@
-name: 'Build Linux x86_64 v1.3.0'
+name: 'Build Linux x86_64 v1.3.1'
 
 on:
   workflow_call:
@@ -37,6 +37,7 @@ jobs:
 
     - name: Build with Nuitka
       run: |
+        mv libs/libjwlCore-x86_64.so libs/libjwlCore.so
         python -m pip install nuitka==2.6.5
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist

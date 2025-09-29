@@ -1,4 +1,4 @@
-name: 'Build Windows v1.3.0'
+name: 'Build Windows v1.3.1'
 
 on:
   workflow_call:
@@ -36,6 +36,7 @@ jobs:
         python -m pip install --upgrade certifi==2025.4.26
     - name: Build EXE with Pyinstaller
       run: |
+        mv libs/jwlCore-amd64.dll libs/jwlCore.dll
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
@@ -77,6 +78,7 @@ jobs:
         python -m pip install --upgrade certifi==2025.4.26
     - name: Build EXE with Pyinstaller
       run: |
+        mv libs/jwlCore-amd64.dll libs/jwlCore.dll
         python -m pip install pyinstaller==5.13.2
         pyinstaller --noconfirm .github/workflows/JWLManager.exe.spec
         cd dist
