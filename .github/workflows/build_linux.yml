@@ -24,10 +24,28 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache Nuitka
+      uses: actions/cache@v4
+      with:
+        path: .nuitka_cache
+        key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
+        restore-keys: |
+          ${{ runner.os }}-nuitka-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -39,6 +57,7 @@ jobs:
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.bin dist/JWLManager_${{ inputs.TAG }}-x86_64
+
     - name: Upload BIN
       uses: actions/upload-artifact@v4
       with:
