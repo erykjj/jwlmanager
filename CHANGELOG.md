@@ -12,9 +12,9 @@
 
 ____
 ## [11.3.0] - 2025-09-28
-### Changed
+### Fixed
 
-- Include both amd64 and arm64 libs for Windows builds
+- Fix architecture issues with libs in Windows builds
 
 ## [11.2.0] - 2025-09-23
 ### Changed
