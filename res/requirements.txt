@@ -1,10 +1,10 @@
-PySide6==6.9.*
-shiboken6==6.9.*
-polars
+certifi==2025.4.26
 pillow
+polars
 puremagic
+PySide6==6.9.*
 regex
 requests
+shiboken6==6.9.*
 xlsx2csv
 XlsxWriter
-certifi==2025.4.26
