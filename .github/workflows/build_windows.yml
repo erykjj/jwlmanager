@@ -54,22 +54,11 @@ jobs:
 
       - name: Build standalone
         run: |
-          python -m nuitka --standalone ^
-            --windows-icon-from-ico=res/icons/JWLManager.ico ^
-            --include-data-dir=res=res ^
-            --user-package-configuration-file=.github/workflows/jwlCore.config ^
-            --include-module=xlsx2csv ^
-            --include-package-data=puremagic ^
-            --enable-plugin=pyside6 ^
-            --assume-yes-for-downloads ^
-            JWLManager.py
+          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
 
       - name: Build onefile EXE from standalone
         run: |
-          python -m nuitka --onefile ^
-            --remove-output ^
-            --standalone-dir=JWLManager.dist ^
-            JWLManager.py
+          python -m nuitka --onefile --remove-output --standalone-dir=JWLManager.dist JWLManager.py
           mkdir dist
           move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
 
@@ -129,22 +118,11 @@ jobs:
 
       - name: Build standalone
         run: |
-          python -m nuitka --standalone ^
-            --windows-icon-from-ico=res/icons/JWLManager.ico ^
-            --include-data-dir=res=res ^
-            --user-package-configuration-file=.github/workflows/jwlCore.config ^
-            --include-module=xlsx2csv ^
-            --include-package-data=puremagic ^
-            --enable-plugin=pyside6 ^
-            --assume-yes-for-downloads ^
-            JWLManager.py
+          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
 
       - name: Build onefile EXE from standalone
         run: |
-          python -m nuitka --onefile ^
-            --remove-output ^
-            --standalone-dir=JWLManager.dist ^
-            JWLManager.py
+          python -m nuitka --onefile --remove-output --standalone-dir=JWLManager.dist JWLManager.py
           mkdir dist
           move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
 
