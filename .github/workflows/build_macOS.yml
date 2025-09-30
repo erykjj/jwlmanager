@@ -24,25 +24,46 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache Nuitka
+      uses: actions/cache@v4
+      with:
+        path: .nuitka_cache
+        key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
+        restore-keys: |
+          ${{ runner.os }}-nuitka-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r res/requirements.txt
+
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka
         python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --macos-target-arch=arm64 --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.app dist/
+
     - name: Zip app
       run: |
         cd dist/
         xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-arm64.app.zip
+
     - name: Upload macOS-arm64 APP
       uses: actions/upload-artifact@v4
       with:
@@ -58,25 +79,46 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v5
+
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
         python-version: '3.13'
+
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Caches/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache Nuitka
+      uses: actions/cache@v4
+      with:
+        path: .nuitka_cache
+        key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
+        restore-keys: |
+          ${{ runner.os }}-nuitka-
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         python -m pip install -r res/requirements.txt
+
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka
         python -m nuitka --macos-create-app-bundle --macos-app-icon='res/icons/JWLManager.icns' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.app dist/
+
     - name: Zip app
       run: |
         cd dist/
         xattr -cr JWLManager.app
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-x86_64.app.zip
+
     - name: Upload macOS-x86_64 APP
       uses: actions/upload-artifact@v4
       with:
