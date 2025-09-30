@@ -51,10 +51,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r res/requirements.txt
           python -m pip install nuitka
-          Copy-Item -Path libs\jwlCore-amd64.dll -Destination . -Force
-          Copy-Item -Path libs\sqlite3_64.dll -Destination . -Force
 
-      - name: Build onefile EXE
+      - name: Build EXE
         run: |
           python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
           New-Item -ItemType Directory -Force -Path dist
@@ -117,10 +115,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r res/requirements-winarm.txt
           python -m pip install nuitka
-          Copy-Item -Path libs\jwlCore-amd64.dll -Destination . -Force
-          Copy-Item -Path libs\sqlite3_64.dll -Destination . -Force
 
-      - name: Build onefile EXE
+      - name: Build EXE
         run: |
           python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
           New-Item -ItemType Directory -Force -Path dist
