@@ -33,7 +33,7 @@ jobs:
       - name: Cache pip
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
+          path: C:\Users\runneradmin\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
@@ -41,7 +41,7 @@ jobs:
       - name: Cache Nuitka
         uses: actions/cache@v4
         with:
-          path: .nuitka_cache
+          path: C:\Users\runneradmin\.nuitka_cache
           key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
           restore-keys: |
             ${{ runner.os }}-nuitka-
@@ -99,7 +99,7 @@ jobs:
       - name: Cache pip
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
+          path: C:\Users\runneradmin\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements-winarm.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
@@ -107,7 +107,7 @@ jobs:
       - name: Cache Nuitka
         uses: actions/cache@v4
         with:
-          path: .nuitka_cache
+          path: C:\Users\runneradmin\.nuitka_cache
           key: ${{ runner.os }}-nuitka-arm-${{ hashFiles('res/requirements-winarm.txt', 'JWLManager.py') }}
           restore-keys: |
             ${{ runner.os }}-nuitka-arm-
