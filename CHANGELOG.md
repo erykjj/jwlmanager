@@ -15,6 +15,7 @@ ____
 ### Changed
 
 - Build Windows packages with Nuitka instead of PyInstaller
+  - Using Python 3.13
 
 ### Fixed
 
