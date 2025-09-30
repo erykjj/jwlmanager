@@ -51,19 +51,22 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r res/requirements.txt
           python -m pip install nuitka
+          Copy-Item -Path libs\jwlCore-amd64.dll -Destination . -Force
 
       - name: Build onefile EXE
         run: |
-          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-          mkdir dist
-          move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
+          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --include-data-file=jwlCore-amd64.dll=jwlCore-amd64.dll --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          New-Item -ItemType Directory -Force -Path dist
+          Move-Item JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
 
       - name: Build ZIP
         run: |
-          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-          mkdir JWLManager
+          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --include-data-file=jwlCore-amd64.dll=jwlCore-amd64.dll --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          New-Item -ItemType Directory -Force -Path dist
+          Remove-Item -Recurse -Force JWLManager -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path JWLManager
           xcopy /E /I JWLManager.dist\* JWLManager\
-          tar.exe -a -c -f ../dist/JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager
+          tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
@@ -113,19 +116,22 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --upgrade -r res/requirements-winarm.txt
           python -m pip install nuitka
+          Copy-Item -Path libs\jwlCore-amd64.dll -Destination . -Force
 
       - name: Build onefile EXE
         run: |
-          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=ress --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-          mkdir dist
-          move JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
+          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --include-data-file=jwlCore-amd64.dll=jwlCore-amd64.dll --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          New-Item -ItemType Directory -Force -Path dist
+          Move-Item JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
 
       - name: Build ZIP
         run: |
-          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
-          mkdir JWLManager
+          python -m nuitka --standalone --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --include-data-file=jwlCore-amd64.dll=jwlCore-amd64.dll --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          New-Item -ItemType Directory -Force -Path dist
+          Remove-Item -Recurse -Force JWLManager -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path JWLManager
           xcopy /E /I JWLManager.dist\* JWLManager\
-          tar.exe -a -c -f ../dist/JWLManager_${{ inputs.TAG }}-arm64.zip JWLManager
+          tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-arm64.zip JWLManager
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
