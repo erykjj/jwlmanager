@@ -12,6 +12,10 @@
 
 ____
 ## [11.3.0] - 2025-09-28
+### Changed
+
+- Build Windows packages with Nuitka instead of PyInstaller
+
 ### Fixed
 
 - Fix architecture issues with libs in Windows builds
