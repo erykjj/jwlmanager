@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [11.3.1] - 2025-19-08
+### Changed
+
+- Updated catalog to include new publications
+
 ## [11.3.0] - 2025-09-28
 ### Changed
 
@@ -1094,6 +1099,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.1
 [11.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.0
 [11.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.2.0
 [11.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.1.0
