@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.3.1'
+VERSION = 'v11.4.0'
 BETA = False
 
 
@@ -3694,9 +3694,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 PRAGMA journal_mode = 'OFF';
                 PRAGMA foreign_keys = 'OFF';
 
-                -- Delete empty InputField and Note records
+                -- Delete empty InputField and (un-tagged) Note records
                 DELETE FROM InputField WHERE COALESCE(Value, '') = '';
-                DELETE FROM Note WHERE COALESCE(Title, '') = '' AND COALESCE(Content, '') = '';
+                DELETE FROM Note WHERE COALESCE(Title, '') = '' AND COALESCE(Content, '') = '' AND NOT EXISTS (SELECT 1 FROM TagMap WHERE TagMap.NoteId = Note.NoteId);
 
                 -- Delete orphaned TagMap records
                 DELETE FROM TagMap WHERE
