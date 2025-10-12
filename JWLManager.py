@@ -3110,21 +3110,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 available_ids[table] = available[::-1]
             return available_ids
 
-        def get_available_pos():
-            available_pos = {}
-            for tag in con.execute(f"SELECT TagId FROM Tag WHERE Type = 1").fetchall():
-                tag_id = tag[0]
-                expected = 0
-                available = []
-                for row in con.execute(f"SELECT Position FROM TagMap WHERE TagId = ? ORDER BY Position", (tag_id,)).fetchall():
-                    current = int(row[0])
-                    while expected < current:
-                        available.append(expected)
-                        expected += 1
-                    expected = current + 1
-                available_pos[tag_id] = available
-            return available_pos
-
         def delete_tags(items, tags):
             deleted_notes = set()
             for note_id in items:
@@ -3143,7 +3128,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def add_tags(items, tags, deleted_notes):
             counter = 0
-            available_pos = get_available_pos()
             available_ids = get_available_ids()
             for note_id in items:
                 changed = note_id in deleted_notes
@@ -3160,10 +3144,7 @@ class Window(QMainWindow, Ui_MainWindow):
                                 con.execute('INSERT INTO Tag (TagId, Type, Name) VALUES (?, 1, ?);', (tag_id, name))
                             else:
                                 tag_id = con.execute('INSERT INTO Tag (Type, Name) VALUES (1, ?);', (name,)).lastrowid
-                    if available_pos.get(tag_id) and available_pos[tag_id]:
-                        pos = available_pos[tag_id].pop(0)
-                    else:
-                        pos = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
+                    pos = con.execute('SELECT ifnull(max(Position), -1) FROM TagMap WHERE TagId = ?;', (tag_id,)).fetchone()[0] + 1
                     if available_ids['TagMap']:
                         tagmap_id = available_ids['TagMap'].pop(0)
                         inserted = con.execute('INSERT OR IGNORE INTO TagMap (TagMapId, NoteId, TagId, Position) VALUES (?, ?, ?, ?);', (tagmap_id, note_id, tag_id, pos)).rowcount
@@ -3685,6 +3666,39 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def trim_db(self):
+
+        def reindex_tags():
+
+            # def make_table(table):
+            #     con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
+
+            # def update_table(table, field):
+            #     app.processEvents()
+            #     con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
+
+            # make_table('TagMap')
+            # update_table('TagMap', 'TagMapId')
+            # con.execute('DROP TABLE CrossReference;')
+
+            # make_table('Tag')
+            # update_table('Tag', 'TagId')
+            # update_table('TagMap', 'TagId')
+            # con.execute('DROP TABLE CrossReference;')
+
+            con.executescript("""
+                CREATE TABLE CrossReference (TagId INTEGER, Old INTEGER, New INTEGER);
+                INSERT INTO CrossReference (TagId, Old, New)
+                SELECT TagId, Position,
+                    ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1
+                FROM TagMap;
+                UPDATE TagMap
+                SET Position = (SELECT -New
+                                FROM CrossReference
+                                WHERE CrossReference.TagId = TagMap.TagId
+                                AND CrossReference.Old = TagMap.Position);
+                UPDATE TagMap SET Position = abs(Position);
+                DROP TABLE CrossReference;""")
+
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
@@ -3706,6 +3720,18 @@ class Window(QMainWindow, Ui_MainWindow):
                 -- Delete unused Tags
                 DELETE FROM Tag WHERE
                     TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
+
+                -- Reindex Tag positions
+                CREATE TABLE CrossReference (TagId INTEGER, Old INTEGER, New INTEGER);
+                INSERT INTO CrossReference (TagId, Old, New)
+                    SELECT TagId, Position, ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 FROM TagMap;
+                UPDATE TagMap
+                    SET Position = (SELECT -New
+                        FROM CrossReference
+                            WHERE CrossReference.TagId = TagMap.TagId
+                                AND CrossReference.Old = TagMap.Position);
+                UPDATE TagMap SET Position = abs(Position);
+                DROP TABLE CrossReference;
 
                 -- Delete orphaned UserMark and BlockRange records
                 DELETE FROM UserMark WHERE
@@ -3742,6 +3768,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 VACUUM;
                 """
             con.executescript(sql)
+            reindex_tags()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
