@@ -7,6 +7,7 @@
 ### Changed
 
 - Don't clean up (remove) empty *tagged* notes
+- Reindex tag positions
 
 ### Fixed
 
