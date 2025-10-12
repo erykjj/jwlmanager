@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Don't clean up (remove) empty *tagged* notes
+
 ### Fixed
 
 ### Removed
