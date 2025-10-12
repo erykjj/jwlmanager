@@ -6,6 +6,7 @@
 
 ### Changed
 
+- Updated jwlCore libs to v0.26.0
 - Don't clean up (remove) empty *tagged* notes
 - Reindex tag positions
 
