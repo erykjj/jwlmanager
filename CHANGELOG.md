@@ -6,16 +6,19 @@
 
 ### Changed
 
-- Updated jwlCore libs to v0.26.0
-- Don't clean up (remove) empty *tagged* notes
-- Reindex tag positions
-
 ### Fixed
 
 ### Removed
 
 ____
-## [11.3.1] - 2025-19-08
+## [11.4.0] - 2025-10-12
+### Changed
+
+- Updated jwlCore libs to v0.26.0
+- Don't clean up (remove) empty *tagged* notes
+- Reindex tag positions
+
+## [11.3.1] - 2025-10-08
 ### Changed
 
 - Updated catalog to include new publications
@@ -1103,6 +1106,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.0
 [11.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.1
 [11.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.0
 [11.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.2.0
