@@ -3666,39 +3666,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
 
     def trim_db(self):
-
-        def reindex_tags():
-
-            # def make_table(table):
-            #     con.executescript(f'CREATE TABLE CrossReference (Old INTEGER, New INTEGER PRIMARY KEY AUTOINCREMENT); INSERT INTO CrossReference (Old) SELECT {table}Id FROM {table} ORDER BY {table}Id;')
-
-            # def update_table(table, field):
-            #     app.processEvents()
-            #     con.executescript(f'UPDATE {table} SET {field} = (SELECT -New FROM CrossReference WHERE Old = {table}.{field}); UPDATE {table} SET {field} = abs({field});')
-
-            # make_table('TagMap')
-            # update_table('TagMap', 'TagMapId')
-            # con.execute('DROP TABLE CrossReference;')
-
-            # make_table('Tag')
-            # update_table('Tag', 'TagId')
-            # update_table('TagMap', 'TagId')
-            # con.execute('DROP TABLE CrossReference;')
-
-            con.executescript("""
-                CREATE TABLE CrossReference (TagId INTEGER, Old INTEGER, New INTEGER);
-                INSERT INTO CrossReference (TagId, Old, New)
-                SELECT TagId, Position,
-                    ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1
-                FROM TagMap;
-                UPDATE TagMap
-                SET Position = (SELECT -New
-                                FROM CrossReference
-                                WHERE CrossReference.TagId = TagMap.TagId
-                                AND CrossReference.Old = TagMap.Position);
-                UPDATE TagMap SET Position = abs(Position);
-                DROP TABLE CrossReference;""")
-
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
@@ -3768,7 +3735,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 VACUUM;
                 """
             con.executescript(sql)
-            reindex_tags()
             con.close()
         except Exception as ex:
             self.crash_box(ex)
