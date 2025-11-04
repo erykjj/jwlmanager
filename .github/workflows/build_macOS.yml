@@ -72,7 +72,7 @@ jobs:
 
   macold:
     name: Build macOS-x86_64 APP
-    runs-on: macos-13 # Ventura
+    runs-on: macos-15-intel
     permissions:
       contents: read
       actions: write
