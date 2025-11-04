@@ -15,7 +15,7 @@ ____
 ### Changed
 
 - Updated jwlCore libs to v0.27.0
-  - Fix for exceptions on empty Bookark title
+  - Fix for exceptions on empty Bookmark title
 
 ## [11.4.0] - 2025-10-12
 ### Changed
