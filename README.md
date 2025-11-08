@@ -94,7 +94,7 @@ ____
 
 Feel free to get in touch and post any [issues and/or suggestions](https://github.com/erykjj/jwlmanager/issues).
 
-My other *JW Library* projects: [**jwlFusion** (desktop)](https://github.com/erykjj/jwlFusion), [**jwlFusion** (Android)](https://github.com/erykjj/jwlFusion-app) & **jwlFission**](https://github.com/erykjj/jwlFission-app)
+My other *JW Library* projects: [**jwlFusion** (desktop)](https://github.com/erykjj/jwlFusion), [**jwlFusion** (Android)](https://github.com/erykjj/jwlFusion-app) & [**jwlFission**](https://github.com/erykjj/jwlFission-app)
 
 ____
 #### Footnotes:
