@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.4.1'
+VERSION = 'v11.5.0'
 BETA = False
 
 
@@ -2276,7 +2276,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_item():
                     con.execute('INSERT OR IGNORE INTO PlaylistItemAccuracy (Description) VALUES (?);', (pia_d,))
                     pia_piai = con.execute('SELECT PlaylistItemAccuracyId FROM PlaylistItemAccuracy WHERE Description = ?;', (pia_d,)).fetchone()[0]
-                    existing_id = con.execute('SELECT PlaylistItemId FROM PlaylistItem WHERE Label = ? AND ThumbnailFilePath = ?;', (pi_l, im_fp)).fetchone()
+                    existing_id = con.execute('SELECT PlaylistItemId FROM PlaylistItem WHERE Label = ? AND ThumbnailFilePath = ? AND PlaylistItemId IN (SELECT PlaylistItemId FROM TagMap JOIN Tag USING (TagId) WHERE Name = ?);', (pi_l, im_fp, playlist)).fetchone()
                     if existing_id:
                         pi_pii = existing_id[0]
                     else:
@@ -2354,7 +2354,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in impcon.execute(sql).fetchall():
                     pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
                     playlist = playlist_name if playlist_name else t_n
-                    if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ?;', (playlist, im_h)).fetchone():
+                    if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ? AND Tag.Name = ?;', (playlist, im_h, playlist)).fetchone():
                         continue
                     count += 1
                     if im_h in hashes:
