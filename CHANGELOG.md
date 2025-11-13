@@ -6,7 +6,11 @@
 
 ### Changed
 
+- Updated publications catalog
+
 ### Fixed
+
+- Fixed playlist import bug
 
 ### Removed
 
