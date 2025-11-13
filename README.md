@@ -98,7 +98,7 @@ My other *JW Library* projects: [**jwlFusion** (desktop)](https://github.com/ery
 
 ____
 #### Footnotes:
-[^#]: Requirements: Linux, MS Windows 10/11, macOS 13 "Ventura" and newer
+[^#]: Requirements: Linux, MS Windows 10/11, macOS 15 "Sequoia" and newer
 [^*]: Available: Deutsch, English, español, français, italiano, Polski, Português, Pусский, українська; help with translation to other languages also welcome: [Weblate](https://hosted.weblate.org/engage/jwlmanager/).
 [^1]: [JW Library](https://www.jw.org/en/online-help/jw-library/) is a registered trademark of *Watch Tower Bible and Tract Society of Pennsylvania*.
 [^2]: See [`/res/requirements.txt`](https://github.com/erykjj/jwlmanager/blob/master/res/requirements.txt).
