@@ -6,15 +6,20 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [11.5.0] - 2025-11-13
+### Changed
+
 - Updated publications catalog
 
 ### Fixed
 
 - Fixed playlist import bug
 
-### Removed
-
-____
 ## [11.4.1] - 2025-11-04
 ### Changed
 
@@ -1116,6 +1121,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.0
 [11.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.1
 [11.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.0
 [11.3.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.3.1
