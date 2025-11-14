@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Minor fix for reusing IDs when importing playlists
+
 ### Removed
 
 ____
