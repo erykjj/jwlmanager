@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.5.0'
+VERSION = 'v11.5.1'
 BETA = False
 
 
@@ -2276,7 +2276,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_item():
                     con.execute('INSERT OR IGNORE INTO PlaylistItemAccuracy (Description) VALUES (?);', (pia_d,))
                     pia_piai = con.execute('SELECT PlaylistItemAccuracyId FROM PlaylistItemAccuracy WHERE Description = ?;', (pia_d,)).fetchone()[0]
-                    existing_id = con.execute('SELECT PlaylistItemId FROM PlaylistItem WHERE Label = ? AND ThumbnailFilePath = ? AND PlaylistItemId IN (SELECT PlaylistItemId FROM TagMap JOIN Tag USING (TagId) WHERE Name = ?);', (pi_l, im_fp, playlist)).fetchone()
+                    existing_id = con.execute('SELECT pi.PlaylistItemId FROM PlaylistItem pi JOIN TagMap tm ON pi.PlaylistItemId = tm.PlaylistItemId JOIN Tag t ON tm.TagId = t.TagId WHERE pi.Label = ? AND pi.ThumbnailFilePath = ? AND t.Name = ?;', (pi_l, im_fp, playlist)).fetchone()
                     if existing_id:
                         pi_pii = existing_id[0]
                     else:
