@@ -8,11 +8,15 @@
 
 ### Fixed
 
-- Minor fix for reusing IDs when importing playlists
-
 ### Removed
 
 ____
+## [11.5.1] - 2025-11-15
+### Fixed
+
+- Minor fix for reusing IDs when importing playlists
+- Fixed another typo bug in playlist import
+
 ## [11.5.0] - 2025-11-13
 ### Changed
 
@@ -1123,6 +1127,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.1
 [11.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.0
 [11.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.1
 [11.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.0
