@@ -2308,7 +2308,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 def add_markers():
                     if not pim_stt:
                         return
-                    existing_id = con.execute('SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (pi_pii)).fetchone()
+                    existing_id = con.execute('SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId = ?;', (pi_pii,)).fetchone()
                     if existing_id:
                         pim_pimi = existing_id[0]
                     else:
