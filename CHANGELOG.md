@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed Data Viewer toolbar button hiding
+
 ### Removed
 
 ____

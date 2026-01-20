@@ -2533,7 +2533,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.note_item.change_color()
             self.note_item.update_note()
             self.modified_list.append(self.note_item)
-            update_viewer_toolbar()
+            self.viewer_window.show_buttons()
             go_back()
 
         def apply_color(color):
@@ -2573,14 +2573,6 @@ class Window(QMainWindow, Ui_MainWindow):
             app.processEvents()
             self.viewer_window.viewer_layout.setCurrentIndex(1)
 
-        def update_viewer_toolbar():
-            self.viewer_window.discard_action.setText('')
-            self.viewer_window.confirm_action.setText('')
-            self.viewer_window.confirm_action.setToolTip('✔')
-            self.viewer_window.discard_action.setToolTip('✗')
-            self.viewer_window.confirm_action.setEnabled(True)
-            self.viewer_window.discard_action.setEnabled(True)
-
         def update_viewer_title():
             self.viewer_window.setWindowTitle(_('Data Viewer') + f': {self.filtered}/{len(self.viewer_items) - len(self.deleted_list)} {self.combo_category.currentText()}')
             self.viewer_state = 'viewer'
@@ -2606,11 +2598,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 elif index == idx:
                     item.hide()
                 else:
-                    row, col, tmp, tmp  = self.viewer_window.grid_layout.getItemPosition(index)
+                    row, col, _, _  = self.viewer_window.grid_layout.getItemPosition(index)
                     row, col = return_previous(row, col)
                     self.viewer_window.grid_layout.addWidget(item, row, col)
             update_viewer_title()
-            update_viewer_toolbar()
+            self.viewer_window.show_buttons()
             app.processEvents()
 
         def filter_items():
