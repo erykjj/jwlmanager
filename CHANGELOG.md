@@ -8,11 +8,18 @@
 
 ### Fixed
 
-- Fixed Data Viewer toolbar button hiding
-
 ### Removed
 
 ____
+## [11.6.0] - 2026-01-19
+### Changed
+
+- Updated resources
+
+### Fixed
+
+- Fixed Data Viewer toolbar button hiding
+
 ## [11.5.1] - 2025-11-15
 ### Fixed
 
@@ -1129,6 +1136,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[11.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.6.0
 [11.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.1
 [11.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.0
 [11.4.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.4.1
