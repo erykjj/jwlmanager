@@ -30,7 +30,7 @@ from datetime import datetime
 
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QKeySequence, QPainter, QPixmap, QShortcut
-from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QDialog, QDialogButtonBox, QFrame, QGridLayout, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QStackedLayout, QTextEdit, QTreeWidget, QToolBar, QToolButton, QVBoxLayout, QWidget, QWidgetAction
 
 _base_path = path.dirname(__file__)
 
@@ -398,14 +398,20 @@ class DataViewer(QDialog):
         discard_button = QToolButton()
         discard_button.setProperty('class', 'discard')
         self.discard_action = QAction()
-        self.discard_action.setDisabled(True)
+        self.discard_action.setToolTip('✗')
         discard_button.setDefaultAction(self.discard_action)
+        self.discard_widget_action = QWidgetAction(self)
+        self.discard_widget_action.setDisabled(True)
+        self.discard_widget_action.setDefaultWidget(discard_button)
 
         confirm_button = QToolButton()
         confirm_button.setProperty('class', 'confirm')
         self.confirm_action = QAction()
-        self.confirm_action.setDisabled(True)
+        self.confirm_action.setToolTip('✔')
         confirm_button.setDefaultAction(self.confirm_action)
+        self.confirm_widget_action = QWidgetAction(self)
+        self.confirm_widget_action.setDisabled(True)
+        self.confirm_widget_action.setDefaultWidget(confirm_button)
 
         spacer = QWidget()
         spacer.setFixedHeight(1)
@@ -422,8 +428,10 @@ class DataViewer(QDialog):
         toolbar = QToolBar(viewer)
         toolbar.setFixedHeight(30)
         toolbar.addWidget(txt_button)
-        toolbar.addWidget(discard_button)
-        toolbar.addWidget(confirm_button)
+        toolbar.addAction(self.discard_widget_action)
+        toolbar.addAction(self.confirm_widget_action)
+        self.confirm_widget_action.setVisible(False)
+        self.discard_widget_action.setVisible(False)
         toolbar.addWidget(spacer)
         toolbar.addWidget(self.filter_box)
 
@@ -520,6 +528,11 @@ class DataViewer(QDialog):
         if e.key() == Qt.Key_Escape:
             self.escape_pressed.emit()
 
+    def show_buttons(self):
+        self.confirm_widget_action.setEnabled(True)
+        self.discard_widget_action.setEnabled(True)
+        self.confirm_widget_action.setVisible(True)
+        self.discard_widget_action.setVisible(True)
 
 class ViewerItem(QWidget):
     def __init__(self, parent, idx, color, title, body, meta, metadata, independent):
