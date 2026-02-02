@@ -3,7 +3,7 @@
 """
   JWLManager module with Qt classes for UI components
 
-  MIT License:  Copyright (c) 2025 Eryk J.
+  MIT License:  Copyright (c) 2026 Eryk J.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -630,11 +630,11 @@ class ViewerItem(QWidget):
             4: 'red',
             5: 'orange',
             6: 'purple' }
-        color = colors.get(self.color,'grey')
+        color = colors.get(self.color, 'grey')
         widgets = [self.text_box, self.separator, self.delete_button, self.edit_button]
         if self.meta: widgets.append(self.meta_box)
         for w in widgets:
-            w.setProperty('note',color)
+            w.setProperty('note', color)
             w.style().unpolish(w)
             w.style().polish(w)
         self.setStyleSheet(f'QTextEdit[note="{color}"] {{background-color:{color};}} QFrame[note="{color}"] {{background-color:{color};}} QLabel[note="{color}"] {{color:{color};}} QPushButton[note="{color}"] {{background-color:{color};}}')

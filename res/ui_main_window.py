@@ -178,6 +178,7 @@ class Ui_MainWindow(object):
         self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
         self.combo_grouping.addItem("")
+        self.combo_grouping.addItem("")
         self.combo_grouping.setObjectName(u"combo_grouping")
         self.combo_grouping.setEnabled(False)
         self.combo_grouping.setGeometry(QRect(320, 30, 190, 28))
@@ -490,6 +491,7 @@ class Ui_MainWindow(object):
         self.combo_grouping.setItemText(3, QCoreApplication.translate("MainWindow", u"Year", None))
         self.combo_grouping.setItemText(4, QCoreApplication.translate("MainWindow", u"Tag", None))
         self.combo_grouping.setItemText(5, QCoreApplication.translate("MainWindow", u"Color", None))
+        self.combo_grouping.setItemText(6, QCoreApplication.translate("MainWindow", u"Duplicates", None))
 
         self.combo_grouping.setToolTip("")
         self.total.setText("")

@@ -26,16 +26,16 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.6.0'
-BETA = False
+VERSION = 'v12.0.0'
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, TagDialog, ThemeManager, ViewerItem
 
-from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
+from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer, QTranslator
 from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout,QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -47,6 +47,7 @@ from PIL import Image
 from platform import platform
 from random import randint
 from tempfile import mkdtemp
+from textwrap import dedent
 from time import time
 from traceback import format_exception
 from xlsxwriter import Workbook
@@ -113,7 +114,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = 0
             self.modified = False
             self.loaded = False
-            self.title_format = settings.value('JWLManager/title','short')
+            self.title_format = settings.value('JWLManager/title', 'short')
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
@@ -128,6 +129,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item.setVisible(False)
                 if item.toolTip() == self.lang:
                     item.setChecked(True)
+            self.dupes = False
             self.current_data = []
             self.tree_cache = {}
 
@@ -512,7 +514,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_color.setVisible(col)
             self.button_tag.setVisible(tag)
 
-            for item in range(6):
+            for item in range(7):
                 self.combo_grouping.model().item(item).setEnabled(True)
             for item in lst:
                 self.combo_grouping.model().item(item).setEnabled(False)
@@ -532,16 +534,16 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Highlights'):
             if new:
                 self.combo_grouping.setCurrentText(_('Type'))
-            disable_options([4], False, True, True, False, True, False)
+            disable_options([4,6], False, True, True, False, True, False)
         elif selection == _('Bookmarks'):
-            disable_options([4,5], False, True, True, False, False, False)
+            disable_options([4,5,6], False, True, True, False, False, False)
         elif selection == _('Annotations'):
-            disable_options([2,4,5], False, True, True, True, False, False)
+            disable_options([2,4,5,6], False, True, True, True, False, False)
         elif selection == _('Favorites'):
-            disable_options([4,5], True, True, True, False, False, False)
+            disable_options([4,5,6], True, True, True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], True, True, True, False, False, False)
+            disable_options([1,2,3,4,5,6], True, True, True, False, False, False)
         self.regroup(new_data)
         self.combo_grouping.blockSignals(False)
 
@@ -701,9 +703,53 @@ class Window(QMainWindow, Ui_MainWindow):
                 return pl.DataFrame(lst, schema=schema, orient='row' )
 
             lst = []
-            for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
+            if self.dupes:
+                dupes = dedent('''WITH duplicate_notes AS (
+                    WITH
+                        title_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType,
+                                        Title) AS cnt
+                                    FROM Note
+                                    WHERE Title IS NOT NULL AND
+                                        Title != '')
+                            WHERE cnt > 1),
+                        content_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType,
+                                        Content) AS cnt
+                                    FROM Note
+                                    WHERE Content IS NOT NULL AND
+                                        Content != '')
+                            WHERE cnt > 1),
+                        empty_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType) AS cnt
+                                    FROM Note
+                                    WHERE (Title IS NULL OR
+                                        Title = '') AND
+                                        (Content IS NULL OR
+                                        Content = ''))
+                            WHERE cnt > 1)
+                    SELECT NoteId FROM title_dupes
+                    UNION SELECT NoteId FROM content_dupes
+                    UNION SELECT NoteId FROM empty_dupes)''')
+                where = 'WHERE n.LocationId IS NOT NULL AND n.NoteId IN (SELECT NoteId FROM duplicate_notes)'
+            else:
+                dupes = ''
+                where = ''
+            sql = f"{dupes} SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n {where} GROUP BY n.NoteId;"
+            for row in con.execute(sql).fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
-
                 code, year = process_code(row[2], row[3])
                 detail1, year, detail2 = process_detail(row[2], row[4], row[5], row[3], year)
                 col = process_color(row[6] or 0)
@@ -712,8 +758,11 @@ class Window(QMainWindow, Ui_MainWindow):
             schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
             notes = pl.DataFrame(lst, schema=schema, orient='row')
             notes = merge_df(notes)
-            i_notes = load_independent()
-            self.current_data = pl.concat([i_notes, notes])
+            if not self.dupes:
+                i_notes = load_independent()
+                self.current_data = pl.concat([i_notes, notes])
+            else:
+                self.current_data = notes
 
         def get_playlists():
             lst = []
@@ -848,11 +897,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 title = 'Full'
             self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
             self.tree_cache[cat][grp]['data'] = self.current_data
-
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
             views = define_views(category)
-
             if 'tree' in self.tree_cache[cat][grp]:
                 tree = self.tree_cache[cat][grp]['tree']
                 rebuild_cached(tree, self.treeWidget)
@@ -874,6 +921,11 @@ class Window(QMainWindow, Ui_MainWindow):
         grouping = self.combo_grouping.currentText()
         cat = self.combo_category.currentIndex()
         grp = self.combo_grouping.currentIndex()
+        if grp == 6:
+            self.dupes = True
+            grouping = _('Title')
+        else:
+            self.dupes = False
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
         code_jwb = regex.compile(r'jwb-\d+$')
         try:
@@ -921,7 +973,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 os.remove(f)
         except:
             pass
-        with ZipFile(PROJECT_PATH / 'res/blank','r') as zipped:
+        with ZipFile(PROJECT_PATH / 'res/blank', 'r') as zipped:
             zipped.extractall(TMP_PATH)
         self.manifest = {
             'name': APP,
@@ -955,7 +1007,7 @@ class Window(QMainWindow, Ui_MainWindow):
         return False
 
     def merge_file(self):
-        fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+        fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir), _('JW Library archives')+' (*.jwlibrary)')
         if not fname[0]:
             return False
         self.merge_items(fname[0])
@@ -964,7 +1016,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.modified:
             self.check_save()
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir), _('JW Library archives')+' (*.jwlibrary)')
             if not fname[0]:
                 return False
             archive = fname[0]
@@ -981,7 +1033,7 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         try:
-            with ZipFile(archive,'r') as zipped:
+            with ZipFile(archive, 'r') as zipped:
                 zipped.extractall(TMP_PATH)
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 self.manifest = json.load(json_file)
@@ -1582,7 +1634,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return item_list
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
-            with ZipFile(PROJECT_PATH / 'res/blank_playlist','r') as zipped:
+            with ZipFile(PROJECT_PATH / 'res/blank_playlist', 'r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
@@ -1742,7 +1794,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.format = 'xlsx'
                 required_columns = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 try:
-                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                    df = pl.read_excel(engine='xlsx2csv', source=file, columns=required_columns)
                 except:
                     QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
                     return 0
@@ -2228,7 +2280,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.format = 'xlsx'
                 required_columns = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE']
                 try:
-                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                    df = pl.read_excel(engine='xlsx2csv', source=file, columns=required_columns)
                 except:
                     QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
                     return 0
@@ -2460,7 +2512,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.progress_dialog = init_progress()
             progress_cb = CALLBACKTYPE(py_progress)
             lib.setProgressCallback(progress_cb)
-            with ZipFile(file,'r') as zipped:
+            with ZipFile(file, 'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
             res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge')
             if res != 0:
@@ -3552,7 +3604,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def obscure_items(self):
 
         def obscure_text(str):
-            lst = list(words[randint(0,len(words)-1)])
+            lst = list(words[randint(0, len(words)-1)])
             l = len(lst)
             i = 0
             s = ''

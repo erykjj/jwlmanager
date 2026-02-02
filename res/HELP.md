@@ -1,6 +1,6 @@
 ## Operation
 ######
-Open a `.jwlibrary` backup archive to see the Annotations (the editable "comment" text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag.
+Open a `.jwlibrary` backup archive to see the Annotations (the editable "comment" text fields in some of the publications), Bookmarks, Favorites, Highlights, Notes and Playlists (**Category**) that are stored within it. These will be organized in a tree view, which can be grouped (**Grouping**) by either title, type, language, and (depending on what you are currently viewing) you may also have the option to group by year, color or tag. For Notes, there is also a special grouping that shows duplicate notes — same title/different non-empty content or same content/different title — at the same location.
 ######
 If you **drag-and-drop** (or double-click) an archive into the app when another archive is already opened, you will have the option to "Open" it (replacing the current one) or "Merge". If you choose to **merge**, *all* the records (Annotations, Bookmarks, Highlights, Notes and Playlists) from this second archive will be added to the already opened one, *over-writing* any that may be the same (eg., a note with the same ID). Keep in mind that by merging *you don't have any control* over which records to import. Also, *merging is always "additive"*: for example, if you deleted a note in the original archive and import another that still has that note, the note will be restored; or, if you deleted it in the archive you are merging but it still exists in the original archive, it will remain. Thus, it is preferable to export the items you want from the second archive and import them into the first in two steps (using the `Export` and `Import` buttons).
 ######
@@ -19,17 +19,17 @@ Clicking on the column headers allows for **sorting** the tree; clicking the sam
 ######
 The ***View*** menu has some additional options (also accessible directly via the key combination shortcut):
 ######
-* **Theme (`Ctrl+T`)** - toggle between light and dark mode
-* **Expand All (`Ctrl+E`)** - expand the tree to make all levels visible
+* **Theme (`Ctrl+T`)** — toggle between light and dark mode
+* **Expand All (`Ctrl+E`)** — expand the tree to make all levels visible
   * Note: **double-clicking** on an entry will expand (or collapse) all its sub-levels
-* **Collapse All (`Ctrl+C`)** - collapse all levels
-* **Select All (`Ctrl+A`)** - a quick way to select all entries
+* **Collapse All (`Ctrl+C`)** — collapse all levels
+* **Select All (`Ctrl+A`)** — a quick way to select all entries
   * Note: **right-clicking** on an entry will check/uncheck it and all its sub-levels
-* **Unselect All (`Ctrl+Z`)** - unselect everything
-* **Title View** - change how publication titles are displayed
-  * **Code** - publication code
-  * **Short** - abbreviated title
-  * **Full** - complete title
+* **Unselect All (`Ctrl+Z`)** — unselect everything
+* **Title View** — change how publication titles are displayed
+  * **Code** — publication code
+  * **Short** — abbreviated title
+  * **Full** — complete title
 ######
 If you modify an archive and intend to use the results to re-import into JW Library, make sure to **save** it (with a new name). **KEEP A BACKUP** of your original `.jwlibrary` archive in case you need to restore.
 #####
@@ -61,15 +61,15 @@ Select the Category and the item(s) you wish to eliminate from the database. For
 ######
 ### Export
 ######
-**Notes** and **Annotations** from selected publications can be exported to an MS Excel spreadsheet or a custom text file - either one of which you can edit (add, delete or modify items) and later import into your archive (or share with someone else).
+**Notes** and **Annotations** from selected publications can be exported to an MS Excel spreadsheet or a custom text file — either one of which you can edit (add, delete or modify items) and later import into your archive (or share with someone else).
 ######
 They can also be exported (but not imported) as separate markdown files (with a meta-data header listing the properties of each one) organized in a hierarchical directory tree. The `document` property (in the case of Bible notes this is the book-chapter-verse code; for other publications, it's the article document id) will be enclosed in [[double brackets]] to allow cross-linking the notes in some markdown viewers. If you want to have either the `color` or the `language` also cross-linked this way, swich to the corresponding **Grouping** before performing the export.
 ######
-Annotations are language-agnostic - they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format.
+Annotations are language-agnostic — they show up in different language versions of the *same* publication. The `Link`s to wol.jw.org in the generated MS Excel file are for convenience only; they are not re-imported. The same goes for the `Reference` column, which is the Bible reference in BBCCCVVV format.
 ######
 Items from differente **Playlists** can be exported to a `.jwlplaylist` archive containing one playlist (with the name of the archive) which can be imported as a playlist.
 ######
-Exporting of **Bookmarks** and **Highlights** is also possible - not so much with a view of direct editing, but for sharing/merging into another archive.
+Exporting of **Bookmarks** and **Highlights** is also possible — not so much with a view of direct editing, but for sharing/merging into another archive.
 #####
 ######
 ### Import
@@ -88,68 +88,68 @@ Attribute key and value pairs must be placed within `{}`. The keys correspond to
 ######
 ##### Attributes for all notes (including "independent" ones)
   - **CREATED**
-    - date note was created (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) - optional
+    - date note was created (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) — optional
     - if not provided and note is being updated, its current value will be used; otherwise, modified date if available; if not, the date and time of import is used
     - eg. `{CREATED=2018-12-10}`
   - **MODIFIED**
-    - date note was modified (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) - optional
+    - date note was modified (yyyy-mm-dd or yyyy-mm-ddTHH:MM:SS) — optional
     - if not provided, the date and time of import is used
     - eg. `{MODIFIED=2019-12-10T22:15:00}`
   - **TAGS**
-    - tags (separated by "|") - optional
+    - tags (separated by "|") — optional
     - if not provided, no tag is added; if a note is replacing/updating another, its tags will be updated or removed
     - eg. `{TAGS=Ministerio|Personal}`
 ######
 ##### Attributes for notes attached to any publication
   - **COLOR**
-    - note color (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) - optional (will be 0 = grey if not provided)
+    - note color (0 = grey; 1 = yellow; 2 = green; 3 = blue; 4 = red; 5 = orange; 6 = purple) — optional (will be 0 = grey if not provided)
     - eg. `{COLOR=2}`
   - **RANGE**
-    - one or more consecutive ranges to highlight, separated by semicolons - optional
+    - one or more consecutive ranges to highlight, separated by semicolons — optional
     - format: block identifier number (paragraph/verse) followed by 0-based index of the tokens ("words") to highlight
     - if not provided, note will be attached to start of verse/paragraph (no highlighting)
     - if no COLOR is provided (or `{COLOR=0}`), token range will be ingnored
     - eg. `{RANGE=1:4-11}`, `{RANGE=11:20-35;12:0-12}`
   - **LANG**
-    - language (for Bible and publications notes) - optional (will be 0 = English if not provided)
+    - language (for Bible and publications notes) — optional (will be 0 = English if not provided)
     - eg. `{LANG=1}`
   - **PUB**
-    - publication symbol - **required** for notes attached to any publication or Bible
+    - publication symbol — **required** for notes attached to any publication or Bible
     - if not provided, note will be considered "independent" and attributes listed below will be ignored
     - eg. `{PUB=nwtsty}`
   - **HEADING**
-    - specifies the heading/chapter title where note is placed (or Bible book and chapter) - optional
+    - specifies the heading/chapter title where note is placed (or Bible book and chapter) — optional
     - this is included mostly for convenience; it may be blank
     - eg. `{HEADING=Genesis 1}`
 ######
 ##### Attributes for Bible notes
   - **BK**
-    - Bible book number (1-66) - **required**
+    - Bible book number (1-66) — **required**
     - eg. `{BK=1}`
   - **CH**
-    - chapter number - **required**
+    - chapter number — **required**
     - for books with just one chapter, use 1
     - eg. `{CH=45}`
   - **VS**
-    - verse number - **required** (see exceptions below)
+    - verse number — **required** (see exceptions below)
     - eg. `{VS=6}`
     - **special cases**:
-      - `{VS=0}` - for Psalm headings
-      - attribute omitted - for note at top of chapter
-      - attribute omitted *and* `{BLOCK=1}` - for note attached to Bible book title (before verse 1)
+      - `{VS=0}` — for Psalm headings
+      - attribute omitted — for note at top of chapter
+      - attribute omitted *and* `{BLOCK=1}` — for note attached to Bible book title (before verse 1)
 ######
 ##### Attributes for publication notes:
   - **ISSUE**
-    - issue (yyyymm00 or yyyymm01 or yyyymm15 ) - **required** for periodical publications
+    - issue (yyyymm00 or yyyymm01 or yyyymm15 ) — **required** for periodical publications
     - eg. `{ISSUE=20110400}`
   - **DOC**
-    - document - **required**
+    - document — **required**
     - eg. `{DOC=202011126}`
   - **BLOCK**
     - "paragraph" block
     - eg. `{BLOCK=6}`
     - **special cases**:
-      - attribute omitted - for note at top of document
+      - attribute omitted — for note at top of document
 ######
 ##### Observations:
   - Independent notes are compared by title and content. If two notes are imported that are equal in those two fields, only one will be imported. This helps eliminating duplicates.
