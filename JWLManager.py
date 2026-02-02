@@ -129,6 +129,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     item.setVisible(False)
                 if item.toolTip() == self.lang:
                     item.setChecked(True)
+            self.dupes = False
             self.current_data = []
             self.tree_cache = {}
 
@@ -513,7 +514,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.button_color.setVisible(col)
             self.button_tag.setVisible(tag)
 
-            for item in range(6):
+            for item in range(7):
                 self.combo_grouping.model().item(item).setEnabled(True)
             for item in lst:
                 self.combo_grouping.model().item(item).setEnabled(False)
@@ -533,16 +534,16 @@ class Window(QMainWindow, Ui_MainWindow):
         elif selection == _('Highlights'):
             if new:
                 self.combo_grouping.setCurrentText(_('Type'))
-            disable_options([4], False, True, True, False, True, False)
+            disable_options([4,6], False, True, True, False, True, False)
         elif selection == _('Bookmarks'):
-            disable_options([4,5], False, True, True, False, False, False)
+            disable_options([4,5,6], False, True, True, False, False, False)
         elif selection == _('Annotations'):
-            disable_options([2,4,5], False, True, True, True, False, False)
+            disable_options([2,4,5,6], False, True, True, True, False, False)
         elif selection == _('Favorites'):
-            disable_options([4,5], True, True, True, False, False, False)
+            disable_options([4,5,6], True, True, True, False, False, False)
         elif selection == _('Playlists'):
             self.combo_grouping.setCurrentText(_('Title'))
-            disable_options([1,2,3,4,5], True, True, True, False, False, False)
+            disable_options([1,2,3,4,5,6], True, True, True, False, False, False)
         self.regroup(new_data)
         self.combo_grouping.blockSignals(False)
 
@@ -702,8 +703,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return pl.DataFrame(lst, schema=schema, orient='row' )
 
             lst = []
-            only_dupes = True
-            if only_dupes:
+            if self.dupes:
                 dupes = dedent('''WITH duplicate_notes AS (
                     WITH
                         title_dupes AS (
@@ -759,7 +759,7 @@ class Window(QMainWindow, Ui_MainWindow):
             schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
             notes = pl.DataFrame(lst, schema=schema, orient='row')
             notes = merge_df(notes)
-            if not only_dupes:
+            if not self.dupes:
                 i_notes = load_independent()
                 self.current_data = pl.concat([i_notes, notes])
             else:
@@ -924,6 +924,11 @@ class Window(QMainWindow, Ui_MainWindow):
         grouping = self.combo_grouping.currentText()
         cat = self.combo_category.currentIndex()
         grp = self.combo_grouping.currentIndex()
+        if grp == 6: # Duplicates
+            self.dupes = True
+            grouping = _('Title')
+        else:
+            self.dupes = False
         code_yr = regex.compile(r'(.*?[^\d-])(\d{2}$)')
         code_jwb = regex.compile(r'jwb-\d+$')
         try:
