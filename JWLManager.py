@@ -750,7 +750,6 @@ class Window(QMainWindow, Ui_MainWindow):
             sql = f"{dupes} SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n {where} GROUP BY n.NoteId;"
             for row in con.execute(sql).fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
-
                 code, year = process_code(row[2], row[3])
                 detail1, year, detail2 = process_detail(row[2], row[4], row[5], row[3], year)
                 col = process_color(row[6] or 0)
@@ -898,11 +897,9 @@ class Window(QMainWindow, Ui_MainWindow):
                 title = 'Full'
             self.current_data = self.current_data.with_columns(pl.col(title).alias('Title'))
             self.tree_cache[cat][grp]['data'] = self.current_data
-
             self.int_total = self.current_data.shape[0]
             self.total.setText(f'**{self.int_total:,}**')
             views = define_views(category)
-
             if 'tree' in self.tree_cache[cat][grp]:
                 tree = self.tree_cache[cat][grp]['tree']
                 rebuild_cached(tree, self.treeWidget)
@@ -924,7 +921,7 @@ class Window(QMainWindow, Ui_MainWindow):
         grouping = self.combo_grouping.currentText()
         cat = self.combo_category.currentIndex()
         grp = self.combo_grouping.currentIndex()
-        if grp == 6: # Duplicates
+        if grp == 6:
             self.dupes = True
             grouping = _('Title')
         else:
