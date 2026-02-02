@@ -26,16 +26,16 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v11.6.0'
-BETA = False
+VERSION = 'v12.0.0'
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
 from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, TagDialog, ThemeManager, ViewerItem
 
-from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer,QTranslator
+from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer, QTranslator
 from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout,QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -113,7 +113,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = 0
             self.modified = False
             self.loaded = False
-            self.title_format = settings.value('JWLManager/title','short')
+            self.title_format = settings.value('JWLManager/title', 'short')
             options = { 'code': 0, 'short': 1, 'full': 2 }
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
@@ -921,7 +921,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 os.remove(f)
         except:
             pass
-        with ZipFile(PROJECT_PATH / 'res/blank','r') as zipped:
+        with ZipFile(PROJECT_PATH / 'res/blank', 'r') as zipped:
             zipped.extractall(TMP_PATH)
         self.manifest = {
             'name': APP,
@@ -955,7 +955,7 @@ class Window(QMainWindow, Ui_MainWindow):
         return False
 
     def merge_file(self):
-        fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+        fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir), _('JW Library archives')+' (*.jwlibrary)')
         if not fname[0]:
             return False
         self.merge_items(fname[0])
@@ -964,7 +964,7 @@ class Window(QMainWindow, Ui_MainWindow):
         if self.modified:
             self.check_save()
         if not archive:
-            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir),_('JW Library archives')+' (*.jwlibrary)')
+            fname = QFileDialog.getOpenFileName(self, _('Open archive'), str(self.working_dir), _('JW Library archives')+' (*.jwlibrary)')
             if not fname[0]:
                 return False
             archive = fname[0]
@@ -981,7 +981,7 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         try:
-            with ZipFile(archive,'r') as zipped:
+            with ZipFile(archive, 'r') as zipped:
                 zipped.extractall(TMP_PATH)
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 self.manifest = json.load(json_file)
@@ -1582,7 +1582,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 return item_list
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
-            with ZipFile(PROJECT_PATH / 'res/blank_playlist','r') as zipped:
+            with ZipFile(PROJECT_PATH / 'res/blank_playlist', 'r') as zipped:
                 zipped.extractall(playlist_path)
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
@@ -1742,7 +1742,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.format = 'xlsx'
                 required_columns = ['PUB', 'ISSUE', 'DOC', 'LABEL', 'VALUE']
                 try:
-                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                    df = pl.read_excel(engine='xlsx2csv', source=file, columns=required_columns)
                 except:
                     QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
                     return 0
@@ -2228,7 +2228,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 self.format = 'xlsx'
                 required_columns = ['CREATED', 'MODIFIED', 'TAGS', 'COLOR', 'RANGE', 'LANG', 'PUB', 'BK', 'CH', 'VS', 'ISSUE', 'DOC', 'BLOCK', 'HEADING', 'TITLE', 'NOTE']
                 try:
-                    df = pl.read_excel(engine='xlsx2csv', source=file,columns=required_columns)
+                    df = pl.read_excel(engine='xlsx2csv', source=file, columns=required_columns)
                 except:
                     QMessageBox.critical(self, _('Error!'), _('Required columns') + f':\n\n{str(required_columns).strip("][")}', QMessageBox.Abort)
                     return 0
@@ -2460,7 +2460,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.progress_dialog = init_progress()
             progress_cb = CALLBACKTYPE(py_progress)
             lib.setProgressCallback(progress_cb)
-            with ZipFile(file,'r') as zipped:
+            with ZipFile(file, 'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
             res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge')
             if res != 0:
@@ -3552,7 +3552,7 @@ class Window(QMainWindow, Ui_MainWindow):
     def obscure_items(self):
 
         def obscure_text(str):
-            lst = list(words[randint(0,len(words)-1)])
+            lst = list(words[randint(0, len(words)-1)])
             l = len(lst)
             i = 0
             s = ''
