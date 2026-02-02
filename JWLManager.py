@@ -47,6 +47,7 @@ from PIL import Image
 from platform import platform
 from random import randint
 from tempfile import mkdtemp
+from textwrap import dedent
 from time import time
 from traceback import format_exception
 from xlsxwriter import Workbook
@@ -701,7 +702,53 @@ class Window(QMainWindow, Ui_MainWindow):
                 return pl.DataFrame(lst, schema=schema, orient='row' )
 
             lst = []
-            for row in con.execute("SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n GROUP BY n.NoteId;").fetchall():
+            only_dupes = True
+            if only_dupes:
+                dupes = dedent('''WITH duplicate_notes AS (
+                    WITH
+                        title_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType,
+                                        Title) AS cnt
+                                    FROM Note
+                                    WHERE Title IS NOT NULL AND
+                                        Title != '')
+                            WHERE cnt > 1),
+                        content_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType,
+                                        Content) AS cnt
+                                    FROM Note
+                                    WHERE Content IS NOT NULL AND
+                                        Content != '')
+                            WHERE cnt > 1),
+                        empty_dupes AS (
+                            SELECT NoteId FROM (
+                                SELECT NoteId, COUNT( * ) OVER (
+                                    PARTITION BY LocationId,
+                                        BlockIdentifier,
+                                        BlockType) AS cnt
+                                    FROM Note
+                                    WHERE (Title IS NULL OR
+                                        Title = '') AND
+                                        (Content IS NULL OR
+                                        Content = ''))
+                            WHERE cnt > 1)
+                    SELECT NoteId FROM title_dupes
+                    UNION SELECT NoteId FROM content_dupes
+                    UNION SELECT NoteId FROM empty_dupes)''')
+                where = 'WHERE n.LocationId IS NOT NULL AND n.NoteId IN (SELECT NoteId FROM duplicate_notes)'
+            else:
+                dupes = ''
+                where = ''
+            sql = f"{dupes} SELECT NoteId Id, MepsLanguage Language, KeySymbol Symbol, IssueTagNumber Issue, BookNumber Book, ChapterNumber Chapter, ColorIndex Color, GROUP_CONCAT(Name, ' | ') Tags, substr(LastModified, 0, 11) Modified FROM (SELECT * FROM Note n JOIN Location l USING (LocationId) LEFT JOIN TagMap tm USING (NoteId) LEFT JOIN Tag t USING (TagId) LEFT JOIN UserMark u USING (UserMarkId) ORDER BY t.Name) n {where} GROUP BY n.NoteId;"
+            for row in con.execute(sql).fetchall():
                 lng = lang_name.get(row[1], f'#{row[1]}')
 
                 code, year = process_code(row[2], row[3])
@@ -712,8 +759,11 @@ class Window(QMainWindow, Ui_MainWindow):
             schema = {'Id': pl.Int64, 'Language': pl.Utf8, 'Symbol': pl.Utf8, 'Color': pl.Utf8, 'Tags': pl.Utf8, 'Modified': pl.Utf8, 'Year': pl.Utf8, 'Detail1': pl.Utf8, 'Detail2': pl.Utf8}
             notes = pl.DataFrame(lst, schema=schema, orient='row')
             notes = merge_df(notes)
-            i_notes = load_independent()
-            self.current_data = pl.concat([i_notes, notes])
+            if not only_dupes:
+                i_notes = load_independent()
+                self.current_data = pl.concat([i_notes, notes])
+            else:
+                self.current_data = notes
 
         def get_playlists():
             lst = []
