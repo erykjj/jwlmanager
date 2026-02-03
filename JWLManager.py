@@ -2767,6 +2767,10 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def get_notes():
                 item_list = []
+                if self.dupes:
+                    order = 'ORDER BY l.KeySymbol, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, n.BlockIdentifier;'
+                else:
+                    order = 'ORDER BY Type, Date DESC;'
                 sql = f'''
                     SELECT n.BlockType Type,
                         n.Title,
@@ -2819,9 +2823,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         BlockRange b USING (
                             UserMarkId
                         )
-                    WHERE n.NoteId IN {items} 
+                    WHERE n.NoteId IN {items}
                     GROUP BY n.NoteId
-                    ORDER BY Type, Date DESC;
+                    {order}
                     '''
                 for row in con.execute(sql).fetchall():
                     item = {
