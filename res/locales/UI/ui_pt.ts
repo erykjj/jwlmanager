@@ -33,7 +33,7 @@
     <message>
         <location filename="main_window.ui" line="150"/>
         <source>Duplicates</source>
-        <translation type="unfinished"></translation>
+        <translation>Duplicações</translation>
     </message>
     <message>
         <location filename="main_window.ui" line="186"/>
