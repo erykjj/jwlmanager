@@ -2767,7 +2767,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
             def get_notes():
                 item_list = []
-                if group in [0, 1, 2, 6]:
+                if group in [0, 6]:
                     order = 'ORDER BY l.KeySymbol, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, n.BlockIdentifier;'
                 else:
                     order = 'ORDER BY Type, Date DESC;'
