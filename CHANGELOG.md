@@ -11,12 +11,16 @@
 ### Removed
 
 ____
-## [12.0.0] - 2026-02-02
+## [12.0.0] - 2026-02-04
 ### Added
 
 - Added **listing duplicate notes** (same title/different non-empty content or same content/different title - at same location)
   - These can then be edited/removed in the Data Viewer
   - Be careful not to remove *both* from the main interface
+
+### Changed
+
+- Adjusted sorting in Data Viewer: ordered by publication in some cases, by most recent in others (depending on grouping)
 
 ## [11.6.0] - 2026-01-19
 ### Changed
