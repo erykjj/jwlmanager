@@ -2763,11 +2763,11 @@ class Window(QMainWindow, Ui_MainWindow):
                 d = '-' + d
             return f'{yr}-{m}{d}'
 
-        def show_notes():
+        def show_notes(group):
 
             def get_notes():
                 item_list = []
-                if self.dupes:
+                if group in [0, 1, 2, 6]:
                     order = 'ORDER BY l.KeySymbol, l.BookNumber, l.ChapterNumber, l.DocumentId, l.IssueTagNumber, n.BlockIdentifier;'
                 else:
                     order = 'ORDER BY Type, Date DESC;'
@@ -3018,6 +3018,7 @@ class Window(QMainWindow, Ui_MainWindow):
         except:
             pass
         category = self.combo_category.currentText()
+        group = self.combo_grouping.currentIndex()
         self.viewer_items = {}
         self.deleted_list = []
         self.modified_list = []
@@ -3047,7 +3048,7 @@ class Window(QMainWindow, Ui_MainWindow):
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             items = str(selected).replace('[', '(').replace(']', ')')
             if category == _('Notes'):
-                show_notes()
+                show_notes(group)
             else:
                 show_annotations()
             update_viewer_title()
