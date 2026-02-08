@@ -52,6 +52,11 @@ jobs:
         python -m pip install --upgrade -r res/requirements.txt
         sudo apt install ccache
 
+    - name: Prepare config file
+      run: |
+        cp .github/workflows/jwlCore.nuitka-package.config.yml ./
+        ls -la jwlCore.nuitka-package.config.yml
+
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka
