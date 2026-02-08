@@ -52,6 +52,7 @@ jobs:
         python -m pip install --upgrade -r res/requirements.txt
         sudo apt install ccache
         cp .github/jwlCore.nuitka-package.config.yml ./
+        cat jwlCore.nuitka-package.config.yml
 
     - name: Build with Nuitka
       run: |
