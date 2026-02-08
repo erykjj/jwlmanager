@@ -11,7 +11,7 @@
 ### Removed
 
 ____
-## [12.0.0] - 2026-02-04
+## [12.0.0] - 2026-02-08
 ### Added
 
 - Added **listing duplicate notes** (same title/different non-empty content or same content/different title - at same location)
