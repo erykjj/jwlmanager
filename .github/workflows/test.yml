@@ -1,0 +1,41 @@
+- name: Prepare and verify config
+  run: |
+    # Create the corrected config file
+    cat > jwlCore.nuitka-package.config.yml << 'EOF'
+- module-name: 'jwlcore'
+  dlls:
+    linux:
+      - relative-path: 'libs'
+        prefix: 'libjwlCore'
+        suffix: 'so'
+    macos:
+      - relative-path: 'libs'
+        prefix: 'libjwlCore'
+        suffix: 'dylib'
+    win32:
+      - relative-path: '.'
+        prefix: 'jwlCore-amd64'
+        suffix: 'dll'
+      - relative-path: '.'
+        prefix: 'sqlite3_64'
+        suffix: 'dll'
+EOF
+    
+    # Verify it exists
+    ls -la jwlCore.nuitka-package.config.yml
+    echo "=== Config content ==="
+    cat jwlCore.nuitka-package.config.yml
+
+- name: Build with Nuitka
+  run: |
+    python -m pip install nuitka==4.0.0
+    python -m nuitka --mode=onefile \
+      --windows-icon-from-ico='res/icons/JWLManager.ico' \
+      --include-data-dir=res=res \
+      --user-package-configuration-file=jwlCore.nuitka-package.config.yml \
+      --include-module=xlsx2csv \
+      --include-package-data=puremagic \
+      --enable-plugin=pyside6 \
+      --clang \
+      --assume-yes-for-downloads \
+      JWLManager.py
