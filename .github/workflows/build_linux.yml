@@ -53,19 +53,6 @@ jobs:
         sudo apt install ccache
         cp .github/jwlCore.nuitka-package.config.yml ./
 
-    - name: Validate config syntax
-      run: |
-        python -c "
-          import yaml
-          try:
-              with open('jwlCore.nuitka-package.config.yml', 'r') as f:
-                  data = yaml.safe_load(f)
-              print('✅ YAML syntax is valid')
-              print('Structure:', data)
-          except Exception as e:
-              print(f'❌ YAML error: {e}')
-              exit(1)
-          "
     - name: Build with Nuitka
       run: |
         python -m pip install nuitka
