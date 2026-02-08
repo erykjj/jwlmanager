@@ -1,22 +1,26 @@
 - module-name: 'jwlcore'
   dlls:
-    - filename:
-        relative-path: 'libs'
-        prefix: 'libjwlCore'
-        suffix: 'so'
+    - from_filenames:
+        relative_path: 'libs'
+        prefixes:
+          - 'libjwlCore'
+        suffixes:
+          - 'so'
       when: 'linux'
-    - filename:
-        relative-path: 'libs'
-        prefix: 'libjwlCore'
-        suffix: 'dylib'
+
+    - from_filenames:
+        relative_path: 'libs'
+        prefixes:
+          - 'libjwlCore'
+        suffixes:
+          - 'dylib'
       when: 'macos'
-    - filename:
-        relative-path: '.'
-        prefix: 'jwlCore-amd64'
-        suffix: 'dll'
-      when: 'win32'
-    - filename:
-        relative-path: '.'
-        prefix: 'sqlite3_64'
-        suffix: 'dll'
+
+    - from_filenames:
+        relative_path: '.'
+        prefixes:
+          - 'jwlCore-amd64'
+          - 'sqlite3_64'
+        suffixes:
+          - 'dll'
       when: 'win32'
