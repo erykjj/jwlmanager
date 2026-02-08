@@ -1,4 +1,4 @@
-certifi==2025.4.26
+certifi
 pillow
 polars
 puremagic
