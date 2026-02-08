@@ -1,0 +1,27 @@
+# yamllint disable rule:line-length
+# yamllint disable rule:indentation
+# yamllint disable rule:comments-indentation
+
+- module-name: 'jwlcore'
+  dlls:
+    - relative-path: 'libs'
+      prefixes:
+        - 'libjwlCore'
+      suffixes:
+        - 'so'
+      when: 'linux'
+
+    - relative-path: 'libs'
+      prefixes:
+        - 'libjwlCore'
+      suffixes:
+        - 'dylib'
+      when: 'macos'
+
+    - relative-path: '.'
+      prefixes:
+        - 'jwlCore-amd64'
+        - 'sqlite3_64'
+      suffixes:
+        - 'dll'
+      when: 'win32'
