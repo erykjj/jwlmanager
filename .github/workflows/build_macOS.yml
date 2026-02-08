@@ -1,4 +1,4 @@
-name: 'Build macOS v1.4.0'
+name: 'Build macOS v1.4.1'
 
 on:
   workflow_call:

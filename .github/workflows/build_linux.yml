@@ -1,4 +1,4 @@
-name: 'Build Linux v1.4.0'
+name: 'Build Linux v1.4.1'
 
 on:
   workflow_call:
@@ -50,6 +50,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install --upgrade -r res/requirements.txt
+        apt install ccache
 
     - name: Build with Nuitka
       run: |
