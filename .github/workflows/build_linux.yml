@@ -53,7 +53,7 @@ jobs:
 
     - name: Build with Nuitka
       run: |
-        python -m pip install nuitka==2.8.10
+        python -m pip install nuitka==2.8.9
         python -m nuitka --mode=onefile --windows-icon-from-ico='res/icons/JWLManager.ico' --include-data-dir=res=res --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --clang --assume-yes-for-downloads JWLManager.py
         mkdir dist
         mv JWLManager.bin dist/JWLManager_${{ inputs.TAG }}-x86_64
