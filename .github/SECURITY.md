@@ -4,7 +4,7 @@
 
 These are due to the fact the the app is not signed with a valid certificate, which is too expensive for me to purchase just for this one (open-source) project. If you receive one of these alerts, you can safely choose "More info" and "Run anyway". *Apparently*, you only need to this once.
 
-As to **virus alerts**, have a look here. These are the virus scan results for one recent Windows executable: https://www.virustotal.com/gui/file/48a6990299b53f55602b3faa3cda36dae94735b51a772541bd3dee27ca9857bf/detection
+As to **virus alerts**, have a look here. These are the virus scan results for one recent Windows executable: https://www.virustotal.com/gui/file/75564a74c68e22189e5d083468f88c74d055df0270f0552e80672113deedfba2/detection
 
 You'll notice the great majority of anti-virus products report it as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. The app is basically a Python 3 script, and I use [PyInstaller](https://pyinstaller.org/en/stable/) to package it up into a Windows executable. It's this process of compiling a script that some over-zealous anti-virus products *may* flag as dangerous.
 
