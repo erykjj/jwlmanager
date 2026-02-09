@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.0.0'
+VERSION = 'v12.0.1'
 BETA = False
 
 
