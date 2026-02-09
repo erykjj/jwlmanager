@@ -11,6 +11,18 @@
 ### Removed
 
 ____
+## [12.0.1] - 2026-02-08
+### Added
+
+- Added **listing duplicate notes** (same title/different non-empty content or same content/different title - at same location)
+  - These can then be edited/removed in the Data Viewer
+  - Be careful not to remove *both* from the main interface
+
+### Changed
+
+- Adjusted sorting in Data Viewer: ordered by publication in some cases, by most recent in others (depending on grouping)
+- Built with latest Nuitka v4.0 (hopefully to reduce antivirus false-positive alerts)
+
 ## [12.0.0] - 2026-02-08
 ### Added
 
@@ -1147,6 +1159,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.1
 [12.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.0
 [11.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.6.0
 [11.5.1]:https://github.com/erykjj/jwlmanager/releases/tag/v11.5.1
