@@ -6,7 +6,8 @@ These are due to the fact the the app is not signed with a valid certificate, wh
 
 As to **virus alerts**, have a look here. These are the virus scan results for one recent Windows executable: https://www.virustotal.com/gui/file/329a4619a0758d4d93b5586115d5dbf20885b667ce5fd8b1483508de714d93c0/detection
 
-You'll notice the great majority of anti-virus products report it as clean. In particular, notice the important/big players: Microsoft, Google, Avast, Kaspersky, McAfee, etc. The app is basically a Python 3 script, and I use [PyInstaller](https://pyinstaller.org/en/stable/) to package it up into a Windows executable. It's this process of compiling a script that some over-zealous anti-virus products *may* flag as dangerous.
+You'll notice the great majority of anti-virus products report it as clean. The app is basically a Python 3 script, and I use [Nuitka](https://nuitka.net/user-documentation/common-issue-solutions.html#windows-virus-scanners) to package it up into a Windows executable. It's this process of compiling a script that some over-zealous anti-virus products *may* flag as dangerous.
+
 
 ## **macOS** slow start/no start
 
