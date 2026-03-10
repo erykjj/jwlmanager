@@ -14,7 +14,7 @@ ____
 ## [12.1.0] - 2026-03-10
 ### Changed
 
-- Updated jwlCore libs to v0.28.0
+- Updated jwlCore libs to v0.28.1
 
 ### Fixed
 
