@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.0.1'
+VERSION = 'v12.1.0'
 BETA = False
 
 
@@ -3718,11 +3718,12 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             sql = """
-                BEGIN;
-
-                PRAGMA temp_store = 2;
+                PRAGMA temp_store = 'MEMORY';
+                PRAGMA synchronous = 'OFF';
                 PRAGMA journal_mode = 'OFF';
                 PRAGMA foreign_keys = 'OFF';
+
+                BEGIN;
 
                 -- Delete empty InputField and (un-tagged) Note records
                 DELETE FROM InputField WHERE COALESCE(Value, '') = '';
@@ -3751,10 +3752,12 @@ class Window(QMainWindow, Ui_MainWindow):
 
                 -- Delete orphaned UserMark and BlockRange records
                 DELETE FROM UserMark WHERE
-                    LocationId NOT IN (SELECT LocationId FROM Location)
-                    OR (UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange)
-                        AND UserMarkId NOT IN (SELECT UserMarkId FROM Note));
-                DELETE FROM BlockRange WHERE UserMarkId NOT IN (SELECT UserMarkId FROM UserMark);
+                    (UserMarkId NOT IN (SELECT UserMarkId FROM BlockRange WHERE UserMarkId IS NOT NULL)
+                    AND UserMarkId NOT IN (SELECT UserMarkId FROM Note WHERE UserMarkId IS NOT NULL))
+                    OR LocationId NOT IN (SELECT LocationId FROM Location WHERE LocationId IS NOT NULL);
+                DELETE FROM BlockRange WHERE
+                    UserMarkId NOT IN (SELECT UserMarkId FROM UserMark WHERE
+                        UserMarkId IS NOT NULL);
 
                 -- Delete orphaned PlaylistItem and related records
                 DELETE FROM PlaylistItem WHERE PlaylistItemId NOT IN (SELECT PlaylistItemId FROM TagMap);
@@ -3778,8 +3781,12 @@ class Window(QMainWindow, Ui_MainWindow):
                 -- Fix "missing" note links
                 UPDATE Location SET Title = "" WHERE Title IS NULL;
 
-                PRAGMA foreign_keys = 'ON';
                 COMMIT;
+
+                PRAGMA foreign_keys = 'ON';
+                PRAGMA synchronous = 'FULL';
+                PRAGMA journal_mode = 'DELETE';
+                PRAGMA temp_store = 'DEFAULT';
 
                 VACUUM;
                 """
