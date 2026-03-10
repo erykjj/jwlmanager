@@ -11,6 +11,12 @@
 ### Removed
 
 ____
+## [12.1.0] - 2026-03-10
+### Fixed
+
+- Fixed trim query
+  - *May* cut down the size of the database considerably by cleaning up left-over records
+
 ## [12.0.1] - 2026-02-08
 ### Added
 
@@ -1159,6 +1165,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.1.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.0
 [12.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.1
 [12.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.0
 [11.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v11.6.0
