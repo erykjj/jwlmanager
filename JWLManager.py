@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.1.0'
+VERSION = 'v12.1.1'
 BETA = False
 
 
@@ -3720,7 +3720,7 @@ class Window(QMainWindow, Ui_MainWindow):
             sql = """
                 PRAGMA temp_store = 'MEMORY';
                 PRAGMA synchronous = 'OFF';
-                PRAGMA journal_mode = 'OFF';
+                PRAGMA journal_mode = 'MEMORY';
                 PRAGMA foreign_keys = 'OFF';
 
                 BEGIN;
