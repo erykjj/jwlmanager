@@ -1,4 +1,4 @@
-name: 'Build Windows v1.5.0'
+name: 'Build Windows v1.6.0'
 
 on:
   workflow_call:
@@ -23,7 +23,7 @@ jobs:
       actions: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -31,7 +31,7 @@ jobs:
           python-version: '3.13'
 
       - name: Cache pip
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\Users\runneradmin\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Cache Nuitka
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\Users\runneradmin\.nuitka_cache
           key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
@@ -72,13 +72,13 @@ jobs:
           tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-amd64.zip JWLManager
 
       - name: Upload EXE
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: WindowsEXE
           path: dist/JWLManager_${{ inputs.TAG }}-amd64.exe
 
       - name: Upload ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: WindowsZIP
           path: dist/JWLManager_${{ inputs.TAG }}-amd64.zip
@@ -91,7 +91,7 @@ jobs:
       actions: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -99,7 +99,7 @@ jobs:
           python-version: '3.13'
 
       - name: Cache pip
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\Users\runneradmin\AppData\Local\pip\Cache
           key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements-winarm.txt') }}
@@ -107,7 +107,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Cache Nuitka
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: C:\Users\runneradmin\.nuitka_cache
           key: ${{ runner.os }}-nuitka-arm-${{ hashFiles('res/requirements-winarm.txt', 'JWLManager.py') }}
@@ -140,13 +140,13 @@ jobs:
           tar.exe -a -c -f dist/JWLManager_${{ inputs.TAG }}-arm64.zip JWLManager
 
       - name: Upload EXE
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: WinarmEXE
           path: dist/JWLManager_${{ inputs.TAG }}-arm64.exe
 
       - name: Upload ZIP
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: WinarmZIP
           path: dist/JWLManager_${{ inputs.TAG }}-arm64.zip

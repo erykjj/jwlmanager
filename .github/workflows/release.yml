@@ -1,4 +1,4 @@
-name: 'Draft Release v1.4.0'
+name: 'Draft Release v1.6.0'
 
 on:
   push:
@@ -32,33 +32,33 @@ jobs:
       TAG: ${{ github.ref_name }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Download Linux binary
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: LinuxBIN
     - name: Download Windows executable
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: WindowsEXE
     - name: Download Windows zipped folder
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: WindowsZIP
     - name: Download Windows-arm executable
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: WinarmEXE
     - name: Download Windows-arm zipped folder
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: WinarmZIP
     - name: Download macOS app
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: MacAPP
     - name: Download macOS-old app
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: MacAPP-old
     - name: Extract section from changelog

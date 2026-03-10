@@ -1,4 +1,4 @@
-name: 'Build macOS v1.5.0'
+name: 'Build macOS v1.6.0'
 
 on:
   workflow_call:
@@ -23,7 +23,7 @@ jobs:
       actions: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -31,7 +31,7 @@ jobs:
         python-version: '3.13'
 
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/Library/Caches/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
@@ -39,7 +39,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Cache Nuitka
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: .nuitka_cache
         key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
@@ -66,7 +66,7 @@ jobs:
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-arm64.app.zip
 
     - name: Upload macOS-arm64 APP
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: MacAPP
         path: dist/JWLManager_${{ inputs.TAG }}-arm64.app.zip
@@ -79,7 +79,7 @@ jobs:
       actions: write
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Set up Python
       uses: actions/setup-python@v6
@@ -87,7 +87,7 @@ jobs:
         python-version: '3.13'
 
     - name: Cache pip
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ~/Library/Caches/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('res/requirements*.txt') }}
@@ -95,7 +95,7 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Cache Nuitka
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: .nuitka_cache
         key: ${{ runner.os }}-nuitka-${{ hashFiles('res/requirements*.txt', 'JWLManager.py') }}
@@ -122,7 +122,7 @@ jobs:
         ditto -c -k --sequesterRsrc --keepParent JWLManager.app JWLManager_${{ inputs.TAG }}-x86_64.app.zip
 
     - name: Upload macOS-x86_64 APP
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: MacAPP-old
         path: dist/JWLManager_${{ inputs.TAG }}-x86_64.app.zip
