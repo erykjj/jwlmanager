@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.1.1'
+VERSION = 'v12.1.2'
 BETA = False
 
 
@@ -1622,7 +1622,10 @@ class Window(QMainWindow, Ui_MainWindow):
                 rows = con.execute(f'SELECT * FROM IndependentMedia WHERE FilePath IN {fp} OR IndependentMediaId IN {mi};').fetchall()
                 expcon.executemany('INSERT INTO IndependentMedia VALUES (?, ?, ?, ?, ?);', rows)
                 for f in rows:
-                    shutil.copy2(TMP_PATH+'/'+f[2], playlist_path+'/'+f[2])
+                    try:
+                        shutil.copy2(TMP_PATH+'/'+f[2], playlist_path+'/'+f[2])
+                    except:
+                        QMessageBox.warning(self, _('Warning!'), f'Problem with "{f[2]}"\nExport will be incomplete.', QMessageBox.accept())
 
                 rows = expcon.execute('SELECT LocationId FROM PlaylistItemLocationMap;').fetchall()
                 lo = '('
@@ -3427,10 +3430,8 @@ class Window(QMainWindow, Ui_MainWindow):
                         thash = sha256hash(f'{TMP_PATH}/{thumb_name}')
                         con.execute('INSERT INTO IndependentMedia (OriginalFileName, FilePath, MimeType, Hash) VALUES (?, ?, ?, ?);', (name, thumb_name, mime, thash))
 
-                    else: # file alread in archive
+                    else: # file alread in archive, use its name
                         media_id, thumb_name = con.execute('SELECT IndependentMediaId, FilePath FROM IndependentMedia WHERE Hash = ?;', (hash256,)).fetchone()
-                        if thumb_name != name:
-                            thumb_name = con.execute('SELECT ThumbnailFilePath FROM PlaylistItemIndependentMediaMap JOIN PlaylistItem USING (PlaylistItemId) WHERE IndependentMediaId = ?;', (media_id,)).fetchone()[0]
 
                     result += 1
                     item_id = con.execute('INSERT INTO PlaylistItem (Label, Accuracy, EndAction, ThumbnailFilePath) VALUES (?, ?, ?, ?);', (check_label(name), 1, 1, thumb_name)).lastrowid
