@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [12.1.2] - 2026-04-07
+### Fixed
+
+- Fixed crash on adding same item to playlist
+
 ## [12.1.1] - 2026-03-10
 ### Changed
 
@@ -1169,6 +1174,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.2
 [12.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.1
 [12.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.1
 [12.0.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.0
