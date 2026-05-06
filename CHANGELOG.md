@@ -8,6 +8,9 @@
 
 ### Changed
 
+- Updated jwlCore libs to v0.30.0
+  - Downgrade schema to v14 to allow import/restore on older JW Library versions
+
 ### Fixed
 
 ### Removed
