@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.1.2'
+VERSION = 'v13.0.0'
 BETA = False
 
 
@@ -1095,6 +1095,7 @@ class Window(QMainWindow, Ui_MainWindow):
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
             m['userDataBackup']['lastModifiedDate'] = t
             m['userDataBackup']['databaseName'] = DB_NAME
+            m['userDataBackup']['schemaVersion'] = 14
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
             con.commit()
@@ -1103,8 +1104,26 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
-        update_manifest()
+        def downgrade_schema():
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            sql = """
+                PRAGMA foreign_keys = OFF;
+                DROP INDEX IF EXISTS IX_Location_Media;
+                ALTER TABLE Location DROP COLUMN Specialty;
+                ALTER TABLE Location DROP COLUMN Edition;
+                PRAGMA user_version = 14;
+                PRAGMA foreign_keys = ON; """
+            try:
+                con.executescript(sql)
+                con.commit()
+            except:
+                pass
+            finally:
+                con.close()
+
         self.trim_db()
+        downgrade_schema()
+        update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
                 files = os.listdir(TMP_PATH)
