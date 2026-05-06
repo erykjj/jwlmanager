@@ -4,6 +4,8 @@
 
 ### Added
 
+- Downgrade to schema v14 to allow import/restore on older JW Library versions
+
 ### Changed
 
 ### Fixed
