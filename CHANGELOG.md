@@ -18,7 +18,8 @@ ____
 
 ### Changed
 
-- Updated jwlCore libs to v0.30.0
+- Updated jwlCore libs to v0.31.0
+  - Fix NULL Title
 
 ## [12.1.2] - 2026-04-07
 ### Fixed
