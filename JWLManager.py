@@ -27,7 +27,7 @@
 
 APP = 'JWLManager'
 VERSION = 'v12.2.0'
-BETA = False
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -35,7 +35,7 @@ from res.ui_extras import AboutBox, HelpBox, DataViewer, DropList, MergeDialog, 
 
 from PySide6.QtCore import QEvent, QPoint, QSettings, QSize, Qt, QTimer, QTranslator
 from PySide6.QtGui import QAction, QColor, QFont, QIcon, QPixmap
-from PySide6.QtWidgets import QApplication, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QApplication, QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout, QGridLayout, QHBoxLayout, QLabel, QMainWindow, QMenu, QMessageBox, QProgressDialog, QPushButton, QSizePolicy, QSpacerItem, QTextEdit, QTreeWidgetItem, QTreeWidgetItemIterator, QVBoxLayout, QWidget
 
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -130,6 +130,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 if item.toolTip() == self.lang:
                     item.setChecked(True)
             self.dupes = False
+            self.older_schema = False
             self.current_data = []
             self.tree_cache = {}
 
@@ -213,8 +214,8 @@ class Window(QMainWindow, Ui_MainWindow):
             reply = QMessageBox.question(self, _('Exit'), _('Save before quitting?'), QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel, QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 if self.save_file() == False:
-                     event.ignore()
-                     return
+                    event.ignore()
+                    return
             elif reply == QMessageBox.Cancel:
                 event.ignore()
                 return
@@ -1125,22 +1126,23 @@ class Window(QMainWindow, Ui_MainWindow):
             self.zip_file()
 
     def save_as_file(self):
-        fname = ()
-        if not self.save_filename:
-            now = datetime.now().strftime('%Y-%m-%d')
-            fname = QFileDialog.getSaveFileName(self, _('Save archive'), f'{self.working_dir}/MODIFIED_{now}.jwlibrary', _('JW Library archives')+'(*.jwlibrary)')[0]
-        else:
-            fname = QFileDialog.getSaveFileName(self, _('Save archive'), self.save_filename, _('JW Library archives')+'(*.jwlibrary)')[0]
-        if not fname:
+        suggested = self.save_filename if self.save_filename else f"{self.working_dir}/MODIFIED_{datetime.now().strftime('%Y-%m-%d')}.jwlibrary"
+        dialog = QFileDialog(self, _('Save archive'), suggested, _('JW Library archives')+' (*.jwlibrary)')
+        dialog.setOption(QFileDialog.DontUseNativeDialog, True)
+        checkbox = QCheckBox('Schema v14')
+        checkbox.setChecked(self.older_schema)
+        dialog.layout().addWidget(checkbox)
+        if not dialog.exec():
             self.statusBar.showMessage(' '+_('NOT saved!'), 4000)
             return False
-        elif Path(fname) == self.current_archive:
-            reply = QMessageBox.critical(self, _('Save'), _("It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?"),
-              QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-            if reply == QMessageBox.No:
-                return self.save_file()
+        fname = dialog.selectedFiles()[0]
         if Path(fname).suffix != '.jwlibrary':
             fname += '.jwlibrary'
+        self.older_schema = checkbox.isChecked()
+        if Path(fname) == self.current_archive:
+            reply = QMessageBox.critical(self, _('Save'), _("It's recommended to save under another name.\nAre you absolutely sure you want to replace the original?"), QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if reply == QMessageBox.No:
+                return self.save_file()
         self.save_filename = fname
         self.working_dir = Path(fname).parent
         self.current_archive = self.save_filename
@@ -1242,6 +1244,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 con.close()
 
         self.trim_db()
+        if self.older_schema:
+            downgrade_schema()
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
