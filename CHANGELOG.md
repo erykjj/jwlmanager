@@ -6,6 +6,7 @@
 
 - Added automatic upgrade to schema v16
 - Added option to save as older schema v14 (for JW Library version < 15.8)
+  - Checkbox at bottom of File Save dialog
 
 ### Changed
 
