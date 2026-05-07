@@ -1122,7 +1122,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 con.close()
 
         self.trim_db()
-        downgrade_schema()
+        downgrade_schema() # NOTE: temporary backwards-compatibilty "fix" to work with JW Library < v15.8
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
