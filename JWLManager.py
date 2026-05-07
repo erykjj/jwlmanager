@@ -1013,6 +1013,23 @@ class Window(QMainWindow, Ui_MainWindow):
         self.merge_items(fname[0])
 
     def load_file(self, archive=''):
+
+        def downgrade_schema():
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            sql = """
+                DROP INDEX IF EXISTS IX_Location_Media;
+                ALTER TABLE Location DROP COLUMN Specialty;
+                ALTER TABLE Location DROP COLUMN Edition;
+                CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type);
+                PRAGMA user_version = 14; """
+            try:
+                con.executescript(sql)
+                con.commit()
+            except:
+                pass
+            finally:
+                con.close()
+
         if self.modified:
             self.check_save()
         if not archive:
@@ -1035,6 +1052,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive, 'r') as zipped:
                 zipped.extractall(TMP_PATH)
+                downgrade_schema() # NOTE: temporary backwards-compatibilty "fix" to work with JW Library < v15.8
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 self.manifest = json.load(json_file)
             self.file_loaded()
@@ -1104,25 +1122,9 @@ class Window(QMainWindow, Ui_MainWindow):
             with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
-        def downgrade_schema():
-            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-            sql = """
-                PRAGMA foreign_keys = OFF;
-                DROP INDEX IF EXISTS IX_Location_Media;
-                ALTER TABLE Location DROP COLUMN Specialty;
-                ALTER TABLE Location DROP COLUMN Edition;
-                PRAGMA user_version = 14;
-                PRAGMA foreign_keys = ON; """
-            try:
-                con.executescript(sql)
-                con.commit()
-            except:
-                pass
-            finally:
-                con.close()
+
 
         self.trim_db()
-        downgrade_schema() # NOTE: temporary backwards-compatibilty "fix" to work with JW Library < v15.8
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
