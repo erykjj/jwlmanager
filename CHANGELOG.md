@@ -4,18 +4,22 @@
 
 ### Added
 
-- Downgrade to schema v14 to allow import/restore on older JW Library versions
-
 ### Changed
-
-- Updated jwlCore libs to v0.30.0
-  - Downgrade schema to v14 to allow import/restore on older JW Library versions
 
 ### Fixed
 
 ### Removed
 
 ____
+## [12.2.0] - 2026-05-06
+### Added
+
+- Downgrade to schema v14 to allow import/restore on older JW Library versions
+
+### Changed
+
+- Updated jwlCore libs to v0.30.0
+
 ## [12.1.2] - 2026-04-07
 ### Fixed
 
