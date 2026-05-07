@@ -1014,16 +1014,61 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def load_file(self, archive=''):
 
-        def downgrade_schema():
+        def upgrade_schema():
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-            sql = """
-                DROP INDEX IF EXISTS IX_Location_Media;
-                ALTER TABLE Location DROP COLUMN Specialty;
-                ALTER TABLE Location DROP COLUMN Edition;
-                CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type);
-                PRAGMA user_version = 14; """
+            current_version = con.execute('PRAGMA user_version;').fetchone()[0]
+            if current_version >= 16:
+                con.close()
+                return
             try:
-                con.executescript(sql)
+                con.executescript("""
+                    ALTER TABLE Location ADD COLUMN Specialty TEXT;
+                    ALTER TABLE Location ADD COLUMN Edition TEXT;
+                    CREATE TABLE Location_new (
+                        LocationId     INTEGER NOT NULL PRIMARY KEY,
+                        BookNumber     INTEGER,
+                        ChapterNumber  INTEGER,
+                        DocumentId     INTEGER,
+                        Track          INTEGER,
+                        IssueTagNumber INTEGER NOT NULL DEFAULT 0,
+                        KeySymbol      TEXT,
+                        MepsLanguage   INTEGER,
+                        Type           INTEGER NOT NULL,
+                        Title          TEXT,
+                        Specialty      TEXT,
+                        Edition        TEXT,
+                        UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
+                        CHECK ((Type = 0 AND
+                            ((DocumentId IS NOT NULL AND DocumentId != 0) OR
+                            (Track IS NOT NULL AND
+                            ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
+                            (DocumentId IS NOT NULL AND DocumentId != 0))) OR
+                            (BookNumber IS NOT NULL AND BookNumber != 0 AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                            (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
+                            BookNumber IS NOT NULL AND BookNumber != 0 AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
+                            Type != 0),
+                        CHECK ((Type = 1 AND
+                            (BookNumber IS NULL OR BookNumber = 0) AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0) AND
+                            (DocumentId IS NULL OR DocumentId = 0) AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                            Track IS NULL) OR
+                            Type != 1),
+                        CHECK ((Type IN (2, 3) AND
+                            (BookNumber IS NULL OR BookNumber = 0) AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                            Type NOT IN (2, 3)));
+                    INSERT INTO Location_new SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, NULL, NULL
+                    FROM Location;
+                    DROP TABLE Location;
+                    ALTER TABLE Location_new RENAME TO Location;
+                    CREATE INDEX IF NOT EXISTS IX_Location_KeySymbol_MepsLanguage_BookNumber_ChapterNumber ON Location(KeySymbol, MepsLanguage, BookNumber, ChapterNumber);
+                    CREATE INDEX IF NOT EXISTS IX_Location_MepsLanguage_DocumentId ON Location(MepsLanguage, DocumentId);
+                    CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type, COALESCE(Specialty, ''), COALESCE(Edition, ''));
+                    PRAGMA user_version = 16;""")
                 con.commit()
             except:
                 pass
@@ -1052,7 +1097,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive, 'r') as zipped:
                 zipped.extractall(TMP_PATH)
-                downgrade_schema() # NOTE: temporary backwards-compatibilty "fix" to work with JW Library < v15.8
+            upgrade_schema()
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 self.manifest = json.load(json_file)
             self.file_loaded()
@@ -1113,16 +1158,88 @@ class Window(QMainWindow, Ui_MainWindow):
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
             m['userDataBackup']['lastModifiedDate'] = t
             m['userDataBackup']['databaseName'] = DB_NAME
-            m['userDataBackup']['schemaVersion'] = 14
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             con.execute('UPDATE LastModified SET LastModified = ?;', (m['userDataBackup']['lastModifiedDate'],))
+            schema_version = con.execute('PRAGMA user_version;').fetchone()[0]
             con.commit()
             con.close()
+            m['userDataBackup']['schemaVersion'] = schema_version
             m['userDataBackup']['hash'] = sha256hash(f'{TMP_PATH}/{DB_NAME}')
             with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(m, json_file, indent=None, separators=(',', ':'))
 
-
+        def downgrade_schema():
+            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
+            groups = {}
+            for row in con.execute("SELECT LocationId, KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type FROM Location").fetchall():
+                key = f"{row[1]}|{row[2]}|{row[3]}|{row[4]}|{row[5]}|{row[6]}"
+                if key not in groups:
+                    groups[key] = []
+                groups[key].append(row[0])
+            try:
+                for key, ids in groups.items():
+                    if len(ids) > 1:
+                        keep_id = ids[0]
+                        for old_id in ids[1:]:
+                            con.execute("UPDATE Bookmark SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE Bookmark SET PublicationLocationId = ? WHERE PublicationLocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE Note SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE UserMark SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE InputField SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE TagMap SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("UPDATE PlaylistItemLocationMap SET LocationId = ? WHERE LocationId = ?", (keep_id, old_id))
+                            con.execute("DELETE FROM Location WHERE LocationId = ?", (old_id,))
+                con.executescript("""
+                    CREATE TABLE Location_new (
+                        LocationId     INTEGER NOT NULL PRIMARY KEY,
+                        BookNumber     INTEGER,
+                        ChapterNumber  INTEGER,
+                        DocumentId     INTEGER,
+                        Track          INTEGER,
+                        IssueTagNumber INTEGER NOT NULL DEFAULT 0,
+                        KeySymbol      TEXT,
+                        MepsLanguage   INTEGER,
+                        Type           INTEGER NOT NULL,
+                        Title          TEXT,
+                        UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
+                        UNIQUE (KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type),
+                        CHECK ((Type = 0 AND
+                            ((DocumentId IS NOT NULL AND DocumentId != 0) OR
+                            (Track IS NOT NULL AND
+                            ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
+                                (DocumentId IS NOT NULL AND DocumentId != 0))) OR
+                            (BookNumber IS NOT NULL AND BookNumber != 0 AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                            (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
+                            BookNumber IS NOT NULL AND BookNumber != 0 AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
+                            Type != 0),
+                        CHECK ((Type = 1 AND
+                            (BookNumber IS NULL OR BookNumber = 0) AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0) AND
+                            (DocumentId IS NULL OR DocumentId = 0) AND
+                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                            Track IS NULL) OR
+                            Type != 1),
+                        CHECK ((Type IN (2, 3) AND
+                            (BookNumber IS NULL OR BookNumber = 0) AND
+                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                            Type NOT IN (2, 3)));
+                    INSERT INTO Location_new SELECT
+                        LocationId, BookNumber, ChapterNumber, DocumentId, Track,
+                        IssueTagNumber, KeySymbol, MepsLanguage, Type, Title
+                    FROM Location;
+                    DROP TABLE Location;
+                    ALTER TABLE Location_new RENAME TO Location;
+                    PRAGMA user_version = 14;""")
+                con.commit()
+            except Exception as ex:
+                self.crash_box(ex)
+                self.clean_up()
+                sys.exit()
+            finally:
+                con.close()
 
         self.trim_db()
         update_manifest()
