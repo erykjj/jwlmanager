@@ -4,7 +4,13 @@
 
 ### Added
 
+- Added automatic upgrade to schema v16
+- Added option to save as older schema v14 (for JW Library version < 15.8)
+
 ### Changed
+
+- Updated jwlCore libs to v0.31.1
+  - Default to schema v16
 
 ### Fixed
 
