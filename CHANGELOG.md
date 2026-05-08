@@ -4,6 +4,16 @@
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+____
+## [12.2.0] - 2026-05-08
+### Added
+
 - Added automatic upgrade to schema v16
 - Added option to save as older schema v14 (for JW Library version < 15.8)
   - Checkbox at bottom of File Save dialog
@@ -12,16 +22,6 @@
 
 - Updated jwlCore libs to v0.31.1
   - Default to schema v16
-
-### Fixed
-
-### Removed
-
-____
-## [12.2.0] - 2026-05-06
-### Added
-
-- Downgrade to schema v14 to allow import/restore on older JW Library versions
 
 ### Changed
 
