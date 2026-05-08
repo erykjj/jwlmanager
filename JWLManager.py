@@ -1774,8 +1774,8 @@ class Window(QMainWindow, Ui_MainWindow):
                 for row in rows:
                     lo += f'{row[0]}, '
                 lo = lo.rstrip(', ') + ')'
-                rows = con.execute(f'SELECT * FROM Location WHERE LocationId IN {lo};').fetchall()
-                expcon.executemany('INSERT INTO Location VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
+                rows = con.execute(f"SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition FROM Location WHERE LocationId IN {lo};").fetchall()
+                expcon.executemany('INSERT INTO Location (LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', rows)
                 return item_list
 
             playlist_path = mkdtemp(prefix='JWLPlaylist_')
