@@ -11,7 +11,7 @@
 ### Removed
 
 ____
-## [12.2.0] - 2026-05-08
+## [12.2.0] - 2026-05-11
 ### Added
 
 - Added automatic upgrade to schema v16
@@ -22,10 +22,6 @@ ____
 
 - Updated jwlCore libs to v0.31.1
   - Default to schema v16
-
-### Changed
-
-- Updated jwlCore libs to v0.31.0
   - Fix NULL Title
 
 ## [12.1.2] - 2026-04-07
@@ -1191,6 +1187,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.0
 [12.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.2
 [12.1.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.1
 [12.0.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.0.1
