@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.2.1'
+VERSION = 'v12.2.2'
 BETA = False
 
 
@@ -1246,17 +1246,25 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.trim_db()
         if self.older_schema:
+            db_path = f'{TMP_PATH}/{DB_NAME}'
+            db_backup = f'{TMP_PATH}/userData_backup.db'
+            shutil.copy2(db_path, db_backup)
             downgrade_schema()
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
                 files = os.listdir(TMP_PATH)
                 for f in files:
+                    if f == 'userData_backup.db':
+                        continue
                     newzip.write(f'{TMP_PATH}/{f}', f)
         except Exception as ex:
             self.crash_box(ex)
             self.clean_up()
             sys.exit()
+        finally:
+            if self.older_schema:
+                os.replace(db_backup, db_path)
         self.archive_saved()
 
 
