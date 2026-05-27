@@ -11,6 +11,12 @@
 ### Removed
 
 ____
+## [12.2.2] - 2026-05-27
+### Fixed
+
+- Fixed schema downgrade for Bible items
+- Fixed restore v16 after saving as v14
+
 ## [12.2.1] - 2026-05-27
 ### Fixed
 
@@ -1192,6 +1198,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.2
 [12.2.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.1
 [12.2.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.0
 [12.1.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.1.2
