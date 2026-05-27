@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.2.0'
+VERSION = 'v12.2.1'
 BETA = False
 
 
@@ -1174,7 +1174,7 @@ class Window(QMainWindow, Ui_MainWindow):
         def downgrade_schema():
             con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
             groups = {}
-            for row in con.execute("SELECT LocationId, KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type FROM Location").fetchall():
+            for row in con.execute("SELECT LocationId, KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type FROM Location WHERE BookNumber IS NULL AND ChapterNumber IS NULL").fetchall():
                 key = f"{row[1]}|{row[2]}|{row[3]}|{row[4]}|{row[5]}|{row[6]}"
                 if key not in groups:
                     groups[key] = []
