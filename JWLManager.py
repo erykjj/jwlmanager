@@ -1130,7 +1130,7 @@ class Window(QMainWindow, Ui_MainWindow):
         dialog = QFileDialog(self, _('Save archive'), suggested, _('JW Library archives')+' (*.jwlibrary)')
         dialog.setOption(QFileDialog.DontUseNativeDialog, True)
         checkbox = QCheckBox('Schema v14')
-        checkbox.setChecked(self.older_schema)
+        checkbox.setChecked(False)
         checkbox.setStyleSheet('QCheckBox::indicator {border: 1px solid #d97917; background-color: transparent;} QCheckBox::indicator:checked {background-color: #d97917;}')
         dialog.layout().addWidget(checkbox)
         if not dialog.exec():
