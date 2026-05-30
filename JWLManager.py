@@ -1154,8 +1154,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def update_manifest():
             t = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-            with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
-                m = json.load(json_file)
+            m = self.manifest
             m['name'] = APP
             m['creationDate'] = t
             m['userDataBackup']['deviceName'] = f'{APP}_{VERSION}'
