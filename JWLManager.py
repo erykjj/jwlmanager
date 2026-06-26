@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.2.3'
+VERSION = 'v12.3.0'
 BETA = False
 
 
@@ -3619,16 +3619,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
     def delete_items(self):
 
-        def reorder_tags():
-            for tag_id in con.execute('SELECT TagId FROM Tag').fetchall():
-                pos = 1
-                for tag_map in con.execute('SELECT TagMapId FROM TagMap WHERE TagId = ? ORDER BY Position;', (tag_id[0],)).fetchall():
-                    con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (-pos, tag_map[0]))
-                    pos += 1
-            for tag_map in con.execute('SELECT TagMapId, Position FROM TagMap;').fetchall():
-                con.execute('UPDATE TagMap SET Position = ? WHERE TagMapId = ?', (abs(tag_map[1])-1, tag_map[0]))
-            con.execute('DELETE FROM Tag WHERE TagId > 0 AND TagId NOT IN ( SELECT TagId FROM TagMap );')
-
         def delete(table, field):
             return con.execute(f'DELETE FROM {table} WHERE {field} IN {items};').rowcount
 
@@ -3661,7 +3651,6 @@ class Window(QMainWindow, Ui_MainWindow):
             con.execute(f'DELETE FROM PlaylistItemMarkerParagraphMap WHERE PlaylistItemMarkerId IN ( SELECT PlaylistItemMarkerId FROM PlaylistItemMarker WHERE PlaylistItemId IN {items});').fetchall()
             delete('PlaylistItemMarker', 'PlaylistItemId')
             count = delete('PlaylistItem', 'PlaylistItemId')
-            reorder_tags()
             return count
 
         def delete_items():
@@ -3673,7 +3662,6 @@ class Window(QMainWindow, Ui_MainWindow):
                 return delete('BlockRange', 'BlockRangeId')
             elif category == _('Notes'):
                 count = delete('Note', 'NoteId')
-                reorder_tags()
                 return count
             elif category == _('Annotations'):
                 return delete('InputField', 'LocationId')
@@ -3890,16 +3878,9 @@ class Window(QMainWindow, Ui_MainWindow):
                     TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
                 -- Reindex Tag positions
-                CREATE TABLE CrossReference (TagId INTEGER, Old INTEGER, New INTEGER);
-                INSERT INTO CrossReference (TagId, Old, New)
-                    SELECT TagId, Position, ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 FROM TagMap;
-                UPDATE TagMap
-                    SET Position = (SELECT -New
-                        FROM CrossReference
-                            WHERE CrossReference.TagId = TagMap.TagId
-                                AND CrossReference.Old = TagMap.Position);
-                UPDATE TagMap SET Position = abs(Position);
-                DROP TABLE CrossReference;
+                CREATE TEMP TABLE TagMapNewPos AS SELECT TagMapId, ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 AS NewPos FROM TagMap;
+                UPDATE TagMap SET Position = (SELECT NewPos FROM TagMapNewPos WHERE TagMapNewPos.TagMapId = TagMap.TagMapId);
+                DROP TABLE TagMapNewPos;
 
                 -- Delete orphaned UserMark and BlockRange records
                 DELETE FROM UserMark WHERE
