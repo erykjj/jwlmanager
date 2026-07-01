@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [12.2.5] - 2026-07-01
+### Changed
+- Updated jwlCore libs to v0.32.0
+  - Fixed potential tag reindexing issues
+
 ## [12.2.4] - 2026-06-26
 ### Fixed
 
@@ -1208,6 +1213,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.2.5]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.5
 [12.2.4]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.4
 [12.2.3]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.3
 [12.2.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.2
