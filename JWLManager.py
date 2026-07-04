@@ -3878,9 +3878,10 @@ class Window(QMainWindow, Ui_MainWindow):
                     TagId NOT IN (SELECT DISTINCT TagId FROM TagMap) AND Type > 0;
 
                 -- Reindex Tag positions
-                CREATE TEMP TABLE TagMapNewPos AS SELECT TagMapId, ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 AS NewPos FROM TagMap;
-                UPDATE TagMap SET Position = (SELECT NewPos FROM TagMapNewPos WHERE TagMapNewPos.TagMapId = TagMap.TagMapId);
-                DROP TABLE TagMapNewPos;
+                CREATE TEMP TABLE TagMapNew AS SELECT TagMapId, PlaylistItemId, LocationId, NoteId, TagId, ROW_NUMBER() OVER (PARTITION BY TagId ORDER BY Position, TagMapId) - 1 AS Position FROM TagMap;
+                DELETE FROM TagMap;
+                INSERT INTO TagMap SELECT * FROM TagMapNew;
+                DROP TABLE TagMapNew;
 
                 -- Delete orphaned UserMark and BlockRange records
                 DELETE FROM UserMark WHERE
