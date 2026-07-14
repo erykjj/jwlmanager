@@ -6,6 +6,14 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [12.4.0] - 2026-07-13
+### Changed
+
 - Updated blank database template
 
 ### Fixed
@@ -13,9 +21,6 @@
 - Fixed importing playlists with new schema v16 format
 - Other small fixes
 
-### Removed
-
-____
 ## [12.3.0] - 2026-07-04
 ### Changed
 - Updated jwlCore libs to v0.32.1
@@ -1224,6 +1229,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.4.0
 [12.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.3.0
 [12.2.5]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.5
 [12.2.4]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.4
