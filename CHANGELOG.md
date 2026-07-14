@@ -8,6 +8,8 @@
 
 ### Fixed
 
+- Fixed importing playlists with new schema v16 format
+
 ### Removed
 
 ____
