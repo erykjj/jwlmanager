@@ -2442,6 +2442,63 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_playlist(playlist_name):
 
+            def upgrade_schema(con):
+                current_version = con.execute('PRAGMA user_version;').fetchone()[0]
+                if current_version >= 16:
+                    return
+                try:
+                    con.executescript("""
+                        ALTER TABLE Location ADD COLUMN Specialty TEXT;
+                        ALTER TABLE Location ADD COLUMN Edition TEXT;
+                        CREATE TABLE Location_new (
+                            LocationId     INTEGER NOT NULL PRIMARY KEY,
+                            BookNumber     INTEGER,
+                            ChapterNumber  INTEGER,
+                            DocumentId     INTEGER,
+                            Track          INTEGER,
+                            IssueTagNumber INTEGER NOT NULL DEFAULT 0,
+                            KeySymbol      TEXT,
+                            MepsLanguage   INTEGER,
+                            Type           INTEGER NOT NULL,
+                            Title          TEXT,
+                            Specialty      TEXT,
+                            Edition        TEXT,
+                            UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
+                            CHECK ((Type = 0 AND
+                                ((DocumentId IS NOT NULL AND DocumentId != 0) OR
+                                (Track IS NOT NULL AND
+                                ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
+                                (DocumentId IS NOT NULL AND DocumentId != 0))) OR
+                                (BookNumber IS NOT NULL AND BookNumber != 0 AND
+                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                                (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                                (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
+                                BookNumber IS NOT NULL AND BookNumber != 0 AND
+                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
+                                Type != 0),
+                            CHECK ((Type = 1 AND
+                                (BookNumber IS NULL OR BookNumber = 0) AND
+                                (ChapterNumber IS NULL OR ChapterNumber = 0) AND
+                                (DocumentId IS NULL OR DocumentId = 0) AND
+                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                                Track IS NULL) OR
+                                Type != 1),
+                            CHECK ((Type IN (2, 3) AND
+                                (BookNumber IS NULL OR BookNumber = 0) AND
+                                (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                                Type NOT IN (2, 3)));
+                        INSERT INTO Location_new SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, NULL, NULL
+                        FROM Location;
+                        DROP TABLE Location;
+                        ALTER TABLE Location_new RENAME TO Location;
+                        CREATE INDEX IF NOT EXISTS IX_Location_KeySymbol_MepsLanguage_BookNumber_ChapterNumber ON Location(KeySymbol, MepsLanguage, BookNumber, ChapterNumber);
+                        CREATE INDEX IF NOT EXISTS IX_Location_MepsLanguage_DocumentId ON Location(MepsLanguage, DocumentId);
+                        CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type, COALESCE(Specialty, ''), COALESCE(Edition, ''));
+                        PRAGMA user_version = 16;""")
+                    con.commit()
+                except:
+                    pass
+
             def update_db(playlist_name):
 
                 def existing_media():
@@ -2533,9 +2590,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             if available_ids.get('Location'):
                                 l_li = available_ids['Location'].pop()
-                                con.execute('INSERT INTO Location (LocationId, BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (l_li, l_bn, l_cn, l_ks, l_ml, l_tp, l_t))
+                                con.execute('INSERT INTO Location (LocationId, BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', (l_li, l_bn, l_cn, l_ks, l_ml, l_tp, l_t, l_sp, l_ed))
                             else:
-                                l_li = con.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?);', (l_bn, l_cn, l_ks, l_ml, l_tp, l_t)).lastrowid
+                                l_li = con.execute('INSERT INTO Location (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', (l_bn, l_cn, l_ks, l_ml, l_tp, l_t, l_sp, l_ed)).lastrowid
                     else:
                         existing_id = con.execute('SELECT LocationId FROM Location WHERE Track = ? AND IssueTagNumber = ? AND KeySymbol = ? AND MepsLanguage = ? AND Type = ?;', (l_tr, l_itn, l_ks, l_ml, l_tp)).fetchone()
                         if existing_id:
@@ -2543,9 +2600,9 @@ class Window(QMainWindow, Ui_MainWindow):
                         else:
                             if available_ids.get('Location'):
                                 l_li = available_ids['Location'].pop()
-                                con.execute('INSERT INTO Location (LocationId, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?, ?);', (l_li, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t))
+                                con.execute('INSERT INTO Location (LocationId, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);', (l_li, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, l_sp, l_ed))
                             else:
-                                l_li = con.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title) VALUES (?, ?, ?, ?, ?, ?, ?);', (l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t)).lastrowid
+                                l_li = con.execute('INSERT INTO Location (DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, Specialty, Edition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);', (l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, l_sp, l_ed)).lastrowid
                     con.execute('INSERT INTO PlaylistItemLocationMap (PlaylistItemId, LocationId, MajorMultimediaType, BaseDurationTicks) VALUES (?, ?, ?, ?) ON CONFLICT(PlaylistItemId, LocationId) DO UPDATE SET MajorMultimediaType = excluded.MajorMultimediaType, BaseDurationTicks = excluded.BaseDurationTicks;', (pi_pii, l_li, pilm_mmt, pilm_bdt))
 
                 hashes = {}
@@ -2557,7 +2614,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 sql = 'SELECT * FROM PlaylistItem p LEFT JOIN PlaylistItemLocationMap USING (PlaylistItemId) LEFT JOIN Location USING (LocationId) LEFT JOIN PlaylistItemAccuracy a ON p.Accuracy = a.PlaylistItemAccuracyId LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) JOIN IndependentMedia i ON i.FilePath = p.ThumbnailFilePath LEFT JOIN PlaylistItemMarker USING (PlaylistItemId) LEFT JOIN PlaylistItemMarkerBibleVerseMap USING (PlaylistItemMarkerId) LEFT JOIN PlaylistItemMarkerParagraphMap USING (PlaylistItemMarkerId)'
                 count = 0
                 for row in impcon.execute(sql).fetchall():
-                    pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
+                    pi_pii, pi_l, pi_stot, pi_etot, _, pi_ea, _, pilm_li, pilm_mmt, pilm_bdt, l_bn, l_cn, l_di, l_tr, l_itn, l_ks, l_ml, l_tp, l_t, l_sp, l_ed, _, pia_d, _, _, _, _, _, _, t_n, im_imi, im_of, im_fp, im_mt, im_h, _, pim_l, pim_stt, pim_dt, pim_etdt, pimbvm_vi, pimpm_mdi, pimpm_pi, pimpm_miwp = row
                     playlist = playlist_name if playlist_name else t_n
                     if con.execute('SELECT * FROM PlaylistItem pi LEFT JOIN IndependentMedia im ON (pi.ThumbnailFilePath = im.FilePath) LEFT JOIN TagMap USING (PlaylistItemId) LEFT JOIN Tag USING (TagId) WHERE Name = ? AND Hash = ? AND Tag.Name = ?;', (playlist, im_h, playlist)).fetchone():
                         continue
@@ -2579,6 +2636,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 zipped.extractall(playlist_path)
             db = 'userData.db'
             impcon = sqlite3.connect(f'{playlist_path}/{db}')
+            upgrade_schema(impcon)
             count = update_db(playlist_name)
             impcon.close()
             shutil.rmtree(playlist_path, ignore_errors=True)
