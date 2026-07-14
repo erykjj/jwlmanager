@@ -1792,7 +1792,7 @@ class Window(QMainWindow, Ui_MainWindow):
             expcon = sqlite3.connect(f'{playlist_path}/userData.db')
             expcon.executescript("PRAGMA temp_store = 2; PRAGMA journal_mode = 'OFF'; PRAGMA foreign_keys = 'OFF';")
             item_list = playlist_export()
-            expcon.execute('INSERT INTO LastModified VALUES (?);', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
+            expcon.execute('UPDATE LastModified SET LastModified = ?;', (datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),))
             expcon.executescript('PRAGMA foreign_keys = "ON"; VACUUM;')
             expcon.commit()
             expcon.close()
