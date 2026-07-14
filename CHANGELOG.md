@@ -6,9 +6,12 @@
 
 ### Changed
 
+- Updated blank database template
+
 ### Fixed
 
 - Fixed importing playlists with new schema v16 format
+- Other small fixes
 
 ### Removed
 
