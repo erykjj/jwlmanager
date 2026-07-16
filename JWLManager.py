@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.4.0'
+VERSION = 'v12.5.0'
 BETA = False
 
 
@@ -986,7 +986,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 'deviceName': f'{APP}_{VERSION}',
                 'databaseName': 'userData.db',
                 'hash': '',
-                'schemaVersion': 14 } }
+                'schemaVersion': 16 } }
         with open(f'{TMP_PATH}/manifest.json', 'w') as json_file:
                 json.dump(self.manifest, json_file, indent=None, separators=(',', ':'))
         self.file_loaded(False)
@@ -1013,69 +1013,68 @@ class Window(QMainWindow, Ui_MainWindow):
             return False
         self.merge_items(fname[0])
 
+    def upgrade_schema(self, db_path):
+        con = sqlite3.connect(db_path)
+        current_version = con.execute('PRAGMA user_version;').fetchone()[0]
+        if current_version >= 16:
+            con.close()
+            return
+        try:
+            con.executescript("""
+                ALTER TABLE Location ADD COLUMN Specialty TEXT;
+                ALTER TABLE Location ADD COLUMN Edition TEXT;
+                CREATE TABLE Location_new (
+                    LocationId     INTEGER NOT NULL PRIMARY KEY,
+                    BookNumber     INTEGER,
+                    ChapterNumber  INTEGER,
+                    DocumentId     INTEGER,
+                    Track          INTEGER,
+                    IssueTagNumber INTEGER NOT NULL DEFAULT 0,
+                    KeySymbol      TEXT,
+                    MepsLanguage   INTEGER,
+                    Type           INTEGER NOT NULL,
+                    Title          TEXT,
+                    Specialty      TEXT,
+                    Edition        TEXT,
+                    UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
+                    CHECK ((Type = 0 AND
+                        ((DocumentId IS NOT NULL AND DocumentId != 0) OR
+                        (Track IS NOT NULL AND
+                        ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
+                        (DocumentId IS NOT NULL AND DocumentId != 0))) OR
+                        (BookNumber IS NOT NULL AND BookNumber != 0 AND
+                        KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                        (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                        (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
+                        BookNumber IS NOT NULL AND BookNumber != 0 AND
+                        KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
+                        Type != 0),
+                    CHECK ((Type = 1 AND
+                        (BookNumber IS NULL OR BookNumber = 0) AND
+                        (ChapterNumber IS NULL OR ChapterNumber = 0) AND
+                        (DocumentId IS NULL OR DocumentId = 0) AND
+                        KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
+                        Track IS NULL) OR
+                        Type != 1),
+                    CHECK ((Type IN (2, 3) AND
+                        (BookNumber IS NULL OR BookNumber = 0) AND
+                        (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
+                        Type NOT IN (2, 3)));
+                INSERT INTO Location_new SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, NULL, NULL
+                FROM Location;
+                DROP TABLE Location;
+                ALTER TABLE Location_new RENAME TO Location;
+                CREATE INDEX IF NOT EXISTS IX_Location_KeySymbol_MepsLanguage_BookNumber_ChapterNumber ON Location(KeySymbol, MepsLanguage, BookNumber, ChapterNumber);
+                CREATE INDEX IF NOT EXISTS IX_Location_MepsLanguage_DocumentId ON Location(MepsLanguage, DocumentId);
+                CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type, COALESCE(Specialty, ''), COALESCE(Edition, ''));
+                PRAGMA user_version = 16;""")
+            con.commit()
+        except:
+            pass
+        finally:
+            con.close()
+
     def load_file(self, archive=''):
-
-        def upgrade_schema():
-            con = sqlite3.connect(f'{TMP_PATH}/{DB_NAME}')
-            current_version = con.execute('PRAGMA user_version;').fetchone()[0]
-            if current_version >= 16:
-                con.close()
-                return
-            try:
-                con.executescript("""
-                    ALTER TABLE Location ADD COLUMN Specialty TEXT;
-                    ALTER TABLE Location ADD COLUMN Edition TEXT;
-                    CREATE TABLE Location_new (
-                        LocationId     INTEGER NOT NULL PRIMARY KEY,
-                        BookNumber     INTEGER,
-                        ChapterNumber  INTEGER,
-                        DocumentId     INTEGER,
-                        Track          INTEGER,
-                        IssueTagNumber INTEGER NOT NULL DEFAULT 0,
-                        KeySymbol      TEXT,
-                        MepsLanguage   INTEGER,
-                        Type           INTEGER NOT NULL,
-                        Title          TEXT,
-                        Specialty      TEXT,
-                        Edition        TEXT,
-                        UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
-                        CHECK ((Type = 0 AND
-                            ((DocumentId IS NOT NULL AND DocumentId != 0) OR
-                            (Track IS NOT NULL AND
-                            ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
-                            (DocumentId IS NOT NULL AND DocumentId != 0))) OR
-                            (BookNumber IS NOT NULL AND BookNumber != 0 AND
-                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
-                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
-                            (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
-                            BookNumber IS NOT NULL AND BookNumber != 0 AND
-                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
-                            Type != 0),
-                        CHECK ((Type = 1 AND
-                            (BookNumber IS NULL OR BookNumber = 0) AND
-                            (ChapterNumber IS NULL OR ChapterNumber = 0) AND
-                            (DocumentId IS NULL OR DocumentId = 0) AND
-                            KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
-                            Track IS NULL) OR
-                            Type != 1),
-                        CHECK ((Type IN (2, 3) AND
-                            (BookNumber IS NULL OR BookNumber = 0) AND
-                            (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
-                            Type NOT IN (2, 3)));
-                    INSERT INTO Location_new SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, NULL, NULL
-                    FROM Location;
-                    DROP TABLE Location;
-                    ALTER TABLE Location_new RENAME TO Location;
-                    CREATE INDEX IF NOT EXISTS IX_Location_KeySymbol_MepsLanguage_BookNumber_ChapterNumber ON Location(KeySymbol, MepsLanguage, BookNumber, ChapterNumber);
-                    CREATE INDEX IF NOT EXISTS IX_Location_MepsLanguage_DocumentId ON Location(MepsLanguage, DocumentId);
-                    CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type, COALESCE(Specialty, ''), COALESCE(Edition, ''));
-                    PRAGMA user_version = 16;""")
-                con.commit()
-            except:
-                pass
-            finally:
-                con.close()
-
         if self.modified:
             self.check_save()
         if not archive:
@@ -1098,7 +1097,7 @@ class Window(QMainWindow, Ui_MainWindow):
         try:
             with ZipFile(archive, 'r') as zipped:
                 zipped.extractall(TMP_PATH)
-            upgrade_schema()
+            self.upgrade_schema(f'{TMP_PATH}/{DB_NAME}')
             with open(f'{TMP_PATH}/manifest.json', 'r') as json_file:
                 self.manifest = json.load(json_file)
             self.file_loaded()
@@ -1249,6 +1248,8 @@ class Window(QMainWindow, Ui_MainWindow):
             db_backup = f'{TMP_PATH}/userData_backup.db'
             shutil.copy2(db_path, db_backup)
             downgrade_schema()
+        else:
+            self.upgrade_schema(f'{TMP_PATH}/{DB_NAME}')
         update_manifest()
         try:
             with ZipFile(self.save_filename, 'w', compression=ZIP_DEFLATED) as newzip:
@@ -1806,7 +1807,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     'deviceName': f'{APP}_{VERSION}',
                     'databaseName': 'userData.db',
                     'hash': sha256hash(f'{playlist_path}/userData.db'),
-                    'schemaVersion': 14 } }
+                    'schemaVersion': 16 } }
             with open(f'{playlist_path}/manifest.json', 'w') as json_file:
                     json.dump(m, json_file, indent=None, separators=(',', ':'))
             with ZipFile(fname, 'w', compression=ZIP_DEFLATED) as newzip:
@@ -2442,63 +2443,6 @@ class Window(QMainWindow, Ui_MainWindow):
 
         def import_playlist(playlist_name):
 
-            def upgrade_schema(con):
-                current_version = con.execute('PRAGMA user_version;').fetchone()[0]
-                if current_version >= 16:
-                    return
-                try:
-                    con.executescript("""
-                        ALTER TABLE Location ADD COLUMN Specialty TEXT;
-                        ALTER TABLE Location ADD COLUMN Edition TEXT;
-                        CREATE TABLE Location_new (
-                            LocationId     INTEGER NOT NULL PRIMARY KEY,
-                            BookNumber     INTEGER,
-                            ChapterNumber  INTEGER,
-                            DocumentId     INTEGER,
-                            Track          INTEGER,
-                            IssueTagNumber INTEGER NOT NULL DEFAULT 0,
-                            KeySymbol      TEXT,
-                            MepsLanguage   INTEGER,
-                            Type           INTEGER NOT NULL,
-                            Title          TEXT,
-                            Specialty      TEXT,
-                            Edition        TEXT,
-                            UNIQUE (BookNumber, ChapterNumber, KeySymbol, MepsLanguage, Type),
-                            CHECK ((Type = 0 AND
-                                ((DocumentId IS NOT NULL AND DocumentId != 0) OR
-                                (Track IS NOT NULL AND
-                                ((KeySymbol IS NOT NULL AND length(KeySymbol) > 0) OR
-                                (DocumentId IS NOT NULL AND DocumentId != 0))) OR
-                                (BookNumber IS NOT NULL AND BookNumber != 0 AND
-                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
-                                (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
-                                (ChapterNumber IS NOT NULL AND ChapterNumber != 0 AND
-                                BookNumber IS NOT NULL AND BookNumber != 0 AND
-                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0))) OR
-                                Type != 0),
-                            CHECK ((Type = 1 AND
-                                (BookNumber IS NULL OR BookNumber = 0) AND
-                                (ChapterNumber IS NULL OR ChapterNumber = 0) AND
-                                (DocumentId IS NULL OR DocumentId = 0) AND
-                                KeySymbol IS NOT NULL AND length(KeySymbol) > 0 AND
-                                Track IS NULL) OR
-                                Type != 1),
-                            CHECK ((Type IN (2, 3) AND
-                                (BookNumber IS NULL OR BookNumber = 0) AND
-                                (ChapterNumber IS NULL OR ChapterNumber = 0)) OR
-                                Type NOT IN (2, 3)));
-                        INSERT INTO Location_new SELECT LocationId, BookNumber, ChapterNumber, DocumentId, Track, IssueTagNumber, KeySymbol, MepsLanguage, Type, Title, NULL, NULL
-                        FROM Location;
-                        DROP TABLE Location;
-                        ALTER TABLE Location_new RENAME TO Location;
-                        CREATE INDEX IF NOT EXISTS IX_Location_KeySymbol_MepsLanguage_BookNumber_ChapterNumber ON Location(KeySymbol, MepsLanguage, BookNumber, ChapterNumber);
-                        CREATE INDEX IF NOT EXISTS IX_Location_MepsLanguage_DocumentId ON Location(MepsLanguage, DocumentId);
-                        CREATE UNIQUE INDEX IF NOT EXISTS IX_Location_Media ON Location(KeySymbol, IssueTagNumber, MepsLanguage, DocumentId, Track, Type, COALESCE(Specialty, ''), COALESCE(Edition, ''));
-                        PRAGMA user_version = 16;""")
-                    con.commit()
-                except:
-                    pass
-
             def update_db(playlist_name):
 
                 def existing_media():
@@ -2635,8 +2579,8 @@ class Window(QMainWindow, Ui_MainWindow):
             with ZipFile(file, 'r') as zipped:
                 zipped.extractall(playlist_path)
             db = 'userData.db'
+            self.upgrade_schema(f'{playlist_path}/{db}')
             impcon = sqlite3.connect(f'{playlist_path}/{db}')
-            upgrade_schema(impcon)
             count = update_db(playlist_name)
             impcon.close()
             shutil.rmtree(playlist_path, ignore_errors=True)
@@ -2725,7 +2669,8 @@ class Window(QMainWindow, Ui_MainWindow):
             lib.setProgressCallback(progress_cb)
             with ZipFile(file, 'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
-            res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge')
+            self.upgrade_schema(f'{TMP_PATH}/merge/{DB_NAME}')
+            res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge', False)
             if res != 0:
                 count = 0
             shutil.rmtree(f'{TMP_PATH}/merge', ignore_errors=True)
