@@ -6,15 +6,20 @@
 
 ### Changed
 
+### Fixed
+
+### Removed
+
+____
+## [12.5.0] - 2026-07-16
+### Changed
+
 - Small code optimizations
 
 ### Fixed
 
 - Fixed jwlCore bindings
 
-### Removed
-
-____
 ## [12.4.0] - 2026-07-13
 ### Changed
 
@@ -1233,6 +1238,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.5.0
 [12.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.4.0
 [12.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.3.0
 [12.2.5]:https://github.com/erykjj/jwlmanager/releases/tag/v12.2.5
