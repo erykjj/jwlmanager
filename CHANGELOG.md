@@ -6,7 +6,11 @@
 
 ### Changed
 
+- Small code optimizations
+
 ### Fixed
+
+- Fixed jwlCore bindings
 
 ### Removed
 
