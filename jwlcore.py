@@ -61,7 +61,7 @@ CALLBACKTYPE = ctypes.CFUNCTYPE(None, ctypes.c_int)
 lib.setProgressCallback.argtypes = [CALLBACKTYPE]
 lib.setProgressCallback.restype  = None
 
-lib.mergeDatabase.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+lib.mergeDatabase.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_bool]
 lib.mergeDatabase.restype  = ctypes.c_int
 
 lib.getLastResult.argtypes = []
@@ -71,8 +71,8 @@ lib.getCoreVersion.argtypes = []
 lib.getCoreVersion.restype  = ctypes.c_char_p
 
 # Python wrappers
-def merge_databases(path1: str, path2: str) -> int:
-    return lib.mergeDatabase(path1.encode("utf-8"), path2.encode("utf-8"))
+def merge_databases(path1: str, path2: str, downgrade: bool = False) -> int:
+    return lib.mergeDatabase(path1.encode("utf-8"), path2.encode("utf-8"), downgrade)
 
 def get_last_result() -> str | None:
     p = lib.getLastResult()
