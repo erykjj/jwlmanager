@@ -2669,7 +2669,6 @@ class Window(QMainWindow, Ui_MainWindow):
             lib.setProgressCallback(progress_cb)
             with ZipFile(file, 'r') as zipped:
                 zipped.extractall(f'{TMP_PATH}/merge')
-            self.upgrade_schema(f'{TMP_PATH}/merge/{DB_NAME}')
             res = merge_databases(f'{TMP_PATH}', f'{TMP_PATH}/merge', False)
             if res != 0:
                 count = 0
