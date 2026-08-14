@@ -11,6 +11,12 @@
 ### Removed
 
 ____
+## [12.6.0] - 2026-08-14
+### Changed
+
+- Updated jwlCore libs to v0.33.0
+  - Fixed two table merges
+
 ## [12.5.0] - 2026-07-16
 ### Changed
 
@@ -1238,6 +1244,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.0
 [12.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.5.0
 [12.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.4.0
 [12.3.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.3.0
