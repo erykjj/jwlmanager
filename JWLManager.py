@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.6.0'
+VERSION = 'v12.7.0'
 BETA = False
 
 
@@ -829,7 +829,10 @@ class Window(QMainWindow, Ui_MainWindow):
                         if depth == len(values) - 1:
                             node['data']['Id'].extend(id_list)
                             self.leaves[node['item']] = node['data']['Id']
-                        node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
+                        try:
+                            node['item'].setData(1, Qt.ItemDataRole.DisplayRole, node['count'])
+                        except RuntimeError:
+                            return tree
                 return tree
 
             def rebuild_cached(tree, parent_item):
