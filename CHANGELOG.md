@@ -7,6 +7,7 @@
 ### Changed
 
 - Added a crash-guard to prevent crashes under certain circumstances
+- Extended merge error display time
 
 ### Fixed
 
