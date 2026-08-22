@@ -6,15 +6,18 @@
 
 ### Changed
 
-- Added a crash-guard to prevent crashes under certain circumstances
-- Extended merge error display time
-- Updated publications catalog
-
 ### Fixed
 
 ### Removed
 
 ____
+## [12.6.1] - 2026-08-22
+### Changed
+
+- Added a crash-guard to prevent crashes under certain circumstances
+- Extended merge error display time
+- Updated publications catalog
+
 ## [12.6.0] - 2026-08-14
 ### Changed
 
@@ -1248,6 +1251,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.6.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.1
 [12.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.0
 [12.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.5.0
 [12.4.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.4.0
