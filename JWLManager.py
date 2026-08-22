@@ -2687,7 +2687,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.clean_up()
             sys.exit()
         if count == 0:
-            self.statusBar.showMessage(' ' + _('NOT merged!') + ' ' + get_last_result(), 6000)
+            self.statusBar.showMessage(' ' + _('NOT merged!') + ' ' + get_last_result(), 8000)
             return
         else:
             message = f' {count:,} '+_('items merged')
