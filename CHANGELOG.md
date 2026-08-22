@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Added a crash-guard to prevent crashes under certain circumstances
+
 ### Fixed
 
 ### Removed
