@@ -57,7 +57,7 @@ class AboutBox(QDialog):
         year = f'MIT ©{datetime.now().year}'
         owner = 'Eryk J.'
         web = 'https://github.com/erykjj/jwlmanager'
-        contact = b'\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6E\x76\x65\x6E\x74\x61\x74\x69\x2E\x6F\x72\x67'.decode('utf-8')
+        contact = b'\x70\x72\x6F\x78\x79\x2B\x69\x6E\x66\x69\x6E\x69\x74\x69\x40\x69\x6B\x2E\x6D\x65'.decode('utf-8')
 
         self.setStyleSheet('QDialog {border:2px solid #5b3c88}')
         layout = QHBoxLayout(self)
