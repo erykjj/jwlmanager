@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [12.6.2] - 2026-09-02
+### Changed
+
+- Update contact
+
 ## [12.6.1] - 2026-08-22
 ### Changed
 
@@ -1251,6 +1256,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.6.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.2
 [12.6.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.1
 [12.6.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.0
 [12.5.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.5.0
