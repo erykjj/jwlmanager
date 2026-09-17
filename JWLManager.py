@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.6.2'
+VERSION = 'v12.6.3'
 BETA = False
 
 
@@ -1499,6 +1499,8 @@ class Window(QMainWindow, Ui_MainWindow):
             def shorten_title(t):
                 if not t:
                     return _('UNTITLED')
+                t = regex.sub(r'[\r\n\t]+', ' ', t)
+                t = regex.sub(r'\s+', ' ', t)
                 t = regex.sub(r'(\d):+|:+', lambda m: f'{m.group(1)}.' if m.group(1) else '-', t)
                 t = regex.sub(r'[^\w\s\-,().;]+', '', t)
                 t = t.strip()
