@@ -1,4 +1,4 @@
-name: 'Build Windows v1.6.0'
+name: 'Build Windows v1.7.0'
 
 on:
   workflow_call:
@@ -58,7 +58,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          python -m nuitka --onefile --onefile-tempdir-spec="{PROGRAM_DIR}/.__JWLManager__" --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
           New-Item -ItemType Directory -Force -Path dist
           Move-Item JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-amd64.exe
 
@@ -126,7 +126,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          python -m nuitka --onefile --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
+          python -m nuitka --onefile --onefile-tempdir-spec="{PROGRAM_DIR}/.__JWLManager__" --windows-icon-from-ico=res/icons/JWLManager.ico --include-data-dir=res=res --windows-console-mode=disable --user-package-configuration-file=.github/workflows/jwlCore.config --include-module=xlsx2csv --include-package-data=puremagic --enable-plugin=pyside6 --assume-yes-for-downloads JWLManager.py
           New-Item -ItemType Directory -Force -Path dist
           Move-Item JWLManager.exe dist/JWLManager_${{ inputs.TAG }}-arm64.exe
 
