@@ -1,4 +1,4 @@
-name: 'Draft Release v1.6.0'
+name: 'Draft Release v1.7.0'
 
 on:
   push:
@@ -102,6 +102,7 @@ jobs:
             - Stand-alone: [JWLManager_${{ github.ref_name }}](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-x86_64)
           - Windows 10/11:
             - Stand-alone: [JWLManager_${{ github.ref_name }}-amd64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-amd64.exe)
+              - NOTE: This is unpacked to a directory called `.__JWLManager__` next to the executable
             - Zipped folder: [JWLManager_${{ github.ref_name }}-amd64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-amd64.zip)
           - Windows 10/11 (ARM or older Intel CPUs that don't work with the above):
             - Stand-alone: [JWLManager_${{ github.ref_name }}-arm64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/JWLManager_${{ github.ref_name }}-arm64.exe)
