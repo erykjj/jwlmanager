@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Single-file executable on Windows unpacks to `.\.__JWLManager__\` (next to the executable)
+
 ### Fixed
 
 ### Removed
