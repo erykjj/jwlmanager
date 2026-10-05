@@ -32,7 +32,7 @@ jobs:
       TAG: ${{ github.ref_name }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
     - name: Download Linux binary
       uses: actions/download-artifact@v8
       with:
