@@ -823,7 +823,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
                             if current_parent == self.treeWidget:
                                 now = time()
-                                if now - self.last_refresh >= 0.05:
+                                if now - self.last_refresh >= 0.01:
                                     app.processEvents()
                                     self.last_refresh = now
                             node['items'][value] = {'count': 0, 'data': defaultdict(list), 'items': {}, 'item': child_item}
