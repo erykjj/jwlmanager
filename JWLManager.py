@@ -26,8 +26,8 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.8.0'
-BETA = True
+VERSION = 'v12.7.1'
+BETA = False
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -944,10 +944,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.leaves = {}
             self.treeWidget.clear()
             self.treeWidget.repaint()
-            now = time()
             build_tree()
-            fin = time()
-            print (now, fin, fin-now)
             con.commit()
             con.close()
         except Exception as ex:
