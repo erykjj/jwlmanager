@@ -26,8 +26,8 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.7.0'
-BETA = False
+VERSION = 'v12.8.0'
+BETA = True
 
 
 from res.ui_main_window import Ui_MainWindow
@@ -133,6 +133,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.older_schema = False
             self.current_data = []
             self.tree_cache = {}
+            self.last_refresh = time()
 
         self.mode = settings.value('JWLManager/theme', 'light')
         self.format = settings.value('JWLManager/format', 'xlsx')
@@ -821,7 +822,10 @@ class Window(QMainWindow, Ui_MainWindow):
                             child_item.setData(1, Qt.ItemDataRole.DisplayRole, 0)
                             child_item.setTextAlignment(1, Qt.AlignmentFlag.AlignCenter)
                             if current_parent == self.treeWidget:
-                                app.processEvents()
+                                now = time()
+                                if now - self.last_refresh >= 0.01:
+                                    app.processEvents()
+                                    self.last_refresh = now
                             node['items'][value] = {'count': 0, 'data': defaultdict(list), 'items': {}, 'item': child_item}
                         node = node['items'][value]
                         current_parent = node['item']
@@ -909,6 +913,7 @@ class Window(QMainWindow, Ui_MainWindow):
                 rebuild_cached(tree, self.treeWidget)
             else:
                 tree = traverse(self.current_data, views[grouping], self.treeWidget)
+                app.processEvents()
                 self.tree_cache[cat][grp]['tree'] = tree
 
         if new_data:
@@ -939,7 +944,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.leaves = {}
             self.treeWidget.clear()
             self.treeWidget.repaint()
+            now = time()
             build_tree()
+            fin = time()
+            print (now, fin, fin-now)
             con.commit()
             con.close()
         except Exception as ex:
