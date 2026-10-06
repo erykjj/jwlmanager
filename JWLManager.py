@@ -939,10 +939,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.leaves = {}
             self.treeWidget.clear()
             self.treeWidget.repaint()
-            now = time()
             build_tree()
-            fin = time()
-            print (now, fin, fin-now)
             con.commit()
             con.close()
         except Exception as ex:
