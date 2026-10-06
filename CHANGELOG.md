@@ -11,6 +11,11 @@
 ### Removed
 
 ____
+## [12.7.1] - 2026-10-06
+### Changed
+
+- Slight optimization to tree-building code
+
 ## [12.7.0] - 2026-10-05
 ### Changed
 
@@ -1267,6 +1272,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.7.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.1
 [12.7.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.0
 [12.6.3]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.3
 [12.6.2]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.2
