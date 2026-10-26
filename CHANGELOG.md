@@ -6,6 +6,10 @@
 
 ### Changed
 
+- Updated dependencies
+  - **Windows ARM users** - please confirm everything is working correctly
+- Adapted QSettings to PySide 6.12
+
 ### Fixed
 
 ### Removed
