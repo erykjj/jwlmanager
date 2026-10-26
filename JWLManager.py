@@ -66,6 +66,24 @@ DB_NAME = 'userData.db'
 CALLBACKTYPE = ctypes.CFUNCTYPE(None, ctypes.c_int)
 
 
+def get_setting(key, default, cast=None):
+    # Transition JWLManager.conf from PySide 6.9 to PySide 6.12's restricted deserialization
+    try:
+        val = settings.value(key, default)
+    except RuntimeError:
+        val = default
+        try:
+            settings.setValue(key, default)
+        except RuntimeError:
+            pass
+    if cast is not None:
+        try:
+            val = cast(val)
+        except (TypeError, ValueError):
+            val = default
+    return val
+
+
 class Window(QMainWindow, Ui_MainWindow):
 
     def __init__(self, archive=''):
@@ -114,8 +132,10 @@ class Window(QMainWindow, Ui_MainWindow):
             self.int_total = 0
             self.modified = False
             self.loaded = False
-            self.title_format = settings.value('JWLManager/title', 'short')
+            self.title_format = get_setting('JWLManager/title', 'short')
             options = { 'code': 0, 'short': 1, 'full': 2 }
+            if self.title_format not in options:
+                self.title_format = 'short'
             self.titleChoices.actions()[options[self.title_format]].setChecked(True)
             self.save_filename = ''
             self.current_archive = archive
@@ -135,32 +155,41 @@ class Window(QMainWindow, Ui_MainWindow):
             self.tree_cache = {}
             self.last_refresh = time()
 
-        self.mode = settings.value('JWLManager/theme', 'light')
-        self.format = settings.value('JWLManager/format', 'xlsx')
+        self.mode = get_setting('JWLManager/theme', 'light')
+        self.format = get_setting('JWLManager/format', 'xlsx')
         self.setupUi(self)
         self.actionReindex.setVisible(False)
-        self.combo_category.setCurrentIndex(int(settings.value('JWLManager/category', 0)))
+        self.combo_category.setCurrentIndex(get_setting('JWLManager/category', 0, cast=int))
         self.combo_category.view().setMinimumWidth(190)
         self.combo_grouping.setCurrentText(_('Type'))
-        self.viewer_pos = settings.value('Viewer/position', QPoint(50, 25))
-        self.viewer_size = settings.value('Viewer/size', QSize(755, 500))
-        self.help_pos = settings.value('Help/position', QPoint(50, 50))
-        self.help_size = settings.value('Help/size', QSize(350, 400))
-        self.tag_size = settings.value('Tag/size', QSize(350, 400))
+        self.viewer_pos = get_setting('Viewer/position', QPoint(50, 25), cast=QPoint)
+        self.viewer_size = get_setting('Viewer/size', QSize(755, 500), cast=QSize)
+        self.help_pos = get_setting('Help/position', QPoint(50, 50), cast=QPoint)
+        self.help_size = get_setting('Help/size', QSize(350, 400), cast=QSize)
+        self.tag_size = get_setting('Tag/size', QSize(350, 400), cast=QSize)
         self.setAcceptDrops(True)
         self.status_label = QLabel()
         self.statusBar.addPermanentWidget(self.status_label, 0)
         self.statusBar.setStyleSheet('font-weight: bold;')
         self.treeWidget.setSortingEnabled(True)
-        self.treeWidget.sortByColumn(int(settings.value('JWLManager/sort', 1)), settings.value('JWLManager/direction', Qt.DescendingOrder))
-        self.treeWidget.setColumnWidth(0, int(settings.value('JWLManager/column1', 500)))
-        self.treeWidget.setColumnWidth(1, int(settings.value('JWLManager/column2', 30)))
+        sortCol = get_setting('JWLManager/sort', 1, cast=int)
+        sortDir = Qt.SortOrder(get_setting('JWLManager/direction', 1, cast=int))
+        settings.setValue('JWLManager/direction', sortDir.value)
+        col1Width = get_setting('JWLManager/column1', 500, cast=int)
+        col2Width = get_setting('JWLManager/column2', 30, cast=int)
+        winSize = get_setting('Main_Window/size', QSize(680, 500), cast=QSize)
+        winPos = get_setting('Main_Window/position', center(), cast=QPoint)
+
+        self.treeWidget.sortByColumn(sortCol, sortDir)
+        self.treeWidget.setColumnWidth(0, col1Width)
+        self.treeWidget.setColumnWidth(1, col2Width)
         self.treeWidget.setExpandsOnDoubleClick(False)
-        self.resize(settings.value('Main_Window/size', QSize(680, 500)))
-        self.move(settings.value('Main_Window/position', center()))
+        self.resize(winSize)
+        self.move(winPos)
         self.viewer_window = QDialog(self)
         connect_signals()
         set_vars()
+        settings.sync()
         self.about_window = AboutBox(self, app=APP, version=VERSION)
         self.help_window = HelpBox(_('Help'), self.help_size, self.help_pos)
         self.merge_window = MergeDialog(self)
@@ -3957,7 +3986,7 @@ class Window(QMainWindow, Ui_MainWindow):
         settings.setValue('JWLManager/column1', self.treeWidget.columnWidth(0))
         settings.setValue('JWLManager/column2', self.treeWidget.columnWidth(1))
         settings.setValue('JWLManager/sort', self.treeWidget.sortColumn())
-        settings.setValue('JWLManager/direction', self.treeWidget.header().sortIndicatorOrder())
+        settings.setValue('JWLManager/direction', self.treeWidget.header().sortIndicatorOrder().value)
         settings.setValue('JWLManager/format', self.format)
         settings.setValue('Main_Window/position', self.pos())
         settings.setValue('Main_Window/size', self.size())
@@ -4014,7 +4043,7 @@ def get_language():
         group.add_argument(f'-{k}', action='store_true', help=available_languages[k])
         tr[k] = gettext.translation('messages', localedir, fallback=True, languages=[k])
     args = vars(parser.parse_args())
-    lng = settings.value('JWLManager/language', 'en')
+    lng = get_setting('JWLManager/language', 'en')
     for l in available_languages.keys():
         if args[l]:
             lng = l
