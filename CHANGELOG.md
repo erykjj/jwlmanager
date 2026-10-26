@@ -6,15 +6,18 @@
 
 ### Changed
 
-- Updated dependencies
-  - **Windows ARM users** - please confirm everything is working correctly
-- Adapted QSettings to PySide 6.12
-
 ### Fixed
 
 ### Removed
 
 ____
+## [12.8.0] - 2026-10-26
+### Changed
+
+- Updated dependencies
+  - **Windows ARM users** - please confirm & report if the app launches correctly
+- Adapted QSettings to PySide 6.12
+
 ## [12.7.1] - 2026-10-06
 ### Changed
 
@@ -1276,6 +1279,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.8.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.8.0
 [12.7.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.1
 [12.7.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.0
 [12.6.3]:https://github.com/erykjj/jwlmanager/releases/tag/v12.6.3
