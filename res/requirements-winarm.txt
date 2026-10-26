@@ -1,10 +1,10 @@
-certifi==2025.4.26
+certifi
 pillow
 polars-lts-cpu
 puremagic
-PySide6==6.9.*
+PySide6==6.*
 regex
 requests
-shiboken6==6.9.*
+shiboken6==6.*
 xlsx2csv
 XlsxWriter
