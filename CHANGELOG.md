@@ -6,6 +6,8 @@
 
 ### Changed
 
+- Updated Bible book names
+
 ### Fixed
 
 ### Removed
