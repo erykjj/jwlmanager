@@ -6,13 +6,17 @@
 
 ### Changed
 
-- Updated Bible book names
-
 ### Fixed
 
 ### Removed
 
 ____
+## [12.9.0] - 2026-11-22
+### Changed
+
+- Updated Bible book names
+- Updated publications catalog
+
 ## [12.8.0] - 2026-10-26
 ### Changed
 
@@ -1281,6 +1285,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.9.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.9.0
 [12.8.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.8.0
 [12.7.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.1
 [12.7.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.0
