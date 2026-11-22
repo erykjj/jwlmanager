@@ -26,7 +26,7 @@
 """
 
 APP = 'JWLManager'
-VERSION = 'v12.8.0'
+VERSION = 'v12.9.0'
 BETA = False
 
 
@@ -1653,7 +1653,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             item['Reference'] = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={lang_symbol[item['LANG']]}&pub={item['PUB']}&bible={item['Reference']}"
                             if not item.get('HEADING'):
-                                item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
+                                item['HEADING'] = f"{bible_book[item['BK']]} {item['CH']}"
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -1718,7 +1718,7 @@ class Window(QMainWindow, Ui_MainWindow):
                     if item['TYPE'] == 0 and not (item.get('BK') or item.get('DOC')):
                         fname += _('* INDEPENDENT *').strip('* ') + '/'
                     elif item.get('BK'):
-                        fname += f"{pub}/{str(item['BK']).zfill(2)}_{bible_books[item['BK']]}/{str(item['CH']).zfill(3)}/"
+                        fname += f"{pub}/{str(item['BK']).zfill(2)}_{bible_book[item['BK']]}/{str(item['CH']).zfill(3)}/"
                         if item.get('VS') is not None:
                             fname += str(item['VS']).zfill(3) + '_'
                     else:
@@ -2677,7 +2677,6 @@ class Window(QMainWindow, Ui_MainWindow):
             message = f' {category}: {count:,} '+_('items imported/updated')
             self.statusBar.showMessage(message, 4000)
         if count > 0:
-            
             self.regroup(True, message)
             self.archive_modified()
 
@@ -2787,7 +2786,7 @@ class Window(QMainWindow, Ui_MainWindow):
             self.viewer_window.body.setProperty('note', color)
             self.viewer_window.title.setStyleSheet(self.viewer_window.title.styleSheet())
             self.viewer_window.body.setStyleSheet(self.viewer_window.body.styleSheet())
-            
+
         def change_color(action):
             color = action.data()
             apply_color(color)
@@ -3059,7 +3058,7 @@ class Window(QMainWindow, Ui_MainWindow):
                             script = str(item['BK']).zfill(2) + str(item['CH']).zfill(3) + vs
                             item['Link'] = f"https://www.jw.org/finder?wtlocale={item['LANG']}&pub={item['PUB']}&bible={script}"
                             if not item.get('HEADING'):
-                                item['HEADING'] = f"{bible_books[item['BK']]} {item['CH']}"
+                                item['HEADING'] = f"{bible_book[item['BK']]} {item['CH']}"
                             elif item.get('VS') is not None and (':' not in item['HEADING']):
                                 item['HEADING'] += f":{item['VS']}"
                         else: # publication note
@@ -4062,8 +4061,9 @@ def get_language():
 def read_resources(lng):
 
     def load_bible_books(lng):
-        for row in con.execute('SELECT Number, Name FROM BibleBooks WHERE Language = ?;', (lng,)).fetchall():
+        for row in con.execute('SELECT Number, Name, Singular FROM BibleBooks WHERE Language = ?;', (lng,)).fetchall():
             bible_books[row[0]] = row[1]
+            bible_book[row[0]] = row[2]
 
     def load_languages():
         for row in con.execute('SELECT Language, Name, Code, Symbol FROM Languages;').fetchall():
@@ -4073,11 +4073,12 @@ def read_resources(lng):
                 ui_lang = row[0]
         return ui_lang
 
-    global _, bible_books, favorites, lang_name, lang_symbol, publications
+    global _, bible_book, bible_books, favorites, lang_name, lang_symbol, publications
 
     _ = tr[lng].gettext
     lang_name = {}
     lang_symbol = {}
+    bible_book = {}
     bible_books = {}
 
     con = sqlite3.connect(PROJECT_PATH / 'res/resources.db')
