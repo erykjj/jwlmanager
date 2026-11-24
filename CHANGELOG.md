@@ -11,6 +11,12 @@
 ### Removed
 
 ____
+## [12.10.0] - 2026-11-24
+### Changed
+
+- Updated jwlCore libs to v1.1.0
+  - Thread/memory tweaks
+
 ## [12.9.0] - 2026-11-22
 ### Changed
 
@@ -1285,6 +1291,7 @@ ____
 
 ____
 [Unreleased]: https://github.com/erykjj/jwlmanager
+[12.10.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.10.0
 [12.9.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.9.0
 [12.8.0]:https://github.com/erykjj/jwlmanager/releases/tag/v12.8.0
 [12.7.1]:https://github.com/erykjj/jwlmanager/releases/tag/v12.7.1
